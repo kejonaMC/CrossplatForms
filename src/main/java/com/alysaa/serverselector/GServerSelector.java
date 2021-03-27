@@ -11,7 +11,6 @@ import java.io.IOException;
 
 public class GServerSelector extends JavaPlugin {
     public static GServerSelector plugin;
-    private FileConfiguration config;
 
     @Override
     public void onEnable() {
@@ -20,7 +19,6 @@ public class GServerSelector extends JavaPlugin {
         this.getCommand("servers").setExecutor(new SelectorCommand());
        getLogger().info("Plugin has been enabled");
     }
-
     @Override
     public void onDisable() {
 
@@ -31,7 +29,7 @@ public class GServerSelector extends JavaPlugin {
             configFile.getParentFile().mkdirs();
             saveResource("config.yml", false);
         }
-        config = new YamlConfiguration();
+        FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
         } catch (IOException | InvalidConfigurationException e) {
