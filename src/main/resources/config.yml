@@ -7,3 +7,21 @@ EnableSelector: true
 ItemJoin: true
 Slot: 4
 
+# Edit Selector Form
+Form:
+  Title: Server Selector
+  Content: Click on the server button of choice.
+
+# Button Titles
+  Button1: Lobby
+  Button2: Survival
+  Button3: Creative
+  Button4: Factions
+  Button5: MiniGames
+
+# Button Images Paths
+  Path1: dirt.png
+  Path2: cobble.png
+  Path3: diamond.png
+  Path4: emerald.png
+  Path5: gold.png

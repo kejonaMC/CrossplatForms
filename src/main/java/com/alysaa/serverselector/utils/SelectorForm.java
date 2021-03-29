@@ -1,5 +1,6 @@
 package com.alysaa.serverselector.utils;
 
+import com.alysaa.serverselector.GServerSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.SimpleForm;
@@ -20,12 +21,13 @@ public class SelectorForm {
                 FloodgatePlayer fplayer = FloodgateApi.getInstance().getPlayer(uuid);
                 fplayer.sendForm(
                         SimpleForm.builder()
-                                .title("Title")
-                                .content("Content")
-                                .button("server1", FormImage.Type.URL, "https://github.com/GeyserMC.png?size=200")
-                                .button("server2", FormImage.Type.PATH, "textures/i/glyph_world_template.png")
-                                .button("server3", FormImage.Type.URL, "https://github.com/GeyserMC.png?size=200")
-                                .button("server4", FormImage.Type.URL, "https://github.com/GeyserMC.png?size=200")
+                                .title(GServerSelector.plugin.getConfig().getString("Form.Title"))
+                                .content(GServerSelector.plugin.getConfig().getString("Form.Content"))
+                                .button(GServerSelector.plugin.getConfig().getString("Form.Button1"), FormImage.Type.PATH, "GServerSelector/ButtonImages/"+GServerSelector.plugin.getConfig().getString("Form.Path1"))
+                                .button(GServerSelector.plugin.getConfig().getString("Form.Button2"), FormImage.Type.PATH, "GServerSelector/ButtonImages/"+GServerSelector.plugin.getConfig().getString("Form.Path2"))
+                                .button(GServerSelector.plugin.getConfig().getString("Form.Button3"), FormImage.Type.PATH, "GServerSelector/ButtonImages/"+GServerSelector.plugin.getConfig().getString("Form.Path3"))
+                                .button(GServerSelector.plugin.getConfig().getString("Form.Button4"), FormImage.Type.PATH, "GServerSelector/ButtonImages/"+GServerSelector.plugin.getConfig().getString("Form.Path4"))
+                                .button(GServerSelector.plugin.getConfig().getString("Form.Button5"), FormImage.Type.PATH, "GServerSelector/ButtonImages/"+GServerSelector.plugin.getConfig().getString("Form.Path5"))
                                 .responseHandler((form, responseData) -> {
                                     SimpleFormResponse response = form.parseResponse(responseData);
                                     if (response.getClickedButtonId() == 0) {
@@ -37,6 +39,13 @@ public class SelectorForm {
                                     if (response.getClickedButtonId() == 2) {
                                         System.out.println("hello3");
                                     }
+                                    if (response.getClickedButtonId() == 3) {
+                                        System.out.println("hello3");
+                                    }
+                                    if (response.getClickedButtonId() == 4) {
+                                        System.out.println("hello3");
+                                    }
+
                                 }));
             }else {
                 player.sendMessage("Sorry this is a Bedrock command!");

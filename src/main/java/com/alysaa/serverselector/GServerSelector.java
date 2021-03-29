@@ -19,13 +19,15 @@ public class GServerSelector extends JavaPlugin {
         plugin = this;
         createFiles();
         this.getCommand("servers").setExecutor(new SelectorCommand());
-       getLogger().info("Plugin has been enabled");
+        getLogger().info("Plugin has been enabled");
         Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
     }
+
     @Override
     public void onDisable() {
 
     }
+
     private void createFiles() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
@@ -37,6 +39,13 @@ public class GServerSelector extends JavaPlugin {
             config.load(configFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
+        }
+        File PathDir = new File("plugins/GServerSelector/ButtonImages/");
+        if (!PathDir.exists()) {
+            try {
+                PathDir.mkdirs();
+            } catch (Exception ignored) {
+            }
         }
     }
 }
