@@ -9,6 +9,7 @@ Slot: 4
 
 # Edit Selector Form
 Form:
+
   Title: Server Selector
   Content: Click on the server button of choice.
 
@@ -18,6 +19,13 @@ Form:
   Button3: Creative
   Button4: Factions
   Button5: MiniGames
+
+# Define Bungeecord ServerNames. has to be exact the same as in the bungeecord config.yml!
+  ServerName1: Lobby
+  ServerName2: Survival
+  ServerName3: Creative
+  ServerName4: Factions
+  ServerName5: Minigames
 
 # Button Images Paths
   Path1: dirt.png

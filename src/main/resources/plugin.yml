@@ -2,7 +2,6 @@ name: GServerSelector
 main: com.alysaa.serverselector.GServerSelector
 version: 1.0
 api-version: 1.15
-depend: [Geyser-Spigot,floodgate]
 description: Geyser Plugin Addon.
 commands:
   servers:
