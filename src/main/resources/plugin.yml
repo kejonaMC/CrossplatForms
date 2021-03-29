@@ -4,8 +4,8 @@ version: 1.0
 api-version: 1.15
 depend: [Geyser-Spigot,floodgate]
 description: Geyser Plugin Addon.
-
-geyserupdate:
-  description: updating Geyser command
-  permission: gserverselector.servers
-  aliases: /servers
+commands:
+  servers:
+    description: updating Geyser command
+    permission: gserverselector.servers
+    aliases: /servers

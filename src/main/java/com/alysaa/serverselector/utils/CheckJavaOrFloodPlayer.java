@@ -1,4 +1,4 @@
-package com.alysaa.serverselector.common;
+package com.alysaa.serverselector.utils;
 
 import com.alysaa.serverselector.GServerSelector;
 import org.geysermc.connector.GeyserConnector;
@@ -12,7 +12,7 @@ public class CheckJavaOrFloodPlayer {
      * @param uuid the UUID to determine
      * @return true if the player is from Bedrock
      */
-    public static boolean isBedrockPlayer(UUID uuid) {
+    public static boolean isFloodgatePlayer(UUID uuid) {
         if (!GServerSelector.plugin.getConfig().getBoolean("EnableSelector")){
             return GeyserConnector.getInstance().getPlayerByUuid(uuid) != null;
         } else {
