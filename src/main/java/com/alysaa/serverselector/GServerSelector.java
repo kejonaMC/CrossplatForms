@@ -40,12 +40,5 @@ public class GServerSelector extends JavaPlugin {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
-        File PathDir = new File("plugins/GServerSelector/ButtonImages/");
-        if (!PathDir.exists()) {
-            try {
-                PathDir.mkdirs();
-            } catch (Exception ignored) {
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-# BedrockServerSelector by Jens
+# GServerSelector by Jens
 
 # Enable Selector
 EnableSelector: true
@@ -6,6 +6,8 @@ EnableSelector: true
 # Gives player compass and options
 ItemJoin: true
 Slot: 4
+DisableItemDrop: true
+DisableItemMove: true
 
 # Edit Selector Form
 Form:
@@ -27,9 +29,9 @@ Form:
   ServerName4: Factions
   ServerName5: Minigames
 
-# Button Images Paths
-  Path1: dirt.png
-  Path2: cobble.png
-  Path3: diamond.png
-  Path4: emerald.png
-  Path5: gold.png
+# Button Images Url's
+  Url1: "https://www.digminecraft.com/block_recipes/images/lime_concrete.png"
+  Url2: "https://www.digminecraft.com/block_recipes/images/yellow_concrete.png"
+  Url3: "https://www.digminecraft.com/block_recipes/images/light_blue_concrete.png"
+  Url4: "https://www.digminecraft.com/block_recipes/images/light_gray_concrete.png"
+  Url5: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"

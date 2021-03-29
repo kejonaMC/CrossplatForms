@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
@@ -29,6 +31,7 @@ public class CompassOnJoin implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
 
@@ -36,8 +39,21 @@ public class CompassOnJoin implements Listener {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
             if (p.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
-               SelectorForm.SelectServer();
+                SelectorForm.SelectServer();
             }
+        }
+    }
+
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        if (GServerSelector.plugin.getConfig().getBoolean("DisableItemDrop")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (GServerSelector.plugin.getConfig().getBoolean("DisableItemMove")) {
+            event.setCancelled(true);
         }
     }
 }
