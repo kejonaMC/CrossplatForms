@@ -1,1 +1,9 @@
+# BedrockServerSelector by Jens
+
+# Enable Selector
 EnableSelector: true
+
+# Gives player compass and options
+ItemJoin: true
+Slot: 4
+

@@ -1,6 +1,8 @@
 package com.alysaa.serverselector;
 
 import com.alysaa.serverselector.command.SelectorCommand;
+import com.alysaa.serverselector.listeners.CompassOnJoin;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,6 +20,7 @@ public class GServerSelector extends JavaPlugin {
         createFiles();
         this.getCommand("servers").setExecutor(new SelectorCommand());
        getLogger().info("Plugin has been enabled");
+        Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
     }
     @Override
     public void onDisable() {
