@@ -39,7 +39,7 @@ public class SelectorForm {
                                     // player closed the form or returned invalid info (see FormResponse)
                                     return;
                                 }
-                                if (response.getClickedButtonId() == 1) {
+                                if (response.getClickedButtonId() == 0) {
                                     String server1 = config.getString("Form.ServerName1");
                                     ByteArrayOutputStream b = new ByteArrayOutputStream();
                                     DataOutputStream out = new DataOutputStream(b);
@@ -51,7 +51,7 @@ public class SelectorForm {
                                     }
                                     player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
                                 }
-                                if (response.getClickedButtonId() == 2) {
+                                if (response.getClickedButtonId() == 1) {
                                     String server2 = config.getString("Form.ServerName2");
                                     ByteArrayOutputStream b = new ByteArrayOutputStream();
                                     DataOutputStream out = new DataOutputStream(b);
@@ -63,7 +63,7 @@ public class SelectorForm {
                                     }
                                     player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
                                 }
-                                if (response.getClickedButtonId() == 3) {
+                                if (response.getClickedButtonId() == 2) {
                                     String server3 = config.getString("Form.ServerName3");
                                     ByteArrayOutputStream b = new ByteArrayOutputStream();
                                     DataOutputStream out = new DataOutputStream(b);
@@ -75,7 +75,7 @@ public class SelectorForm {
                                     }
                                     player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
                                 }
-                                if (response.getClickedButtonId() == 4) {
+                                if (response.getClickedButtonId() == 3) {
                                     String server4 = config.getString("Form.ServerName4");
                                     ByteArrayOutputStream b = new ByteArrayOutputStream();
                                     DataOutputStream out = new DataOutputStream(b);
@@ -87,7 +87,7 @@ public class SelectorForm {
                                     }
                                     player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
                                 }
-                                if (response.getClickedButtonId() == 5) {
+                                if (response.getClickedButtonId() == 4) {
                                     String server5 = config.getString("Form.ServerName5");
                                     ByteArrayOutputStream b = new ByteArrayOutputStream();
                                     DataOutputStream out = new DataOutputStream(b);
