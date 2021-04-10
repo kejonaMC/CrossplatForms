@@ -35,11 +35,11 @@ public class CompassOnJoin implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
 
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-            if (p.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
-                SelectorForm.SelectServer();
+            if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
+                SelectorForm.SelectServer(player);
             }
         }
     }
