@@ -21,6 +21,7 @@ public class GServerSelector extends JavaPlugin {
         this.getCommand("servers").setExecutor(new SelectorCommand());
         getLogger().info("Plugin has been enabled");
         Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override
