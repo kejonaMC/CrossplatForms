@@ -2,7 +2,7 @@ package com.alysaa.serverselector.listeners;
 
 import com.alysaa.serverselector.GServerSelector;
 import com.alysaa.serverselector.utils.CheckJavaOrFloodPlayer;
-import com.alysaa.serverselector.utils.SelectorForm;
+import com.alysaa.serverselector.form.SelectorForm;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

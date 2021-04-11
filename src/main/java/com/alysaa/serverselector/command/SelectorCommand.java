@@ -1,7 +1,7 @@
 package com.alysaa.serverselector.command;
 
 import com.alysaa.serverselector.GServerSelector;
-import com.alysaa.serverselector.utils.SelectorForm;
+import com.alysaa.serverselector.form.SelectorForm;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -1,6 +1,7 @@
-package com.alysaa.serverselector.utils;
+package com.alysaa.serverselector.form;
 
 import com.alysaa.serverselector.GServerSelector;
+import com.alysaa.serverselector.utils.CheckJavaOrFloodPlayer;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
