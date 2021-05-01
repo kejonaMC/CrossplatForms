@@ -20,7 +20,12 @@ Form:
   Button2: Survival
   Button3: Creative
   Button4: Factions
-  Button5: MiniGames
+  Button5: Minigames
+  Button6: UHC
+  Button7: Skyblock
+  Button8: Skygrid
+  Button9: BuildWars
+  Button10: Adventure
 
 # Define Bungeecord ServerNames. has to be exact the same as in the bungeecord config.yml!
   ServerName1: Lobby
@@ -28,10 +33,20 @@ Form:
   ServerName3: Creative
   ServerName4: Factions
   ServerName5: Minigames
+  ServerName6: UHC
+  ServerName7: Skyblock
+  ServerName8: Skygrid
+  ServerName9: BuildWars
+  ServerName10: Adventure
 
 # Button Images Url's
-  Url1: "https://www.digminecraft.com/block_recipes/images/lime_concrete.png"
-  Url2: "https://www.digminecraft.com/block_recipes/images/yellow_concrete.png"
-  Url3: "https://www.digminecraft.com/block_recipes/images/light_blue_concrete.png"
-  Url4: "https://www.digminecraft.com/block_recipes/images/light_gray_concrete.png"
-  Url5: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
+  Url1: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
+  Url2: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
+  Url3: "https://www.digminecraft.com/block_recipes/images/purple_concrete.png"
+  Url4: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
+  Url5: "https://www.digminecraft.com/block_recipes/images/pink_concrete.png"
+  Url6: "https://www.digminecraft.com/block_recipes/images/red_concrete.png"
+  Url7: "https://www.digminecraft.com/block_recipes/images/orange_concrete.png"
+  Url8: "https://www.digminecraft.com/block_recipes/images/yellow_concrete.png"
+  Url9: "https://www.digminecraft.com/block_recipes/images/lime_concrete.png"
+  Url10: "https://www.digminecraft.com/block_recipes/images/green_concrete.png"

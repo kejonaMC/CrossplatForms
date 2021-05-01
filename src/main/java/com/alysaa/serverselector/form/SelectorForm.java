@@ -2,8 +2,6 @@ package com.alysaa.serverselector.form;
 
 import com.alysaa.serverselector.GServerSelector;
 import com.alysaa.serverselector.utils.CheckJavaOrFloodPlayer;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -34,75 +32,38 @@ public class SelectorForm {
                             .button(config.getString("Form.Button3"), FormImage.Type.URL, config.getString("Form.Url3"))
                             .button(config.getString("Form.Button4"), FormImage.Type.URL, config.getString("Form.Url4"))
                             .button(config.getString("Form.Button5"), FormImage.Type.URL, config.getString("Form.Url5"))
+                            .button(config.getString("Form.Button6"), FormImage.Type.URL, config.getString("Form.Url6"))
+                            .button(config.getString("Form.Button7"), FormImage.Type.URL, config.getString("Form.Url7"))
+                            .button(config.getString("Form.Button8"), FormImage.Type.URL, config.getString("Form.Url8"))
+                            .button(config.getString("Form.Button9"), FormImage.Type.URL, config.getString("Form.Url9"))
+                            .button(config.getString("Form.Button10"), FormImage.Type.URL, config.getString("Form.Url10"))
                             .responseHandler((form, responseData) -> {
                                 SimpleFormResponse response = form.parseResponse(responseData);
                                 if (!response.isCorrect()) {
+                                    // isCorrect() = !isClosed() && !isInvalid()
                                     // player closed the form or returned invalid info (see FormResponse)
                                     return;
                                 }
-                                if (response.getClickedButtonId() == 0) {
-                                    String server1 = config.getString("Form.ServerName1");
+                                int serverNumber = response.getClickedButtonId() + 1;
+                                String serverName = config.getString("Form.ServerName" + serverNumber);
+                                if (serverName != null) {
                                     ByteArrayOutputStream b = new ByteArrayOutputStream();
                                     DataOutputStream out = new DataOutputStream(b);
                                     try {
                                         out.writeUTF("Connect");
-                                        out.writeUTF(server1);
+                                        out.writeUTF(serverName);
                                     } catch (IOException eee) {
                                         Bukkit.getLogger().info("You'll never see me!");
                                     }
                                     player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
-                                }
-                                if (response.getClickedButtonId() == 1) {
-                                    String server2 = config.getString("Form.ServerName2");
-                                    ByteArrayOutputStream b = new ByteArrayOutputStream();
-                                    DataOutputStream out = new DataOutputStream(b);
-                                    try {
-                                        out.writeUTF("Connect");
-                                        out.writeUTF(server2);
-                                    } catch (IOException eee) {
-                                        Bukkit.getLogger().info("You'll never see me!");
-                                    }
-                                    player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
-                                }
-                                if (response.getClickedButtonId() == 2) {
-                                    String server3 = config.getString("Form.ServerName3");
-                                    ByteArrayOutputStream b = new ByteArrayOutputStream();
-                                    DataOutputStream out = new DataOutputStream(b);
-                                    try {
-                                        out.writeUTF("Connect");
-                                        out.writeUTF(server3);
-                                    } catch (IOException eee) {
-                                        Bukkit.getLogger().info("You'll never see me!");
-                                    }
-                                    player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
-                                }
-                                if (response.getClickedButtonId() == 3) {
-                                    String server4 = config.getString("Form.ServerName4");
-                                    ByteArrayOutputStream b = new ByteArrayOutputStream();
-                                    DataOutputStream out = new DataOutputStream(b);
-                                    try {
-                                        out.writeUTF("Connect");
-                                        out.writeUTF(server4);
-                                    } catch (IOException eee) {
-                                        Bukkit.getLogger().info("You'll never see me!");
-                                    }
-                                    player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
-                                }
-                                if (response.getClickedButtonId() == 4) {
-                                    String server5 = config.getString("Form.ServerName5");
-                                    ByteArrayOutputStream b = new ByteArrayOutputStream();
-                                    DataOutputStream out = new DataOutputStream(b);
-                                    try {
-                                        out.writeUTF("Connect");
-                                        out.writeUTF(server5);
-                                    } catch (IOException eee) {
-                                        Bukkit.getLogger().info("You'll never see me!");
-                                    }
-                                    player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
+                                } else {
+                                    String noServer = "Failed to find a serverName value in the config for 'Button" + serverNumber + "'";
+                                    player.sendMessage(noServer);
+                                    GServerSelector.plugin.getLogger().warning(noServer);
                                 }
                             }));
         } else {
-            player.sendMessage("Sorry this is a Bedrock command!");
+            player.sendMessage("Sorry, this is a Bedrock command!");
         }
     }
 }
