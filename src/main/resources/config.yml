@@ -15,23 +15,19 @@ Form:
   Title: Server Selector
   Content: Click on the server button of choice.
 
-# Button Titles
-  Button1: Lobby
-  Button2: Survival
-  Button3: Creative
-  Button4: Factions
-  Button5: MiniGames
-
-# Define Bungeecord ServerNames. has to be exact the same as in the bungeecord config.yml!
-  ServerName1: Lobby
-  ServerName2: Survival
-  ServerName3: Creative
-  ServerName4: Factions
-  ServerName5: Minigames
-
-# Button Images Url's
-  Url1: "https://www.digminecraft.com/block_recipes/images/lime_concrete.png"
-  Url2: "https://www.digminecraft.com/block_recipes/images/yellow_concrete.png"
-  Url3: "https://www.digminecraft.com/block_recipes/images/light_blue_concrete.png"
-  Url4: "https://www.digminecraft.com/block_recipes/images/light_gray_concrete.png"
-  Url5: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
+# Add as many servers as you want. Replace "ButtonTextHere" with the text you want on the button.
+# The ServerName value must be the exact server name defined in bungeecord's config.
+# If you remove the ImageURL key, no icon will be shown next to the button.
+  Servers:
+    ButtonTextHere:
+      ServerName: Lobby
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
+    Survival:
+      ServerName: Survival
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
+    Creative:
+      ServerName: Creative
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/purple_concrete.png"
+    Factions:
+      ServerName: Factions
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
