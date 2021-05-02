@@ -15,38 +15,19 @@ Form:
   Title: Server Selector
   Content: Click on the server button of choice.
 
-# Button Titles
-  Button1: Lobby
-  Button2: Survival
-  Button3: Creative
-  Button4: Factions
-  Button5: Minigames
-  Button6: UHC
-  Button7: Skyblock
-  Button8: Skygrid
-  Button9: BuildWars
-  Button10: Adventure
-
-# Define Bungeecord ServerNames. has to be exact the same as in the bungeecord config.yml!
-  ServerName1: Lobby
-  ServerName2: Survival
-  ServerName3: Creative
-  ServerName4: Factions
-  ServerName5: Minigames
-  ServerName6: UHC
-  ServerName7: Skyblock
-  ServerName8: Skygrid
-  ServerName9: BuildWars
-  ServerName10: Adventure
-
-# Button Images Url's
-  Url1: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
-  Url2: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-  Url3: "https://www.digminecraft.com/block_recipes/images/purple_concrete.png"
-  Url4: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
-  Url5: "https://www.digminecraft.com/block_recipes/images/pink_concrete.png"
-  Url6: "https://www.digminecraft.com/block_recipes/images/red_concrete.png"
-  Url7: "https://www.digminecraft.com/block_recipes/images/orange_concrete.png"
-  Url8: "https://www.digminecraft.com/block_recipes/images/yellow_concrete.png"
-  Url9: "https://www.digminecraft.com/block_recipes/images/lime_concrete.png"
-  Url10: "https://www.digminecraft.com/block_recipes/images/green_concrete.png"
+# Add as many servers as you want. Replace "ButtonTextHere" with the text you want on the button.
+# The ServerName value must be the exact server name defined in bungeecord's config.
+# If you remove the ImageURL key, no icon will be shown next to the button.
+  Servers:
+    ButtonTextHere:
+      ServerName: Lobby
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
+    Survival:
+      ServerName: Survival
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
+    Creative:
+      ServerName: Creative
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/purple_concrete.png"
+    Factions:
+      ServerName: Factions
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
