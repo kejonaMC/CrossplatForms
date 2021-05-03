@@ -31,3 +31,6 @@ Form:
     Factions:
       ButtonText: "Factions - In Progress!"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
+
+# Don't touch this
+ConfigVersion: 1
