@@ -6,27 +6,26 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
 
 public class GServerSelector extends JavaPlugin {
-    public static GServerSelector plugin;
+    private static GServerSelector plugin;
 
     @Override
     public void onEnable() {
         plugin = this;
         createFiles();
-        this.getCommand("servers").setExecutor(new SelectorCommand());
-        getLogger().info("Plugin has been enabled");
+        getCommand("servers").setExecutor(new SelectorCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override
     public void onDisable() {
-
     }
 
     private void createFiles() {
@@ -41,5 +40,9 @@ public class GServerSelector extends JavaPlugin {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Plugin getInstance() {
+        return plugin;
     }
 }

@@ -21,7 +21,7 @@ public class SelectorCommand implements CommandExecutor {
                 }
             }
         } else if (sender instanceof ConsoleCommandSender) {
-            GServerSelector.plugin.getLogger().info("This command only works in-game!");
+            GServerSelector.getInstance().getLogger().info("This command only works in-game!");
         }
         return false;
     }

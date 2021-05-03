@@ -1,7 +1,6 @@
 package com.alysaa.serverselector.form;
 
 import com.alysaa.serverselector.GServerSelector;
-import com.alysaa.serverselector.utils.CheckJavaOrFloodPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,15 +23,15 @@ import java.util.logging.Logger;
 
 public class SelectorForm {
     public static void SelectServer(Player player) {
-        Logger logger = GServerSelector.plugin.getLogger();
-        FileConfiguration config = GServerSelector.plugin.getConfig();
+        Logger logger = GServerSelector.getInstance().getLogger();
+        FileConfiguration config = GServerSelector.getInstance().getConfig();
         UUID uuid = player.getUniqueId();
-        boolean isFloodgatePlayer = CheckJavaOrFloodPlayer.isFloodgatePlayer(uuid);
+        boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(uuid);
         if (!isFloodgatePlayer) {
             player.sendMessage("Sorry, this is a Bedrock command!");
             return;
         }
-        FloodgatePlayer fPlayer = FloodgateApi.getInstance().getPlayer(uuid);
+        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
 
 
         // todo: doing config validation outside of this would be much faster
@@ -100,15 +99,15 @@ public class SelectorForm {
                 } catch (IOException eee) {
                     Bukkit.getLogger().info("You'll never see me!");
                 }
-                player.sendPluginMessage(GServerSelector.plugin, "BungeeCord", b.toByteArray());
+                player.sendPluginMessage(GServerSelector.getInstance(), "BungeeCord", b.toByteArray());
             } else {
                 String noServer = "Failed to find a ServerName value in the config for '" + response.getClickedButton().getText() + "'";
                 player.sendMessage(noServer);
-                GServerSelector.plugin.getLogger().warning(noServer);
+                GServerSelector.getInstance().getLogger().warning(noServer);
             }
         });
 
         // Send the form to the floodgate player
-        fPlayer.sendForm(serverSelector);
+        floodgatePlayer.sendForm(serverSelector);
     }
 }
