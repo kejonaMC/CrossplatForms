@@ -1,7 +1,9 @@
 name: GServerSelector
 main: com.alysaa.serverselector.GServerSelector
 version: 1.0
-api-version: 1.15
+api-version: 1.13
+depend:
+  - floodgate
 description: Geyser Plugin Addon.
 commands:
   servers:
