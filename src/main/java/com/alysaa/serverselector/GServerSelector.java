@@ -18,7 +18,10 @@ public class GServerSelector extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        createFiles();
+        if (!loadConfig()) {
+            getLogger().severe("Disabling due to configuration error.");
+            return;
+        }
         getCommand("servers").setExecutor(new SelectorCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -28,7 +31,7 @@ public class GServerSelector extends JavaPlugin {
     public void onDisable() {
     }
 
-    private void createFiles() {
+    private boolean loadConfig() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             configFile.getParentFile().mkdirs();
@@ -37,8 +40,15 @@ public class GServerSelector extends JavaPlugin {
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
+            if (getConfig().contains("ConfigVersion") && (getConfig().getInt("ConfigVersion") == 1)) {
+                return true;
+            } else {
+                getLogger().severe("Mismatched config version! Regenerate a new config.");
+                return false;
+            }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
