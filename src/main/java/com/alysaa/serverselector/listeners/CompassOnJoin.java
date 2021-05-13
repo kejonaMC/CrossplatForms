@@ -39,7 +39,7 @@ public class CompassOnJoin implements Listener {
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
             if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
-                SelectorForm.SelectServer(player);
+                SelectorForm.sendSelector(player);
             }
         }
     }

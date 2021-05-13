@@ -15,7 +15,7 @@ public class SelectorCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (command.getName().equalsIgnoreCase("servers") && player.hasPermission("gserverselector.servers")) {
                 try {
-                    SelectorForm.SelectServer(player);
+                    SelectorForm.sendSelector(player);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -22,40 +22,32 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 public class SelectorForm {
-    public static void SelectServer(Player player) {
+
+    private static SimpleForm serverSelector;
+    private static List<String> validServerNames;
+
+    /**
+     * Initialize or refresh the server selector form
+     */
+    public static void init() {
         Logger logger = GServerSelector.getInstance().getLogger();
         FileConfiguration config = GServerSelector.getInstance().getConfig();
-        UUID uuid = player.getUniqueId();
-        boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(uuid);
-        if (!isFloodgatePlayer) {
-            player.sendMessage("Sorry, this is a Bedrock command!");
-            return;
-        }
-        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
 
-
-        // todo: doing config validation outside of this would be much faster
-        // todo: generate the button list (or even the whole form) on config load instead
-        // todo: image caching?
-
-        // Get the Form.Servers section
+        // Enter the Form.Servers section
         ConfigurationSection serverSection;
         if (config.contains("Form.Servers")) {
             serverSection = config.getConfigurationSection("Form.Servers");
         } else {
-            String badConfigMsg = "Failed to send a form because the configuration is malformed! Regenerate it.";
-            player.sendMessage(badConfigMsg);
-            logger.severe(badConfigMsg);
+            logger.severe("Failed to create the selector form because the configuration is malformed! Regenerate it.");
             return;
         }
-        // Get all the defined servers
+        // Get all the defined servers in our config
         Set<String> allServers = serverSection.getKeys(false);
         if (allServers.isEmpty()) {
-            player.sendMessage("There are no defined servers for you to connect to!");
-            logger.severe("Failed to send a form because there are no defined servers in the form configuration!");
+            logger.severe("Failed to create the selector form because there are no defined servers in the form configuration!");
             return;
         }
-        // Create a list of buttons. For every server with a valid button configuration, we add its button. The index value is the button id.
+        // Create a list of buttons. For every defined server with a valid button configuration, we add its button. The index value is the button id.
         List<ButtonComponent> buttonComponents = new ArrayList<>();
         // This list will contain the name of every server that has a valid button. The index value is the button id.
         List<String> validServerNames = new ArrayList<>(2);
@@ -72,16 +64,33 @@ public class SelectorForm {
             }
         }
         if (buttonComponents.isEmpty()) {
-            player.sendMessage("There are no valid servers to be displayed!");
             logger.warning("Failed to create any valid buttons for the server selector form! The form configuration is malformed.");
             return;
         }
 
+        // Only update the fields once everything has been validated
+
         // Create the form without the Builder so that we have more control over the list of buttons
-        SimpleForm serverSelector = SimpleForm.of(
+        SelectorForm.serverSelector = SimpleForm.of(
                 config.getString("Form.Title"),
                 config.getString("Form.Content"),
                 buttonComponents);
+        // Save the valid server names so that the response handler knows the server identity of each button
+        SelectorForm.validServerNames = validServerNames;
+    }
+
+    /**
+     * Send the server selector
+     * @param player the floodgate player to send it to
+     */
+    public static void sendSelector(Player player) {
+        UUID uuid = player.getUniqueId();
+        boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(uuid);
+        if (!isFloodgatePlayer) {
+            player.sendMessage("Sorry, this is a Bedrock command!");
+            return;
+        }
+        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
 
         // Set the response handler
         serverSelector.setResponseHandler((responseData) -> {

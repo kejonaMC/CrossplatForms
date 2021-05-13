@@ -1,6 +1,7 @@
 package com.alysaa.serverselector;
 
 import com.alysaa.serverselector.command.SelectorCommand;
+import com.alysaa.serverselector.form.SelectorForm;
 import com.alysaa.serverselector.listeners.CompassOnJoin;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -22,9 +23,10 @@ public class GServerSelector extends JavaPlugin {
             getLogger().severe("Disabling due to configuration error.");
             return;
         }
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        SelectorForm.init();
         getCommand("servers").setExecutor(new SelectorCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
     }
 
     @Override
