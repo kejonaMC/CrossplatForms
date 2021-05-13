@@ -58,6 +58,7 @@
             <groupId>org.geysermc.cumulus</groupId>
             <artifactId>api</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

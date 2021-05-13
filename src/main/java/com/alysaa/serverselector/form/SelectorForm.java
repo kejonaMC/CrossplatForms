@@ -1,7 +1,6 @@
 package com.alysaa.serverselector.form;
 
 import com.alysaa.serverselector.GServerSelector;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -29,7 +28,9 @@ public class SelectorForm {
     /**
      * Initialize or refresh the server selector form
      */
-    public static void init() {
+    public static boolean init() {
+        GServerSelector.getInstance().loadConfig();
+
         Logger logger = GServerSelector.getInstance().getLogger();
         FileConfiguration config = GServerSelector.getInstance().getConfig();
 
@@ -39,13 +40,13 @@ public class SelectorForm {
             serverSection = config.getConfigurationSection("Form.Servers");
         } else {
             logger.severe("Failed to create the selector form because the configuration is malformed! Regenerate it.");
-            return;
+            return false;
         }
         // Get all the defined servers in our config
         Set<String> allServers = serverSection.getKeys(false);
         if (allServers.isEmpty()) {
             logger.severe("Failed to create the selector form because there are no defined servers in the form configuration!");
-            return;
+            return false;
         }
         // Create a list of buttons. For every defined server with a valid button configuration, we add its button. The index value is the button id.
         List<ButtonComponent> buttonComponents = new ArrayList<>();
@@ -65,7 +66,7 @@ public class SelectorForm {
         }
         if (buttonComponents.isEmpty()) {
             logger.warning("Failed to create any valid buttons for the server selector form! The form configuration is malformed.");
-            return;
+            return false;
         }
 
         // Only update the fields once everything has been validated
@@ -77,6 +78,7 @@ public class SelectorForm {
                 buttonComponents);
         // Save the valid server names so that the response handler knows the server identity of each button
         SelectorForm.validServerNames = validServerNames;
+        return true;
     }
 
     /**
@@ -107,10 +109,11 @@ public class SelectorForm {
             try {
                 out.writeUTF("Connect");
                 out.writeUTF(serverName);
-            } catch (IOException eee) {
-                Bukkit.getLogger().info("You'll never see me!");
+                player.sendPluginMessage(GServerSelector.getInstance(), "BungeeCord", b.toByteArray());
+            } catch (IOException e) {
+                GServerSelector.getInstance().getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                e.printStackTrace();
             }
-            player.sendPluginMessage(GServerSelector.getInstance(), "BungeeCord", b.toByteArray());
         });
 
         // Send the form to the floodgate player

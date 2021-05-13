@@ -1,5 +1,6 @@
 package com.alysaa.serverselector;
 
+import com.alysaa.serverselector.command.ReloadCommand;
 import com.alysaa.serverselector.command.SelectorCommand;
 import com.alysaa.serverselector.form.SelectorForm;
 import com.alysaa.serverselector.listeners.CompassOnJoin;
@@ -7,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,7 +25,8 @@ public class GServerSelector extends JavaPlugin {
         }
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         SelectorForm.init();
-        getCommand("servers").setExecutor(new SelectorCommand());
+        getCommand("gservers").setExecutor(new SelectorCommand());
+        getCommand("gserversreload").setExecutor(new ReloadCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
     }
 
@@ -33,10 +34,15 @@ public class GServerSelector extends JavaPlugin {
     public void onDisable() {
     }
 
-    private boolean loadConfig() {
+    public boolean loadConfig() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            configFile.getParentFile().mkdirs();
+            try {
+                configFile.getParentFile().mkdirs();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                return false;
+            }
             saveResource("config.yml", false);
         }
         FileConfiguration config = new YamlConfiguration();
@@ -54,7 +60,7 @@ public class GServerSelector extends JavaPlugin {
         }
     }
 
-    public static Plugin getInstance() {
+    public static GServerSelector getInstance() {
         return plugin;
     }
 }

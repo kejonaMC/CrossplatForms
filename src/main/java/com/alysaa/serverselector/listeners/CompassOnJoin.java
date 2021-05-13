@@ -36,14 +36,17 @@ public class CompassOnJoin implements Listener {
     public void onInteract(PlayerInteractEvent e) {
 
         Player player = e.getPlayer();
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
-            if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
-                SelectorForm.sendSelector(player);
+        // todo: make sure the item is special
+        if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
+            if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+                    SelectorForm.sendSelector(player);
+                }
             }
         }
     }
 
+    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemDrop")) {
             event.setCancelled(true);

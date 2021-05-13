@@ -4,9 +4,10 @@ version: 1.0
 api-version: 1.13
 depend:
   - floodgate
-description: Geyser Plugin Addon.
+description: Allow Floodgate players to join BungeeCord servers through a Bedrock form.
 commands:
-  servers:
-    description: updating Geyser command
-    permission: gserverselector.servers
-    aliases: /servers
+  gservers:
+    description: Open a server selector form.
+    permission: gserverselector.gservers
+  gserversreload:
+    description: Reload the selector form.
