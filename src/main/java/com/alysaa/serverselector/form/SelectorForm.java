@@ -183,7 +183,7 @@ public class SelectorForm {
                     out.writeUTF(serverName);
                     player.sendPluginMessage(GServerSelector.getInstance(), "BungeeCord", b.toByteArray());
                 } catch (IOException e) {
-                    GServerSelector.getInstance().getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                    SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();
                 }
             } else {

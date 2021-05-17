@@ -1,6 +1,7 @@
 package com.alysaa.serverselector.command;
 
 import com.alysaa.serverselector.GServerSelector;
+import com.alysaa.serverselector.SelectorLogger;
 import com.alysaa.serverselector.form.SelectorForm;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,7 +23,7 @@ public class SelectorCommand implements CommandExecutor {
                 }
             }
         } else if (sender instanceof ConsoleCommandSender) {
-            GServerSelector.getInstance().getLogger().warning("This command only works in-game!");
+            SelectorLogger.getLogger().warn("This command only works in-game!");
         }
         return true;
     }

@@ -1,6 +1,7 @@
 package com.alysaa.serverselector.command;
 
 import com.alysaa.serverselector.GServerSelector;
+import com.alysaa.serverselector.SelectorLogger;
 import com.alysaa.serverselector.form.SelectorForm;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,11 +16,11 @@ public class ReloadCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (sender instanceof ConsoleCommandSender) {
-            Logger logger = GServerSelector.getInstance().getLogger();
+            SelectorLogger logger = SelectorLogger.getLogger();
             if (SelectorForm.init()) {
                 logger.info("Reload the server selector form.");
             } else {
-                logger.warning("Failed to reload the server selector form!");
+                logger.warn("Failed to reload the server selector form!");
             }
         } else if (sender instanceof Player){
             sender.sendMessage(ChatColor.RED + "This command only works in-game!");

@@ -15,12 +15,14 @@ import java.io.IOException;
 
 public class GServerSelector extends JavaPlugin {
     private static GServerSelector plugin;
+    private SelectorLogger logger;
 
     @Override
     public void onEnable() {
         plugin = this;
+        logger = SelectorLogger.getLogger();
         if (!loadConfig()) {
-            getLogger().severe("Disabling due to configuration error.");
+            logger.severe("Disabling due to configuration error.");
             return;
         }
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -51,7 +53,7 @@ public class GServerSelector extends JavaPlugin {
             if (getConfig().contains("ConfigVersion") && (getConfig().getInt("ConfigVersion") == 1)) {
                 return true;
             } else {
-                getLogger().severe("Mismatched config version! Regenerate a new config.");
+                logger.severe("Mismatched config version! Regenerate a new config.");
                 return false;
             }
         } catch (IOException | InvalidConfigurationException e) {
