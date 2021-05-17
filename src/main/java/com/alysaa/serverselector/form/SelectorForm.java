@@ -3,9 +3,13 @@ package com.alysaa.serverselector.form;
 import com.alysaa.serverselector.GServerSelector;
 import com.alysaa.serverselector.SelectorLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.geysermc.cumulus.SimpleForm;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.SimpleFormResponse;
@@ -26,6 +30,15 @@ public class SelectorForm {
 
     private static List<String> validCommands;
     private static int commandsIndex;
+
+    private static final ItemStack formItem;
+    static {
+        ItemStack compass = new ItemStack(Material.COMPASS);
+        ItemMeta compassMeta = compass.getItemMeta();
+        compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
+        compass.setItemMeta(compassMeta);
+        formItem = compass;
+    }
 
 
     /**
@@ -195,5 +208,9 @@ public class SelectorForm {
 
         // Send the form to the floodgate player
         floodgatePlayer.sendForm(serverSelector);
+    }
+
+    public static ItemStack getItem() {
+        return formItem;
     }
 }

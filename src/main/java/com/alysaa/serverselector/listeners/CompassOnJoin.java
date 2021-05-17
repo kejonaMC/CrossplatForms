@@ -2,7 +2,6 @@ package com.alysaa.serverselector.listeners;
 
 import com.alysaa.serverselector.GServerSelector;
 import com.alysaa.serverselector.form.SelectorForm;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +12,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 public class CompassOnJoin implements Listener {
@@ -23,11 +21,25 @@ public class CompassOnJoin implements Listener {
             boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(e.getPlayer().getUniqueId());
             if (isFloodgatePlayer) {
                 Player player = e.getPlayer();
-                ItemStack compass = new ItemStack(Material.COMPASS);
-                ItemMeta compassMeta = compass.getItemMeta();
-                compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
-                compass.setItemMeta(compassMeta);
-                player.getInventory().setItem(GServerSelector.getInstance().getConfig().getInt("Slot"), compass);
+                ItemStack compass = SelectorForm.getItem();
+                if (player.getInventory().contains(compass)) {
+                    return;
+                }
+
+                int desiredSlot = GServerSelector.getInstance().getConfig().getInt("Slot");
+                ItemStack oldItem = player.getInventory().getItem(desiredSlot);
+                if (oldItem == null || oldItem.getType() == Material.AIR) {
+                    player.getInventory().setItem(desiredSlot, compass);
+                } else {
+                    for (int i = 0; i < 10; i++) {
+                        if (player.getInventory().getItem(i) == null || player.getInventory().getItem(i).getType() == Material.AIR) {
+                            player.getInventory().setItem(i, oldItem);
+                            player.getInventory().setItem(desiredSlot, compass);
+                            break;
+                        }
+                    }
+                    // If the player doesn't have the space in their hotbar then they don't get it
+                }
             }
         }
     }
@@ -36,8 +48,7 @@ public class CompassOnJoin implements Listener {
     public void onInteract(PlayerInteractEvent e) {
 
         Player player = e.getPlayer();
-        // todo: make sure the item is special
-        if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
+        if (player.getInventory().getItemInMainHand().isSimilar(SelectorForm.getItem())) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
                     SelectorForm.sendForm(player);
@@ -48,14 +59,14 @@ public class CompassOnJoin implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemDrop")) {
+        if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemDrop") && event.getItemDrop().getItemStack().isSimilar(SelectorForm.getItem())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemMove")) {
+        if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemMove") && event.getCurrentItem().isSimilar(SelectorForm.getItem())) {
             event.setCancelled(true);
         }
     }

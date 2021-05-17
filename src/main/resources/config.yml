@@ -1,12 +1,12 @@
-# GServerSelector by Jens
+# GServerSelector by Jens & Konicai
 
-# Enable Selector
-EnableSelector: true
 
-# Gives player compass and options
+# Gives the player a compass which they can use to open the selector form
 ItemJoin: true
 Slot: 4
+# Stop the player from dropping the compass
 DisableItemDrop: true
+# Stop the player from moving the compass within their inventory
 DisableItemMove: true
 
 # Edit Selector Form
@@ -32,7 +32,7 @@ Form:
       ButtonText: "Factions - In Progress!"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
 # Add as many command buttons as you want. The name for each button (Extra One, etc) has no significance, as long as they are all different.
-# These commands will all be run from the console.
+# These commands will all be run from the console. {playerName} is a placeholder which is replaced when the command is sent.
 # If you remove the ImageURL key, no icon will be shown to the left of the button.
   Commands:
     ExtraOne:
