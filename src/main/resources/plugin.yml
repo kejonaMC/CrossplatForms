@@ -11,3 +11,4 @@ commands:
     permission: gserverselector.teleporter
   gserversreload:
     description: Reload the selector form.
+    permission: gserverselector.reload
