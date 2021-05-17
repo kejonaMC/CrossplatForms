@@ -31,6 +31,21 @@ Form:
     Factions:
       ButtonText: "Factions - In Progress!"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
+# Add as many command buttons as you want. The name for each button (Extra One, etc) has no significance, as long as they are all different.
+# These commands will all be run from the console.
+# If you remove the ImageURL key, no icon will be shown to the left of the button.
+  Commands:
+    ExtraOne:
+      ButtonText: "Spawn"
+      ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
+      Command: "execute as {playerName} run spawn"
+    ExtraTwo:
+      ButtonText: "The Void"
+      ImageURL: "https://www.digminecraft.com/materials/images/bedrock.png"
+      Command: "tp {playerName} 0 -10 0"
+
+# Toggle debug logging
+EnableDebug: false
 
 # Don't touch this
 ConfigVersion: 1

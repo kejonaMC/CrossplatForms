@@ -40,7 +40,7 @@ public class CompassOnJoin implements Listener {
         if (player.getInventory().getItemInMainHand().getType() == Material.COMPASS) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    SelectorForm.sendSelector(player);
+                    SelectorForm.sendForm(player);
                 }
             }
         }
