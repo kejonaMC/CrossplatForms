@@ -1,9 +1,9 @@
-package com.alysaa.serverselector;
+package dev.projectg.serverselector;
 
-import com.alysaa.serverselector.command.ReloadCommand;
-import com.alysaa.serverselector.command.SelectorCommand;
-import com.alysaa.serverselector.form.SelectorForm;
-import com.alysaa.serverselector.listeners.SelectorItem;
+import dev.projectg.serverselector.command.ReloadCommand;
+import dev.projectg.serverselector.command.SelectorCommand;
+import dev.projectg.serverselector.form.SelectorForm;
+import dev.projectg.serverselector.listeners.SelectorItem;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;

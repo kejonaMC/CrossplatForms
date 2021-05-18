@@ -1,4 +1,4 @@
-package com.alysaa.serverselector;
+package dev.projectg.serverselector;
 
 public class SelectorLogger {
 

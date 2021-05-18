@@ -1,8 +1,7 @@
-package com.alysaa.serverselector.command;
+package dev.projectg.serverselector.command;
 
-import com.alysaa.serverselector.GServerSelector;
-import com.alysaa.serverselector.SelectorLogger;
-import com.alysaa.serverselector.form.SelectorForm;
+import dev.projectg.serverselector.SelectorLogger;
+import dev.projectg.serverselector.form.SelectorForm;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

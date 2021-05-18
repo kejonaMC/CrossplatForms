@@ -1,7 +1,7 @@
-package com.alysaa.serverselector.listeners;
+package dev.projectg.serverselector.listeners;
 
-import com.alysaa.serverselector.GServerSelector;
-import com.alysaa.serverselector.form.SelectorForm;
+import dev.projectg.serverselector.GServerSelector;
+import dev.projectg.serverselector.form.SelectorForm;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
