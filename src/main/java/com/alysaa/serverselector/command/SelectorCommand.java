@@ -15,12 +15,10 @@ public class SelectorCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (command.getName().equalsIgnoreCase("teleporter") && player.hasPermission("gserverselector.teleporter")) {
-                if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    SelectorForm.sendForm(player);
-                } else {
-                    player.sendMessage(ChatColor.RED + "Sorry, this is only a Bedrock Edition command!");
-                }
+            if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+                SelectorForm.sendForm(player);
+            } else {
+                player.sendMessage(ChatColor.RED + "Sorry, this is only a Bedrock Edition command!");
             }
         } else if (sender instanceof ConsoleCommandSender) {
             SelectorLogger.getLogger().warn("This command only works in-game!");
