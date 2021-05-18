@@ -3,7 +3,7 @@ package com.alysaa.serverselector;
 import com.alysaa.serverselector.command.ReloadCommand;
 import com.alysaa.serverselector.command.SelectorCommand;
 import com.alysaa.serverselector.form.SelectorForm;
-import com.alysaa.serverselector.listeners.CompassOnJoin;
+import com.alysaa.serverselector.listeners.SelectorItem;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +29,7 @@ public class GServerSelector extends JavaPlugin {
         SelectorForm.init();
         getCommand("gteleporter").setExecutor(new SelectorCommand());
         getCommand("gserversreload").setExecutor(new ReloadCommand());
-        Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new SelectorItem(), this);
     }
 
     @Override

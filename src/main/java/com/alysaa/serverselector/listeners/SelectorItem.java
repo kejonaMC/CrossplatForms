@@ -14,7 +14,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.geysermc.floodgate.api.FloodgateApi;
 
-public class CompassOnJoin implements Listener {
+public class SelectorItem implements Listener {
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         if (GServerSelector.getInstance().getConfig().getBoolean("ItemJoin")) {
@@ -46,7 +47,6 @@ public class CompassOnJoin implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
-
         Player player = e.getPlayer();
         if (player.getInventory().getItemInMainHand().isSimilar(SelectorForm.getItem())) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
