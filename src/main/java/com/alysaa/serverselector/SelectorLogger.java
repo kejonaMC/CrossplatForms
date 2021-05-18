@@ -2,7 +2,7 @@ package com.alysaa.serverselector;
 
 public class SelectorLogger {
 
-    private static SelectorLogger LOGGER;
+    private static final SelectorLogger LOGGER = new SelectorLogger(GServerSelector.getInstance());
 
     private final GServerSelector instance;
 
@@ -10,9 +10,6 @@ public class SelectorLogger {
         this.instance = instance;
     }
     public static SelectorLogger getLogger() {
-        if (LOGGER == null) {
-            LOGGER = new SelectorLogger(GServerSelector.getInstance());
-        }
         return LOGGER;
     }
 

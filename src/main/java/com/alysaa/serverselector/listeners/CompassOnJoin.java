@@ -59,14 +59,18 @@ public class CompassOnJoin implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemDrop") && event.getItemDrop().getItemStack().isSimilar(SelectorForm.getItem())) {
-            event.setCancelled(true);
+        if (event.getItemDrop().getItemStack().isSimilar(SelectorForm.getItem())) {
+            if (!GServerSelector.getInstance().getConfig().getBoolean("AllowItemDrop")) {
+                event.setCancelled(true);
+            } else if (GServerSelector.getInstance().getConfig().getBoolean("DestroyDroppedItem")) {
+                event.getItemDrop().remove();
+            }
         }
     }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (GServerSelector.getInstance().getConfig().getBoolean("DisableItemMove") && event.getCurrentItem().isSimilar(SelectorForm.getItem())) {
+        if (!GServerSelector.getInstance().getConfig().getBoolean("AllowItemMove") && event.getCurrentItem().isSimilar(SelectorForm.getItem())) {
             event.setCancelled(true);
         }
     }

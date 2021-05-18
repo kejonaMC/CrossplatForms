@@ -24,6 +24,8 @@ import java.util.*;
 
 public class SelectorForm {
 
+    // todo: static abuse?
+
     private static SimpleForm serverSelector;
 
     private static List<String> validServerNames;

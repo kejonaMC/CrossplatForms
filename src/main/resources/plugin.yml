@@ -6,7 +6,7 @@ depend:
   - floodgate
 description: Allow Floodgate players to join BungeeCord servers through a Bedrock form.
 commands:
-  teleporter:
+  gteleporter:
     description: Open a server selector form.
     permission: gserverselector.teleporter
   gserversreload:

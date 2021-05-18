@@ -5,9 +5,11 @@
 ItemJoin: true
 Slot: 4
 # Stop the player from dropping the compass
-DisableItemDrop: true
-# Stop the player from moving the compass within their inventory
-DisableItemMove: true
+AllowItemDrop: false
+# Destroy the compass if the player drops it
+DestroyDroppedItem: true
+# Stop the player from moving the compass
+AllowItemMove: false
 
 # Edit Selector Form
 Form:
@@ -48,4 +50,4 @@ Form:
 EnableDebug: false
 
 # Don't touch this
-ConfigVersion: 1
+ConfigVersion: 2
