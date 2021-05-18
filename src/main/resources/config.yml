@@ -48,5 +48,5 @@ Form:
       ButtonText: "The Void"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/black_concrete.png"
       Commands:
-        - "tp {playerName} 0 -10 0"
+        - "tp {playerUUID} 0 -10 0"
         - "say {playerName} made a fatal decision."

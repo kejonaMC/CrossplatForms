@@ -204,7 +204,7 @@ public class SelectorForm {
             } else {
                 // Get the commands from the list of commands and replace any playerName placeholders
                 for (String command : validCommands.get(buttonID - commandsIndex)) {
-                    String functionalCommand = command.replace("{playerName}", player.getName());
+                    String functionalCommand = command.replace("{playerName}", player.getName()).replace("{playerUUID}", player.getUniqueId().toString());
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), functionalCommand);
                 }
             }
