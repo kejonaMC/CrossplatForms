@@ -1,23 +1,30 @@
-# GServerSelector by Jens
+# GServerSelector by Jens & Konicai
 
-# Enable Selector
-EnableSelector: true
 
-# Gives player compass and options
+# Gives the player a compass which they can use to open the selector form
 ItemJoin: true
 Slot: 4
-DisableItemDrop: true
-DisableItemMove: true
+# Stop the player from dropping the compass
+AllowItemDrop: false
+# Destroy the compass if the player drops it
+DestroyDroppedItem: true
+# Stop the player from moving the compass
+AllowItemMove: false
 
-# Edit Selector Form
+# Toggle debug logging
+EnableDebug: false
+
+# Don't touch this
+ConfigVersion: 2
+
+
+# Please see our readme for information on configuring this section.
+# https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
 Form:
 
   Title: "Server Selector"
   Content: "Click on the server button of choice."
 
-# Add as many servers as you want. The name of the server must be the exact server name defined in bungeecord's config.
-# ButtonText is the text that will be shown on the button.
-# If you remove the ImageURL key, no icon will be shown to the left of the button.
   Servers:
     Lobby:
       ButtonText: "Server Lobby"
@@ -31,6 +38,15 @@ Form:
     Factions:
       ButtonText: "Factions - In Progress!"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
-
-# Don't touch this
-ConfigVersion: 1
+  Commands:
+    ExtraOne:
+      ButtonText: "Spawn"
+      ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
+      Commands:
+        - "execute as {playerName} run spawn"
+    ExtraTwo:
+      ButtonText: "The Void"
+      ImageURL: "https://www.digminecraft.com/block_recipes/images/black_concrete.png"
+      Commands:
+        - "tp {playerName} 0 -10 0"
+        - "say {playerName} made a fatal decision."

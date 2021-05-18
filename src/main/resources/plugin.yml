@@ -1,12 +1,14 @@
 name: GServerSelector
-main: com.alysaa.serverselector.GServerSelector
-version: 1.0
+main: dev.projectg.serverselector.GServerSelector
+version: 1.1.0
 api-version: 1.13
 depend:
   - floodgate
-description: Geyser Plugin Addon.
+description: Allow Floodgate players to join BungeeCord servers through a Bedrock form.
 commands:
-  servers:
-    description: updating Geyser command
-    permission: gserverselector.servers
-    aliases: /servers
+  gteleporter:
+    description: Open a server selector form.
+    permission: gserverselector.teleporter
+  gssreload:
+    description: Reload the selector form.
+    permission: gserverselector.reload

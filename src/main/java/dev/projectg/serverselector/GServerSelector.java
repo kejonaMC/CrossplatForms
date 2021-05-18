@@ -1,12 +1,13 @@
-package com.alysaa.serverselector;
+package dev.projectg.serverselector;
 
-import com.alysaa.serverselector.command.SelectorCommand;
-import com.alysaa.serverselector.listeners.CompassOnJoin;
+import dev.projectg.serverselector.command.ReloadCommand;
+import dev.projectg.serverselector.command.SelectorCommand;
+import dev.projectg.serverselector.form.SelectorForm;
+import dev.projectg.serverselector.listeners.SelectorItem;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -14,36 +15,45 @@ import java.io.IOException;
 
 public class GServerSelector extends JavaPlugin {
     private static GServerSelector plugin;
+    private SelectorLogger logger;
 
     @Override
     public void onEnable() {
         plugin = this;
+        logger = SelectorLogger.getLogger();
         if (!loadConfig()) {
-            getLogger().severe("Disabling due to configuration error.");
+            logger.severe("Disabling due to configuration error.");
             return;
         }
-        getCommand("servers").setExecutor(new SelectorCommand());
-        Bukkit.getServer().getPluginManager().registerEvents(new CompassOnJoin(), this);
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        SelectorForm.init();
+        getCommand("gteleporter").setExecutor(new SelectorCommand());
+        getCommand("gssreload").setExecutor(new ReloadCommand());
+        Bukkit.getServer().getPluginManager().registerEvents(new SelectorItem(), this);
     }
 
     @Override
     public void onDisable() {
     }
 
-    private boolean loadConfig() {
+    public boolean loadConfig() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            configFile.getParentFile().mkdirs();
+            try {
+                configFile.getParentFile().mkdirs();
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                return false;
+            }
             saveResource("config.yml", false);
         }
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
-            if (getConfig().contains("ConfigVersion") && (getConfig().getInt("ConfigVersion") == 1)) {
+            if (getConfig().contains("ConfigVersion") && (getConfig().getInt("ConfigVersion") == 2)) {
                 return true;
             } else {
-                getLogger().severe("Mismatched config version! Regenerate a new config.");
+                logger.severe("Mismatched config version! Regenerate a new config.");
                 return false;
             }
         } catch (IOException | InvalidConfigurationException e) {
@@ -52,7 +62,7 @@ public class GServerSelector extends JavaPlugin {
         }
     }
 
-    public static Plugin getInstance() {
+    public static GServerSelector getInstance() {
         return plugin;
     }
 }
