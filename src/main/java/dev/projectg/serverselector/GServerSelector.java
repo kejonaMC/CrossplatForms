@@ -28,7 +28,7 @@ public class GServerSelector extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         SelectorForm.init();
         getCommand("gteleporter").setExecutor(new SelectorCommand());
-        getCommand("gserversreload").setExecutor(new ReloadCommand());
+        getCommand("gssreload").setExecutor(new ReloadCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new SelectorItem(), this);
     }
 

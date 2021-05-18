@@ -9,6 +9,6 @@ commands:
   gteleporter:
     description: Open a server selector form.
     permission: gserverselector.teleporter
-  gserversreload:
+  gssreload:
     description: Reload the selector form.
     permission: gserverselector.reload
