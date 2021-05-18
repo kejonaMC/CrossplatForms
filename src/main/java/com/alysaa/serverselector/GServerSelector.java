@@ -50,7 +50,7 @@ public class GServerSelector extends JavaPlugin {
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
-            if (getConfig().contains("ConfigVersion") && (getConfig().getInt("ConfigVersion") == 1)) {
+            if (getConfig().contains("ConfigVersion") && (getConfig().getInt("ConfigVersion") == 2)) {
                 return true;
             } else {
                 logger.severe("Mismatched config version! Regenerate a new config.");

@@ -30,7 +30,7 @@ public class SelectorForm {
 
     private static List<String> validServerNames;
 
-    private static List<String> validCommands;
+    private static List<List<String>> validCommands;
     private static int commandsIndex;
 
     private static final ItemStack formItem;
@@ -143,17 +143,17 @@ public class SelectorForm {
         // Create a list of buttons. For every defined command with a valid configuration, we add its button. The index value is the button id.
         List<ButtonComponent> buttonComponents = new ArrayList<>();
         // This list will contain every command that has a valid button. The index value is the button id.
-        List<String> validCommands = new ArrayList<>();
+        List<List<String>> validCommands = new ArrayList<>();
         for (String commandEntry : allCommands) {
             ConfigurationSection commandInfo = commandSection.getConfigurationSection(commandEntry);
-            if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Command", true) && commandInfo.isString("Command")) {
+            if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
                 String buttonText = commandInfo.getString("ButtonText");
                 if (commandInfo.contains("ImageURL")) {
                     buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, commandInfo.getString("ImageURL")));
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
                 }
-                validCommands.add(commandInfo.getString("Command"));
+                validCommands.add(commandInfo.getStringList("Commands"));
             }
         }
         if (buttonComponents.isEmpty()) {
@@ -202,9 +202,11 @@ public class SelectorForm {
                     e.printStackTrace();
                 }
             } else {
-                // Get the command from the list of commands and replace any playerName placeholders
-                String functionalCommand = validCommands.get(buttonID - commandsIndex).replace("{playerName}", player.getName());
-                Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), functionalCommand);
+                // Get the commands from the list of commands and replace any playerName placeholders
+                for (String command : validCommands.get(buttonID - commandsIndex)) {
+                    String functionalCommand = command.replace("{playerName}", player.getName());
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), functionalCommand);
+                }
             }
         });
 

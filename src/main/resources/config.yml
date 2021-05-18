@@ -40,11 +40,14 @@ Form:
     ExtraOne:
       ButtonText: "Spawn"
       ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
-      Command: "execute as {playerName} run spawn"
+      Commands:
+        - "execute as {playerName} run spawn"
     ExtraTwo:
       ButtonText: "The Void"
       ImageURL: "https://www.digminecraft.com/materials/images/bedrock.png"
-      Command: "tp {playerName} 0 -10 0"
+      Commands:
+        - "tp {playerName} 0 -10 0"
+        - "say {playerName} made a fatal decision."
 
 # Toggle debug logging
 EnableDebug: false
