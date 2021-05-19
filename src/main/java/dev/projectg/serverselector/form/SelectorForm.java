@@ -81,7 +81,7 @@ public class SelectorForm {
 
         // Enter the Form.Servers section
         ConfigurationSection serverSection;
-        if (config.contains("Form.Servers")) {
+        if (config.contains("Form.Servers", true)) {
             serverSection = config.getConfigurationSection("Form.Servers");
         } else {
             logger.debug("Failed to create any server buttons because the configuration is malformed! Regenerate it.");
@@ -99,9 +99,9 @@ public class SelectorForm {
         List<String> validServerNames = new ArrayList<>(2);
         for (String serverName : allServers) {
             ConfigurationSection serverInfo = serverSection.getConfigurationSection(serverName);
-            if (serverInfo.contains("ButtonText") && serverInfo.isString("ButtonText")) {
+            if (serverInfo.contains("ButtonText", true) && serverInfo.isString("ButtonText")) {
                 String buttonText = serverInfo.getString("ButtonText");
-                if (serverInfo.contains("ImageURL")) {
+                if (serverInfo.contains("ImageURL", true)) {
                     buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, serverInfo.getString("ImageURL")));
                     logger.debug(serverName + " contains image");
                 } else {
@@ -131,7 +131,7 @@ public class SelectorForm {
 
         // Enter the Form.Commands section
         ConfigurationSection commandSection;
-        if (config.contains("Form.Commands")) {
+        if (config.contains("Form.Commands", true)) {
             commandSection = config.getConfigurationSection("Form.Commands");
         } else {
             logger.debug("Failed to create any command buttons because the configuration is malformed! Regenerate it.");
@@ -151,8 +151,9 @@ public class SelectorForm {
             ConfigurationSection commandInfo = commandSection.getConfigurationSection(commandEntry);
             if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
                 String buttonText = commandInfo.getString("ButtonText");
-                if (commandInfo.contains("ImageURL")) {
+                if (commandInfo.contains("ImageURL", true)) {
                     buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, commandInfo.getString("ImageURL")));
+                    logger.debug("Command " + commandEntry + " contains an image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
                 }
