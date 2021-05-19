@@ -26,7 +26,7 @@ public class GServerSelector extends JavaPlugin {
             return;
         }
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        SelectorForm.init();
+        SelectorForm.init(getConfig());
         getCommand("gteleporter").setExecutor(new SelectorCommand());
         getCommand("gssreload").setExecutor(new ReloadCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new SelectorItem(), this);
@@ -47,10 +47,12 @@ public class GServerSelector extends JavaPlugin {
             }
             saveResource("config.yml", false);
         }
+        // Get the config but don't actually load it into the main memory config
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
             if (config.contains("ConfigVersion", true) && (config.getInt("ConfigVersion") == 2)) {
+                // Load the config into the main memory config
                 reloadConfig();
                 return true;
             } else {

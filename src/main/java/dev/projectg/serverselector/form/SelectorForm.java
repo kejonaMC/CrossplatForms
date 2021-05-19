@@ -46,11 +46,9 @@ public class SelectorForm {
     /**
      * Initialize or refresh the server selector form
      */
-    public static boolean init() {
-        GServerSelector.getInstance().loadConfig();
+    public static boolean init(FileConfiguration config) {
 
         SelectorLogger logger = SelectorLogger.getLogger();
-        FileConfiguration config = GServerSelector.getInstance().getConfig();
 
         List<ButtonComponent> allButtons= new ArrayList<>();
         allButtons.addAll(getServerButtons(logger, config));
