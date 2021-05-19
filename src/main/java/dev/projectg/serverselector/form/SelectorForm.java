@@ -103,10 +103,13 @@ public class SelectorForm {
                 String buttonText = serverInfo.getString("ButtonText");
                 if (serverInfo.contains("ImageURL")) {
                     buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, serverInfo.getString("ImageURL")));
+                    logger.debug(serverName + " contains image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
+                    logger.debug(serverName + " does not contain image");
                 }
                 validServerNames.add(serverName);
+                logger.debug("added server for \"" + serverName + "\" with button text: " + buttonText);
             }
         }
         if (buttonComponents.isEmpty()) {
@@ -154,6 +157,7 @@ public class SelectorForm {
                     buttonComponents.add(ButtonComponent.of(buttonText));
                 }
                 validCommands.add(commandInfo.getStringList("Commands"));
+                logger.debug("added command for \"" + commandEntry + "\" with button text: " + buttonText);
             }
         }
         if (buttonComponents.isEmpty()) {
