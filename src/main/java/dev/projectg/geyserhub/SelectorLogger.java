@@ -1,12 +1,12 @@
-package dev.projectg.serverselector;
+package dev.projectg.geyserhub;
 
 public class SelectorLogger {
 
-    private static final SelectorLogger LOGGER = new SelectorLogger(GServerSelector.getInstance());
+    private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
 
-    private final GServerSelector instance;
+    private final GeyserHubMain instance;
 
-    private SelectorLogger(GServerSelector instance) {
+    private SelectorLogger(GeyserHubMain instance) {
         this.instance = instance;
     }
     public static SelectorLogger getLogger() {

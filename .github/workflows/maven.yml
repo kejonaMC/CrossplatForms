@@ -26,6 +26,6 @@ jobs:
       uses: actions/upload-artifact@v2.2.3
       if: success()
       with:
-        name: GServerSelector.jar
-        path: target/GServerSelector*.jar
+        name: GeyserHubMain.jar
+        path: target/GeyserHubMain*.jar
         retention-days: 15

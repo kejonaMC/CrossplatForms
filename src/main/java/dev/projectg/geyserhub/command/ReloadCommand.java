@@ -1,7 +1,7 @@
-package dev.projectg.serverselector.command;
+package dev.projectg.geyserhub.command;
 
-import dev.projectg.serverselector.GServerSelector;
-import dev.projectg.serverselector.form.SelectorForm;
+import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,11 +14,11 @@ public class ReloadCommand implements CommandExecutor {
 
         if (sender instanceof Player || sender instanceof ConsoleCommandSender) {
 
-            GServerSelector.getInstance().loadConfig();
-            if (SelectorForm.init(GServerSelector.getInstance().getConfig())) {
-                sender.sendMessage("[GServerSelector]" + ChatColor.GREEN + "Reloaded the server selector form.");
+            GeyserHubMain.getInstance().loadConfig();
+            if (BedrockMenu.init(GeyserHubMain.getInstance().getConfig())) {
+                sender.sendMessage("[GeyserHubMain]" + ChatColor.GREEN + "Reloaded the server selector form.");
             } else {
-                sender.sendMessage("[GServerSelector]" + ChatColor.RED + "Failed to reload the server selector form!");
+                sender.sendMessage("[GeyserHubMain]" + ChatColor.RED + "Failed to reload the server selector form!");
             }
         }
         return true;

@@ -1,7 +1,7 @@
-package dev.projectg.serverselector.listeners;
+package dev.projectg.geyserhub.listeners;
 
-import dev.projectg.serverselector.GServerSelector;
-import dev.projectg.serverselector.form.SelectorForm;
+import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,16 +18,16 @@ public class SelectorItem implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        if (GServerSelector.getInstance().getConfig().getBoolean("ItemJoin")) {
+        if (GeyserHubMain.getInstance().getConfig().getBoolean("ItemJoin")) {
             boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(e.getPlayer().getUniqueId());
             if (isFloodgatePlayer) {
                 Player player = e.getPlayer();
-                ItemStack compass = SelectorForm.getItem();
+                ItemStack compass = BedrockMenu.getItem();
                 if (player.getInventory().contains(compass)) {
                     return;
                 }
 
-                int desiredSlot = GServerSelector.getInstance().getConfig().getInt("Slot");
+                int desiredSlot = GeyserHubMain.getInstance().getConfig().getInt("Slot");
                 ItemStack oldItem = player.getInventory().getItem(desiredSlot);
                 if (oldItem == null || oldItem.getType() == Material.AIR) {
                     player.getInventory().setItem(desiredSlot, compass);
@@ -48,10 +48,10 @@ public class SelectorItem implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if (player.getInventory().getItemInMainHand().isSimilar(SelectorForm.getItem())) {
+        if (player.getInventory().getItemInMainHand().isSimilar(BedrockMenu.getItem())) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    SelectorForm.sendForm(player);
+                    BedrockMenu.sendForm(player);
                 }
             }
         }
@@ -59,10 +59,10 @@ public class SelectorItem implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (event.getItemDrop().getItemStack().isSimilar(SelectorForm.getItem())) {
-            if (!GServerSelector.getInstance().getConfig().getBoolean("AllowItemDrop")) {
+        if (event.getItemDrop().getItemStack().isSimilar(BedrockMenu.getItem())) {
+            if (!GeyserHubMain.getInstance().getConfig().getBoolean("AllowItemDrop")) {
                 event.setCancelled(true);
-            } else if (GServerSelector.getInstance().getConfig().getBoolean("DestroyDroppedItem")) {
+            } else if (GeyserHubMain.getInstance().getConfig().getBoolean("DestroyDroppedItem")) {
                 event.getItemDrop().remove();
             }
         }
@@ -70,7 +70,7 @@ public class SelectorItem implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!GServerSelector.getInstance().getConfig().getBoolean("AllowItemMove") && event.getCurrentItem().isSimilar(SelectorForm.getItem())) {
+        if (!GeyserHubMain.getInstance().getConfig().getBoolean("AllowItemMove") && event.getCurrentItem().isSimilar(BedrockMenu.getItem())) {
             event.setCancelled(true);
         }
     }

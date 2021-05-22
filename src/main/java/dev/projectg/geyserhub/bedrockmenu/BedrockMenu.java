@@ -1,7 +1,7 @@
-package dev.projectg.serverselector.form;
+package dev.projectg.geyserhub.bedrockmenu;
 
-import dev.projectg.serverselector.GServerSelector;
-import dev.projectg.serverselector.SelectorLogger;
+import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +22,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class SelectorForm {
+public class BedrockMenu {
 
     // todo: static abuse?
 
@@ -62,7 +62,7 @@ public class SelectorForm {
         commandsIndex = validServerNames.size();
 
         // Create the form without the Builder so that we have more control over the list of buttons
-        SelectorForm.serverSelector = SimpleForm.of(
+        BedrockMenu.serverSelector = SimpleForm.of(
                 config.getString("Form.Title"),
                 config.getString("Form.Content"),
                 allButtons);
@@ -70,7 +70,7 @@ public class SelectorForm {
     }
 
     /**
-     *  Get the server buttons and set {@link SelectorForm#validServerNames}
+     *  Get the server buttons and set {@link BedrockMenu#validServerNames}
      * @param logger The logger to send messages to
      * @param config The configuration to pull the servers from
      * @return A list of ButtonComponents, which may be empty.
@@ -115,12 +115,12 @@ public class SelectorForm {
         }
 
         // Save the valid server names so that the response handler knows the server identity of each button
-        SelectorForm.validServerNames = validServerNames;
+        BedrockMenu.validServerNames = validServerNames;
         return buttonComponents;
     }
 
     /**
-     * Get the server buttons and set {@link SelectorForm#validCommands}
+     * Get the server buttons and set {@link BedrockMenu#validCommands}
      * @param logger The logger to send messages to
      * @param config The configuration to pull the commands from
      * @return A list of ButtonComponents, which may be empty.
@@ -164,7 +164,7 @@ public class SelectorForm {
         }
 
         // Save the valid commands so that the response handler knows which command should be sent for each button
-        SelectorForm.validCommands = validCommands;
+        BedrockMenu.validCommands = validCommands;
         return buttonComponents;
     }
 
@@ -199,7 +199,7 @@ public class SelectorForm {
                 try {
                     out.writeUTF("Connect");
                     out.writeUTF(serverName);
-                    player.sendPluginMessage(GServerSelector.getInstance(), "BungeeCord", b.toByteArray());
+                    player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
                 } catch (IOException e) {
                     SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();

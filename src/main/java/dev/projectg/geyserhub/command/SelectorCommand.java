@@ -1,7 +1,7 @@
-package dev.projectg.serverselector.command;
+package dev.projectg.geyserhub.command;
 
-import dev.projectg.serverselector.SelectorLogger;
-import dev.projectg.serverselector.form.SelectorForm;
+import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +15,7 @@ public class SelectorCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                SelectorForm.sendForm(player);
+                BedrockMenu.sendForm(player);
             } else {
                 player.sendMessage(ChatColor.RED + "Sorry, this is only a Bedrock Edition command!");
             }

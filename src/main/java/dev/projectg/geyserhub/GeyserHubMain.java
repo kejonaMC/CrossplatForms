@@ -1,9 +1,9 @@
-package dev.projectg.serverselector;
+package dev.projectg.geyserhub;
 
-import dev.projectg.serverselector.command.ReloadCommand;
-import dev.projectg.serverselector.command.SelectorCommand;
-import dev.projectg.serverselector.form.SelectorForm;
-import dev.projectg.serverselector.listeners.SelectorItem;
+import dev.projectg.geyserhub.command.ReloadCommand;
+import dev.projectg.geyserhub.command.SelectorCommand;
+import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
+import dev.projectg.geyserhub.listeners.SelectorItem;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,8 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 
-public class GServerSelector extends JavaPlugin {
-    private static GServerSelector plugin;
+public class GeyserHubMain extends JavaPlugin {
+    private static GeyserHubMain plugin;
     private SelectorLogger logger;
 
     @Override
@@ -26,7 +26,7 @@ public class GServerSelector extends JavaPlugin {
             return;
         }
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        SelectorForm.init(getConfig());
+        BedrockMenu.init(getConfig());
         getCommand("gteleporter").setExecutor(new SelectorCommand());
         getCommand("gssreload").setExecutor(new ReloadCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new SelectorItem(), this);
@@ -65,7 +65,7 @@ public class GServerSelector extends JavaPlugin {
         }
     }
 
-    public static GServerSelector getInstance() {
+    public static GeyserHubMain getInstance() {
         return plugin;
     }
 }
