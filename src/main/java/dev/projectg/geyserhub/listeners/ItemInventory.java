@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ItemInventory implements Listener {
+
+    @SuppressWarnings("unused")
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();

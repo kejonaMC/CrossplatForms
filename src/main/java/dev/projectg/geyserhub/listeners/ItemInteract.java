@@ -15,6 +15,7 @@ import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class ItemInteract implements Listener {
 
     @EventHandler

@@ -11,6 +11,7 @@ import java.util.List;
 
 public class MessageJoin implements Listener {
 
+    @SuppressWarnings("unused")
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
