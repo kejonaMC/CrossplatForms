@@ -23,7 +23,7 @@ public class SelectorLogger {
         instance.getLogger().severe(message);
     }
     public void debug(String message) {
-        if (instance.getConfig().getBoolean("EnableDebug", false)) {
+        if (instance.getConfig().getBoolean("Enable-Debug", false)) {
             instance.getLogger().info(message);
         }
     }

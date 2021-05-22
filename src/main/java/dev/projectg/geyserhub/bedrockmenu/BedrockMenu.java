@@ -87,6 +87,7 @@ public class BedrockMenu {
         ConfigurationSection serverSection;
         if (config.contains("Form.Servers", true)) {
             serverSection = config.getConfigurationSection("Form.Servers");
+            assert serverSection != null;
         } else {
             logger.debug("Failed to create any server buttons because the configuration is malformed! Regenerate it.");
             return Collections.emptyList();
@@ -109,10 +110,13 @@ public class BedrockMenu {
                 continue;
             }
 
-            if (serverInfo.contains("ButtonText", true) && serverInfo.isString("ButtonText")) {
-                String buttonText = serverInfo.getString("ButtonText");
+            if (serverInfo.contains("Button-Text", true) && serverInfo.isString("Button-Text")) {
+                String buttonText = serverInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (serverInfo.contains("ImageURL", true)) {
-                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, serverInfo.getString("ImageURL")));
+                    String imageURL = serverInfo.getString("ImageURL");
+                    assert imageURL != null;
+                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, imageURL));
                     logger.debug(serverName + " contains image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
@@ -143,6 +147,7 @@ public class BedrockMenu {
         ConfigurationSection commandSection;
         if (config.contains("Form.Commands", true)) {
             commandSection = config.getConfigurationSection("Form.Commands");
+            assert commandSection != null;
         } else {
             logger.debug("Failed to create any command buttons because the configuration is malformed! Regenerate it.");
             return Collections.emptyList();
@@ -165,10 +170,13 @@ public class BedrockMenu {
                 continue;
             }
 
-            if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
-                String buttonText = commandInfo.getString("ButtonText");
+            if (commandInfo.contains("Button-Text", true) && commandInfo.isString("Button-Text") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
+                String buttonText = commandInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (commandInfo.contains("ImageURL", true)) {
-                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, commandInfo.getString("ImageURL")));
+                    String imageURL = commandInfo.getString("ImageURL");
+                    assert imageURL != null;
+                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, imageURL));
                     logger.debug("Command " + commandEntry + " contains an image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
