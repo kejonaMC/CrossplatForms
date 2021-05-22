@@ -24,23 +24,17 @@ public class ScoreboardManager extends Placeholders {
 
     public static void createScoreboard(Player player) {
         Scoreboard board = Objects.requireNonNull(Bukkit.getServer().getScoreboardManager()).getNewScoreboard();
-        Objective o = board.registerNewObjective("Scoreboard", "dummy");
-        o.setDisplayName(replaceValues(player, GeyserHubMain.getInstance().getConfig().getString("Scoreboard.Title")));
-        o.setDisplaySlot(DisplaySlot.SIDEBAR);
-        List<String> text = GeyserHubMain.getInstance().getConfig().getStringList("Scoreboard.Line");
-        // todo: the following needs to be cleaned up
-        int size = text.size();
-        String f = "";
+        Objective objective = board.registerNewObjective("GeyserHub", "dummy", replaceValues(player, GeyserHubMain.getInstance().getConfig().getString("Scoreboard.Title")));
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        List<String> text = GeyserHubMain.getInstance().getConfig().getStringList("Scoreboard.Lines");
 
-        for (String s : text) {
-            f = replaceValues(player, s);
-            int currentLine = size - 1;
-            if (currentLine <= 15 && currentLine-- > 0) {
-                f = f + colorCodes[currentLine--];
-            }
+        // Scoreboards have a max of 15 lines
+        int limit = Math.min(text.size(), 16);
 
-            Score var10 = o.getScore(ChatColor.translateAlternateColorCodes('&', f));
-            var10.setScore(size - 1);
+        for (int index = 0; index < limit; index++) {
+            String formattedLine = replaceValues(player, text.get(index));
+            Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', formattedLine));
+            score.setScore(limit - index);
         }
         player.setScoreboard(board);
     }

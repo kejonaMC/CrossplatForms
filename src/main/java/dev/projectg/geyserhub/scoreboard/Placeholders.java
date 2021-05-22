@@ -45,7 +45,7 @@ public class Placeholders implements Listener {
             b = String.valueOf(economy.getBalance(player));
         }
 
-        String m = ChatColor.translateAlternateColorCodes('&', x.replace("{Player}", player.getName()).replace("{Online}", String.valueOf(Bukkit.getOnlinePlayers().size())).replace("{MaxPlayers}", String.valueOf(Bukkit.getMaxPlayers())).replace("{Group}", g).replace("{Money}", b)).replace("null", "N/A");
+        String m = ChatColor.translateAlternateColorCodes('&', x.replace("{playerName}", player.getName()).replace("{onlinePlayers}", String.valueOf(Bukkit.getOnlinePlayers().size())).replace("{maxPlayers}", String.valueOf(Bukkit.getMaxPlayers())).replace("{Group}", g).replace("{Money}", b)).replace("null", "N/A");
         return PAPI == 1 ? PlaceholderAPI.setPlaceholders(player, m) : m;
     }
 }
