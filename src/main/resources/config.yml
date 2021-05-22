@@ -1,15 +1,4 @@
-# GeyserHubMain by Jens & Konicai
-
-
-# Gives the player a compass which they can use to open the selector form
-ItemJoin: true
-Slot: 4
-# Stop the player from dropping the compass
-AllowItemDrop: false
-# Destroy the compass if the player drops it
-DestroyDroppedItem: true
-# Stop the player from moving the compass
-AllowItemMove: false
+# GeyserHub by Jens & Konicai
 
 # Toggle debug logging
 EnableDebug: false
@@ -18,13 +7,46 @@ EnableDebug: false
 ConfigVersion: 2
 
 
+# Gives the player a compass which they can use to open the selector form
+Item-Join: true
+Slot: 4
+# Stop the player from dropping the compass
+Allow-Item-Drop: false
+# Destroy the compass if the player drops it
+Destroy-Dropped-Item: true
+# Stop the player from moving the compass
+Allow-Item-Move: false
+
+# Join and leave message's <player> = player name
+Enable-Join-Message:
+Join-Message:
+  - "&fWelcome &6<player>&f on geyser network!"
+  - "&bHave a great time playing on our network!"
+
+
 # Please see our readme for information on configuring this section.
 # https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
-Form:
+Enable-Java-Menu: true
+Java-Menu-Slot: 9
+Java-Selector:
+  lobby:
+    Name: "Lobby"
+    Material: Diamond
+    Lore:
+      - "lore lore"
+    Server: Lobby
+    Slot: 0
+  survival:
+    Name: "Survival"
+    Material: Emerald
+    Lore:
+      - "lore lore"
+    Server: Survival
+    Slot: 2
 
+Form:
   Title: "Server Selector"
   Content: "Click on the server button of choice."
-
   Servers:
     Lobby:
       ButtonText: "Server Lobby"
@@ -48,5 +70,19 @@ Form:
       ButtonText: "The Void"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/black_concrete.png"
       Commands:
-        - "tp {playerUUID} 0 -10 0"
+        - "tp {playerName} 0 -10 0"
         - "say {playerName} made a fatal decision."
+
+Enable-Scoreboard: true
+Scoreboard:
+  # Refresh rate in seconds.
+  Refresh-rate: 7
+  Title: "Welcome to GeyserServer"
+  Line:
+    - "&f+----------------------+"
+    - "&f+&b          GeyserLobby      &f+"
+    - "&f+&b      Plugin provided by &f   +"
+    - "&f+&b            ProjectG.        &f +"
+    - "&f+----------------------+"
+    - "&a  *  &6https://projectg.dev  &a*"
+

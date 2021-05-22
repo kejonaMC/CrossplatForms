@@ -3,11 +3,20 @@ package dev.projectg.geyserhub;
 import dev.projectg.geyserhub.command.ReloadCommand;
 import dev.projectg.geyserhub.command.SelectorCommand;
 import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
-import dev.projectg.geyserhub.listeners.SelectorItem;
+import dev.projectg.geyserhub.listeners.ItemInteract;
+import dev.projectg.geyserhub.listeners.ItemInventory;
+import dev.projectg.geyserhub.listeners.ItemJoin;
+import dev.projectg.geyserhub.listeners.MessageJoin;
+import dev.projectg.geyserhub.scoreboard.Placeholders;
+import dev.projectg.geyserhub.scoreboard.ScoreboardManager;
+import dev.projectg.geyserhub.utils.bstats.Metrics;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -20,20 +29,51 @@ public class GeyserHubMain extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        new Metrics(this, 11427);
         logger = SelectorLogger.getLogger();
         if (!loadConfig()) {
             logger.severe("Disabling due to configuration error.");
             return;
         }
+        // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         BedrockMenu.init(getConfig());
-        getCommand("gteleporter").setExecutor(new SelectorCommand());
-        getCommand("gssreload").setExecutor(new ReloadCommand());
-        Bukkit.getServer().getPluginManager().registerEvents(new SelectorItem(), this);
+
+        getCommand("ghteleporter").setExecutor(new SelectorCommand());
+        getCommand("ghreload").setExecutor(new ReloadCommand());
+
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemInventory(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemJoin(), this);
+        if (getConfig().getBoolean("Enable-Scoreboard")){
+            enableScorboards();
+        }
+        if (getConfig().getBoolean("Enable-Join-Message")){
+            Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
+        }
     }
 
     @Override
     public void onDisable() {
+    }
+
+    private void enableScorboards() {
+        if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
+            Placeholders.Vault = 0;
+        } else {
+            this.setupPermissions();
+        }
+        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
+            Placeholders.PAPI = 0;
+        }
+        if (this.getServer().getPluginManager().getPlugin("Essentials") == null) {
+            Placeholders.Essentials = 0;
+        } else {
+            this.setupEconomy();
+        }
+        this.Scheduler();
+        Bukkit.getServer().getPluginManager().registerEvents(new ScoreboardManager(), this);
     }
 
     public boolean loadConfig() {
@@ -62,6 +102,29 @@ public class GeyserHubMain extends JavaPlugin {
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+    public void Scheduler() {
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            try {
+                ScoreboardManager.addScoreboard();
+            } catch (Exception var2) {
+                var2.printStackTrace();
+            }
+        }, 20L, Placeholders.isb * 20L);
+    }
+
+    private void setupEconomy() {
+        RegisteredServiceProvider economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
+        if (economyProvider != null) {
+            Placeholders.economy = (Economy)economyProvider.getProvider();
+        }
+    }
+
+    private void setupPermissions() {
+        RegisteredServiceProvider permissionProvider = this.getServer().getServicesManager().getRegistration(Permission.class);
+        if (permissionProvider != null) {
+            Placeholders.permission = (Permission)permissionProvider.getProvider();
         }
     }
 
