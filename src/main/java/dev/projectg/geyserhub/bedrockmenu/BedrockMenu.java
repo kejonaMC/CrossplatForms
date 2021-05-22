@@ -17,6 +17,7 @@ import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class BedrockMenu {
     static {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta compassMeta = compass.getItemMeta();
+        assert compassMeta != null;
         compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
         compass.setItemMeta(compassMeta);
         formItem = compass;
@@ -46,7 +48,7 @@ public class BedrockMenu {
     /**
      * Initialize or refresh the server selector form
      */
-    public static boolean init(FileConfiguration config) {
+    public static boolean init(@Nonnull FileConfiguration config) {
 
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -62,10 +64,14 @@ public class BedrockMenu {
         commandsIndex = validServerNames.size();
 
         // Create the form without the Builder so that we have more control over the list of buttons
-        BedrockMenu.serverSelector = SimpleForm.of(
-                config.getString("Form.Title"),
-                config.getString("Form.Content"),
-                allButtons);
+        String title = config.getString("Form.Title");
+        String content = config.getString("Form.Content");
+        if (title == null || content == null) {
+            logger.severe("Value of Form.Title or Form.Content has no value in the config! Failed to create the bedrock selector form.");
+            return false;
+        }
+
+        BedrockMenu.serverSelector = SimpleForm.of(title, content, allButtons);
         return true;
     }
 
@@ -75,7 +81,7 @@ public class BedrockMenu {
      * @param config The configuration to pull the servers from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getServerButtons(SelectorLogger logger, FileConfiguration config) {
+    private static List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Servers section
         ConfigurationSection serverSection;
@@ -97,6 +103,12 @@ public class BedrockMenu {
         List<String> validServerNames = new ArrayList<>(2);
         for (String serverName : allServers) {
             ConfigurationSection serverInfo = serverSection.getConfigurationSection(serverName);
+            if (serverInfo == null) {
+                // This will be null if the serverName key isn't actually a configuration section
+                logger.warn("Server entry with name \"" + serverName + "\" was not added to the bedrock selector because it was not formatted correctly!");
+                continue;
+            }
+
             if (serverInfo.contains("ButtonText", true) && serverInfo.isString("ButtonText")) {
                 String buttonText = serverInfo.getString("ButtonText");
                 if (serverInfo.contains("ImageURL", true)) {
@@ -111,7 +123,7 @@ public class BedrockMenu {
             }
         }
         if (buttonComponents.isEmpty()) {
-            logger.debug("Failed to create any valid server buttons for the form! The form configuration is malformed!");
+            logger.warn("Failed to create any valid server buttons for the form! The form configuration is malformed!");
         }
 
         // Save the valid server names so that the response handler knows the server identity of each button
@@ -125,7 +137,7 @@ public class BedrockMenu {
      * @param config The configuration to pull the commands from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getCommandButtons(SelectorLogger logger, FileConfiguration config) {
+    private static List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Commands section
         ConfigurationSection commandSection;
@@ -147,6 +159,12 @@ public class BedrockMenu {
         List<List<String>> validCommands = new ArrayList<>();
         for (String commandEntry : allCommands) {
             ConfigurationSection commandInfo = commandSection.getConfigurationSection(commandEntry);
+            if (commandInfo == null) {
+                // This will be null if the serverName key isn't actually a configuration section
+                logger.warn("Command entry with name \"" + commandEntry + "\" was not added to the bedrock selector because it was not formatted correctly!");
+                continue;
+            }
+
             if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
                 String buttonText = commandInfo.getString("ButtonText");
                 if (commandInfo.contains("ImageURL", true)) {
@@ -154,13 +172,14 @@ public class BedrockMenu {
                     logger.debug("Command " + commandEntry + " contains an image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
+                    logger.debug("Command " + commandEntry + " does not contain an image");
                 }
                 validCommands.add(commandInfo.getStringList("Commands"));
                 logger.debug("added command for \"" + commandEntry + "\" with button text: " + buttonText);
             }
         }
         if (buttonComponents.isEmpty()) {
-            logger.debug("Failed to create any valid commands buttons for the form! The form configuration is malformed!");
+            logger.warn("Failed to create any valid commands buttons for the form! The form configuration is malformed!");
         }
 
         // Save the valid commands so that the response handler knows which command should be sent for each button
@@ -173,6 +192,8 @@ public class BedrockMenu {
      * @param player the floodgate player to send it to
      */
     public static void sendForm(Player player) {
+        SelectorLogger logger = SelectorLogger.getLogger();
+
         UUID uuid = player.getUniqueId();
         boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(uuid);
         if (!isFloodgatePlayer) {
@@ -180,6 +201,12 @@ public class BedrockMenu {
             return;
         }
         FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
+
+        if (serverSelector == null) {
+            player.sendMessage("The form is broken! Please contact a server administrator");
+            logger.warn("The bedrock server selector is null! Try reloading it.");
+            return;
+        }
 
         // Set the response handler
         serverSelector.setResponseHandler((responseData) -> {
@@ -201,7 +228,7 @@ public class BedrockMenu {
                     out.writeUTF(serverName);
                     player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
                 } catch (IOException e) {
-                    SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                    logger.warn("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();
                 }
             } else {
