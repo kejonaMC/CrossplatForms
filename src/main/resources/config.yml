@@ -18,13 +18,6 @@ Destroy-Dropped-Item: true
 # Stop the player from moving the compass
 Allow-Item-Move: false
 
-# Join and leave message's <player> = player name
-Enable-Join-Message: true
-Join-Message:
-  - "&fWelcome &6<player>&f on geyser network!"
-  - "&bHave a great time playing on our network!"
-
-
 # Please see our readme for information on configuring this section.
 # https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
 Java-Selector:
@@ -68,7 +61,12 @@ Form:
         - "tp {playerName} 0 -10 0"
         - "say {playerName} made a fatal decision."
 
-Enable-Scoreboard: true
+# Join and leave messages. {playerName} is replaced with the player's name.
+Enable-Join-Message: true
+Join-Message:
+  - "&fWelcome &6{playerName}&f on geyser network!"
+  - "&bHave a great time playing on our network!"
+
 Scoreboard:
   Enable: true
   # Refresh rate in seconds.
