@@ -73,7 +73,7 @@ Scoreboard:
   Refresh-rate: 7
   Title: "Welcome to GeyserServer"
   Lines:
-    - "&f+----------------+"
+    - "&f+----------------------+"
     - "&f+&b          GeyserLobby      &f+"
     - "&f+&b      Plugin provided by &f   +"
     - "&f+&b            ProjectG.        &f +"
