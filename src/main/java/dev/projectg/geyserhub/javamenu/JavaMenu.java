@@ -22,23 +22,25 @@ public class JavaMenu {
     Inventory gui = Bukkit.createInventory(player, GeyserHubMain.getInstance().getConfig().getInt("JavaMenuSlot"), ChatColor.DARK_AQUA + "Server Selector");
     ConfigurationSection Selector = GeyserHubMain.getInstance().getConfig().getConfigurationSection("JavaSelector");
     assert Selector != null;
-    for(String key : Selector.getKeys(false)) {
-        Selector.get(key);
+    for (String key : Selector.getKeys(false)) {
+
         String name = GeyserHubMain.getInstance().getConfig().getString("JavaSelector." + key + ".Name");
         Material material = Material.matchMaterial(Objects.requireNonNull(GeyserHubMain.getInstance().getConfig().getString("JavaSelector." + key + ".Material")));
         int slot = GeyserHubMain.getInstance().getConfig().getInt("JavaSelector." + key + ".Slot");
-                        assert material != null;
+        assert material != null;
         ItemStack selectorStack = new ItemStack(material);
         ItemMeta NameM = selectorStack.getItemMeta();
         assert NameM != null;
         NameM.setDisplayName(name);
+
         // get server name from item
         assert GeyserHubMain.getInstance() != null;
         String bungeeName = GeyserHubMain.getInstance().getConfig().getString("JavaSelector." + key + ".Server");
         assert bungeeName != null;
         NameM.getPersistentDataContainer().set(new NamespacedKey(GeyserHubMain.getInstance(), "bungeeName"), PersistentDataType.STRING, bungeeName);
+
         // add the lore
-        List<String> lore = new ArrayList<String>(GeyserHubMain.getInstance().getConfig().getStringList("JavaSelector." + key + ".Lore"));
+        List<String> lore = new ArrayList<>(GeyserHubMain.getInstance().getConfig().getStringList("JavaSelector." + key + ".Lore"));
         NameM.setLore(lore);
         selectorStack.setItemMeta(NameM);
         gui.setItem(slot, selectorStack);

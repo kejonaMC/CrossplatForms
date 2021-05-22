@@ -15,10 +15,10 @@ public class Placeholders implements Listener {
     public static Economy economy = null;
     public static Permission permission = null;
     public static int PAPI = 1;
-    public static int Vault = 1;
-    public static int Essentials = 1;
-    public static String[] colorcodes = new String[]{"&0", "&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&a", "&b", "&c", "&d", "&e", "&f"};
-    public static ArrayList<Player> hide = new ArrayList();
+    public static int vault = 1;
+    public static int essentials = 1;
+    public static String[] colorCodes = {"&0", "&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&a", "&b", "&c", "&d", "&e", "&f"};
+    public static ArrayList<Player> hide = new ArrayList<>();
     public static int isb;
     public static String g;
     public static String b;
@@ -37,11 +37,11 @@ public class Placeholders implements Listener {
     }
 
     public static String replaceValues(Player player, String x) {
-        if (Vault != 0 && permission.hasGroupSupport()) {
+        if (vault != 0 && permission.hasGroupSupport()) {
             g = permission.getPrimaryGroup(player);
         }
 
-        if (Essentials != 0) {
+        if (essentials != 0) {
             b = String.valueOf(economy.getBalance(player));
         }
 

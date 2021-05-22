@@ -28,6 +28,7 @@ public class ScoreboardManager extends Placeholders {
         o.setDisplayName(replaceValues(player, GeyserHubMain.getInstance().getConfig().getString("Scoreboard.Title")));
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         List<String> text = GeyserHubMain.getInstance().getConfig().getStringList("Scoreboard.Line");
+        // todo: the following needs to be cleaned up
         int size = text.size();
         String f = "";
 
@@ -35,12 +36,11 @@ public class ScoreboardManager extends Placeholders {
             f = replaceValues(player, s);
             int currentLine = size - 1;
             if (currentLine <= 15 && currentLine-- > 0) {
-                f = f + colorcodes[currentLine--];
+                f = f + colorCodes[currentLine--];
             }
 
             Score var10 = o.getScore(ChatColor.translateAlternateColorCodes('&', f));
-            --size;
-            var10.setScore(size);
+            var10.setScore(size - 1);
         }
         player.setScoreboard(board);
     }

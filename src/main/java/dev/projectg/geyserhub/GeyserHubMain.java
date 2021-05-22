@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
@@ -40,12 +41,13 @@ public class GeyserHubMain extends JavaPlugin {
 
         BedrockMenu.init(getConfig());
 
-        getCommand("ghteleporter").setExecutor(new SelectorCommand());
-        getCommand("ghreload").setExecutor(new ReloadCommand());
+        Objects.requireNonNull(getCommand("ghteleporter")).setExecutor(new SelectorCommand());
+        Objects.requireNonNull(getCommand("ghreload")).setExecutor(new ReloadCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInventory(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemJoin(), this);
+
         if (getConfig().getBoolean("Enable-Scoreboard")){
             enableScorboards();
         }
@@ -60,7 +62,7 @@ public class GeyserHubMain extends JavaPlugin {
 
     private void enableScorboards() {
         if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
-            Placeholders.Vault = 0;
+            Placeholders.vault = 0;
         } else {
             this.setupPermissions();
         }
@@ -68,7 +70,7 @@ public class GeyserHubMain extends JavaPlugin {
             Placeholders.PAPI = 0;
         }
         if (this.getServer().getPluginManager().getPlugin("Essentials") == null) {
-            Placeholders.Essentials = 0;
+            Placeholders.essentials = 0;
         } else {
             this.setupEconomy();
         }
@@ -114,17 +116,19 @@ public class GeyserHubMain extends JavaPlugin {
         }, 20L, Placeholders.isb * 20L);
     }
 
+    // todo: I think we can just set vault as a softdepend instead of doing this?
+
     private void setupEconomy() {
         RegisteredServiceProvider economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
         if (economyProvider != null) {
-            Placeholders.economy = (Economy)economyProvider.getProvider();
+            Placeholders.economy = (Economy) economyProvider.getProvider();
         }
     }
 
     private void setupPermissions() {
         RegisteredServiceProvider permissionProvider = this.getServer().getServicesManager().getRegistration(Permission.class);
         if (permissionProvider != null) {
-            Placeholders.permission = (Permission)permissionProvider.getProvider();
+            Placeholders.permission = (Permission) permissionProvider.getProvider();
         }
     }
 
