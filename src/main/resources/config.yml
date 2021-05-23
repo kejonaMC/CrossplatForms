@@ -30,13 +30,13 @@ Java-Selector:
       Material: Diamond
       Lore:
         - "lore lore"
-      Slot: 3
+      Slot: 2
     survival:
       Display-Name: "Survival"
       Material: Emerald
       Lore:
         - "lore lore"
-      Slot: 7
+      Slot: 6
 
 Form:
   Title: "Server Selector"
