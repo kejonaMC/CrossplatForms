@@ -32,14 +32,14 @@ public class GeyserHubMain extends JavaPlugin {
         plugin = this;
         new Metrics(this, 11427);
         logger = SelectorLogger.getLogger();
-        if (!loadConfig()) {
+        if (!loadConfiguration()) {
             logger.severe("Disabling due to configuration error.");
             return;
         }
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        BedrockMenu.init(getConfig());
+        new BedrockMenu(getConfig());
 
         Objects.requireNonNull(getCommand("ghteleporter")).setExecutor(new SelectorCommand());
         Objects.requireNonNull(getCommand("ghreload")).setExecutor(new ReloadCommand());
@@ -48,10 +48,10 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInventory(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemJoin(), this);
 
-        if (getConfig().getBoolean("Enable-Scoreboard")){
+        if (getConfig().getBoolean("Scoreboard.Enable", false)) {
             enableScorboards();
         }
-        if (getConfig().getBoolean("Enable-Join-Message")){
+        if (getConfig().getBoolean("Enable-Join-Message", false)) {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
         }
     }
@@ -78,7 +78,7 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ScoreboardManager(), this);
     }
 
-    public boolean loadConfig() {
+    public boolean loadConfiguration() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             try {
@@ -93,7 +93,7 @@ public class GeyserHubMain extends JavaPlugin {
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
-            if (config.contains("ConfigVersion", true) && (config.getInt("ConfigVersion") == 2)) {
+            if (config.contains("Config-Version", true) && (config.getInt("Config-Version") == 3)) {
                 // Load the config into the main memory config
                 reloadConfig();
                 return true;

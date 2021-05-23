@@ -1,14 +1,15 @@
 # GeyserHub by Jens & Konicai
 
 # Toggle debug logging
-EnableDebug: false
+Enable-Debug: false
 
 # Don't touch this
-ConfigVersion: 2
+Config-Version: 3
 
 
 # Gives the player a compass which they can use to open the selector form
 Item-Join: true
+# The slot in which the item will be given
 Slot: 4
 # Stop the player from dropping the compass
 Allow-Item-Drop: false
@@ -17,72 +18,65 @@ Destroy-Dropped-Item: true
 # Stop the player from moving the compass
 Allow-Item-Move: false
 
-# Join and leave message's <player> = player name
-Enable-Join-Message:
-Join-Message:
-  - "&fWelcome &6<player>&f on geyser network!"
-  - "&bHave a great time playing on our network!"
-
-
 # Please see our readme for information on configuring this section.
 # https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
-Enable-Java-Menu: true
-Java-Menu-Slot: 9
 Java-Selector:
-  lobby:
-    Name: "Lobby"
-    Material: Diamond
-    Lore:
-      - "lore lore"
-    Server: Lobby
-    Slot: 0
-  survival:
-    Name: "Survival"
-    Material: Emerald
-    Lore:
-      - "lore lore"
-    Server: Survival
-    Slot: 2
+  Title: "Server Selector"
+  Size: 9
+
+  Servers:
+    lobby:
+      Display-Name: "Lobby"
+      Material: Diamond
+      Lore:
+        - "lore lore"
+      Slot: 2
+    survival:
+      Display-Name: "Survival"
+      Material: Emerald
+      Lore:
+        - "lore lore"
+      Slot: 6
 
 Form:
   Title: "Server Selector"
   Content: "Click on the server button of choice."
+
   Servers:
-    Lobby:
-      ButtonText: "Server Lobby"
+    lobby:
+      Button-Text: "Server Lobby"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
-    Survival:
-      ButtonText: "Survival of the fittest"
+    survival:
+      Button-Text: "Survival of the fittest"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-    Creative:
-      ButtonText: "Creative Plots"
-      ImageURL: "https://www.digminecraft.com/block_recipes/images/purple_concrete.png"
-    Factions:
-      ButtonText: "Factions - In Progress!"
-      ImageURL: "https://www.digminecraft.com/block_recipes/images/magenta_concrete.png"
   Commands:
-    ExtraOne:
-      ButtonText: "Spawn"
+    extraOne:
+      Button-Text: "Spawn"
       ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
       Commands:
         - "execute as {playerName} run spawn"
-    ExtraTwo:
-      ButtonText: "The Void"
-      ImageURL: "https://www.digminecraft.com/block_recipes/images/black_concrete.png"
+    extraTwo:
+      Button-Text: "The Void"
       Commands:
         - "tp {playerName} 0 -10 0"
         - "say {playerName} made a fatal decision."
 
-Enable-Scoreboard: true
+# Join and leave messages. {playerName} is replaced with the player's name.
+Enable-Join-Message: true
+Join-Message:
+  - "&fWelcome &6{playerName}&f on geyser network!"
+  - "&bHave a great time playing on our network!"
+
 Scoreboard:
+  Enable: true
   # Refresh rate in seconds.
   Refresh-rate: 7
   Title: "Welcome to GeyserServer"
-  Line:
+  Lines:
     - "&f+----------------------+"
     - "&f+&b          GeyserLobby      &f+"
     - "&f+&b      Plugin provided by &f   +"
     - "&f+&b            ProjectG.        &f +"
-    - "&f+----------------------+"
+    - "&f&f+----------------------+"
     - "&a  *  &6https://projectg.dev  &a*"
 

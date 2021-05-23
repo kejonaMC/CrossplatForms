@@ -1,30 +1,40 @@
 package dev.projectg.geyserhub;
 
-public class SelectorLogger {
+public class SelectorLogger implements Reloadable {
 
     private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
 
-    private final GeyserHubMain instance;
+    private final GeyserHubMain plugin;
+    private boolean debug;
 
-    private SelectorLogger(GeyserHubMain instance) {
-        this.instance = instance;
-    }
     public static SelectorLogger getLogger() {
         return LOGGER;
     }
 
+    private SelectorLogger(GeyserHubMain plugin) {
+        this.plugin = plugin;
+        debug = plugin.getConfig().getBoolean("Enable-Debug", false);
+        ReloadableRegistry.registerReloadable(this);
+    }
+
     public void info(String message) {
-        instance.getLogger().info(message);
+        plugin.getLogger().info(message);
     }
     public void warn(String message) {
-        instance.getLogger().warning(message);
+        plugin.getLogger().warning(message);
     }
     public void severe(String message) {
-        instance.getLogger().severe(message);
+        plugin.getLogger().severe(message);
     }
     public void debug(String message) {
-        if (instance.getConfig().getBoolean("EnableDebug", false)) {
-            instance.getLogger().info(message);
+        if (debug) {
+            plugin.getLogger().info(message);
         }
+    }
+
+    @Override
+    public boolean reload() {
+        debug = plugin.getConfig().getBoolean("Enable-Debug", false);
+        return true;
     }
 }

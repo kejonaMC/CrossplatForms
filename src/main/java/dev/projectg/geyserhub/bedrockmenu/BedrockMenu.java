@@ -1,6 +1,8 @@
 package dev.projectg.geyserhub.bedrockmenu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.Reloadable;
+import dev.projectg.geyserhub.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,34 +23,57 @@ import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-public class BedrockMenu {
+public class BedrockMenu implements Reloadable {
 
-    // todo: static abuse?
-
-    private static SimpleForm serverSelector;
-
-    private static List<String> validServerNames;
-
-    private static List<List<String>> validCommands;
-    private static int commandsIndex;
-
-    private static final ItemStack formItem;
+    private static BedrockMenu instance;
+    private static final ItemStack SELECTOR_ITEM;
     static {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta compassMeta = compass.getItemMeta();
         assert compassMeta != null;
         compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
         compass.setItemMeta(compassMeta);
-        formItem = compass;
+        SELECTOR_ITEM = compass;
     }
 
+    private SimpleForm serverSelector;
+    private List<String> validServerNames;
+    private List<List<String>> validCommands;
+    private int commandsIndex;
+
+
+    /**
+     *
+     * @return Get the latest BedrockMenu instance that was created
+     */
+    public static BedrockMenu getInstance() {
+        return instance;
+    }
+
+    /**
+     * Create a new bedrock selector form and initializes it.
+     * @param config the configuration to use for construction
+     */
+    public BedrockMenu(@Nonnull FileConfiguration config) {
+        instance = this;
+        load(config);
+        ReloadableRegistry.registerReloadable(this);
+    }
+    @Override
+    public boolean reload() {
+         return load(GeyserHubMain.getInstance().getConfig());
+    }
 
     /**
      * Initialize or refresh the server selector form
      */
-    public static boolean init(@Nonnull FileConfiguration config) {
+    private boolean load(@Nonnull FileConfiguration config) {
 
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -71,7 +96,7 @@ public class BedrockMenu {
             return false;
         }
 
-        BedrockMenu.serverSelector = SimpleForm.of(title, content, allButtons);
+        serverSelector = SimpleForm.of(title, content, allButtons);
         return true;
     }
 
@@ -81,12 +106,13 @@ public class BedrockMenu {
      * @param config The configuration to pull the servers from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
+    private List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Servers section
         ConfigurationSection serverSection;
         if (config.contains("Form.Servers", true)) {
             serverSection = config.getConfigurationSection("Form.Servers");
+            assert serverSection != null;
         } else {
             logger.debug("Failed to create any server buttons because the configuration is malformed! Regenerate it.");
             return Collections.emptyList();
@@ -109,10 +135,13 @@ public class BedrockMenu {
                 continue;
             }
 
-            if (serverInfo.contains("ButtonText", true) && serverInfo.isString("ButtonText")) {
-                String buttonText = serverInfo.getString("ButtonText");
+            if (serverInfo.contains("Button-Text", true) && serverInfo.isString("Button-Text")) {
+                String buttonText = serverInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (serverInfo.contains("ImageURL", true)) {
-                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, serverInfo.getString("ImageURL")));
+                    String imageURL = serverInfo.getString("ImageURL");
+                    assert imageURL != null;
+                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, imageURL));
                     logger.debug(serverName + " contains image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
@@ -127,7 +156,7 @@ public class BedrockMenu {
         }
 
         // Save the valid server names so that the response handler knows the server identity of each button
-        BedrockMenu.validServerNames = validServerNames;
+        this.validServerNames = validServerNames;
         return buttonComponents;
     }
 
@@ -137,12 +166,13 @@ public class BedrockMenu {
      * @param config The configuration to pull the commands from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
+    private List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Commands section
         ConfigurationSection commandSection;
         if (config.contains("Form.Commands", true)) {
             commandSection = config.getConfigurationSection("Form.Commands");
+            assert commandSection != null;
         } else {
             logger.debug("Failed to create any command buttons because the configuration is malformed! Regenerate it.");
             return Collections.emptyList();
@@ -165,10 +195,13 @@ public class BedrockMenu {
                 continue;
             }
 
-            if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
-                String buttonText = commandInfo.getString("ButtonText");
+            if (commandInfo.contains("Button-Text", true) && commandInfo.isString("Button-Text") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
+                String buttonText = commandInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (commandInfo.contains("ImageURL", true)) {
-                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, commandInfo.getString("ImageURL")));
+                    String imageURL = commandInfo.getString("ImageURL");
+                    assert imageURL != null;
+                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, imageURL));
                     logger.debug("Command " + commandEntry + " contains an image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
@@ -183,7 +216,7 @@ public class BedrockMenu {
         }
 
         // Save the valid commands so that the response handler knows which command should be sent for each button
-        BedrockMenu.validCommands = validCommands;
+        this.validCommands = validCommands;
         return buttonComponents;
     }
 
@@ -191,7 +224,7 @@ public class BedrockMenu {
      * Send the server selector
      * @param player the floodgate player to send it to
      */
-    public static void sendForm(Player player) {
+    public void sendForm(Player player) {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         UUID uuid = player.getUniqueId();
@@ -245,6 +278,6 @@ public class BedrockMenu {
     }
 
     public static ItemStack getItem() {
-        return formItem;
+        return SELECTOR_ITEM;
     }
 }
