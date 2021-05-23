@@ -2,8 +2,8 @@ package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
-import dev.projectg.geyserhub.bedrockmenu.JavaMenu;
+import dev.projectg.geyserhub.menu.BedrockMenu;
+import dev.projectg.geyserhub.menu.JavaMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

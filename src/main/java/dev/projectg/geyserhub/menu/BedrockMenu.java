@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.bedrockmenu;
+package dev.projectg.geyserhub.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.Reloadable;

@@ -2,7 +2,7 @@ package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.ReloadCommand;
 import dev.projectg.geyserhub.command.SelectorCommand;
-import dev.projectg.geyserhub.bedrockmenu.BedrockMenu;
+import dev.projectg.geyserhub.menu.BedrockMenu;
 import dev.projectg.geyserhub.listeners.ItemInteract;
 import dev.projectg.geyserhub.listeners.ItemInventory;
 import dev.projectg.geyserhub.listeners.ItemJoin;
