@@ -32,14 +32,14 @@ public class GeyserHubMain extends JavaPlugin {
         plugin = this;
         new Metrics(this, 11427);
         logger = SelectorLogger.getLogger();
-        if (!loadConfig()) {
+        if (!loadConfiguration()) {
             logger.severe("Disabling due to configuration error.");
             return;
         }
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        BedrockMenu.init(getConfig());
+        new BedrockMenu(getConfig());
 
         Objects.requireNonNull(getCommand("ghteleporter")).setExecutor(new SelectorCommand());
         Objects.requireNonNull(getCommand("ghreload")).setExecutor(new ReloadCommand());
@@ -78,7 +78,7 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ScoreboardManager(), this);
     }
 
-    public boolean loadConfig() {
+    public boolean loadConfiguration() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             try {

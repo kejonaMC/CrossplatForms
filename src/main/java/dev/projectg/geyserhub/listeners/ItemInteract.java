@@ -34,7 +34,7 @@ public class ItemInteract implements Listener {
         if (player.getInventory().getItemInMainHand().isSimilar(BedrockMenu.getItem())) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    BedrockMenu.sendForm(player);
+                    BedrockMenu.getInstance().sendForm(player);
                 } else {
                     JavaMenu.openMenu(player, GeyserHubMain.getInstance().getConfig());
                 }

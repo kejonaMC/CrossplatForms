@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.bedrockmenu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.Reloadable;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,32 +24,50 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class BedrockMenu {
+public class BedrockMenu implements Reloadable {
 
-    // todo: static abuse?
-
-    private static SimpleForm serverSelector;
-
-    private static List<String> validServerNames;
-
-    private static List<List<String>> validCommands;
-    private static int commandsIndex;
-
-    private static final ItemStack formItem;
+    private static BedrockMenu instance;
+    private static final ItemStack SELECTOR_ITEM;
     static {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta compassMeta = compass.getItemMeta();
         assert compassMeta != null;
         compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
         compass.setItemMeta(compassMeta);
-        formItem = compass;
+        SELECTOR_ITEM = compass;
     }
 
+    private SimpleForm serverSelector;
+    private List<String> validServerNames;
+    private List<List<String>> validCommands;
+    private int commandsIndex;
+
+
+    /**
+     *
+     * @return Get the latest BedrockMenu instance that was created
+     */
+    public static BedrockMenu getInstance() {
+        return instance;
+    }
+
+    /**
+     * Create a new bedrock selector form and initializes it.
+     * @param config the configuration to use for construction
+     */
+    public BedrockMenu(@Nonnull FileConfiguration config) {
+        instance = this;
+        load(config);
+    }
+    @Override
+    public boolean reload() {
+         return load(GeyserHubMain.getInstance().getConfig());
+    }
 
     /**
      * Initialize or refresh the server selector form
      */
-    public static boolean init(@Nonnull FileConfiguration config) {
+    private boolean load(@Nonnull FileConfiguration config) {
 
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -71,7 +90,7 @@ public class BedrockMenu {
             return false;
         }
 
-        BedrockMenu.serverSelector = SimpleForm.of(title, content, allButtons);
+        serverSelector = SimpleForm.of(title, content, allButtons);
         return true;
     }
 
@@ -81,7 +100,7 @@ public class BedrockMenu {
      * @param config The configuration to pull the servers from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
+    private List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Servers section
         ConfigurationSection serverSection;
@@ -131,7 +150,7 @@ public class BedrockMenu {
         }
 
         // Save the valid server names so that the response handler knows the server identity of each button
-        BedrockMenu.validServerNames = validServerNames;
+        this.validServerNames = validServerNames;
         return buttonComponents;
     }
 
@@ -141,7 +160,7 @@ public class BedrockMenu {
      * @param config The configuration to pull the commands from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
+    private List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Commands section
         ConfigurationSection commandSection;
@@ -191,7 +210,7 @@ public class BedrockMenu {
         }
 
         // Save the valid commands so that the response handler knows which command should be sent for each button
-        BedrockMenu.validCommands = validCommands;
+        this.validCommands = validCommands;
         return buttonComponents;
     }
 
@@ -199,7 +218,7 @@ public class BedrockMenu {
      * Send the server selector
      * @param player the floodgate player to send it to
      */
-    public static void sendForm(Player player) {
+    public void sendForm(Player player) {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         UUID uuid = player.getUniqueId();
@@ -253,6 +272,6 @@ public class BedrockMenu {
     }
 
     public static ItemStack getItem() {
-        return formItem;
+        return SELECTOR_ITEM;
     }
 }
