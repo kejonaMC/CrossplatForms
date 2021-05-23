@@ -1,7 +1,9 @@
-package dev.projectg.serverselector.form;
+package dev.projectg.geyserhub.bedrockmenu;
 
-import dev.projectg.serverselector.GServerSelector;
-import dev.projectg.serverselector.SelectorLogger;
+import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.Reloadable;
+import dev.projectg.geyserhub.ReloadableRegistry;
+import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,36 +19,61 @@ import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-public class SelectorForm {
+public class BedrockMenu implements Reloadable {
 
-    // todo: static abuse?
-
-    private static SimpleForm serverSelector;
-
-    private static List<String> validServerNames;
-
-    private static List<List<String>> validCommands;
-    private static int commandsIndex;
-
-    private static final ItemStack formItem;
+    private static BedrockMenu instance;
+    private static final ItemStack SELECTOR_ITEM;
     static {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta compassMeta = compass.getItemMeta();
+        assert compassMeta != null;
         compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
         compass.setItemMeta(compassMeta);
-        formItem = compass;
+        SELECTOR_ITEM = compass;
     }
 
+    private SimpleForm serverSelector;
+    private List<String> validServerNames;
+    private List<List<String>> validCommands;
+    private int commandsIndex;
+
+
+    /**
+     *
+     * @return Get the latest BedrockMenu instance that was created
+     */
+    public static BedrockMenu getInstance() {
+        return instance;
+    }
+
+    /**
+     * Create a new bedrock selector form and initializes it.
+     * @param config the configuration to use for construction
+     */
+    public BedrockMenu(@Nonnull FileConfiguration config) {
+        instance = this;
+        load(config);
+        ReloadableRegistry.registerReloadable(this);
+    }
+    @Override
+    public boolean reload() {
+         return load(GeyserHubMain.getInstance().getConfig());
+    }
 
     /**
      * Initialize or refresh the server selector form
      */
-    public static boolean init(FileConfiguration config) {
+    private boolean load(@Nonnull FileConfiguration config) {
 
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -62,25 +89,30 @@ public class SelectorForm {
         commandsIndex = validServerNames.size();
 
         // Create the form without the Builder so that we have more control over the list of buttons
-        SelectorForm.serverSelector = SimpleForm.of(
-                config.getString("Form.Title"),
-                config.getString("Form.Content"),
-                allButtons);
+        String title = config.getString("Form.Title");
+        String content = config.getString("Form.Content");
+        if (title == null || content == null) {
+            logger.severe("Value of Form.Title or Form.Content has no value in the config! Failed to create the bedrock selector form.");
+            return false;
+        }
+
+        serverSelector = SimpleForm.of(title, content, allButtons);
         return true;
     }
 
     /**
-     *  Get the server buttons and set {@link SelectorForm#validServerNames}
+     *  Get the server buttons and set {@link BedrockMenu#validServerNames}
      * @param logger The logger to send messages to
      * @param config The configuration to pull the servers from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getServerButtons(SelectorLogger logger, FileConfiguration config) {
+    private List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Servers section
         ConfigurationSection serverSection;
         if (config.contains("Form.Servers", true)) {
             serverSection = config.getConfigurationSection("Form.Servers");
+            assert serverSection != null;
         } else {
             logger.debug("Failed to create any server buttons because the configuration is malformed! Regenerate it.");
             return Collections.emptyList();
@@ -97,10 +129,19 @@ public class SelectorForm {
         List<String> validServerNames = new ArrayList<>(2);
         for (String serverName : allServers) {
             ConfigurationSection serverInfo = serverSection.getConfigurationSection(serverName);
-            if (serverInfo.contains("ButtonText", true) && serverInfo.isString("ButtonText")) {
-                String buttonText = serverInfo.getString("ButtonText");
+            if (serverInfo == null) {
+                // This will be null if the serverName key isn't actually a configuration section
+                logger.warn("Server entry with name \"" + serverName + "\" was not added to the bedrock selector because it was not formatted correctly!");
+                continue;
+            }
+
+            if (serverInfo.contains("Button-Text", true) && serverInfo.isString("Button-Text")) {
+                String buttonText = serverInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (serverInfo.contains("ImageURL", true)) {
-                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, serverInfo.getString("ImageURL")));
+                    String imageURL = serverInfo.getString("ImageURL");
+                    assert imageURL != null;
+                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, imageURL));
                     logger.debug(serverName + " contains image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
@@ -111,26 +152,27 @@ public class SelectorForm {
             }
         }
         if (buttonComponents.isEmpty()) {
-            logger.debug("Failed to create any valid server buttons for the form! The form configuration is malformed!");
+            logger.warn("Failed to create any valid server buttons for the form! The form configuration is malformed!");
         }
 
         // Save the valid server names so that the response handler knows the server identity of each button
-        SelectorForm.validServerNames = validServerNames;
+        this.validServerNames = validServerNames;
         return buttonComponents;
     }
 
     /**
-     * Get the server buttons and set {@link SelectorForm#validCommands}
+     * Get the server buttons and set {@link BedrockMenu#validCommands}
      * @param logger The logger to send messages to
      * @param config The configuration to pull the commands from
      * @return A list of ButtonComponents, which may be empty.
      */
-    private static List<ButtonComponent> getCommandButtons(SelectorLogger logger, FileConfiguration config) {
+    private List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
         // Enter the Form.Commands section
         ConfigurationSection commandSection;
         if (config.contains("Form.Commands", true)) {
             commandSection = config.getConfigurationSection("Form.Commands");
+            assert commandSection != null;
         } else {
             logger.debug("Failed to create any command buttons because the configuration is malformed! Regenerate it.");
             return Collections.emptyList();
@@ -147,24 +189,34 @@ public class SelectorForm {
         List<List<String>> validCommands = new ArrayList<>();
         for (String commandEntry : allCommands) {
             ConfigurationSection commandInfo = commandSection.getConfigurationSection(commandEntry);
-            if (commandInfo.contains("ButtonText", true) && commandInfo.isString("ButtonText") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
-                String buttonText = commandInfo.getString("ButtonText");
+            if (commandInfo == null) {
+                // This will be null if the serverName key isn't actually a configuration section
+                logger.warn("Command entry with name \"" + commandEntry + "\" was not added to the bedrock selector because it was not formatted correctly!");
+                continue;
+            }
+
+            if (commandInfo.contains("Button-Text", true) && commandInfo.isString("Button-Text") && commandInfo.contains("Commands", true) && commandInfo.isList("Commands")) {
+                String buttonText = commandInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (commandInfo.contains("ImageURL", true)) {
-                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, commandInfo.getString("ImageURL")));
+                    String imageURL = commandInfo.getString("ImageURL");
+                    assert imageURL != null;
+                    buttonComponents.add(ButtonComponent.of(buttonText, FormImage.Type.URL, imageURL));
                     logger.debug("Command " + commandEntry + " contains an image");
                 } else {
                     buttonComponents.add(ButtonComponent.of(buttonText));
+                    logger.debug("Command " + commandEntry + " does not contain an image");
                 }
                 validCommands.add(commandInfo.getStringList("Commands"));
                 logger.debug("added command for \"" + commandEntry + "\" with button text: " + buttonText);
             }
         }
         if (buttonComponents.isEmpty()) {
-            logger.debug("Failed to create any valid commands buttons for the form! The form configuration is malformed!");
+            logger.warn("Failed to create any valid commands buttons for the form! The form configuration is malformed!");
         }
 
         // Save the valid commands so that the response handler knows which command should be sent for each button
-        SelectorForm.validCommands = validCommands;
+        this.validCommands = validCommands;
         return buttonComponents;
     }
 
@@ -172,7 +224,9 @@ public class SelectorForm {
      * Send the server selector
      * @param player the floodgate player to send it to
      */
-    public static void sendForm(Player player) {
+    public void sendForm(Player player) {
+        SelectorLogger logger = SelectorLogger.getLogger();
+
         UUID uuid = player.getUniqueId();
         boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(uuid);
         if (!isFloodgatePlayer) {
@@ -180,6 +234,12 @@ public class SelectorForm {
             return;
         }
         FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
+
+        if (serverSelector == null) {
+            player.sendMessage("The form is broken! Please contact a server administrator");
+            logger.warn("The bedrock server selector is null! Try reloading it.");
+            return;
+        }
 
         // Set the response handler
         serverSelector.setResponseHandler((responseData) -> {
@@ -199,9 +259,9 @@ public class SelectorForm {
                 try {
                     out.writeUTF("Connect");
                     out.writeUTF(serverName);
-                    player.sendPluginMessage(GServerSelector.getInstance(), "BungeeCord", b.toByteArray());
+                    player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
                 } catch (IOException e) {
-                    SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                    logger.warn("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();
                 }
             } else {
@@ -218,6 +278,6 @@ public class SelectorForm {
     }
 
     public static ItemStack getItem() {
-        return formItem;
+        return SELECTOR_ITEM;
     }
 }
