@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.listeners;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.menu.BedrockMenu;
 import dev.projectg.geyserhub.menu.JavaMenu;
+import dev.projectg.geyserhub.menu.SelectorItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,7 @@ public class ItemInteract implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("Allow-Item-Move") && Objects.requireNonNull(event.getCurrentItem()).isSimilar(BedrockMenu.getItem())) {
+        if (!GeyserHubMain.getInstance().getConfig().getBoolean("Allow-Item-Move") && Objects.requireNonNull(event.getCurrentItem()).isSimilar(SelectorItem.getItem())) {
                 event.setCancelled(true);
             }
     }
@@ -31,7 +32,7 @@ public class ItemInteract implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if (player.getInventory().getItemInMainHand().isSimilar(BedrockMenu.getItem())) {
+        if (player.getInventory().getItemInMainHand().isSimilar(SelectorItem.getItem())) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
                     BedrockMenu.getInstance().sendForm(player);
@@ -44,7 +45,7 @@ public class ItemInteract implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (event.getItemDrop().getItemStack().isSimilar(BedrockMenu.getItem())) {
+        if (event.getItemDrop().getItemStack().isSimilar(SelectorItem.getItem())) {
             if (!GeyserHubMain.getInstance().getConfig().getBoolean("Allow-Item-Drop")) {
                 event.setCancelled(true);
             } else if (GeyserHubMain.getInstance().getConfig().getBoolean("Destroy-Dropped-Item")) {

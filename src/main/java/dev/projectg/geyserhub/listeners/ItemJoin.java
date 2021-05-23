@@ -1,7 +1,7 @@
 package dev.projectg.geyserhub.listeners;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.menu.BedrockMenu;
+import dev.projectg.geyserhub.menu.SelectorItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,7 @@ public class ItemJoin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         if (GeyserHubMain.getInstance().getConfig().getBoolean("Item-Join")) {
             Player player = event.getPlayer();
-            ItemStack compass = BedrockMenu.getItem();
+            ItemStack compass = SelectorItem.getItem();
             if (player.getInventory().contains(compass)) {
                 return;
             }
