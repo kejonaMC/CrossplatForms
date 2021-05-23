@@ -2,6 +2,7 @@ package dev.projectg.geyserhub.bedrockmenu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.Reloadable;
+import dev.projectg.geyserhub.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,7 +23,11 @@ import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class BedrockMenu implements Reloadable {
 
@@ -58,6 +63,7 @@ public class BedrockMenu implements Reloadable {
     public BedrockMenu(@Nonnull FileConfiguration config) {
         instance = this;
         load(config);
+        ReloadableRegistry.registerReloadable(this);
     }
     @Override
     public boolean reload() {

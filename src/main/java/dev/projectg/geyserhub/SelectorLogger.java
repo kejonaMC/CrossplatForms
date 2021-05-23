@@ -14,6 +14,7 @@ public class SelectorLogger implements Reloadable {
     private SelectorLogger(GeyserHubMain plugin) {
         this.plugin = plugin;
         debug = plugin.getConfig().getBoolean("Enable-Debug", false);
+        ReloadableRegistry.registerReloadable(this);
     }
 
     public void info(String message) {

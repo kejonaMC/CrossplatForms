@@ -1,10 +1,13 @@
 package dev.projectg.geyserhub;
 
-import java.util.ArrayList;
-
+/**
+ * Any classes that implements this interface should be able to reload their functionality.
+ */
 public interface Reloadable {
 
-    ArrayList<Reloadable> reloadables = new ArrayList<>();
-
+    /**
+     * Reload the functionality of the class.
+     * @return true if the reload was successful
+     */
     boolean reload();
 }
