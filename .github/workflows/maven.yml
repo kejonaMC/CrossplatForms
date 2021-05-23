@@ -27,5 +27,5 @@ jobs:
       if: success()
       with:
         name: GeyserHubMain.jar
-        path: target/GeyserHubMain*.jar
+        path: target/GeyserHub*.jar
         retention-days: 15
