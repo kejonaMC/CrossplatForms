@@ -5,18 +5,13 @@ import dev.projectg.geyserhub.Reloadable;
 import dev.projectg.geyserhub.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.geysermc.cumulus.SimpleForm;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.SimpleFormResponse;
 import org.geysermc.cumulus.util.FormImage;
-import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import javax.annotation.Nonnull;
@@ -27,20 +22,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class BedrockMenu implements Reloadable {
 
     private static BedrockMenu instance;
-    private static final ItemStack SELECTOR_ITEM;
-    static {
-        ItemStack compass = new ItemStack(Material.COMPASS);
-        ItemMeta compassMeta = compass.getItemMeta();
-        assert compassMeta != null;
-        compassMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Server Selector"));
-        compass.setItemMeta(compassMeta);
-        SELECTOR_ITEM = compass;
-    }
+
+    private boolean isEnabled = false;
 
     private SimpleForm serverSelector;
     private List<String> validServerNames;
@@ -57,17 +44,28 @@ public class BedrockMenu implements Reloadable {
     }
 
     /**
-     * Create a new bedrock selector form and initializes it.
-     * @param config the configuration to use for construction
+     * Create a new bedrock selector form and initializes it with the current loaded config
      */
-    public BedrockMenu(@Nonnull FileConfiguration config) {
+    public BedrockMenu() {
         instance = this;
-        load(config);
         ReloadableRegistry.registerReloadable(this);
+        reload();
     }
     @Override
     public boolean reload() {
-         return load(GeyserHubMain.getInstance().getConfig());
+        if (GeyserHubMain.getInstance().getConfig().getBoolean("Bedrock-Selector.Enable", true)) {
+            if (load(GeyserHubMain.getInstance().getConfig())) {
+                isEnabled = true;
+            } else {
+                isEnabled = false;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
     /**
@@ -89,10 +87,10 @@ public class BedrockMenu implements Reloadable {
         commandsIndex = validServerNames.size();
 
         // Create the form without the Builder so that we have more control over the list of buttons
-        String title = config.getString("Form.Title");
-        String content = config.getString("Form.Content");
+        String title = config.getString("Bedrock-Selector.Title");
+        String content = config.getString("Bedrock-Selector.Content");
         if (title == null || content == null) {
-            logger.severe("Value of Form.Title or Form.Content has no value in the config! Failed to create the bedrock selector form.");
+            logger.severe("Value of Bedrock-Selector.Title or Bedrock-Selector.Content has no value in the config! Failed to create the bedrock selector form.");
             return false;
         }
 
@@ -108,10 +106,10 @@ public class BedrockMenu implements Reloadable {
      */
     private List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
-        // Enter the Form.Servers section
+        // Enter the Bedrock-Selector.Servers section
         ConfigurationSection serverSection;
-        if (config.contains("Form.Servers", true)) {
-            serverSection = config.getConfigurationSection("Form.Servers");
+        if (config.contains("Bedrock-Selector.Servers", true)) {
+            serverSection = config.getConfigurationSection("Bedrock-Selector.Servers");
             assert serverSection != null;
         } else {
             logger.debug("Failed to create any server buttons because the configuration is malformed! Regenerate it.");
@@ -168,10 +166,10 @@ public class BedrockMenu implements Reloadable {
      */
     private List<ButtonComponent> getCommandButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
 
-        // Enter the Form.Commands section
+        // Enter the Bedrock-Selector.Commands section
         ConfigurationSection commandSection;
-        if (config.contains("Form.Commands", true)) {
-            commandSection = config.getConfigurationSection("Form.Commands");
+        if (config.contains("Bedrock-Selector.Commands", true)) {
+            commandSection = config.getConfigurationSection("Bedrock-Selector.Commands");
             assert commandSection != null;
         } else {
             logger.debug("Failed to create any command buttons because the configuration is malformed! Regenerate it.");
@@ -222,22 +220,14 @@ public class BedrockMenu implements Reloadable {
 
     /**
      * Send the server selector
-     * @param player the floodgate player to send it to
+     * @param floodgatePlayer the floodgate player to send it to
      */
-    public void sendForm(Player player) {
+    public void sendForm(@Nonnull FloodgatePlayer floodgatePlayer) {
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        UUID uuid = player.getUniqueId();
-        boolean isFloodgatePlayer = FloodgateApi.getInstance().isFloodgatePlayer(uuid);
-        if (!isFloodgatePlayer) {
-            player.sendMessage("Sorry, this is a Bedrock command!");
-            return;
-        }
-        FloodgatePlayer floodgatePlayer = FloodgateApi.getInstance().getPlayer(uuid);
-
-        if (serverSelector == null) {
-            player.sendMessage("The form is broken! Please contact a server administrator");
-            logger.warn("The bedrock server selector is null! Try reloading it.");
+        Player player = Bukkit.getServer().getPlayer(floodgatePlayer.getCorrectUniqueId());
+        if (player == null) {
+            logger.severe("Unable to find a Bukkit Player for the given Floodgate Player: " + floodgatePlayer.getCorrectUniqueId().toString());
             return;
         }
 
@@ -261,7 +251,7 @@ public class BedrockMenu implements Reloadable {
                     out.writeUTF(serverName);
                     player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
                 } catch (IOException e) {
-                    logger.warn("Failed to send a plugin message to Bungeecord!");
+                    logger.severe("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();
                 }
             } else {
@@ -275,9 +265,5 @@ public class BedrockMenu implements Reloadable {
 
         // Send the form to the floodgate player
         floodgatePlayer.sendForm(serverSelector);
-    }
-
-    public static ItemStack getItem() {
-        return SELECTOR_ITEM;
     }
 }

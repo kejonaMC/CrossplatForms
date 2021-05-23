@@ -1,15 +1,16 @@
 [![Discord](https://img.shields.io/discord/806179549498966058?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/xXzzdAXa2b)
 
 
-# GeyserServerSelector
+# GeyserHub
 
-Allow Floodgate players to switch BungeeCord servers using Bedrock forms.
+Allow Floodgate players to switch BungeeCord servers using Bedrock forms. Also includes a GUI for Java players, along with a simple scoreboard and welcome message. Everything can be customized or turned off.
 
+The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GServerSelector/job/legacy-selector/).
 ###### Note: This is NOT an official GeyserMC plugin. It is made to work with Geyser, but it is not maintained or produced by GeyserMC. If you need support with this plugin, please do not ask the Geyser developers — instead, please go to our Discord server which is linked above.
 
 ## Installation
 
-GeyserServerSelector is a lobby plugin that must be installed on any backend servers you want the selector on.
+GeyserHub is a lobby plugin that must be installed on any backend servers you want the selector on.
 Floodgate 2.0 must be installed on the backend servers.
 See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-floodgate-on-spigot-servers-behind-bungeecord-or-velocity) for more information
 
@@ -17,8 +18,8 @@ See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-flood
 
 | Command | Permission | Info |
 | ------- | -----------| ---- |
-| `gteleporter` | `gserverselector.teleporter` | Open the server selector. Only available to bedrock players. | 
-| `gssreload` | `gserverselector.reload` | Reload the contents of the server selector form. |
+| `ghteleporter` | `gserverselector.teleporter` | Open the server selector.| 
+| `ghreload` | `gserverselector.reload` | Reload the configuration. |
 
 
 ## Configuration

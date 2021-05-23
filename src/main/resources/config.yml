@@ -21,6 +21,8 @@ Allow-Item-Move: false
 # Please see our readme for information on configuring this section.
 # https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
 Java-Selector:
+  Enable: true
+
   Title: "Server Selector"
   Size: 9
 
@@ -38,7 +40,9 @@ Java-Selector:
         - "lore lore"
       Slot: 6
 
-Form:
+Bedrock-Selector:
+  Enable: true
+
   Title: "Server Selector"
   Content: "Click on the server button of choice."
 

@@ -19,6 +19,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class JavaMenu {
+
+    public static boolean isEnabled() {
+        return GeyserHubMain.getInstance().getConfig().getBoolean("Java-Selector.Enabled", true);
+    }
+
     public static void openMenu(@Nonnull Player player, @Nonnull FileConfiguration config) {
         SelectorLogger logger = SelectorLogger.getLogger();
 

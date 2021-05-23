@@ -39,7 +39,7 @@ public class GeyserHubMain extends JavaPlugin {
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        new BedrockMenu(getConfig());
+        new BedrockMenu();
 
         Objects.requireNonNull(getCommand("ghteleporter")).setExecutor(new SelectorCommand());
         Objects.requireNonNull(getCommand("ghreload")).setExecutor(new ReloadCommand());
