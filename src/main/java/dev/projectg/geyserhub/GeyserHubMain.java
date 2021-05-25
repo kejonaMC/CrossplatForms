@@ -6,6 +6,7 @@ import dev.projectg.geyserhub.module.menu.BedrockMenu;
 import dev.projectg.geyserhub.module.items.ItemInteract;
 import dev.projectg.geyserhub.module.items.ItemInventory;
 import dev.projectg.geyserhub.module.items.ItemJoin;
+import dev.projectg.geyserhub.module.message.BroadCast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.scoreboard.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
@@ -58,6 +59,7 @@ public class GeyserHubMain extends JavaPlugin {
         if (getConfig().getBoolean("Enable-Join-Message", false)) {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
         }
+            BroadCast.startBroadcastTimer(getServer().getScheduler());
     }
 
     @Override
