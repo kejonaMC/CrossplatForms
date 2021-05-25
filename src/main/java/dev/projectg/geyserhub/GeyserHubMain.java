@@ -9,6 +9,7 @@ import dev.projectg.geyserhub.module.items.ItemJoin;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.scoreboard.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
+import dev.projectg.geyserhub.module.world.DayTask;
 import dev.projectg.geyserhub.module.world.WorldSettings;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
@@ -20,10 +21,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
@@ -56,6 +59,9 @@ public class GeyserHubMain extends JavaPlugin {
         }
         if (getConfig().getBoolean("Enable-Join-Message", false)) {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
+        }
+        if (getConfig().getBoolean("World-settings.always-day", false)) {
+            BukkitTask DayTask = new DayTask().runTaskTimer(this, 0L, 100L);
         }
     }
 
@@ -138,4 +144,5 @@ public class GeyserHubMain extends JavaPlugin {
     public static GeyserHubMain getInstance() {
         return plugin;
     }
+
 }

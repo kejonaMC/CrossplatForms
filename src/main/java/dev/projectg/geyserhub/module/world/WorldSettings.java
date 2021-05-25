@@ -81,6 +81,7 @@ public class WorldSettings implements Listener {
     public void onWeatherChange(WeatherChangeEvent event) {
         if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-weather-change"))
             return;
+
         event.setCancelled(event.toWeatherState());
     }
 
