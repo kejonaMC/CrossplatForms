@@ -84,3 +84,18 @@ Scoreboard:
     - "&f&f+----------------------+"
     - "&a  *  &6https://projectg.dev  &a*"
 
+World-settings:
+  disable-hunger-loss: true
+  disable-fall-damage: true
+  disable-player-pvp: true
+  disable-weather-change: true
+  disable-mob-spawning: true
+  disable-block-burn: true
+  disable-block-fire-spread: true
+  disable_block-leaf-decay: true
+  disable-drowning: true
+  disable-fire-damage: true
+  disable-block-place: true
+  disable-block-break: true
+
+

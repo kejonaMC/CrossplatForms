@@ -1,8 +1,8 @@
 package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.Reloadable;
-import dev.projectg.geyserhub.ReloadableRegistry;
+import dev.projectg.geyserhub.utils.bstats.Reloadable;
+import dev.projectg.geyserhub.utils.bstats.ReloadableRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

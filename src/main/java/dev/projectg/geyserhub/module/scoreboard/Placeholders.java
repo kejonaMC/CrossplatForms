@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.scoreboard;
+package dev.projectg.geyserhub.module.scoreboard;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import me.clip.placeholderapi.PlaceholderAPI;

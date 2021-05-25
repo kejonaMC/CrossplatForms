@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub;
+package dev.projectg.geyserhub.utils.bstats;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

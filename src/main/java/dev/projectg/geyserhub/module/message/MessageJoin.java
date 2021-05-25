@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.listeners;
+package dev.projectg.geyserhub.module.message;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import org.bukkit.ChatColor;

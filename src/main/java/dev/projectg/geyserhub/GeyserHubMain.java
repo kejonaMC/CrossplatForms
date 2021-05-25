@@ -2,14 +2,16 @@ package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.ReloadCommand;
 import dev.projectg.geyserhub.command.SelectorCommand;
-import dev.projectg.geyserhub.menu.BedrockMenu;
-import dev.projectg.geyserhub.listeners.ItemInteract;
-import dev.projectg.geyserhub.listeners.ItemInventory;
-import dev.projectg.geyserhub.listeners.ItemJoin;
-import dev.projectg.geyserhub.listeners.MessageJoin;
-import dev.projectg.geyserhub.scoreboard.Placeholders;
-import dev.projectg.geyserhub.scoreboard.ScoreboardManager;
+import dev.projectg.geyserhub.module.menu.BedrockMenu;
+import dev.projectg.geyserhub.module.items.ItemInteract;
+import dev.projectg.geyserhub.module.items.ItemInventory;
+import dev.projectg.geyserhub.module.items.ItemJoin;
+import dev.projectg.geyserhub.module.message.MessageJoin;
+import dev.projectg.geyserhub.module.scoreboard.Placeholders;
+import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
+import dev.projectg.geyserhub.module.world.WorldSettings;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
+import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -47,6 +49,7 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInventory(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemJoin(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
             enableScorboards();

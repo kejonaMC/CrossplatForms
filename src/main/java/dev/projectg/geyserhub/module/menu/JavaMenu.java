@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.menu;
+package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.listeners;
+package dev.projectg.geyserhub.module.items;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;

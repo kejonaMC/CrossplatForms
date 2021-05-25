@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.menu;
+package dev.projectg.geyserhub.module.menu;
 
 
 import org.bukkit.ChatColor;

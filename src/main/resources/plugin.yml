@@ -12,3 +12,10 @@ commands:
   ghreload:
     description: Reload the selector form.
     permission: geyserhub.reload
+permissions:
+  geyserhub.blockbreak:
+    description: Allows player to break blocks
+    default: op
+  geyserhub.blockplace:
+    description: Allows player to place blocks
+    default: op
