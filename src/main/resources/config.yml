@@ -85,8 +85,6 @@ Scoreboard:
     - "&a  *  &6https://projectg.dev  &a*"
 
 World-settings:
-  World-name: "world"
-  always-day: true
   disable-hunger-loss: true
   disable-fall-damage: true
   disable-player-pvp: true
