@@ -1,7 +1,9 @@
 package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.module.scoreboard.Placeholders;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -18,7 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaMenu {
+public class JavaMenu extends Placeholders {
 
     public static boolean isEnabled() {
         return GeyserHubMain.getInstance().getConfig().getBoolean("Java-Selector.Enabled", true);
@@ -72,7 +74,8 @@ public class JavaMenu {
                 itemMeta.getPersistentDataContainer().set(new NamespacedKey(GeyserHubMain.getInstance(), "bungeeName"), PersistentDataType.STRING, serverName);
                 if (serverInfo.contains("Lore", false) && serverInfo.isList("Lore")) {
                     List<String> lore = serverInfo.getStringList("Lore");
-                    itemMeta.setLore(lore);
+                    List<String> withPlaceholders = PlaceholderAPI.setPlaceholders(player, lore);
+                    itemMeta.setLore(withPlaceholders);
                 } else {
                     logger.debug("Server entry with name \"" + serverName + "\" does not have a valid lore list");
                 }

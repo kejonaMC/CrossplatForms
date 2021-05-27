@@ -31,13 +31,13 @@ Java-Selector:
       Display-Name: "Lobby"
       Material: Diamond
       Lore:
-        - "lore lore"
+        - "&2Online players: %bungee_lobby%"
       Slot: 2
     survival:
       Display-Name: "Survival"
       Material: Emerald
       Lore:
-        - "lore lore"
+        - "&2online players: %bungee_Survival%"
       Slot: 6
 
 Bedrock-Selector:

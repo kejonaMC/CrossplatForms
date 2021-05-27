@@ -1,10 +1,12 @@
 package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.module.scoreboard.Placeholders;
 import dev.projectg.geyserhub.utils.bstats.Reloadable;
 import dev.projectg.geyserhub.utils.bstats.ReloadableRegistry;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -23,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class BedrockMenu implements Reloadable {
+public class BedrockMenu extends Placeholders implements Reloadable {
 
     private static BedrockMenu instance;
 
@@ -250,6 +252,7 @@ public class BedrockMenu implements Reloadable {
                     out.writeUTF("Connect");
                     out.writeUTF(serverName);
                     player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
+                    player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + serverName);
                 } catch (IOException e) {
                     logger.severe("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();

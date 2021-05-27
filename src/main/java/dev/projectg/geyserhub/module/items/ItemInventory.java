@@ -2,6 +2,7 @@ package dev.projectg.geyserhub.module.items;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ public class ItemInventory implements Listener {
                 assert bungeeName != null;
                 out.writeUTF(bungeeName);
                 player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
+                player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + bungeeName);
             } catch (IOException er) {
                 SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
             }
