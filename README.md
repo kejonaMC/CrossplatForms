@@ -3,7 +3,7 @@
 
 # GeyserHub
 
-Allow Floodgate players to switch BungeeCord servers using Bedrock forms. Also includes a GUI for Java players, along with a simple scoreboard and welcome message. Everything can be customized or turned off.
+Allow Floodgate players to switch BungeeCord servers using Bedrock forms. Also includes a GUI for Java players, along with a simple scoreboard, welcome message, auto broadcast and world settings. Everything can be customized or turned off.
 
 The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GServerSelector/job/legacy-selector/).
 ###### Note: This is NOT an official GeyserMC plugin. It is made to work with Geyser, but it is not maintained or produced by GeyserMC. If you need support with this plugin, please do not ask the Geyser developers — instead, please go to our Discord server which is linked above.
@@ -18,9 +18,15 @@ See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-flood
 
 | Command | Permission | Info |
 | ------- | -----------| ---- |
-| `ghteleporter` | `gserverselector.teleporter` | Open the server selector.| 
-| `ghreload` | `gserverselector.reload` | Reload the configuration. |
+| `ghteleporter` | `geyserhub.teleporter` | Open the server selector.| 
+| `ghreload` | `geyserhub.reload` | Reload the configuration. |
 
+## Permissions:
+
+| Permission | Info |
+| -----------| ---- |
+| `geyserhub.blockbreak` | bypass the world settings to break blocks.| 
+| `geyserhub.blockplace` | bypass the world settings to place blocks.|
 
 ## Configuration
 
