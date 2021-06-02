@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.items;
+package dev.projectg.geyserhub.module.listeners;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.module.menu.BedrockMenu;

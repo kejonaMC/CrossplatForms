@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.items;
+package dev.projectg.geyserhub.module.listeners;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.module.menu.SelectorItem;
@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ItemJoin implements Listener {
+public class ItemOnJoin implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler

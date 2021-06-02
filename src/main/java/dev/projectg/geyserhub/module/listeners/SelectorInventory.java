@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.items;
+package dev.projectg.geyserhub.module.listeners;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
@@ -16,7 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-public class ItemInventory implements Listener {
+public class SelectorInventory implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler

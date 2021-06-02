@@ -3,9 +3,9 @@ package dev.projectg.geyserhub;
 import dev.projectg.geyserhub.command.ReloadCommand;
 import dev.projectg.geyserhub.command.SelectorCommand;
 import dev.projectg.geyserhub.module.menu.BedrockMenu;
-import dev.projectg.geyserhub.module.items.ItemInteract;
-import dev.projectg.geyserhub.module.items.ItemInventory;
-import dev.projectg.geyserhub.module.items.ItemJoin;
+import dev.projectg.geyserhub.module.listeners.ItemInteract;
+import dev.projectg.geyserhub.module.listeners.SelectorInventory;
+import dev.projectg.geyserhub.module.listeners.ItemOnJoin;
 import dev.projectg.geyserhub.module.message.BroadCast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.scoreboard.Placeholders;
@@ -50,8 +50,8 @@ public class GeyserHubMain extends JavaPlugin {
         Objects.requireNonNull(getCommand("ghreload")).setExecutor(new ReloadCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ItemInventory(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ItemJoin(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new SelectorInventory(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemOnJoin(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
