@@ -21,7 +21,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,13 +30,15 @@ public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
     private SelectorLogger logger;
 
+    public static final int configVersion = 3;
+
     @Override
     public void onEnable() {
         plugin = this;
         new Metrics(this, 11427);
         logger = SelectorLogger.getLogger();
         if (!loadConfiguration()) {
-            logger.severe("Disabling due to configuration error.");
+            logger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new one");
             return;
         }
         // Bungee channel for selector
@@ -54,7 +55,7 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
-            enableScorboards();
+            enableScoreboards();
         }
         if (getConfig().getBoolean("Enable-Join-Message", false)) {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
@@ -66,7 +67,7 @@ public class GeyserHubMain extends JavaPlugin {
     public void onDisable() {
     }
 
-    private void enableScorboards() {
+    private void enableScoreboards() {
         if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
             Placeholders.vault = 0;
         } else {
@@ -99,13 +100,18 @@ public class GeyserHubMain extends JavaPlugin {
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
-            if (config.contains("Config-Version", true) && (config.getInt("Config-Version") == 3)) {
-                // Load the config into the main memory config
+            if (!config.contains("Config-Version,", true)) {
+                logger.severe("Config-Version does not exist!");
+                return false;
+            } else if (!config.isInt("Config-Version")) {
+                logger.severe("Config-Version is not an integer!");
+                return false;
+            } else if (!(config.getInt("Config-Version") == configVersion)) {
+                logger.severe("Mismatched config version!");
+                return false;
+            } else {
                 reloadConfig();
                 return true;
-            } else {
-                logger.severe("Mismatched config version! Regenerate a new config.");
-                return false;
             }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
