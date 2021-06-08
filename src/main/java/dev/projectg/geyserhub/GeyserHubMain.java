@@ -100,7 +100,7 @@ public class GeyserHubMain extends JavaPlugin {
         FileConfiguration config = new YamlConfiguration();
         try {
             config.load(configFile);
-            if (!config.contains("Config-Version,", true)) {
+            if (!config.contains("Config-Version", true)) {
                 logger.severe("Config-Version does not exist!");
                 return false;
             } else if (!config.isInt("Config-Version")) {
