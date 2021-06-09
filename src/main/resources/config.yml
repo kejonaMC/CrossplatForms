@@ -85,9 +85,9 @@ Scoreboard:
     - "&a  *  &6https://projectg.dev  &a*"
 
 
-Broadcasts-enabled: true
+Broadcasts-Enabled: true
 # ticks between each broadcast (default: 3 minutes)
-Broadcast-interval: 3600
+Broadcast-Interval: 3600
 Broadcasts:
   Message1:
     Messages:
@@ -98,19 +98,3 @@ Broadcasts:
       - '&b -*-*-*- GeyserHub -*-*-*-'
       - '&b -*-*- Made by ProjectG -*-*-'
       - '&6*----------------*----------------* '
-
-World-settings:
-  disable-hunger-loss: true
-  disable-fall-damage: true
-  disable-drowning: true
-  disable-fire-damage: true
-  disable-player-pvp: true
-  disable-weather-change: true
-  disable-mob-spawning: true
-  disable-block-burn: true
-  disable-block-fire-spread: true
-  disable_block-leaf-decay: true
-  disable-block-place: true
-  disable-block-break: true
-
-

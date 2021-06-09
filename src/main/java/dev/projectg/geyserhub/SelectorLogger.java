@@ -1,6 +1,4 @@
-package dev.projectg.geyserhub.utils.bstats;
-
-import dev.projectg.geyserhub.GeyserHubMain;
+package dev.projectg.geyserhub;
 
 public class SelectorLogger implements Reloadable {
 
@@ -32,6 +30,10 @@ public class SelectorLogger implements Reloadable {
         if (debug) {
             plugin.getLogger().info(message);
         }
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.utils.bstats;
+package dev.projectg.geyserhub;
 
 /**
  * Any classes that implements this interface should be able to reload their functionality.

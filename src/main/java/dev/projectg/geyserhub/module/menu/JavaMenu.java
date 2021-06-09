@@ -2,7 +2,7 @@ package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.module.Placeholders;
-import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
+import dev.projectg.geyserhub.SelectorLogger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

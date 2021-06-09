@@ -1,14 +1,17 @@
-package dev.projectg.geyserhub.utils.bstats;
+package dev.projectg.geyserhub;
+
+import dev.projectg.geyserhub.Reloadable;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
+import java.util.Set;
 
 public class ReloadableRegistry {
 
     /**
      * A set of instances that implement the Reloadable interface
      */
-    private static final HashSet<Reloadable> reloadables = new HashSet<>();
+    private static final Set<Reloadable> reloadables = new HashSet<>();
 
     /**
      * Register a reloadable

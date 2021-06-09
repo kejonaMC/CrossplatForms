@@ -1,9 +1,9 @@
 package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.utils.bstats.Reloadable;
-import dev.projectg.geyserhub.utils.bstats.ReloadableRegistry;
-import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
+import dev.projectg.geyserhub.Reloadable;
+import dev.projectg.geyserhub.ReloadableRegistry;
+import dev.projectg.geyserhub.SelectorLogger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

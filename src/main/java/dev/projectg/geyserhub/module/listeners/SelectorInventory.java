@@ -1,7 +1,7 @@
 package dev.projectg.geyserhub.module.listeners;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
+import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

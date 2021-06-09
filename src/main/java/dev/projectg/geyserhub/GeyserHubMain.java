@@ -11,8 +11,8 @@ import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
 import dev.projectg.geyserhub.module.world.WorldSettings;
+import dev.projectg.geyserhub.utils.Utils;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
-import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 
 public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
@@ -33,11 +34,25 @@ public class GeyserHubMain extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         new Metrics(this, 11427);
+        // getting the logger forces the config to load before our loadConfiguration() is called...
         logger = SelectorLogger.getLogger();
+
+        try {
+            Properties gitProperties = new Properties();
+            gitProperties.load(Utils.getResource("git.properties"));
+            logger.info("Branch: " + gitProperties.getProperty("git.branch", "Unknown") + ", Commit: " + gitProperties.getProperty("git.commit.id.abbrev", "Unknown"));
+        } catch (IOException e) {
+            logger.warn("Unable to load resource: git.properties");
+            if (logger.isDebug()) {
+                e.printStackTrace();
+            }
+        }
+
         if (!loadConfiguration()) {
             logger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new one");
             return;
         }
+
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 

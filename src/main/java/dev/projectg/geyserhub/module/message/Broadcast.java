@@ -1,7 +1,7 @@
 package dev.projectg.geyserhub.module.message;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
+import dev.projectg.geyserhub.SelectorLogger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,7 +15,7 @@ public class Broadcast {
     public static void startBroadcastTimer(BukkitScheduler scheduler) {
         int scheduleId = scheduler.scheduleSyncDelayedTask(GeyserHubMain.getInstance(), () -> {
 
-            if (GeyserHubMain.getInstance().getConfig().getBoolean("Broadcasts-enabled")) {
+            if (GeyserHubMain.getInstance().getConfig().getBoolean("Broadcasts-Enabled")) {
                 ConfigurationSection parentSection = GeyserHubMain.getInstance().getConfig().getConfigurationSection("Broadcasts");
                 if (parentSection == null) {
                     SelectorLogger.getLogger().severe("Broadcast configuration section is malformed, unable to send.");
@@ -37,7 +37,7 @@ public class Broadcast {
                 }
             }
             startBroadcastTimer(scheduler);
-        }, GeyserHubMain.getInstance().getConfig().getLong("Broadcast-interval"));
+        }, GeyserHubMain.getInstance().getConfig().getLong("Broadcast-Interval"));
     }
 
     private static String getRandomElement(List<String> list) {
