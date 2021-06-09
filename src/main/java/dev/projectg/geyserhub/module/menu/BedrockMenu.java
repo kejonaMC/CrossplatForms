@@ -5,7 +5,6 @@ import dev.projectg.geyserhub.module.scoreboard.Placeholders;
 import dev.projectg.geyserhub.utils.bstats.Reloadable;
 import dev.projectg.geyserhub.utils.bstats.ReloadableRegistry;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,7 +35,6 @@ public class BedrockMenu extends Placeholders implements Reloadable {
     private List<String> validServerNames;
     private List<List<String>> validCommands;
     private int commandsIndex;
-    Player player;
 
 
     /**
@@ -109,6 +107,7 @@ public class BedrockMenu extends Placeholders implements Reloadable {
      * @return A list of ButtonComponents, which may be empty.
      */
     private List<ButtonComponent> getServerButtons(@Nonnull SelectorLogger logger, @Nonnull FileConfiguration config) {
+
         // Enter the Bedrock-Selector.Servers section
         ConfigurationSection serverSection;
         if (config.contains("Bedrock-Selector.Servers", true)) {
@@ -137,9 +136,8 @@ public class BedrockMenu extends Placeholders implements Reloadable {
             }
 
             if (serverInfo.contains("Button-Text", true) && serverInfo.isString("Button-Text")) {
-                String withplaceholders = serverInfo.getString("Button-Text");
-                assert withplaceholders != null;
-                String buttonText = PlaceholderAPI.setPlaceholders(player.getPlayer(), withplaceholders);
+                String buttonText = serverInfo.getString("Button-Text");
+                assert buttonText != null;
                 if (serverInfo.contains("ImageURL", true)) {
                     String imageURL = serverInfo.getString("ImageURL");
                     assert imageURL != null;
