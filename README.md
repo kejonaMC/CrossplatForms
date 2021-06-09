@@ -5,7 +5,7 @@
 
 Allow Floodgate players to switch BungeeCord servers using Bedrock forms. Also includes a GUI for Java players, along with a simple scoreboard, welcome message, auto broadcast and world settings. Everything can be customized or turned off.
 
-The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GServerSelector/job/legacy-selector/).
+The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GeyserHub/job/legacy-selector/).
 ###### Note: This is NOT an official GeyserMC plugin. It is made to work with Geyser, but it is not maintained or produced by GeyserMC. If you need support with this plugin, please do not ask the Geyser developers — instead, please go to our Discord server which is linked above.
 
 ## Installation
