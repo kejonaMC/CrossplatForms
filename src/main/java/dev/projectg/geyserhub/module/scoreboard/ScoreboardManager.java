@@ -31,7 +31,7 @@ public class ScoreboardManager {
         List<String> text = GeyserHubMain.getInstance().getConfig().getStringList("Scoreboard.Lines");
 
         // Scoreboards have a max of 15 lines
-        int limit = Math.min(text.size(), 16);
+        int limit = Math.min(text.size(), 15);
 
         for (int index = 0; index < limit; index++) {
             String formattedLine = PlaceholderAPI.setPlaceholders(player, text.get(index));
