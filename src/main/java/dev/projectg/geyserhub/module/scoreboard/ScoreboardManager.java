@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.scoreboard;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.module.Placeholders;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

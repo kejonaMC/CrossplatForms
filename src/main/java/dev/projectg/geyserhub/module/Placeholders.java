@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.scoreboard;
+package dev.projectg.geyserhub.module;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -36,6 +36,7 @@ public class Placeholders implements Listener {
         return Bukkit.getServer().getClass().getPackage().getName().substring(23);
     }
 
+    // todo I dont think we need this...
     public static String replaceValues(Player player, String x) {
         if (vault != 0 && permission.hasGroupSupport()) {
             g = permission.getPrimaryGroup(player);

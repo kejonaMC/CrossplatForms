@@ -8,7 +8,7 @@ import dev.projectg.geyserhub.module.listeners.SelectorInventory;
 import dev.projectg.geyserhub.module.listeners.ItemOnJoin;
 import dev.projectg.geyserhub.module.message.BroadCast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
-import dev.projectg.geyserhub.module.scoreboard.Placeholders;
+import dev.projectg.geyserhub.module.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
 import dev.projectg.geyserhub.module.world.WorldSettings;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
