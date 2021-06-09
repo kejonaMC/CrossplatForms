@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.message;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ public class MessageJoin implements Listener {
         List<String> messages = GeyserHubMain.getInstance().getConfig().getStringList("Join-Message");
 
         for (String message : messages) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', message.replace("{playerName}", player.getName())));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, message)));
         }
     }
 }

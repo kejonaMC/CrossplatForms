@@ -6,20 +6,17 @@ import dev.projectg.geyserhub.module.menu.BedrockMenu;
 import dev.projectg.geyserhub.module.listeners.ItemInteract;
 import dev.projectg.geyserhub.module.listeners.SelectorInventory;
 import dev.projectg.geyserhub.module.listeners.ItemOnJoin;
-import dev.projectg.geyserhub.module.message.BroadCast;
+import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
 import dev.projectg.geyserhub.module.world.WorldSettings;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
 import dev.projectg.geyserhub.utils.bstats.SelectorLogger;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -55,34 +52,16 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
-            enableScoreboards();
+            initializeScoreboard();
         }
         if (getConfig().getBoolean("Enable-Join-Message", false)) {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
         }
-            BroadCast.startBroadcastTimer(getServer().getScheduler());
+        Broadcast.startBroadcastTimer(getServer().getScheduler());
     }
 
     @Override
     public void onDisable() {
-    }
-
-    private void enableScoreboards() {
-        if (this.getServer().getPluginManager().getPlugin("Vault") == null) {
-            Placeholders.vault = 0;
-        } else {
-            this.setupPermissions();
-        }
-        if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") == null) {
-            Placeholders.PAPI = 0;
-        }
-        if (this.getServer().getPluginManager().getPlugin("Essentials") == null) {
-            Placeholders.essentials = 0;
-        } else {
-            this.setupEconomy();
-        }
-        this.Scheduler();
-        Bukkit.getServer().getPluginManager().registerEvents(new ScoreboardManager(), this);
     }
 
     public boolean loadConfiguration() {
@@ -118,30 +97,14 @@ public class GeyserHubMain extends JavaPlugin {
             return false;
         }
     }
-    public void Scheduler() {
+    public void initializeScoreboard() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             try {
                 ScoreboardManager.addScoreboard();
             } catch (Exception var2) {
                 var2.printStackTrace();
             }
-        }, 20L, Placeholders.isb * 20L);
-    }
-
-    // todo: I think we can just set vault as a softdepend instead of doing this?
-
-    private void setupEconomy() {
-        RegisteredServiceProvider economyProvider = getServer().getServicesManager().getRegistration(Economy.class);
-        if (economyProvider != null) {
-            Placeholders.economy = (Economy) economyProvider.getProvider();
-        }
-    }
-
-    private void setupPermissions() {
-        RegisteredServiceProvider permissionProvider = this.getServer().getServicesManager().getRegistration(Permission.class);
-        if (permissionProvider != null) {
-            Placeholders.permission = (Permission) permissionProvider.getProvider();
-        }
+        }, 20L, Placeholders.refreshRate * 20L);
     }
 
     public static GeyserHubMain getInstance() {
