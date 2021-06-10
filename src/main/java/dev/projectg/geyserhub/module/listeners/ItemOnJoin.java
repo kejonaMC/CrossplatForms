@@ -14,6 +14,7 @@ public class ItemOnJoin implements Listener {
     @SuppressWarnings("unused")
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        event.getPlayer().getInventory().setHeldItemSlot(GeyserHubMain.getInstance().getConfig().getInt("Slot"));
         if (GeyserHubMain.getInstance().getConfig().getBoolean("Item-Join")) {
             Player player = event.getPlayer();
             ItemStack compass = SelectorItem.getItem();
