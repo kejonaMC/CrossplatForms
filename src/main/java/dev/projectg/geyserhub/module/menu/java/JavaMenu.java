@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.menu;
+package dev.projectg.geyserhub.module.menu.java;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.module.Placeholders;

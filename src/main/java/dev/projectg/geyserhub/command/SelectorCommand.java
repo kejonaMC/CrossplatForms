@@ -2,8 +2,8 @@ package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.BedrockMenu;
-import dev.projectg.geyserhub.module.menu.JavaMenu;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenu;
+import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,13 +22,13 @@ public class SelectorCommand implements CommandExecutor {
                 if (BedrockMenu.getInstance().isEnabled()){
                     BedrockMenu.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
                 } else {
-                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, selector form is not available to Bedrock players!");
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, the selector form is currently not available to Bedrock players!");
                 }
             } else {
                 if (JavaMenu.isEnabled()) {
                     JavaMenu.openMenu(player, GeyserHubMain.getInstance().getConfig());
                 } else {
-                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, selector form is not available to Java players!");
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, the selector form is currently not available to Java players!");
                 }
             }
         } else if (sender instanceof ConsoleCommandSender) {

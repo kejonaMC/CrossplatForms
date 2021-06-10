@@ -1,8 +1,8 @@
 package dev.projectg.geyserhub.module.listeners;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.module.menu.BedrockMenu;
-import dev.projectg.geyserhub.module.menu.JavaMenu;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenu;
+import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import dev.projectg.geyserhub.module.menu.SelectorItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
