@@ -16,7 +16,7 @@ public class MessageJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        List<String> messages = GeyserHubMain.getInstance().getConfig().getStringList("Join-Message");
+        List<String> messages = GeyserHubMain.getInstance().getConfig().getStringList("Join-Message.Messages");
 
         for (String message : messages) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, message)));

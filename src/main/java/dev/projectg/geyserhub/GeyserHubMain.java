@@ -10,6 +10,7 @@ import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
+import dev.projectg.geyserhub.module.teleporter.JoinTeleporter;
 import dev.projectg.geyserhub.module.world.WorldSettings;
 import dev.projectg.geyserhub.utils.Utils;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
@@ -28,7 +29,7 @@ public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
     private SelectorLogger logger;
 
-    public static final int configVersion = 3;
+    public static final int configVersion = 4;
 
     @Override
     public void onEnable() {
@@ -64,6 +65,7 @@ public class GeyserHubMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new SelectorInventory(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemOnJoin(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JoinTeleporter(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
@@ -101,7 +103,7 @@ public class GeyserHubMain extends JavaPlugin {
                 logger.severe("Config-Version is not an integer!");
                 return false;
             } else if (!(config.getInt("Config-Version") == configVersion)) {
-                logger.severe("Mismatched config version!");
+                logger.severe("Mismatched config version! Generate a new config and migrate your settings!");
                 return false;
             } else {
                 reloadConfig();

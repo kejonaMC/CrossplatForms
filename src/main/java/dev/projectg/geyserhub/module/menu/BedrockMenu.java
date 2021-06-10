@@ -52,7 +52,6 @@ public class BedrockMenu implements Reloadable {
     int commandsIndex;
 
     /**
-     *
      * @return Get the latest BedrockMenu instance that was created
      */
     public static BedrockMenu getInstance() {

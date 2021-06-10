@@ -4,7 +4,7 @@
 Enable-Debug: false
 
 # Don't touch this
-Config-Version: 3
+Config-Version: 4
 
 
 # Gives the player a compass which they can use to open the selector form
@@ -37,7 +37,7 @@ Java-Selector:
       Display-Name: "Survival"
       Material: Emerald
       Lore:
-        - "&2online players: %bungee_Survival%"
+        - "&2online players: %bungee_survival%"
       Slot: 6
 
 Bedrock-Selector:
@@ -48,28 +48,34 @@ Bedrock-Selector:
 
   Servers:
     lobby:
-      Button-Text: "Server Lobby"
+      Button-Text: "Server Lobby: %bungee_lobby% players"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
     survival:
-      Button-Text: "Survival of the fittest"
+      Button-Text: "Survival: %bungee_survival% players"
       ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
   Commands:
     extraOne:
       Button-Text: "Spawn"
       ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
       Commands:
-        - "execute as {playerName} run spawn"
+        - "execute as %player_name% run spawn"
     extraTwo:
       Button-Text: "The Void"
       Commands:
-        - "tp {playerName} 0 -10 0"
-        - "say {playerName} made a fatal decision."
+        - "tp %player_uuid% 0 -10 0"
+        - "say %player_name% made a fatal decision."
 
-# Join and leave messages. {playerName} is replaced with the player's name.
-Enable-Join-Message: true
+# Join and leave messages. Supports papi placeholders.
 Join-Message:
-  - "&fWelcome &6{playerName}&f on geyser network!"
-  - "&bHave a great time playing on our network!"
+  Enable: true
+  Messages:
+    - "&fWelcome &6%player_name%&f on geyser network!"
+    - "&bHave a great time playing on our network!"
+
+Join-Teleporter:
+  Enable: false
+  World: world
+  Coordinates: 0;65;0
 
 Scoreboard:
   Enable: true
@@ -85,16 +91,29 @@ Scoreboard:
     - "&a  *  &6https://projectg.dev  &a*"
 
 
-Broadcasts-Enabled: true
-# ticks between each broadcast (default: 3 minutes)
-Broadcast-Interval: 3600
 Broadcasts:
-  Message1:
-    Messages:
+  Enable: true
+  # ticks between each broadcast (default: 3 minutes)
+  Interval: 3600
+  Messages:
+    Message1:
       - '&6 -*-*-  Welcome to GeyserNetwork  -*-*- '
-  Message2:
-    Messages:
+    Message2:
       - '&6*----------------*----------------* '
       - '&b -*-*-*- GeyserHub -*-*-*-'
       - '&b -*-*- Made by ProjectG -*-*-'
       - '&6*----------------*----------------* '
+
+World-settings:
+  disable-hunger-loss: true
+  disable-fall-damage: true
+  disable-drowning: true
+  disable-fire-damage: true
+  disable-player-pvp: true
+  disable-weather-change: true
+  disable-mob-spawning: true
+  disable-block-burn: true
+  disable-block-fire-spread: true
+  disable_block-leaf-decay: true
+  disable-block-place: true
+  disable-block-break: true

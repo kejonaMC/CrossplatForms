@@ -17,7 +17,9 @@ public class ReloadCommand implements CommandExecutor {
 
         if (sender instanceof Player || sender instanceof ConsoleCommandSender) {
 
-            if (!GeyserHubMain.getInstance().loadConfiguration()) {
+            if (GeyserHubMain.getInstance().loadConfiguration()) {
+                sender.sendMessage("[GeyserHub] Reloaded the configuration, reloading modules...");
+            } else {
                 sender.sendMessage("[GeyserHub] " + ChatColor.RED + "Failed to reload the configuration!");
                 return true;
             }
@@ -27,6 +29,8 @@ public class ReloadCommand implements CommandExecutor {
                     sender.sendMessage("[GeyserHub] " + ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
                 }
             }
+
+            sender.sendMessage("[GeyserHub] Finished reload.");
         }
         return true;
     }

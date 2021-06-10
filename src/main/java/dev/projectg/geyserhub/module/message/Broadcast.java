@@ -15,19 +15,17 @@ public class Broadcast {
     public static void startBroadcastTimer(BukkitScheduler scheduler) {
         int scheduleId = scheduler.scheduleSyncDelayedTask(GeyserHubMain.getInstance(), () -> {
 
-            if (GeyserHubMain.getInstance().getConfig().getBoolean("Broadcasts-Enabled")) {
-                ConfigurationSection parentSection = GeyserHubMain.getInstance().getConfig().getConfigurationSection("Broadcasts");
+            if (GeyserHubMain.getInstance().getConfig().getBoolean("Broadcasts.Enable", false)) {
+                ConfigurationSection parentSection = GeyserHubMain.getInstance().getConfig().getConfigurationSection("Broadcasts.Messages");
                 if (parentSection == null) {
-                    SelectorLogger.getLogger().severe("Broadcast configuration section is malformed, unable to send.");
+                    SelectorLogger.getLogger().severe("Broadcasts.Messages configuration section is malformed, unable to send.");
                     return;
                 }
 
                 String broadcastId = getRandomElement(new ArrayList<>(parentSection.getKeys(false)));
-                ConfigurationSection broadcast = parentSection.getConfigurationSection(broadcastId);
-                assert broadcast != null;
 
-                if (broadcast.contains("Messages", true) && broadcast.isList("Messages")) {
-                    for (String message : broadcast.getStringList("Messages")) {
+                if (parentSection.contains(broadcastId, true) && parentSection.isList(broadcastId)) {
+                    for (String message : parentSection.getStringList(broadcastId)) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, message)));
                         }
@@ -37,7 +35,7 @@ public class Broadcast {
                 }
             }
             startBroadcastTimer(scheduler);
-        }, GeyserHubMain.getInstance().getConfig().getLong("Broadcast-Interval"));
+        }, GeyserHubMain.getInstance().getConfig().getLong("Broadcasts-Interval", 3600));
     }
 
     private static String getRandomElement(List<String> list) {
