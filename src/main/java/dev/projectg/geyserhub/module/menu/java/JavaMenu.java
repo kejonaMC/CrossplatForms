@@ -26,6 +26,7 @@ public class JavaMenu extends Placeholders {
         return GeyserHubMain.getInstance().getConfig().getBoolean("Java-Selector.Enabled", true);
     }
 
+    // todo: maybe just remove the FileConfiguration parameter
     public static void openMenu(@Nonnull Player player, @Nonnull FileConfiguration config) {
         SelectorLogger logger = SelectorLogger.getLogger();
 

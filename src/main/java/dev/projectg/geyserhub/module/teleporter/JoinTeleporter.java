@@ -1,8 +1,8 @@
 package dev.projectg.geyserhub.module.teleporter;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.Reloadable;
-import dev.projectg.geyserhub.ReloadableRegistry;
+import dev.projectg.geyserhub.reloadable.Reloadable;
+import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

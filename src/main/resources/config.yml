@@ -44,7 +44,7 @@ Bedrock-Selector:
   Enable: true
 
   Forms:
-    parent:
+    default:
       Title: "Server Selector"
       Content: "Click on the server button of choice."
       Buttons:
@@ -60,7 +60,7 @@ Bedrock-Selector:
           Button-Text: "Minigames"
           Image-URL: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
           Commands:
-            - "execute as %player_name% run ghform minigames"
+            - "execute as %player_name% run ghub form minigames"
         commandTwo:
           Button-Text: "Spawn"
           ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"

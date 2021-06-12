@@ -1,22 +1,28 @@
 package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.Reloadable;
-import dev.projectg.geyserhub.ReloadableRegistry;
+import dev.projectg.geyserhub.reloadable.Reloadable;
+import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BedrockMenu implements Reloadable {
 
     private static BedrockMenu INSTANCE;
+    public static final String DEFAULT = "default";
 
-    private boolean isEnabled;
+    /**
+     * If the bedrock form is enabled in the config. the {@link #getFormNames()} may still return an empty list.
+     */
+    private boolean isEnabled = false;
     private final Map<String, BedrockForm> enabledForms = new HashMap<>();
 
     public static BedrockMenu getInstance() {
@@ -25,11 +31,11 @@ public class BedrockMenu implements Reloadable {
 
     public BedrockMenu() {
         ReloadableRegistry.registerReloadable(this);
-        isEnabled = load();
+        load();
         INSTANCE = this;
     }
 
-    private boolean load() {
+    private void load() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfig();
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -41,11 +47,13 @@ public class BedrockMenu implements Reloadable {
 
             if (selectorSection.contains("Enable", true) && selectorSection.isBoolean("Enable")) {
                 if (selectorSection.getBoolean("Enable")) {
+                    isEnabled = true;
                     if (selectorSection.contains("Forms", true) && selectorSection.isConfigurationSection("Forms")) {
                         ConfigurationSection forms = selectorSection.getConfigurationSection("forms");
                         assert forms != null;
 
                         boolean noSuccess = true;
+                        boolean containsDefault = false;
                         for (String entry : forms.getKeys(false)) {
                             if (!forms.isConfigurationSection(entry)) {
                                 logger.warn("Bedrock form with name " + entry + " is being skipped because it is not a configuration section");
@@ -58,20 +66,24 @@ public class BedrockMenu implements Reloadable {
                                 enabledForms.put(entry, form);
                                 noSuccess = false;
                             }
+                            if ("default".equals(entry)) {
+                                containsDefault = true;
+                            }
                         }
 
                         if (noSuccess) {
-                            isEnabled = false;
-                            logger.warn("Failed to ALL bedrock forms, due to configuration error.");
+                            logger.warn("Failed to load ALL bedrock forms, due to configuration error.");
+                            return;
                         } else {
-                            isEnabled = true;
                             logger.info("Valid Bedrock forms are: " + enabledForms.keySet());
-                            return true;
+                        }
+
+                        if (!containsDefault) {
+                            logger.warn("Failed to load a default form! The Server Selector compass will not work and players will not be able to open the default form with \"/ghub\"");
                         }
                     }
                 } else {
                     logger.debug("Not enabling bedrock forms because it is disabled in the config.");
-                    isEnabled = false;
                 }
             } else {
                 logger.warn("Not enabling bedrock forms because the Enable value is not present in the config.");
@@ -79,11 +91,6 @@ public class BedrockMenu implements Reloadable {
         } else {
             logger.warn("Not enabling bedrock forms because the whole configuration section is not present.");
         }
-        return false;
-    }
-
-    public void sendForm(@Nonnull FloodgatePlayer player) {
-        enabledForms.get("parent").sendForm(player);
     }
 
     public void sendForm(@Nonnull FloodgatePlayer player, @Nonnull String form) {
@@ -93,10 +100,13 @@ public class BedrockMenu implements Reloadable {
     public boolean isEnabled() {
         return isEnabled;
     }
+    public List<String> getFormNames() {
+        return new ArrayList<>(enabledForms.keySet());
+    }
 
     @Override
     public boolean reload() {
-        isEnabled = load();
+        load();
         return isEnabled;
     }
 }

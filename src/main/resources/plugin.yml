@@ -10,13 +10,20 @@ softdepend:
   - PlaceholderAPI
 
 commands:
-  ghteleporter:
-    description: Open a server selector form.
-    permission: geyserhub.teleporter
-  ghreload:
-    description: Reload the selector form.
-    permission: geyserhub.reload
+  ghhub:
+    description: General command
+    permission: geyserhub.main
+
 permissions:
+  geyserhub.main:
+    description: Access to the base command /ghub
+    default: true
+  geyserhub.form:
+    description: Access to open a form with /ghub form <form>
+    default: true
+  geyserhub.reload:
+    description: Access to /ghub reload
+    default: op
   geyserhub.blockbreak:
     description: Allows player to break blocks
     default: op

@@ -1,7 +1,6 @@
 package dev.projectg.geyserhub;
 
-import dev.projectg.geyserhub.command.ReloadCommand;
-import dev.projectg.geyserhub.command.SelectorCommand;
+import dev.projectg.geyserhub.command.GeyserHubCommand;
 import dev.projectg.geyserhub.module.listeners.ItemInteract;
 import dev.projectg.geyserhub.module.listeners.SelectorInventory;
 import dev.projectg.geyserhub.module.listeners.ItemOnJoin;
@@ -59,9 +58,8 @@ public class GeyserHubMain extends JavaPlugin {
 
         new BedrockMenu();
 
-        // todo: squash all our commands into one (maybe "ghub"), add command for the different forms, and add command suggestions/completions
-        Objects.requireNonNull(getCommand("ghteleporter")).setExecutor(new SelectorCommand());
-        Objects.requireNonNull(getCommand("ghreload")).setExecutor(new ReloadCommand());
+        // todo: and add command suggestions/completions, help pages that only shows available commands
+        Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new SelectorInventory(), this);

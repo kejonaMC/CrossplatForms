@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class BedrockForm {
 
-    private boolean isEnabled;
+    private final boolean isEnabled;
 
     private String title;
     private String content;
@@ -166,6 +166,11 @@ public class BedrockForm {
             return;
         }
 
+        if (!isEnabled) {
+            // todo: Do something less dirty to prevent this
+            throw new AssertionError("Form: " + title + " that failed to load was called to be sent to player " + player);
+        }
+
         // Resolve any placeholders in the button text
         List<Button> formattedButtons = new ArrayList<>();
         for (Button button : allButtons) {
@@ -195,9 +200,7 @@ public class BedrockForm {
             if (button instanceof ServerButton) {
                 // This should never be out of bounds considering its size is the number of valid buttons
                 String serverName = ((ServerButton) button).getServerName();
-                ByteArrayOutputStream b = new ByteArrayOutputStream();
-                DataOutputStream out = new DataOutputStream(b);
-                try {
+                try (ByteArrayOutputStream b = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(b)) {
                     out.writeUTF("Connect");
                     out.writeUTF(serverName);
                     player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());

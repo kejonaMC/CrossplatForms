@@ -1,5 +1,8 @@
 package dev.projectg.geyserhub;
 
+import dev.projectg.geyserhub.reloadable.Reloadable;
+import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
+
 public class SelectorLogger implements Reloadable {
 
     private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
