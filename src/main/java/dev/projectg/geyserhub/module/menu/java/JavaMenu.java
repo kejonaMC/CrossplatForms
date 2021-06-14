@@ -36,9 +36,9 @@ public class JavaMenu extends Placeholders {
             return;
         }
         ConfigurationSection javaSection = config.getConfigurationSection("Java-Selector");
-        assert javaSection != null;
+        Objects.requireNonNull(javaSection);
         ConfigurationSection serverSection = javaSection.getConfigurationSection("Servers");
-        assert serverSection != null;
+        Objects.requireNonNull(serverSection);
 
         Inventory selectorGUI = Bukkit.createInventory(player, javaSection.getInt("Size"), ChatColor.DARK_AQUA + javaSection.getString("Title"));
 
@@ -51,13 +51,13 @@ public class JavaMenu extends Placeholders {
                 continue;
             }
             ConfigurationSection serverInfo = serverSection.getConfigurationSection(serverName);
-            assert serverInfo != null;
+            Objects.requireNonNull(serverInfo);
 
             if (serverInfo.contains("Display-Name", true) && serverInfo.isString("Display-Name") && serverInfo.contains("Material", true) && serverInfo.isString("Material") && serverInfo.contains("Slot", true) && serverInfo.isInt("Slot")) {
 
                 // Get all the required info
                 String displayName = serverInfo.getString("Display-Name");
-                assert displayName != null;
+                Objects.requireNonNull(displayName);
                 String materialName = serverInfo.getString("Material");
                 Material material = Material.matchMaterial(Objects.requireNonNull(serverInfo.getString("Material")));
                 if (material == null || material.isAir()) {
@@ -70,7 +70,7 @@ public class JavaMenu extends Placeholders {
                 ItemStack serverStack = new ItemStack(material);
                 ItemMeta itemMeta = serverStack.getItemMeta();
                 // It will only be null if the itemstack is air, which we already filter against.
-                assert itemMeta != null;
+                Objects.requireNonNull(itemMeta);
                 itemMeta.setDisplayName(displayName);
                 itemMeta.getPersistentDataContainer().set(new NamespacedKey(GeyserHubMain.getInstance(), "bungeeName"), PersistentDataType.STRING, serverName);
                 if (serverInfo.contains("Lore", false) && serverInfo.isList("Lore")) {

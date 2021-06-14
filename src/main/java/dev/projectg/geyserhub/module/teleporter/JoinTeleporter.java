@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class JoinTeleporter implements Listener, Reloadable {
 
@@ -44,7 +45,7 @@ public class JoinTeleporter implements Listener, Reloadable {
             return false;
         }
         ConfigurationSection section = config.getConfigurationSection("Join-Teleporter");
-        assert section != null;
+        Objects.requireNonNull(section);
 
         // Validate all our values
         if (!(section.contains("Enable", true) && section.isBoolean(("Enable")))) {
@@ -56,7 +57,7 @@ public class JoinTeleporter implements Listener, Reloadable {
             return false;
         }
         String worldName = section.getString("World");
-        assert worldName != null;
+        Objects.requireNonNull(worldName);
         World world = Bukkit.getServer().getWorld(worldName);
         if (world == null) {
             logger.severe("Join-Teleporter.World in the config is not a valid world, skipping module!");
@@ -66,7 +67,7 @@ public class JoinTeleporter implements Listener, Reloadable {
         if (section.contains("Location") && section.isString("Location")) {
             // Make sure the given coordinates are in the correct format
             String composedCoords = section.getString("Location");
-            assert composedCoords != null;
+            Objects.requireNonNull(composedCoords);
             if (!composedCoords.matches(COORDINATE_REGEX)) {
                 logger.severe("Join-Teleporter.Location in the config is not of the format <integer;integer;integer>, skipping module!");
                 return false;

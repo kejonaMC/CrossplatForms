@@ -3,20 +3,23 @@
 # Toggle debug logging
 Enable-Debug: false
 
-# Don't touch this
-Config-Version: 4
+# Item to access the default menu
+Selector-Item:
+  Material: COMPASS
+  Name: "&6Server Selector"
+  Lore:
+    - "Right click me!"
+  Slot: 4
 
+  # Gives the player the item which they can use to open the default form
+  Join: true
+  # Stop the player from dropping the item
+  Allow-Drop: false
+  # Destroy the compass if the player drops it
+  Destroy-Dropped: true
+  # Stop the player from moving the compass in their inventory
+  Allow-Move: false
 
-# Gives the player a compass which they can use to open the selector form
-Item-Join: true
-# The slot in which the item will be given
-Slot: 4
-# Stop the player from dropping the compass
-Allow-Item-Drop: false
-# Destroy the compass if the player drops it
-Destroy-Dropped-Item: true
-# Stop the player from moving the compass
-Allow-Item-Move: false
 
 # Please see our readme for information on configuring this section.
 # https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
@@ -130,3 +133,6 @@ World-settings:
   disable_block-leaf-decay: true
   disable-block-place: true
   disable-block-break: true
+
+# Don't touch this
+Config-Version: 4

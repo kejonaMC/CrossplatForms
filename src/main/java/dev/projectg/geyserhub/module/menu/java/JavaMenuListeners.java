@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.listeners;
+package dev.projectg.geyserhub.module.menu.java;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
@@ -16,7 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-public class SelectorInventory implements Listener {
+public class JavaMenuListeners implements Listener {
 
     @SuppressWarnings("unused")
     @EventHandler

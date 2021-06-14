@@ -9,10 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BedrockMenu implements Reloadable {
 
@@ -43,14 +40,14 @@ public class BedrockMenu implements Reloadable {
 
         if (config.contains("Bedrock-Selector", true) && config.isConfigurationSection("Bedrock-Selector")) {
             ConfigurationSection selectorSection = config.getConfigurationSection("Bedrock-Selector");
-            assert selectorSection != null;
+            Objects.requireNonNull(selectorSection);
 
             if (selectorSection.contains("Enable", true) && selectorSection.isBoolean("Enable")) {
                 if (selectorSection.getBoolean("Enable")) {
                     isEnabled = true;
                     if (selectorSection.contains("Forms", true) && selectorSection.isConfigurationSection("Forms")) {
                         ConfigurationSection forms = selectorSection.getConfigurationSection("Forms");
-                        assert forms != null;
+                        Objects.requireNonNull(forms);
 
                         boolean noSuccess = true;
                         boolean containsDefault = false;
@@ -60,7 +57,7 @@ public class BedrockMenu implements Reloadable {
                                 continue;
                             }
                             ConfigurationSection formInfo = forms.getConfigurationSection(entry);
-                            assert formInfo != null;
+                            Objects.requireNonNull(formInfo);
                             BedrockForm form = new BedrockForm(formInfo);
                             if (form.isEnabled()) {
                                 enabledForms.put(entry, form);

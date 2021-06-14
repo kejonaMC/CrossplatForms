@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.menu.bedrock;
+package dev.projectg.geyserhub.module.menu.bedrock.button;
 
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.util.FormImage;

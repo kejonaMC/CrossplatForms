@@ -2,6 +2,9 @@ package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.module.menu.bedrock.button.Button;
+import dev.projectg.geyserhub.module.menu.bedrock.button.CommandButton;
+import dev.projectg.geyserhub.module.menu.bedrock.button.ServerButton;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -58,7 +61,7 @@ public class BedrockForm {
             return false;
         }
         ConfigurationSection buttonSection = configSection.getConfigurationSection("Buttons");
-        assert buttonSection != null;
+        Objects.requireNonNull(buttonSection);
         List<Button> buttons = getButtons(buttonSection);
         if (buttons.isEmpty()) {
             logger.warn("Failed to create any valid buttons of form: " + configSection.getName() + "! All listed buttons have a malformed section!");
@@ -112,14 +115,14 @@ public class BedrockForm {
 
             if (buttonInfo.contains("Button-Text", true) && buttonInfo.isString("Button-Text")) {
                 String buttonText = buttonInfo.getString("Button-Text");
-                assert buttonText != null;
+                Objects.requireNonNull(buttonText);
                 logger.debug(buttonId + " has Button-Text: " + buttonText);
 
                 // Add image if specified
                 FormImage image = null;
                 if (buttonInfo.contains("ImageURL", true)) {
                     String imageURL = buttonInfo.getString("ImageURL");
-                    assert imageURL != null;
+                    Objects.requireNonNull(imageURL);
                     image = FormImage.of(FormImage.Type.URL, imageURL);
                     logger.debug(buttonId + " contains image with URL: " + image);
                 } else {
@@ -133,7 +136,7 @@ public class BedrockForm {
                 // Get the server or command data and compile the button
                 if (buttonInfo.contains("Server") && buttonInfo.isString("Server")) {
                     String serverName = buttonInfo.getString("Server");
-                    assert serverName != null;
+                    Objects.requireNonNull(serverName);
                     logger.debug(buttonId + " contains BungeeCord server: " + serverName);
                     compiledButtons.add(new ServerButton(serverName, buttonText, image));
                 } else if (buttonInfo.contains("Commands") && buttonInfo.isList("Commands")) {

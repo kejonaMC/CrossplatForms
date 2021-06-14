@@ -1,25 +1,25 @@
-package dev.projectg.geyserhub.module.menu.bedrock;
+package dev.projectg.geyserhub.module.menu.bedrock.button;
 
 import org.geysermc.cumulus.util.FormImage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ServerButton extends Button{
+public class ServerButton extends Button {
 
     private final String serverName;
 
-    ServerButton(@Nonnull String serverName, @Nonnull String text) {
+    public ServerButton(@Nonnull String serverName, @Nonnull String text) {
         super(text);
         this.serverName = serverName;
     }
 
-    ServerButton(@Nonnull String serverName, @Nonnull String text, @Nullable FormImage image) {
+    public ServerButton(@Nonnull String serverName, @Nonnull String text, @Nullable FormImage image) {
         super(text, image);
         this.serverName = serverName;
     }
 
-    ServerButton(@Nonnull String serverName, @Nonnull String text, @Nonnull FormImage.Type type, @Nonnull String data) {
+    public ServerButton(@Nonnull String serverName, @Nonnull String text, @Nonnull FormImage.Type type, @Nonnull String data) {
         super(text, type, data);
         this.serverName = serverName;
     }

@@ -1,9 +1,9 @@
 package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.GeyserHubCommand;
-import dev.projectg.geyserhub.module.listeners.ItemInteract;
-import dev.projectg.geyserhub.module.listeners.SelectorInventory;
-import dev.projectg.geyserhub.module.listeners.ItemOnJoin;
+import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenuListeners;
+import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenu;
 import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
@@ -61,10 +61,12 @@ public class GeyserHubMain extends JavaPlugin {
         // todo: and add command suggestions/completions, help pages that only shows available commands
         Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand());
 
-        Bukkit.getServer().getPluginManager().registerEvents(new ItemInteract(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new SelectorInventory(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new ItemOnJoin(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new BedrockMenuListeners(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(), this);
+
         Bukkit.getServer().getPluginManager().registerEvents(new JoinTeleporter(), this);
+
         Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
@@ -106,6 +108,7 @@ public class GeyserHubMain extends JavaPlugin {
                 return false;
             } else {
                 reloadConfig();
+                logger.debug("Loaded configuration successfully");
                 return true;
             }
         } catch (IOException | InvalidConfigurationException e) {
