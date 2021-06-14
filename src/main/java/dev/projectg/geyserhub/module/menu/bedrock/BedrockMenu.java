@@ -49,7 +49,7 @@ public class BedrockMenu implements Reloadable {
                 if (selectorSection.getBoolean("Enable")) {
                     isEnabled = true;
                     if (selectorSection.contains("Forms", true) && selectorSection.isConfigurationSection("Forms")) {
-                        ConfigurationSection forms = selectorSection.getConfigurationSection("forms");
+                        ConfigurationSection forms = selectorSection.getConfigurationSection("Forms");
                         assert forms != null;
 
                         boolean noSuccess = true;
