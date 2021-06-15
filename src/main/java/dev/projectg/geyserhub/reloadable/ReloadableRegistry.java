@@ -34,21 +34,21 @@ public class ReloadableRegistry {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         if (GeyserHubMain.getInstance().loadConfiguration()) {
-            logger.info("[GeyserHub] Reloaded the configuration, reloading modules...");
+            logger.info("Reloaded the configuration, reloading modules...");
         } else {
-            logger.severe("[GeyserHub] " + ChatColor.RED + "Failed to reload the configuration!");
+            logger.severe(ChatColor.RED + "Failed to reload the configuration!");
             return false;
         }
 
         boolean success = true;
         for (Reloadable reloadable : ReloadableRegistry.getRegisteredReloadables()) {
             if (!reloadable.reload()) {
-                logger.severe("[GeyserHub] " + ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
+                logger.severe(ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
                 success = false;
             }
         }
 
-        logger.info("[GeyserHub] Finished reload.");
+        logger.info("Finished reload.");
         return success;
     }
 }
