@@ -10,7 +10,7 @@ softdepend:
   - PlaceholderAPI
 
 commands:
-  ghhub:
+  ghub:
     description: General command
     permission: geyserhub.main
 
