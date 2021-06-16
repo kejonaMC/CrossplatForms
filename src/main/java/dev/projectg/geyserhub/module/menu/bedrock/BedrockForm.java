@@ -2,9 +2,7 @@ package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.bedrock.button.Button;
-import dev.projectg.geyserhub.module.menu.bedrock.button.CommandButton;
-import dev.projectg.geyserhub.module.menu.bedrock.button.ServerButton;
+import dev.projectg.geyserhub.module.menu.Button;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +17,11 @@ import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class BedrockForm {
@@ -125,28 +127,34 @@ public class BedrockForm {
                     Objects.requireNonNull(imageURL);
                     image = FormImage.of(FormImage.Type.URL, imageURL);
                     logger.debug(buttonId + " contains image with URL: " + image);
-                } else {
-                    logger.debug(buttonId + " does not contain image URL");
                 }
 
-                if (buttonInfo.contains("Server", true) && buttonInfo.contains("Commands")) {
-                    logger.warn(buttonId + " contains both a Server and Commands key. Only one is allowed. Ignoring commands.");
+                // Add commands if specified
+                List<String> commands = null;
+                if (buttonInfo.contains("Commands") && buttonInfo.isList("Commands")) {
+                    List<String> potentialCommands = buttonInfo.getStringList("Commands");
+                    if (potentialCommands.isEmpty()) {
+                        logger.warn(buttonId + " contains commands list but the list was empty.");
+                    } else {
+                        commands = potentialCommands;
+                        logger.debug(buttonId + " contains commands: " + commands);
+                    }
                 }
 
-                // Get the server or command data and compile the button
+                // Add server if specified
+                String serverName = null;
                 if (buttonInfo.contains("Server") && buttonInfo.isString("Server")) {
-                    String serverName = buttonInfo.getString("Server");
+                    serverName = buttonInfo.getString("Server");
                     Objects.requireNonNull(serverName);
-                    logger.debug(buttonId + " contains BungeeCord server: " + serverName);
-                    compiledButtons.add(new ServerButton(serverName, buttonText, image));
-                } else if (buttonInfo.contains("Commands") && buttonInfo.isList("Commands")) {
-                    List<String> commands = buttonInfo.getStringList("Commands");
-                    logger.debug(buttonId + " contains commands: " + commands);
-                    compiledButtons.add(new CommandButton(commands, buttonText, image));
-                } else {
-                    logger.warn(buttonId + " did not define a BungeeCord server or commands list, not adding.");
-                    continue;
+                    logger.debug(buttonId + " contains BungeeCord target server: " + serverName);
                 }
+
+                compiledButtons.add(
+                        new Button(buttonText)
+                        .setImage(image)
+                        .setCommands(commands)
+                        .setServer(serverName));
+
                 logger.debug(buttonId + " was successfully added.");
             } else {
                 logger.warn(buttonId + " does not contain a valid Button-Text value, not adding.");
@@ -175,17 +183,9 @@ public class BedrockForm {
         }
 
         // Resolve any placeholders in the button text
-        List<Button> formattedButtons = new ArrayList<>();
-        for (Button button : allButtons) {
-            if (button instanceof ServerButton) {
-                ServerButton serverButton = (ServerButton) button;
-                formattedButtons.add(new ServerButton(serverButton.getServerName(), PlaceholderAPI.setPlaceholders(player, serverButton.getButtonComponent().getText()), serverButton.getButtonComponent().getImage()));
-            } else if (button instanceof CommandButton) {
-                CommandButton commandButton = (CommandButton) button;
-                formattedButtons.add(new CommandButton(commandButton.getCommands(), PlaceholderAPI.setPlaceholders(player, commandButton.getButtonComponent().getText()), commandButton.getButtonComponent().getImage()));
-            } else {
-                throw new AssertionError("Failed to account for all possible types of " + button.toString());
-            }
+        List<Button> formattedButtons = new ArrayList<>(allButtons);
+        for (Button button : formattedButtons) {
+            button.setText(PlaceholderAPI.setPlaceholders(player, button.getText()));
         }
         // Create the form
         SimpleForm serverSelector = SimpleForm.of(title, content, formattedButtons.stream().map(Button::getButtonComponent).collect(Collectors.toList()));
@@ -200,25 +200,26 @@ public class BedrockForm {
             }
 
             Button button = formattedButtons.get(response.getClickedButtonId());
-            if (button instanceof ServerButton) {
+
+            if (button.getCommands() != null) {
+                // Get the commands from the list of commands and replace any playerName placeholders
+                for (String command : button.getCommands()) {
+                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), PlaceholderAPI.setPlaceholders(player, command));
+                }
+            }
+
+            if (button.getServer() != null) {
                 // This should never be out of bounds considering its size is the number of valid buttons
-                String serverName = ((ServerButton) button).getServerName();
-                try (ByteArrayOutputStream b = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(b)) {
+                String serverName = button.getServer();
+                try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(baos)) {
                     out.writeUTF("Connect");
                     out.writeUTF(serverName);
-                    player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
+                    player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", baos.toByteArray());
                     player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + serverName);
                 } catch (IOException e) {
                     logger.severe("Failed to send a plugin message to Bungeecord!");
                     e.printStackTrace();
                 }
-            } else if (button instanceof CommandButton){
-                // Get the commands from the list of commands and replace any playerName placeholders
-                for (String command : ((CommandButton) button).getCommands()) {
-                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), PlaceholderAPI.setPlaceholders(player, command));
-                }
-            } else {
-                throw new AssertionError("Failed to account for all possible types of " + button.toString());
             }
         });
 

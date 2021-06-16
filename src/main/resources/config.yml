@@ -58,6 +58,8 @@ Bedrock-Selector:
         survival:
           Button-Text: "Survival: %bungee_survival% players"
           ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
+          Commands:
+            - "Survival is currently in development, please report any bugs to staff!"
           Server: "survival"
         commandOne:
           Button-Text: "Minigames"
