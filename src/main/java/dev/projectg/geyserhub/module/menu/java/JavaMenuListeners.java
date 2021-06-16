@@ -36,7 +36,7 @@ public class JavaMenuListeners implements Listener {
                 player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
                 player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + bungeeName);
             } catch (IOException er) {
-                SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                SelectorLogger.severe("Failed to send a plugin message to Bungeecord!");
             }
             event.setCancelled(true);
         } catch (Exception ignored) {

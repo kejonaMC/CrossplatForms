@@ -18,7 +18,7 @@ public class Broadcast {
             if (GeyserHubMain.getInstance().getConfig().getBoolean("Broadcasts.Enable", false)) {
                 ConfigurationSection parentSection = GeyserHubMain.getInstance().getConfig().getConfigurationSection("Broadcasts.Messages");
                 if (parentSection == null) {
-                    SelectorLogger.getLogger().severe("Broadcasts.Messages configuration section is malformed, unable to send.");
+                    SelectorLogger.severe("Broadcasts.Messages configuration section is malformed, unable to send.");
                     return;
                 }
 
@@ -31,7 +31,7 @@ public class Broadcast {
                         }
                     }
                 } else {
-                    SelectorLogger.getLogger().severe("Broadcast with ID " + broadcastId + " has a malformed message list, unable to send.");
+                    SelectorLogger.severe("Broadcast with ID " + broadcastId + " has a malformed message list, unable to send.");
                 }
             }
             startBroadcastTimer(scheduler);

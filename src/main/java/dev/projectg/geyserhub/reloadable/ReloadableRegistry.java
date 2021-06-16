@@ -31,10 +31,15 @@ public class ReloadableRegistry {
     }
 
     public static boolean reloadAll() {
-        SelectorLogger logger = SelectorLogger.getLogger();
 
         if (ConfigManager.loadDefaultConfiguration()) {
-            SelectorLogger.info("Reloaded the configuration, reloading modules...");
+            SelectorLogger.info("Reloaded the default configuration, reloading modules...");
+        } else {
+            SelectorLogger.severe(ChatColor.RED + "Failed to reload the configuration!");
+            return false;
+        }
+        if (ConfigManager.loadSelectorConfiguration()) {
+            SelectorLogger.info("Reloaded the Selector configuration, reloading modules...");
         } else {
             SelectorLogger.severe(ChatColor.RED + "Failed to reload the configuration!");
             return false;

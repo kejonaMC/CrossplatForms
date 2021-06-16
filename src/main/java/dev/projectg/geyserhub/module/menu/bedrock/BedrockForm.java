@@ -53,7 +53,7 @@ public class BedrockForm {
         String title = configSection.getString("Title");
         String content = configSection.getString("Content");
         if (title == null || content == null) {
-            logger.severe("Value of Bedrock-Selector.Title or Bedrock-Selector.Content has no value in the config for form: "  + configSection.getName() + "! Failed to create the bedrock selector form.");
+            SelectorLogger.severe("Value of Bedrock-Selector.Title or Bedrock-Selector.Content has no value in the config for form: "  + configSection.getName() + "! Failed to create the bedrock selector form.");
             return false;
         }
 
@@ -69,7 +69,7 @@ public class BedrockForm {
             logger.warn("Failed to create any valid buttons of form: " + configSection.getName() + "! All listed buttons have a malformed section!");
             return false;
         } else {
-            logger.debug("Finished adding buttons to form: " + configSection.getName());
+            SelectorLogger.debug("Finished adding buttons to form: " + configSection.getName());
         }
 
         // Only set everything once it has been validated
@@ -96,7 +96,7 @@ public class BedrockForm {
         } else {
             formName = parent.getName();
         }
-        logger.debug("Getting buttons for form: " + formName);
+        SelectorLogger.debug("Getting buttons for form: " + formName);
 
         // Get all the defined buttons in the buttons section
         Set<String> allButtonIds = configSection.getKeys(false);
@@ -118,7 +118,7 @@ public class BedrockForm {
             if (buttonInfo.contains("Button-Text", true) && buttonInfo.isString("Button-Text")) {
                 String buttonText = buttonInfo.getString("Button-Text");
                 Objects.requireNonNull(buttonText);
-                logger.debug(buttonId + " has Button-Text: " + buttonText);
+                SelectorLogger.debug(buttonId + " has Button-Text: " + buttonText);
 
                 // Add image if specified
                 FormImage image = null;
@@ -126,7 +126,7 @@ public class BedrockForm {
                     String imageURL = buttonInfo.getString("ImageURL");
                     Objects.requireNonNull(imageURL);
                     image = FormImage.of(FormImage.Type.URL, imageURL);
-                    logger.debug(buttonId + " contains image with URL: " + image);
+                    SelectorLogger.debug(buttonId + " contains image with URL: " + image);
                 }
 
                 // Add commands if specified
@@ -137,7 +137,7 @@ public class BedrockForm {
                         logger.warn(buttonId + " contains commands list but the list was empty.");
                     } else {
                         commands = potentialCommands;
-                        logger.debug(buttonId + " contains commands: " + commands);
+                        SelectorLogger.debug(buttonId + " contains commands: " + commands);
                     }
                 }
 
@@ -146,7 +146,7 @@ public class BedrockForm {
                 if (buttonInfo.contains("Server") && buttonInfo.isString("Server")) {
                     serverName = buttonInfo.getString("Server");
                     Objects.requireNonNull(serverName);
-                    logger.debug(buttonId + " contains BungeeCord target server: " + serverName);
+                    SelectorLogger.debug(buttonId + " contains BungeeCord target server: " + serverName);
                 }
 
                 compiledButtons.add(
@@ -155,7 +155,7 @@ public class BedrockForm {
                         .setCommands(commands)
                         .setServer(serverName));
 
-                logger.debug(buttonId + " was successfully added.");
+                SelectorLogger.debug(buttonId + " was successfully added.");
             } else {
                 logger.warn(buttonId + " does not contain a valid Button-Text value, not adding.");
             }
@@ -173,7 +173,7 @@ public class BedrockForm {
 
         Player player = Bukkit.getServer().getPlayer(floodgatePlayer.getCorrectUniqueId());
         if (player == null) {
-            logger.severe("Unable to find a Bukkit Player for the given Floodgate Player: " + floodgatePlayer.getCorrectUniqueId().toString());
+            SelectorLogger.severe("Unable to find a Bukkit Player for the given Floodgate Player: " + floodgatePlayer.getCorrectUniqueId().toString());
             return;
         }
 

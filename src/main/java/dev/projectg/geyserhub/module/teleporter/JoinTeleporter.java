@@ -49,18 +49,18 @@ public class JoinTeleporter implements Listener, Reloadable {
 
         // Validate all our values
         if (!(section.contains("Enable", true) && section.isBoolean(("Enable")))) {
-            logger.severe("Join-Teleporter config section does not contain a valid Enable value, skipping module!");
+            SelectorLogger.severe("Join-Teleporter config section does not contain a valid Enable value, skipping module!");
             return false;
         }
         if (!(section.contains("World") && section.isString("World"))) {
-            logger.severe("Join-Teleporter config section does not contain a valid World string, skipping module!");
+            SelectorLogger.severe("Join-Teleporter config section does not contain a valid World string, skipping module!");
             return false;
         }
         String worldName = section.getString("World");
         Objects.requireNonNull(worldName);
         World world = Bukkit.getServer().getWorld(worldName);
         if (world == null) {
-            logger.severe("Join-Teleporter.World in the config is not a valid world, skipping module!");
+            SelectorLogger.severe("Join-Teleporter.World in the config is not a valid world, skipping module!");
             return false;
         }
 
@@ -69,7 +69,7 @@ public class JoinTeleporter implements Listener, Reloadable {
             String composedCoords = section.getString("Location");
             Objects.requireNonNull(composedCoords);
             if (!composedCoords.matches(COORDINATE_REGEX)) {
-                logger.severe("Join-Teleporter.Location in the config is not of the format <integer;integer;integer>, skipping module!");
+                SelectorLogger.severe("Join-Teleporter.Location in the config is not of the format <integer;integer;integer>, skipping module!");
                 return false;
             }
 
@@ -85,7 +85,7 @@ public class JoinTeleporter implements Listener, Reloadable {
                 throw new AssertionError("Failed to decompose the following coordinates: " + composedCoords + " -> " + Arrays.toString(coordinates));
             }
         } else {
-            logger.severe("Join-Teleporter config section does not contain a valid Location value!");
+            SelectorLogger.severe("Join-Teleporter config section does not contain a valid Location value!");
             return false;
         }
     }

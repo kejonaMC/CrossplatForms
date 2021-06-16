@@ -7,10 +7,8 @@ public class SelectorLogger implements Reloadable {
 
     private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
     private static String message;
-
     private final GeyserHubMain plugin;
     private static boolean debug;
-
     public static SelectorLogger getLogger() {
         return LOGGER;
     }
