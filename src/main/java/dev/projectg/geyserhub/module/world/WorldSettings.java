@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.module.world;
 import dev.projectg.geyserhub.GeyserHubMain;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,23 +16,26 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 
 public class WorldSettings implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
         if (!(event.getEntity() instanceof Player)) return;
-        Player player = (Player) event.getEntity();
 
-        if (GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-fall-damage")
+        if (config.getBoolean("World-settings.disable-fall-damage")
                 && event.getCause() == EntityDamageEvent.DamageCause.FALL)
             event.setCancelled(true);
 
-        else if (GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-drowning")
+        else if (config.getBoolean("World-settings.disable-drowning")
                 && event.getCause() == EntityDamageEvent.DamageCause.DROWNING)
             event.setCancelled(true);
 
-        else if (GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-fire-damage")
+        else if (config.getBoolean("World-settings.disable-fire-damage")
                 && (event.getCause() == EntityDamageEvent.DamageCause.FIRE
                 || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || event.getCause()
                 == EntityDamageEvent.DamageCause.LAVA))
@@ -40,7 +44,9 @@ public class WorldSettings implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onFoodChange(FoodLevelChangeEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-hunger-loss"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-hunger-loss"))
             return;
         if (!(event.getEntity() instanceof Player))
             return;
@@ -49,7 +55,9 @@ public class WorldSettings implements Listener {
 
     @EventHandler
     public void onFireSpread(BlockIgniteEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-block-fire-spread"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-block-fire-spread"))
             return;
         if (event.getCause() == BlockIgniteEvent.IgniteCause.SPREAD)
             event.setCancelled(true);
@@ -57,21 +65,27 @@ public class WorldSettings implements Listener {
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-disable-block-burn"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-disable-block-burn"))
             return;
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onLeafDecay(LeavesDecayEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable_block-leaf-decay"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable_block-leaf-decay"))
             return;
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-mob-spawning"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-mob-spawning"))
             return;
         if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.CUSTOM) return;
         event.setCancelled(true);
@@ -79,7 +93,9 @@ public class WorldSettings implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onWeatherChange(WeatherChangeEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-weather-change"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-weather-change"))
             return;
 
         event.setCancelled(event.toWeatherState());
@@ -87,7 +103,9 @@ public class WorldSettings implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDamage(EntityDamageByEntityEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-player-pvp"))
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-player-pvp"))
             return;
         if (!(event.getEntity() instanceof Player)) return;
         event.setCancelled(true);
@@ -95,7 +113,9 @@ public class WorldSettings implements Listener {
     }
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-block-break")
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-block-break")
                 || event.isCancelled())
             return;
         Player player = event.getPlayer();
@@ -109,7 +129,9 @@ public class WorldSettings implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!GeyserHubMain.getInstance().getConfig().getBoolean("World-settings.disable-block-place")
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        if (!config.getBoolean("World-settings.disable-block-place")
                 || event.isCancelled())
             return;
         ItemStack item = event.getItemInHand();

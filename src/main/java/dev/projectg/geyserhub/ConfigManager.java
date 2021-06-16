@@ -56,9 +56,9 @@ public class ConfigManager {
         } else if (!configuration.isInt("Config-Version")) {
             logger.severe("Config-Version is not an integer in" + configFileName + " !");
             return false;
-        } else if (configuration.getInt("Config-Version") != Objects.requireNonNull(configuration.getDefaults()).getInt("Config-Version")) {
-            logger.severe("Mismatched config version in " + configFileName + " ! Generate a new config and migrate your settings!");
-            return false;
+        //} else if (configuration.getInt("Config-Version") != Objects.requireNonNull(configuration.getDefaults()).getInt("Config-Version")) {
+         //   logger.severe("Mismatched config version in " + configFileName + " ! Generate a new config and migrate your settings!");
+         //   return false;
         } else {
             plugin.reloadConfig();
             this.configurations.put(configName, configuration);

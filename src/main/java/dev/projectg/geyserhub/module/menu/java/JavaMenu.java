@@ -23,7 +23,9 @@ import java.util.Objects;
 public class JavaMenu extends Placeholders {
 
     public static boolean isEnabled() {
-        return GeyserHubMain.getInstance().getConfig().getBoolean("Java-Selector.Enabled", true);
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        Objects.requireNonNull(config);
+        return config.getBoolean("Java-Selector.Enabled", true);
     }
 
     // todo: maybe just remove the FileConfiguration parameter

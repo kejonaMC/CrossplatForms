@@ -17,7 +17,8 @@ public class AccessItem {
 
     private static final ItemStack ACCESS_ITEM;
     static {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfig();
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        Objects.requireNonNull(config);
 
         // Get the material
         Material material;

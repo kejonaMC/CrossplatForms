@@ -25,8 +25,10 @@ public class JoinTeleporter implements Listener, Reloadable {
     private Location location;
 
     public JoinTeleporter() {
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
         ReloadableRegistry.registerReloadable(this);
-        enabled = load(GeyserHubMain.getInstance().getConfig());
+        enabled = load(config);
     }
 
     @EventHandler
@@ -92,7 +94,9 @@ public class JoinTeleporter implements Listener, Reloadable {
 
     @Override
     public boolean reload() {
-        enabled = load(GeyserHubMain.getInstance().getConfig());
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        Objects.requireNonNull(config);
+        enabled = load(config);
         return enabled;
     }
 }
