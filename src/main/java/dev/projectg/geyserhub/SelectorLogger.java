@@ -7,8 +7,10 @@ public class SelectorLogger implements Reloadable {
 
     private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
     private static String message;
+
     private final GeyserHubMain plugin;
-    private static boolean debug;
+    private boolean debug;
+
     public static SelectorLogger getLogger() {
         return LOGGER;
     }
@@ -19,18 +21,18 @@ public class SelectorLogger implements Reloadable {
         ReloadableRegistry.registerReloadable(this);
     }
 
-    public static void info(String message) {
-        SelectorLogger.info(message);
+    public void info(String message) {
+        plugin.getLogger().info(message);
     }
     public void warn(String message) {
         plugin.getLogger().warning(message);
     }
-    public static void severe(String message) {
-        SelectorLogger.severe(message);
+    public void severe(String message) {
+        plugin.getLogger().severe(message);
     }
-    public static void debug(String message) {
+    public void debug(String message) {
         if (debug) {
-            SelectorLogger.info(message);
+            plugin.getLogger().info(message);
         }
     }
 

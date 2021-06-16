@@ -1,7 +1,6 @@
 package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.GeyserHubCommand;
-import dev.projectg.geyserhub.utils.ConfigManager;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
@@ -23,21 +22,21 @@ import java.util.Properties;
 
 public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
-    public static SelectorLogger logger;
-    public static final int selectorConfigVersion = 1;
-    public static final int configVersion = 4;
+
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
         plugin = this;
         new Metrics(this, 11427);
         // getting the logger forces the config to load before our loadConfiguration() is called...
-        logger = SelectorLogger.getLogger();
+        SelectorLogger logger = SelectorLogger.getLogger();
+        configManager = new ConfigManager();
 
         try {
             Properties gitProperties = new Properties();
             gitProperties.load(Utils.getResource("git.properties"));
-            SelectorLogger.info("Branch: " + gitProperties.getProperty("git.branch", "Unknown") + ", Commit: " + gitProperties.getProperty("git.commit.id.abbrev", "Unknown"));
+            logger.info("Branch: " + gitProperties.getProperty("git.branch", "Unknown") + ", Commit: " + gitProperties.getProperty("git.commit.id.abbrev", "Unknown"));
         } catch (IOException e) {
             logger.warn("Unable to load resource: git.properties");
             if (logger.isDebug()) {
@@ -45,12 +44,12 @@ public class GeyserHubMain extends JavaPlugin {
             }
         }
 
-        if (!ConfigManager.loadDefaultConfiguration()) {
-            SelectorLogger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new config file");
+        if (!configManager.loadDefaultConfiguration()) {
+            logger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new config file");
             return;
         }
-        if (!ConfigManager.loadSelectorConfiguration()) {
-            SelectorLogger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new selector file");
+        if (!configManager.loadSelectorConfiguration()) {
+            logger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new selector file");
             return;
         }
 
@@ -97,4 +96,7 @@ public class GeyserHubMain extends JavaPlugin {
         return plugin;
     }
 
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
 }
