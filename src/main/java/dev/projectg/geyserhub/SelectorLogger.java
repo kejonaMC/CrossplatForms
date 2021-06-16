@@ -6,7 +6,6 @@ import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 public class SelectorLogger implements Reloadable {
 
     private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
-    private static String message;
 
     private final GeyserHubMain plugin;
     private boolean debug;
