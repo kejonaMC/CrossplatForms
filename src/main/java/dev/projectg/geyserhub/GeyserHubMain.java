@@ -31,7 +31,6 @@ public class GeyserHubMain extends JavaPlugin {
         new Metrics(this, 11427);
         // getting the logger forces the config to load before our loadConfiguration() is called...
         SelectorLogger logger = SelectorLogger.getLogger();
-        configManager = new ConfigManager();
 
         try {
             Properties gitProperties = new Properties();
@@ -44,11 +43,12 @@ public class GeyserHubMain extends JavaPlugin {
             }
         }
 
-        if (!configManager.loadDefaultConfiguration()) {
+        configManager = new ConfigManager();
+        if (!configManager.loadConfiguration("config")) {
             logger.severe("Disabling due to configuration error in config.yml - Fix the formatting or regenerate a new file.");
             return;
         }
-        if (!configManager.loadSelectorConfiguration()) {
+        if (!configManager.loadConfiguration("selector")) {
             logger.severe("Disabling due to configuration error in selector.yml - Fix the formatting or regenerate a new file.");
             return;
         }

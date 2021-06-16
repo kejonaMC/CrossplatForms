@@ -35,12 +35,16 @@ public class ReloadableRegistry {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         ConfigManager configManager = GeyserHubMain.getInstance().getConfigManager();
-        if (configManager.loadDefaultConfiguration() && configManager.loadSelectorConfiguration()) {
-            logger.info("Reloaded the configuration, reloading modules...");
-        } else {
-            logger.severe(ChatColor.RED + "Failed to reload the configuration!");
-            return false;
+        // loadConfiguration() will never remove a key so I don't think this will result in ConcurrentModificationException...
+        for (String configName : configManager.getAllFileConfigurations().keySet()) {
+            if (configManager.loadConfiguration(configName)) {
+                logger.debug("Reloaded config file: " + configName + ".yml");
+            } else {
+                logger.severe(ChatColor.RED + "Failed to reload configuration: " + configName + ".yml");
+                return false;
+            }
         }
+        logger.info("Reloaded the configuration, reloading modules...");
 
         boolean success = true;
         for (Reloadable reloadable : ReloadableRegistry.getRegisteredReloadables()) {
