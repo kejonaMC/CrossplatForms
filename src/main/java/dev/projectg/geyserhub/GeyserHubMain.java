@@ -4,7 +4,7 @@ import dev.projectg.geyserhub.command.GeyserHubCommand;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenu;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.Placeholders;
@@ -56,7 +56,7 @@ public class GeyserHubMain extends JavaPlugin {
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        new BedrockMenu();
+        new BedrockFormRegistry();
 
         // todo: and add command suggestions/completions, help pages that only shows available commands
         Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand());

@@ -9,11 +9,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class BedrockMenu implements Reloadable {
+public class BedrockFormRegistry implements Reloadable {
 
-    private static BedrockMenu INSTANCE;
+    private static BedrockFormRegistry INSTANCE;
     public static final String DEFAULT = "default";
 
     /**
@@ -22,11 +26,11 @@ public class BedrockMenu implements Reloadable {
     private boolean isEnabled = false;
     private final Map<String, BedrockForm> enabledForms = new HashMap<>();
 
-    public static BedrockMenu getInstance() {
+    public static BedrockFormRegistry getInstance() {
         return INSTANCE;
     }
 
-    public BedrockMenu() {
+    public BedrockFormRegistry() {
         ReloadableRegistry.registerReloadable(this);
         load();
         INSTANCE = this;

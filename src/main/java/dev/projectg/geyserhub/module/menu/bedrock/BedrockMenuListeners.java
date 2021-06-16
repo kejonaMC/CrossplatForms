@@ -18,7 +18,7 @@ public class BedrockMenuListeners implements Listener {
         if (player.getInventory().getItemInMainHand().isSimilar(AccessItem.getItem())) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    BedrockMenu.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()), BedrockMenu.DEFAULT);
+                    BedrockFormRegistry.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()), BedrockFormRegistry.DEFAULT);
                 } else {
                     JavaMenu.openMenu(player, GeyserHubMain.getInstance().getConfig());
                 }

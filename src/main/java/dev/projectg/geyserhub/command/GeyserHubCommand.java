@@ -2,7 +2,7 @@ package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenu;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,7 +35,7 @@ public class GeyserHubCommand implements CommandExecutor {
 
         if (args.length == 0) {
             // send the default form, help if console
-            sendForm(commandSender, BedrockMenu.DEFAULT);
+            sendForm(commandSender, BedrockFormRegistry.DEFAULT);
             return true;
         }
 
@@ -92,9 +92,9 @@ public class GeyserHubCommand implements CommandExecutor {
             Player player = (Player) commandSender;
             UUID uuid = player.getUniqueId();
             if (FloodgateApi.getInstance().isFloodgateId(uuid)) {
-                if (BedrockMenu.getInstance().isEnabled()) {
-                    if (BedrockMenu.getInstance().getFormNames().contains(formName)) {
-                        BedrockMenu.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
+                if (BedrockFormRegistry.getInstance().isEnabled()) {
+                    if (BedrockFormRegistry.getInstance().getFormNames().contains(formName)) {
+                        BedrockFormRegistry.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
                     } else {
                         player.sendMessage("Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
                     }
