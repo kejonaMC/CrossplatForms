@@ -4,6 +4,7 @@ import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.utils.ConfigManager;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
@@ -37,7 +38,7 @@ public class BedrockFormRegistry implements Reloadable {
     }
 
     private void load() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfig();
+        FileConfiguration config = ConfigManager.get();
         SelectorLogger logger = SelectorLogger.getLogger();
 
         enabledForms.clear();

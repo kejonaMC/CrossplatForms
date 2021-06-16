@@ -6,9 +6,10 @@ import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 public class SelectorLogger implements Reloadable {
 
     private static final SelectorLogger LOGGER = new SelectorLogger(GeyserHubMain.getInstance());
+    private static String message;
 
     private final GeyserHubMain plugin;
-    private boolean debug;
+    private static boolean debug;
 
     public static SelectorLogger getLogger() {
         return LOGGER;
@@ -20,18 +21,18 @@ public class SelectorLogger implements Reloadable {
         ReloadableRegistry.registerReloadable(this);
     }
 
-    public void info(String message) {
-        plugin.getLogger().info(message);
+    public static void info(String message) {
+        SelectorLogger.info(message);
     }
     public void warn(String message) {
         plugin.getLogger().warning(message);
     }
-    public void severe(String message) {
-        plugin.getLogger().severe(message);
+    public static void severe(String message) {
+        SelectorLogger.severe(message);
     }
-    public void debug(String message) {
+    public static void debug(String message) {
         if (debug) {
-            plugin.getLogger().info(message);
+            SelectorLogger.info(message);
         }
     }
 

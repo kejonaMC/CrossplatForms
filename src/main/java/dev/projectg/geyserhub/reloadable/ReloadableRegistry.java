@@ -1,7 +1,7 @@
 package dev.projectg.geyserhub.reloadable;
 
-import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.utils.ConfigManager;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
@@ -33,22 +33,22 @@ public class ReloadableRegistry {
     public static boolean reloadAll() {
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        if (GeyserHubMain.getInstance().loadConfiguration()) {
-            logger.info("Reloaded the configuration, reloading modules...");
+        if (ConfigManager.loadDefaultConfiguration()) {
+            SelectorLogger.info("Reloaded the configuration, reloading modules...");
         } else {
-            logger.severe(ChatColor.RED + "Failed to reload the configuration!");
+            SelectorLogger.severe(ChatColor.RED + "Failed to reload the configuration!");
             return false;
         }
 
         boolean success = true;
         for (Reloadable reloadable : ReloadableRegistry.getRegisteredReloadables()) {
             if (!reloadable.reload()) {
-                logger.severe(ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
+                SelectorLogger.severe(ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
                 success = false;
             }
         }
 
-        logger.info("Finished reload.");
+        SelectorLogger.info("Finished reload.");
         return success;
     }
 }
