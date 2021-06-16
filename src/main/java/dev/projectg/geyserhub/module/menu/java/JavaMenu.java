@@ -78,7 +78,7 @@ public class JavaMenu extends Placeholders {
                     List<String> withPlaceholders = PlaceholderAPI.setPlaceholders(player, lore);
                     itemMeta.setLore(withPlaceholders);
                 } else {
-                    SelectorLogger.debug("Server entry with name \"" + serverName + "\" does not have a valid lore list");
+                    logger.debug("Server entry with name \"" + serverName + "\" does not have a valid lore list");
                 }
                 serverStack.setItemMeta(itemMeta);
 

@@ -69,7 +69,7 @@ public class AccessItem {
         // Set the meta and set the field
         item.setItemMeta(meta);
         ACCESS_ITEM = item;
-        SelectorLogger.debug("Created and set the access item from the configuration.");
+        SelectorLogger.getLogger().debug("Created and set the access item from the configuration.");
     }
 
     public static ItemStack getItem() {

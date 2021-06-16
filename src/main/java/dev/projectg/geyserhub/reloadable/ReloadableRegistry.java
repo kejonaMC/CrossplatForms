@@ -31,6 +31,7 @@ public class ReloadableRegistry {
     }
 
     public static boolean reloadAll() {
+        SelectorLogger logger = SelectorLogger.getLogger();
 
         if (ConfigManager.loadDefaultConfiguration()) {
             SelectorLogger.info("Reloaded the default configuration, reloading modules...");

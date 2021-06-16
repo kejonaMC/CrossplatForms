@@ -77,7 +77,7 @@ public class BedrockFormRegistry implements Reloadable {
                             logger.warn("Failed to load ALL bedrock forms, due to configuration error.");
                             return;
                         } else {
-                            SelectorLogger.info("Valid Bedrock forms are: " + enabledForms.keySet());
+                            logger.info("Valid Bedrock forms are: " + enabledForms.keySet());
                         }
 
                         if (!containsDefault) {
@@ -85,7 +85,7 @@ public class BedrockFormRegistry implements Reloadable {
                         }
                     }
                 } else {
-                    SelectorLogger.debug("Not enabling bedrock forms because it is disabled in the config.");
+                    logger.debug("Not enabling bedrock forms because it is disabled in the config.");
                 }
             } else {
                 logger.warn("Not enabling bedrock forms because the Enable value is not present in the config.");
