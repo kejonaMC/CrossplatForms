@@ -122,6 +122,4 @@ public class WorldSettings implements Listener {
         player.sendMessage(ChatColor.RESET + "You can't place blocks here!");
         event.setCancelled(true);
     }
-
-
 }
