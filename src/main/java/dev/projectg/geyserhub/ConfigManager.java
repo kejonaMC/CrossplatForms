@@ -37,8 +37,7 @@ public class ConfigManager {
         GeyserHubMain plugin = GeyserHubMain.getInstance();
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        String configFileName = config.fileName + ".yml";
-        File file = new File(plugin.getDataFolder(), configFileName);
+        File file = new File(plugin.getDataFolder(), config.fileName);
         if (!file.exists()) {
             try {
                 file.getParentFile().mkdirs();
@@ -46,7 +45,7 @@ public class ConfigManager {
                 e.printStackTrace();
                 return false;
             }
-            plugin.saveResource(configFileName, false);
+            plugin.saveResource(config.fileName, false);
         }
         FileConfiguration configuration = new YamlConfiguration();
         try {
@@ -56,10 +55,10 @@ public class ConfigManager {
             return false;
         }
         if (!configuration.contains("Config-Version", true)) {
-            logger.severe("Config-Version does not exist in" + configFileName + " !");
+            logger.severe("Config-Version does not exist in" + config.fileName + " !");
             return false;
         } else if (!configuration.isInt("Config-Version")) {
-            logger.severe("Config-Version is not an integer in" + configFileName + " !");
+            logger.severe("Config-Version is not an integer in" + config.fileName + " !");
             return false;
         //} else if (configuration.getInt("Config-Version") != Objects.requireNonNull(configuration.getDefaults()).getInt("Config-Version")) {
             //logger.severe("Mismatched config version in " + configFileName + " ! Generate a new config and migrate your settings!");
