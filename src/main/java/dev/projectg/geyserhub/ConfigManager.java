@@ -16,7 +16,7 @@ public class ConfigManager {
 
     private static ConfigManager CONFIG_MANAGER;
 
-    private final Map<String, FileConfiguration> configurations = new HashMap<>();
+    private final Map<ConfigId, FileConfiguration> configurations = new HashMap<>();
 
     public ConfigManager() {
         if (CONFIG_MANAGER == null) {
@@ -26,13 +26,18 @@ public class ConfigManager {
         }
     }
 
-    public boolean loadConfiguration(@Nonnull String configName) {
-        Objects.requireNonNull(configName);
+    /**
+     * Load a configuration from file.
+     * @param config The configuration to load
+     * @return The success state
+     */
+    public boolean loadConfiguration(@Nonnull ConfigId config) {
+        Objects.requireNonNull(config);
 
         GeyserHubMain plugin = GeyserHubMain.getInstance();
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        String configFileName = configName + ".yml";
+        String configFileName = config.fileName + ".yml";
         File file = new File(plugin.getDataFolder(), configFileName);
         if (!file.exists()) {
             try {
@@ -57,11 +62,11 @@ public class ConfigManager {
             logger.severe("Config-Version is not an integer in" + configFileName + " !");
             return false;
         //} else if (configuration.getInt("Config-Version") != Objects.requireNonNull(configuration.getDefaults()).getInt("Config-Version")) {
-         //   logger.severe("Mismatched config version in " + configFileName + " ! Generate a new config and migrate your settings!");
-         //   return false;
+            //logger.severe("Mismatched config version in " + configFileName + " ! Generate a new config and migrate your settings!");
+            //return false;
         } else {
             plugin.reloadConfig();
-            this.configurations.put(configName, configuration);
+            this.configurations.put(config, configuration);
             logger.debug("Loaded configuration successfully");
             return true;
         }
@@ -69,19 +74,35 @@ public class ConfigManager {
 
     /**
      * Get the given FileConfiguration in the stored map.
-     * @param configName the name of the config file, without ".yml"
+     * @param config the config ID
      * @return the FileConfiguration
      */
     @Nullable
-    public FileConfiguration getFileConfiguration(@Nonnull String configName) {
-        Objects.requireNonNull(configName);
-        return configurations.get(configName);
+    public FileConfiguration getFileConfiguration(@Nonnull ConfigId config) {
+        Objects.requireNonNull(config);
+        return configurations.get(config);
     }
 
     /**
      * @return A the map of configuration names to FileConfigurations
      */
-    public Map<String, FileConfiguration> getAllFileConfigurations() {
+    public Map<ConfigId, FileConfiguration> getAllFileConfigurations() {
         return configurations;
+    }
+
+    /**
+     * An enum containing the identities of all valid configuration files.
+     */
+    public enum ConfigId {
+        MAIN("config.yml"),
+        SELECTOR("selector.yml");
+
+        public static final ConfigId[] VALUES = values();
+
+        public final String fileName;
+
+        ConfigId(String fileName){
+            this.fileName = fileName;
+        }
     }
 }

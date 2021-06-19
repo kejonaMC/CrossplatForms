@@ -44,12 +44,12 @@ public class GeyserHubMain extends JavaPlugin {
         }
 
         configManager = new ConfigManager();
-        if (!configManager.loadConfiguration("config")) {
-            logger.severe("Disabling due to configuration error in config.yml - Fix the formatting or regenerate a new file.");
+        if (!configManager.loadConfiguration(ConfigManager.ConfigId.MAIN)) {
+            logger.severe("Disabling due to configuration error in " + ConfigManager.ConfigId.MAIN.fileName + " - Fix the formatting or regenerate a new file.");
             return;
         }
-        if (!configManager.loadConfiguration("selector")) {
-            logger.severe("Disabling due to configuration error in selector.yml - Fix the formatting or regenerate a new file.");
+        if (!configManager.loadConfiguration(ConfigManager.ConfigId.SELECTOR)) {
+            logger.severe("Disabling due to configuration error in " + ConfigManager.ConfigId.SELECTOR.fileName + " - Fix the formatting or regenerate a new file.");
             return;
         }
 
