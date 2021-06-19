@@ -126,7 +126,7 @@ public class BedrockForm {
                     String imageURL = buttonInfo.getString("ImageURL");
                     Objects.requireNonNull(imageURL);
                     image = FormImage.of(FormImage.Type.URL, imageURL);
-                    logger.debug(buttonId + " contains image with URL: " + image);
+                    logger.debug(buttonId + " contains image with URL: " + image.getData());
                 }
 
                 // Add commands if specified
