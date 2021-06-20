@@ -30,6 +30,7 @@ Java-Selector:
       Lore:
         - "&2Online players: %bungee_lobby%"
       Slot: 2
+
     survival:
       Display-Name: "Survival"
       Material: Emerald
@@ -41,30 +42,42 @@ Bedrock-Selector:
   Enable: true
 
   Forms:
+    # Name of the form, Do not change this!
     default:
+      # Title of the form.
       Title: "Server Selector"
+      # Content of the form.
       Content: "Click on the server button of choice."
+      # Button list, Do not change this!
       Buttons:
+        # Name of the section.
         lobby:
+          # Button text, Placeholders can be used in here.
           Button-Text: "Server Lobby: %bungee_lobby% players"
+          # Here you can set your own custom icon, This has to be an URL or you can delete it if not needed!
           ImageURL: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
+          # Server has to be exact the same (case sensitive) as in the bungeecord config!
           Server: "lobby"
+
         survival:
           Button-Text: "Survival: %bungee_survival% players"
           ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-          Commands:
-            - "Survival is currently in development, please report any bugs to staff!"
           Server: "survival"
+
+        # You can also execute commands with buttons as seen below!
         commandOne:
           Button-Text: "Minigames"
           Image-URL: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
           Commands:
             - "execute as %player_name% run ghub form minigames"
+
         commandTwo:
           Button-Text: "Spawn"
           ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
           Commands:
             - "execute as %player_name% run spawn"
+    # Minigames is an new form that can be set to anything. This form can be opened with
+    # /ghub form minigames as a command or as seen on "commandOne:"
     minigames:
       Title: "Minigames"
       Content: "Click on a minigame of choice."
@@ -73,6 +86,7 @@ Bedrock-Selector:
           Button-Text: "Spleef"
           ImageURL: "https://www.digminecraft.com/materials/images/snowball.png"
           Server: "spleef"
+
         hideseek:
           Button-Text: "Hide & Seek"
           Server: "hideseek"
