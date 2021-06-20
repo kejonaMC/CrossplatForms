@@ -42,14 +42,16 @@ public class ConfigManager {
 
         File file = new File(plugin.getDataFolder(), config.fileName);
         if (!file.exists()) {
-            try {
-                if (!file.getParentFile().mkdirs()) {
-                    logger.severe("Failed to create plugin folder!");
+            if (!file.getParentFile().exists()) {
+                try {
+                    if (!file.getParentFile().mkdirs()) {
+                        logger.severe("Failed to create plugin folder!");
+                        return false;
+                    }
+                } catch (SecurityException e) {
+                    e.printStackTrace();
                     return false;
                 }
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                return false;
             }
             plugin.saveResource(config.fileName, false);
         }
