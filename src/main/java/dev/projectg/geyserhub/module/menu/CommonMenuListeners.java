@@ -41,7 +41,7 @@ public class CommonMenuListeners implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
-        if (!config.getBoolean("Selector-Item.Allow-Move") && Objects.requireNonNull(event.getCurrentItem()).isSimilar(AccessItem.getItem())) {
+        if (!config.getBoolean("Selector-Item.Allow-Move") && event.getCurrentItem().isSimilar(AccessItem.getItem())) {
                 event.setCancelled(true);
             }
     }
