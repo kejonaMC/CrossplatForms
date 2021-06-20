@@ -1,13 +1,14 @@
 package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.GeyserHubCommand;
+import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.config.ConfigManager;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
-import dev.projectg.geyserhub.module.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
 import dev.projectg.geyserhub.module.teleporter.JoinTeleporter;
 import dev.projectg.geyserhub.module.world.WorldSettings;
@@ -44,12 +45,12 @@ public class GeyserHubMain extends JavaPlugin {
         }
 
         configManager = new ConfigManager();
-        if (!configManager.loadConfiguration(ConfigManager.ConfigId.MAIN)) {
-            logger.severe("Disabling due to configuration error in " + ConfigManager.ConfigId.MAIN.fileName + " - Fix the formatting or regenerate a new file.");
+        if (!configManager.loadConfiguration(ConfigId.MAIN)) {
+            logger.severe("Disabling due to configuration error in " + ConfigId.MAIN.fileName + " - Fix the formatting or regenerate a new file.");
             return;
         }
-        if (!configManager.loadConfiguration(ConfigManager.ConfigId.SELECTOR)) {
-            logger.severe("Disabling due to configuration error in " + ConfigManager.ConfigId.SELECTOR.fileName + " - Fix the formatting or regenerate a new file.");
+        if (!configManager.loadConfiguration(ConfigId.SELECTOR)) {
+            logger.severe("Disabling due to configuration error in " + ConfigId.SELECTOR.fileName + " - Fix the formatting or regenerate a new file.");
             return;
         }
 
@@ -89,7 +90,7 @@ public class GeyserHubMain extends JavaPlugin {
             } catch (Exception var2) {
                 var2.printStackTrace();
             }
-        }, 20L, Placeholders.refreshRate * 20L);
+        }, 20L, ScoreboardManager.refreshRate * 20L);
     }
 
     public static GeyserHubMain getInstance() {

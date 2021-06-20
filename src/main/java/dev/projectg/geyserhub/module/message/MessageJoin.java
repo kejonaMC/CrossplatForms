@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.message;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +17,7 @@ public class MessageJoin implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         Objects.requireNonNull(config);
         Player player = e.getPlayer();
         List<String> messages = config.getStringList("Join-Message.Messages");

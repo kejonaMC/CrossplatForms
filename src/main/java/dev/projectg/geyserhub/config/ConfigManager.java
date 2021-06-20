@@ -1,5 +1,7 @@
-package dev.projectg.geyserhub;
+package dev.projectg.geyserhub.config;
 
+import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -43,7 +45,10 @@ public class ConfigManager {
         File file = new File(plugin.getDataFolder(), config.fileName);
         if (!file.exists()) {
             try {
-                file.getParentFile().mkdirs();
+                if (!file.getParentFile().mkdirs()) {
+                    logger.severe("Failed to create plugin folder!");
+                    return false;
+                }
             } catch (SecurityException e) {
                 e.printStackTrace();
                 return false;
@@ -92,21 +97,4 @@ public class ConfigManager {
         return configurations;
     }
 
-    /**
-     * An enum containing the identities of all valid configuration files.
-     */
-    public enum ConfigId {
-        MAIN("config.yml", 4),
-        SELECTOR("selector.yml", 1);
-
-        public static final ConfigId[] VALUES = values();
-
-        public final String fileName;
-        public final int version;
-
-        ConfigId(String fileName, int version) {
-            this.fileName = fileName;
-            this.version = version;
-        }
-    }
 }

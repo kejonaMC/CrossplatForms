@@ -1,7 +1,7 @@
 package dev.projectg.geyserhub.module.menu.java;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.module.Placeholders;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.SelectorLogger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -20,10 +20,11 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaMenu extends Placeholders {
+public class JavaMenu {
 
+    // todo: use this
     public static boolean isEnabled() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
         return config.getBoolean("Java-Selector.Enabled", true);
     }

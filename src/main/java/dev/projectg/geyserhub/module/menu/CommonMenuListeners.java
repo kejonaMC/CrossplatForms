@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -13,12 +14,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
-@SuppressWarnings("unused")
 public class CommonMenuListeners implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
@@ -30,7 +30,7 @@ public class CommonMenuListeners implements Listener {
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
         if (event.getItemDrop().getItemStack().isSimilar(AccessItem.getItem())) {
             if (!config.getBoolean("Selector-Item.Allow-Drop")) {
@@ -43,7 +43,7 @@ public class CommonMenuListeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
         event.getPlayer().getInventory().setHeldItemSlot(GeyserHubMain.getInstance().getConfig().getInt("Selector-Item.Slot"));
         if (config.getBoolean("Selector-Item.Join")) {

@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
@@ -37,7 +38,7 @@ public class BedrockFormRegistry implements Reloadable {
     }
 
     private void load() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
         SelectorLogger logger = SelectorLogger.getLogger();
 

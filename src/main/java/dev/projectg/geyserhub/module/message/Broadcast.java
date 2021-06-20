@@ -2,6 +2,7 @@ package dev.projectg.geyserhub.module.message;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.config.ConfigId;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,9 +15,9 @@ import java.util.*;
 
 public class Broadcast {
     public static void startBroadcastTimer(BukkitScheduler scheduler) {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         Objects.requireNonNull(config);
-        int scheduleId = scheduler.scheduleSyncDelayedTask(GeyserHubMain.getInstance(), () -> {
+        scheduler.scheduleSyncDelayedTask(GeyserHubMain.getInstance(), () -> {
 
             if (config.getBoolean("Broadcasts.Enable", false)) {
                 ConfigurationSection parentSection = config.getConfigurationSection("Broadcasts.Messages");

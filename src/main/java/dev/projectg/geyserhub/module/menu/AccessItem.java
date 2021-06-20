@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.config.ConfigId;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +18,7 @@ public class AccessItem {
 
     private static final ItemStack ACCESS_ITEM;
     static {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
 
         // Get the material

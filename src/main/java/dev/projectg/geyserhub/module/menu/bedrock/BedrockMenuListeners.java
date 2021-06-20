@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.module.menu.AccessItem;
 import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +18,7 @@ public class BedrockMenuListeners implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("selector");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         Objects.requireNonNull(config);
         Player player = event.getPlayer();
         if (player.getInventory().getItemInMainHand().isSimilar(AccessItem.getItem())) {
