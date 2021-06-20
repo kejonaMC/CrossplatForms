@@ -4,7 +4,6 @@ import dev.projectg.geyserhub.command.GeyserHubCommand;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.config.ConfigManager;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.message.Broadcast;
@@ -63,7 +62,6 @@ public class GeyserHubMain extends JavaPlugin {
         Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new BedrockMenuListeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(), this);
 
         Bukkit.getServer().getPluginManager().registerEvents(new JoinTeleporter(), this);
@@ -77,10 +75,6 @@ public class GeyserHubMain extends JavaPlugin {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
         }
         Broadcast.startBroadcastTimer(getServer().getScheduler());
-    }
-
-    @Override
-    public void onDisable() {
     }
 
     public void initializeScoreboard() {
