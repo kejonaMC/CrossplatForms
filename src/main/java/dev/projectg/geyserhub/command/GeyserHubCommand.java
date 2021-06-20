@@ -91,7 +91,7 @@ public class GeyserHubCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             UUID uuid = player.getUniqueId();
-            if (FloodgateApi.getInstance().isFloodgateId(uuid)) {
+            if (FloodgateApi.getInstance().isFloodgatePlayer(uuid)) {
                 if (BedrockFormRegistry.getInstance().isEnabled()) {
                     if (BedrockFormRegistry.getInstance().getFormNames().contains(formName)) {
                         BedrockFormRegistry.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
