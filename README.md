@@ -35,4 +35,6 @@ See the documentation for our config [here](https://github.com/ProjectG-Plugins/
 ## Creators
 Jens & Konicai
 
+ProjectG
+
 
