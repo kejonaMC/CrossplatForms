@@ -39,7 +39,6 @@ public class BedrockFormRegistry implements Reloadable {
 
     private void load() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        Objects.requireNonNull(config);
         SelectorLogger logger = SelectorLogger.getLogger();
 
         enabledForms.clear();

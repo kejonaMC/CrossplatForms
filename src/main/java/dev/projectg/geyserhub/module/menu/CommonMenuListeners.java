@@ -19,7 +19,6 @@ public class CommonMenuListeners implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        Objects.requireNonNull(config);
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
@@ -31,7 +30,6 @@ public class CommonMenuListeners implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        Objects.requireNonNull(config);
         if (event.getItemDrop().getItemStack().isSimilar(AccessItem.getItem())) {
             if (!config.getBoolean("Selector-Item.Allow-Drop")) {
                 event.setCancelled(true);
@@ -44,7 +42,6 @@ public class CommonMenuListeners implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        Objects.requireNonNull(config);
         event.getPlayer().getInventory().setHeldItemSlot(GeyserHubMain.getInstance().getConfig().getInt("Selector-Item.Slot"));
         if (config.getBoolean("Selector-Item.Join")) {
             Player player = event.getPlayer();

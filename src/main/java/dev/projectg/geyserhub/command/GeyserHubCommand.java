@@ -1,6 +1,6 @@
 package dev.projectg.geyserhub.command;
 
-import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.menu.java.JavaMenu;
@@ -102,7 +102,7 @@ public class GeyserHubCommand implements CommandExecutor {
                     player.sendMessage("Sorry, Bedrock forms are disabled!");
                 }
             } else {
-                JavaMenu.openMenu(player, GeyserHubMain.getInstance().getConfig());
+                JavaMenu.openMenu(player, ConfigId.SELECTOR);
             }
         } else if (commandSender instanceof ConsoleCommandSender) {
             sendHelp(commandSender);

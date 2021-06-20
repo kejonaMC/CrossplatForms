@@ -16,7 +16,6 @@ import java.util.*;
 public class Broadcast {
     public static void startBroadcastTimer(BukkitScheduler scheduler) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        Objects.requireNonNull(config);
         scheduler.scheduleSyncDelayedTask(GeyserHubMain.getInstance(), () -> {
 
             if (config.getBoolean("Broadcasts.Enable", false)) {

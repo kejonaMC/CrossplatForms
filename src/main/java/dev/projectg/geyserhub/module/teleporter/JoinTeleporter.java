@@ -27,7 +27,6 @@ public class JoinTeleporter implements Listener, Reloadable {
 
     public JoinTeleporter() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        Objects.requireNonNull(config);
         ReloadableRegistry.registerReloadable(this);
         enabled = load(config);
     }
@@ -88,7 +87,7 @@ public class JoinTeleporter implements Listener, Reloadable {
                 throw new AssertionError("Failed to decompose the following coordinates: " + composedCoords + " -> " + Arrays.toString(coordinates));
             }
         } else {
-            logger.severe("Join-Teleporter config section does not contain a valid Location value!");
+            logger.severe("Join-Teleporter config section does not contain a Location value or it is not a string!");
             return false;
         }
     }
@@ -96,7 +95,6 @@ public class JoinTeleporter implements Listener, Reloadable {
     @Override
     public boolean reload() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        Objects.requireNonNull(config);
         enabled = load(config);
         return enabled;
     }

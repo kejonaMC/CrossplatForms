@@ -38,8 +38,6 @@ public class ConfigManager {
      * @return The success state
      */
     public boolean loadConfiguration(@Nonnull ConfigId config) {
-        Objects.requireNonNull(config);
-
         GeyserHubMain plugin = GeyserHubMain.getInstance();
 
         File file = new File(plugin.getDataFolder(), config.fileName);
@@ -84,7 +82,6 @@ public class ConfigManager {
      * @param config the config ID
      * @return the FileConfiguration
      */
-    @Nullable
     public FileConfiguration getFileConfiguration(@Nonnull ConfigId config) {
         Objects.requireNonNull(config);
         return configurations.get(config);

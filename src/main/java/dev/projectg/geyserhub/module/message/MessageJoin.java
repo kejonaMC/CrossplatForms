@@ -11,14 +11,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MessageJoin implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        Objects.requireNonNull(config);
         Player player = e.getPlayer();
         List<String> messages = config.getStringList("Join-Message.Messages");
 

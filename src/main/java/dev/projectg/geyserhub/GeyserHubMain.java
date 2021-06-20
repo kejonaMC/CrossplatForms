@@ -90,7 +90,7 @@ public class GeyserHubMain extends JavaPlugin {
             } catch (Exception var2) {
                 var2.printStackTrace();
             }
-        }, 20L, ScoreboardManager.refreshRate * 20L);
+        }, 20L, ScoreboardManager.REFRESH_RATE * 20L);
     }
 
     public static GeyserHubMain getInstance() {

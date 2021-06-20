@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.module.menu.java;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.config.ConfigManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,12 +26,14 @@ public class JavaMenu {
     // todo: use this
     public static boolean isEnabled() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        Objects.requireNonNull(config);
         return config.getBoolean("Java-Selector.Enabled", true);
     }
 
     // todo: maybe just remove the FileConfiguration parameter
-    public static void openMenu(@Nonnull Player player, @Nonnull FileConfiguration config) {
+    public static void openMenu(@Nonnull Player player, @Nonnull ConfigId configId) {
+        Objects.requireNonNull(configId);
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(configId);
+
         SelectorLogger logger = SelectorLogger.getLogger();
 
         // Get the java selector section
