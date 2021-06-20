@@ -7,7 +7,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,11 +32,26 @@ public class ConfigManager {
     }
 
     /**
+     * Load every config in {@link ConfigId}
+     * @return false if there was a failure loading any of configurations
+     */
+    public boolean loadAllConfigs() {
+        boolean failOccurred = false;
+        for (ConfigId configId : ConfigId.VALUES) {
+            if (!loadConfig(configId)) {
+                failOccurred = true;
+                logger.severe("Configuration error in " + ConfigId.MAIN.fileName + " - Fix the issue or regenerate a new file.");
+            }
+        }
+        return failOccurred;
+    }
+
+    /**
      * Load a configuration from file.
      * @param config The configuration to load
      * @return The success state
      */
-    public boolean loadConfiguration(@Nonnull ConfigId config) {
+    public boolean loadConfig(@Nonnull ConfigId config) {
         GeyserHubMain plugin = GeyserHubMain.getInstance();
 
         File file = new File(plugin.getDataFolder(), config.fileName);

@@ -44,12 +44,8 @@ public class GeyserHubMain extends JavaPlugin {
         }
 
         configManager = new ConfigManager();
-        if (!configManager.loadConfiguration(ConfigId.MAIN)) {
-            logger.severe("Disabling due to configuration error in " + ConfigId.MAIN.fileName + " - Fix the formatting or regenerate a new file.");
-            return;
-        }
-        if (!configManager.loadConfiguration(ConfigId.SELECTOR)) {
-            logger.severe("Disabling due to configuration error in " + ConfigId.SELECTOR.fileName + " - Fix the formatting or regenerate a new file.");
+        if (!configManager.loadAllConfigs()) {
+            logger.severe("Disabling due to configuration error.");
             return;
         }
 
