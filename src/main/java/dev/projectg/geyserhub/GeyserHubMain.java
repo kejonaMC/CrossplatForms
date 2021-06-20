@@ -1,41 +1,36 @@
 package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.GeyserHubCommand;
+import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.config.ConfigManager;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
-import dev.projectg.geyserhub.module.Placeholders;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
 import dev.projectg.geyserhub.module.teleporter.JoinTeleporter;
 import dev.projectg.geyserhub.module.world.WorldSettings;
 import dev.projectg.geyserhub.utils.Utils;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
 public class GeyserHubMain extends JavaPlugin {
     private static GeyserHubMain plugin;
-    private SelectorLogger logger;
 
-    public static final int configVersion = 4;
+    private ConfigManager configManager;
 
     @Override
     public void onEnable() {
         plugin = this;
         new Metrics(this, 11427);
         // getting the logger forces the config to load before our loadConfiguration() is called...
-        logger = SelectorLogger.getLogger();
+        SelectorLogger logger = SelectorLogger.getLogger();
 
         try {
             Properties gitProperties = new Properties();
@@ -48,8 +43,9 @@ public class GeyserHubMain extends JavaPlugin {
             }
         }
 
-        if (!loadConfiguration()) {
-            logger.severe("Disabling due to configuration error. Fix the formatting or regenerate a new one");
+        configManager = new ConfigManager();
+        if (!configManager.loadAllConfigs()) {
+            logger.severe("Disabling due to configuration error.");
             return;
         }
 
@@ -62,7 +58,6 @@ public class GeyserHubMain extends JavaPlugin {
         Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new BedrockMenuListeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(), this);
 
         Bukkit.getServer().getPluginManager().registerEvents(new JoinTeleporter(), this);
@@ -78,44 +73,6 @@ public class GeyserHubMain extends JavaPlugin {
         Broadcast.startBroadcastTimer(getServer().getScheduler());
     }
 
-    @Override
-    public void onDisable() {
-    }
-
-    public boolean loadConfiguration() {
-        File configFile = new File(getDataFolder(), "config.yml");
-        if (!configFile.exists()) {
-            try {
-                configFile.getParentFile().mkdirs();
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                return false;
-            }
-            saveResource("config.yml", false);
-        }
-        // Get the config but don't actually load it into the main memory config
-        FileConfiguration config = new YamlConfiguration();
-        try {
-            config.load(configFile);
-            if (!config.contains("Config-Version", true)) {
-                logger.severe("Config-Version does not exist!");
-                return false;
-            } else if (!config.isInt("Config-Version")) {
-                logger.severe("Config-Version is not an integer!");
-                return false;
-            } else if (!(config.getInt("Config-Version") == configVersion)) {
-                logger.severe("Mismatched config version! Generate a new config and migrate your settings!");
-                return false;
-            } else {
-                reloadConfig();
-                logger.debug("Loaded configuration successfully");
-                return true;
-            }
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
     public void initializeScoreboard() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             try {
@@ -123,11 +80,14 @@ public class GeyserHubMain extends JavaPlugin {
             } catch (Exception var2) {
                 var2.printStackTrace();
             }
-        }, 20L, Placeholders.refreshRate * 20L);
+        }, 20L, ScoreboardManager.REFRESH_RATE * 20L);
     }
 
     public static GeyserHubMain getInstance() {
         return plugin;
     }
 
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
 }

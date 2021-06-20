@@ -1,9 +1,11 @@
 package dev.projectg.geyserhub.module.scoreboard;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -12,23 +14,23 @@ import java.util.Objects;
 
 
 public class ScoreboardManager {
-    public ScoreboardManager() {
-    }
+
+    public static final int REFRESH_RATE = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN).getInt("Scoreboard.Refresh-rate");
 
     public static void addScoreboard() {
 
         for (Player all : Bukkit.getOnlinePlayers()) {
             createScoreboard(all);
         }
-
     }
 
     public static void createScoreboard(Player player) {
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         Scoreboard board = Objects.requireNonNull(Bukkit.getServer().getScoreboardManager()).getNewScoreboard();
-        Objective objective = board.registerNewObjective("GeyserHub", "dummy", PlaceholderAPI.setPlaceholders(player, GeyserHubMain.getInstance().getConfig().getString("Scoreboard.Title", "GeyserHub")));
+        Objective objective = board.registerNewObjective("GeyserHub", "dummy", PlaceholderAPI.setPlaceholders(player, config.getString("Scoreboard.Title", "GeyserHub")));
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        List<String> text = GeyserHubMain.getInstance().getConfig().getStringList("Scoreboard.Lines");
+        List<String> text = config.getStringList("Scoreboard.Lines");
 
         // Scoreboards have a max of 15 lines
         int limit = Math.min(text.size(), 15);

@@ -2,6 +2,8 @@ package dev.projectg.geyserhub.reloadable;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.config.ConfigManager;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
@@ -33,12 +35,17 @@ public class ReloadableRegistry {
     public static boolean reloadAll() {
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        if (GeyserHubMain.getInstance().loadConfiguration()) {
-            logger.info("Reloaded the configuration, reloading modules...");
-        } else {
-            logger.severe(ChatColor.RED + "Failed to reload the configuration!");
-            return false;
+        ConfigManager configManager = GeyserHubMain.getInstance().getConfigManager();
+        // loadConfiguration() will never remove a key so I don't think this will result in ConcurrentModificationException...
+        for (ConfigId configId : configManager.getAllFileConfigurations().keySet()) {
+            if (configManager.loadConfig(configId)) {
+                logger.debug("Reloaded config file: " + configId.fileName);
+            } else {
+                logger.severe(ChatColor.RED + "Failed to reload configuration: " + configId.fileName);
+                return false;
+            }
         }
+        logger.info("Reloaded the configuration, reloading modules...");
 
         boolean success = true;
         for (Reloadable reloadable : ReloadableRegistry.getRegisteredReloadables()) {

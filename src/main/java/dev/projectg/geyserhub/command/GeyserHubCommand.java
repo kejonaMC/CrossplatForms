@@ -1,6 +1,6 @@
 package dev.projectg.geyserhub.command;
 
-import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.menu.java.JavaMenu;
@@ -91,7 +91,7 @@ public class GeyserHubCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             UUID uuid = player.getUniqueId();
-            if (FloodgateApi.getInstance().isFloodgateId(uuid)) {
+            if (FloodgateApi.getInstance().isFloodgatePlayer(uuid)) {
                 if (BedrockFormRegistry.getInstance().isEnabled()) {
                     if (BedrockFormRegistry.getInstance().getFormNames().contains(formName)) {
                         BedrockFormRegistry.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
@@ -102,7 +102,7 @@ public class GeyserHubCommand implements CommandExecutor {
                     player.sendMessage("Sorry, Bedrock forms are disabled!");
                 }
             } else {
-                JavaMenu.openMenu(player, GeyserHubMain.getInstance().getConfig());
+                JavaMenu.openMenu(player, ConfigId.SELECTOR);
             }
         } else if (commandSender instanceof ConsoleCommandSender) {
             sendHelp(commandSender);

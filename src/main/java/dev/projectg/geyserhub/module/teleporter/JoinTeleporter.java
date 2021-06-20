@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.teleporter;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
@@ -25,8 +26,9 @@ public class JoinTeleporter implements Listener, Reloadable {
     private Location location;
 
     public JoinTeleporter() {
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         ReloadableRegistry.registerReloadable(this);
-        enabled = load(GeyserHubMain.getInstance().getConfig());
+        enabled = load(config);
     }
 
     @EventHandler
@@ -85,14 +87,15 @@ public class JoinTeleporter implements Listener, Reloadable {
                 throw new AssertionError("Failed to decompose the following coordinates: " + composedCoords + " -> " + Arrays.toString(coordinates));
             }
         } else {
-            logger.severe("Join-Teleporter config section does not contain a valid Location value!");
+            logger.severe("Join-Teleporter config section does not contain a Location value or it is not a string!");
             return false;
         }
     }
 
     @Override
     public boolean reload() {
-        enabled = load(GeyserHubMain.getInstance().getConfig());
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
+        enabled = load(config);
         return enabled;
     }
 }
