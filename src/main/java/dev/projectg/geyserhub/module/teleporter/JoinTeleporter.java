@@ -1,6 +1,7 @@
 package dev.projectg.geyserhub.module.teleporter;
 
 import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
@@ -25,7 +26,7 @@ public class JoinTeleporter implements Listener, Reloadable {
     private Location location;
 
     public JoinTeleporter() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         Objects.requireNonNull(config);
         ReloadableRegistry.registerReloadable(this);
         enabled = load(config);
@@ -94,7 +95,7 @@ public class JoinTeleporter implements Listener, Reloadable {
 
     @Override
     public boolean reload() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration("config");
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         Objects.requireNonNull(config);
         enabled = load(config);
         return enabled;
