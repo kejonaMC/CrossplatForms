@@ -18,12 +18,16 @@ public class ConfigManager {
 
     private final Map<ConfigId, FileConfiguration> configurations = new HashMap<>();
 
+    private final SelectorLogger logger;
+
     public ConfigManager() {
         if (CONFIG_MANAGER == null) {
             CONFIG_MANAGER = this;
         } else {
             throw new UnsupportedOperationException("Only one instance of ConfigManager is allowed!");
         }
+
+        this.logger = SelectorLogger.getLogger();
     }
 
     /**
@@ -35,7 +39,6 @@ public class ConfigManager {
         Objects.requireNonNull(config);
 
         GeyserHubMain plugin = GeyserHubMain.getInstance();
-        SelectorLogger logger = SelectorLogger.getLogger();
 
         File file = new File(plugin.getDataFolder(), config.fileName);
         if (!file.exists()) {
@@ -60,9 +63,9 @@ public class ConfigManager {
         } else if (!configuration.isInt("Config-Version")) {
             logger.severe("Config-Version is not an integer in" + config.fileName + " !");
             return false;
-        //} else if (configuration.getInt("Config-Version") != Objects.requireNonNull(configuration.getDefaults()).getInt("Config-Version")) {
-            //logger.severe("Mismatched config version in " + configFileName + " ! Generate a new config and migrate your settings!");
-            //return false;
+        } else if (configuration.getInt("Config-Version") != config.version) {
+            logger.severe("Mismatched config version in " + config.fileName + " ! Generate a new config and migrate your settings!");
+            return false;
         } else {
             plugin.reloadConfig();
             this.configurations.put(config, configuration);
@@ -93,15 +96,17 @@ public class ConfigManager {
      * An enum containing the identities of all valid configuration files.
      */
     public enum ConfigId {
-        MAIN("config.yml"),
-        SELECTOR("selector.yml");
+        MAIN("config.yml", 4),
+        SELECTOR("selector.yml", 1);
 
         public static final ConfigId[] VALUES = values();
 
         public final String fileName;
+        public final int version;
 
-        ConfigId(String fileName){
+        ConfigId(String fileName, int version) {
             this.fileName = fileName;
+            this.version = version;
         }
     }
 }
