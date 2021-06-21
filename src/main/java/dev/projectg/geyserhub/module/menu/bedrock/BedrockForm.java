@@ -183,10 +183,13 @@ public class BedrockForm {
         }
 
         // Resolve any placeholders in the button text
-        List<Button> formattedButtons = new ArrayList<>(allButtons);
-        for (Button button : formattedButtons) {
-            button.setText(PlaceholderAPI.setPlaceholders(player, button.getText()));
+        List<Button> formattedButtons = new ArrayList<>();
+        for (Button rawButton : allButtons) {
+            Button copiedButton = new Button(rawButton);
+            copiedButton.setText(PlaceholderAPI.setPlaceholders(player, copiedButton.getText()));
+            formattedButtons.add(copiedButton);
         }
+
         // Create the form
         SimpleForm serverSelector = SimpleForm.of(title, content, formattedButtons.stream().map(Button::getButtonComponent).collect(Collectors.toList()));
 

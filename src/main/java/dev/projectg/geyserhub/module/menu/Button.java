@@ -5,6 +5,7 @@ import org.geysermc.cumulus.util.FormImage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,17 @@ public class Button {
      */
     public Button(@Nonnull String text) {
         this.text = Objects.requireNonNull(text);
+    }
+
+    /**
+     * Copy constructor
+     * @param button The button to make a copy of
+     */
+    public Button(@Nonnull Button button) {
+        this.text = button.text;
+        this.image = button.image;
+        this.commands = button.getCommands(); // lists are mutable, everything else here isn't
+        this.server = button.server;
     }
 
     /**
@@ -47,23 +59,18 @@ public class Button {
     }
 
     /**
-     * Set the image of the button.
-     * @param type the type of image
-     * @param data the image data
-     * @return the same Button instance
-     */
-    public Button setImage(@Nonnull FormImage.Type type, @Nonnull String data) {
-        this.image = FormImage.of(Objects.requireNonNull(type), Objects.requireNonNull(data));
-        return this;
-    }
-
-    /**
      * set the commands list.
      * @param commands the commands list
      * @return the same Button instance
      */
     public Button setCommands(@Nullable List<String> commands) {
-        this.commands = commands;
+        if (commands == null) {
+            this.commands = null;
+        } else {
+            this.commands = new ArrayList<>(commands);
+        }
+        this.commands = commands == null ? null : new ArrayList<>(commands);
+
         return this;
     }
 
@@ -82,26 +89,26 @@ public class Button {
      * @return the button component
      */
     public ButtonComponent getButtonComponent() {
-        return ButtonComponent.of(text, image);
+        return ButtonComponent.of(text, image); //both are immutable
     }
 
     @Nonnull
     public String getText() {
-        return this.text;
+        return this.text; // Strings are immutable
     }
 
     @Nullable
     public FormImage getImage() {
-        return this.image;
+        return this.image; // Form image is immutable
     }
 
     @Nullable
     public List<String> getCommands() {
-        return this.commands;
+        return new ArrayList<>(this.commands); // Lists are mutable
     }
 
     @Nullable
     public String getServer() {
-        return this.server;
+        return this.server; // Strings are immutable
     }
 }
