@@ -36,14 +36,14 @@ public class ConfigManager {
      * @return false if there was a failure loading any of configurations
      */
     public boolean loadAllConfigs() {
-        boolean failOccurred = false;
+        boolean totalSuccess = true;
         for (ConfigId configId : ConfigId.VALUES) {
             if (!loadConfig(configId)) {
-                failOccurred = true;
+                totalSuccess = false;
                 logger.severe("Configuration error in " + ConfigId.MAIN.fileName + " - Fix the issue or regenerate a new file.");
             }
         }
-        return failOccurred;
+        return totalSuccess;
     }
 
     /**
@@ -88,7 +88,7 @@ public class ConfigManager {
         } else {
             plugin.reloadConfig();
             this.configurations.put(config, configuration);
-            logger.debug("Loaded configuration successfully");
+            logger.debug("Loaded configuration " + config.fileName + " successfully");
             return true;
         }
     }
