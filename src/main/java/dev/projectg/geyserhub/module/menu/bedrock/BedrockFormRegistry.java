@@ -67,6 +67,8 @@ public class BedrockFormRegistry implements Reloadable {
                             if (form.isEnabled()) {
                                 enabledForms.put(entry, form);
                                 noSuccess = false;
+                            } else {
+                                logger.warn("Not adding form for config section: " + entry + " because there was a failure loading it.");
                             }
                             if ("default".equals(entry)) {
                                 containsDefault = true;

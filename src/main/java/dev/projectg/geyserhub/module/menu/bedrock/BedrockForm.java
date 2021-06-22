@@ -130,13 +130,12 @@ public class BedrockForm {
                 }
 
                 // Add commands if specified
-                List<String> commands = null;
+                List<String> commands = Collections.emptyList();
                 if (buttonInfo.contains("Commands") && buttonInfo.isList("Commands")) {
-                    List<String> potentialCommands = buttonInfo.getStringList("Commands");
-                    if (potentialCommands.isEmpty()) {
+                    if (buttonInfo.getStringList("Commands").isEmpty()) {
                         logger.warn(buttonId + " contains commands list but the list was empty.");
                     } else {
-                        commands = potentialCommands;
+                        commands = buttonInfo.getStringList("Commands");
                         logger.debug(buttonId + " contains commands: " + commands);
                     }
                 }
@@ -169,17 +168,16 @@ public class BedrockForm {
      * @param floodgatePlayer the floodgate player to send it to
      */
     protected void sendForm(@Nonnull FloodgatePlayer floodgatePlayer) {
+        if (!isEnabled) {
+            throw new AssertionError("Form: " + title + " that failed to load was called to be sent to a player!");
+        }
+
         SelectorLogger logger = SelectorLogger.getLogger();
 
         Player player = Bukkit.getServer().getPlayer(floodgatePlayer.getCorrectUniqueId());
         if (player == null) {
             logger.severe("Unable to find a Bukkit Player for the given Floodgate Player: " + floodgatePlayer.getCorrectUniqueId().toString());
             return;
-        }
-
-        if (!isEnabled) {
-            // todo: Do something less dirty to prevent this
-            throw new AssertionError("Form: " + title + " that failed to load was called to be sent to player " + player);
         }
 
         // Resolve any placeholders in the button text
@@ -204,7 +202,7 @@ public class BedrockForm {
 
             Button button = formattedButtons.get(response.getClickedButtonId());
 
-            if (button.getCommands() != null) {
+            if (!button.getCommands().isEmpty()) {
                 // Get the commands from the list of commands and replace any playerName placeholders
                 for (String command : button.getCommands()) {
                     Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), PlaceholderAPI.setPlaceholders(player, command));

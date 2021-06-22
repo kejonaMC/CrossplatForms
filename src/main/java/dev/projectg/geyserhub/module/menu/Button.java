@@ -1,5 +1,6 @@
 package dev.projectg.geyserhub.module.menu;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.util.FormImage;
 
@@ -13,12 +14,12 @@ import java.util.Objects;
 public class Button {
 
     // base requirement for ButtonComponent
-    private String text;
-    private FormImage image;
+    @Nonnull private String text;
+    @Nullable private FormImage image;
 
     // Everything extra
-    private List<String> commands = Collections.emptyList();
-    private String server;
+    @Nonnull private List<String> commands = Collections.emptyList();
+    @Nullable private String server;
 
     /**
      * Create a button.
@@ -61,17 +62,12 @@ public class Button {
 
     /**
      * set the commands list.
-     * @param commands the commands list
+     * @param commands the commands list, which can be empty.
      * @return the same Button instance
      */
-    public Button setCommands(@Nullable List<String> commands) {
-        if (commands == null) {
-            this.commands = null;
-        } else {
-            this.commands = new ArrayList<>(commands);
-        }
-        this.commands = commands == null ? null : new ArrayList<>(commands);
-
+    public Button setCommands(@Nonnull List<String> commands) {
+        Objects.requireNonNull(commands);
+        this.commands = new ArrayList<>(commands);
         return this;
     }
 
@@ -89,6 +85,7 @@ public class Button {
      * Get the button component based off the text and image off the Button.
      * @return the button component
      */
+    @NonNull
     public ButtonComponent getButtonComponent() {
         return ButtonComponent.of(text, image); //both are immutable
     }
@@ -103,7 +100,11 @@ public class Button {
         return this.image; // Form image is immutable
     }
 
-    @Nullable
+    /**
+     * Get the commands that should be executed when this button is pressed
+     * @return a List of commands, which may be empty.
+     */
+    @Nonnull
     public List<String> getCommands() {
         return new ArrayList<>(this.commands); // Lists are mutable
     }
