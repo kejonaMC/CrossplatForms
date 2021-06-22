@@ -6,6 +6,7 @@ import org.geysermc.cumulus.util.FormImage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class Button {
     private FormImage image;
 
     // Everything extra
-    private List<String> commands;
+    private List<String> commands = Collections.emptyList();
     private String server;
 
     /**
