@@ -16,11 +16,14 @@ commands:
 
 permissions:
   geyserhub.main:
-    description: Access to the base command /ghub
+    description: Access to the base command /ghub. Opens the default form if a player runs the command.
     default: true
   geyserhub.form:
-    description: Access to open a form with /ghub form <form>
+    description: Access to /ghub form <form>
     default: true
+  geyserhub.form.others:
+    description: Access to /ghub form <form> <playername>
+    default: op
   geyserhub.reload:
     description: Access to /ghub reload
     default: op
