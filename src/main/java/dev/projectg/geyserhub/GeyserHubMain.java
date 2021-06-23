@@ -51,24 +51,33 @@ public class GeyserHubMain extends JavaPlugin {
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
+        // Load bedrock forms
         new BedrockFormRegistry();
 
         // todo: and add command suggestions/completions, help pages that only shows available commands
         Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand());
 
+        // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(), this);
 
+        // Listener the Join Teleporter module
         Bukkit.getServer().getPluginManager().registerEvents(new JoinTeleporter(), this);
 
+        // Listener for world settings
         Bukkit.getServer().getPluginManager().registerEvents(new WorldSettings(), this);
 
+        // load the scoreboard if enabled
         if (getConfig().getBoolean("Scoreboard.Enable", false)) {
             initializeScoreboard();
         }
+
+        // Enable the join message if enabled
         if (getConfig().getBoolean("Enable-Join-Message", false)) {
             Bukkit.getServer().getPluginManager().registerEvents(new MessageJoin(), this);
         }
+
+        // The random interval broadcast module
         Broadcast.startBroadcastTimer(getServer().getScheduler());
     }
 

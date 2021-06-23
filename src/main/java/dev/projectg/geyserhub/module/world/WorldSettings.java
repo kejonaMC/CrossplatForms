@@ -2,7 +2,6 @@ package dev.projectg.geyserhub.module.world;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -111,7 +110,7 @@ public class WorldSettings implements Listener {
         if (player.hasPermission("geyserhub.blockbreak")) {
             return;
         }
-        player.sendMessage(ChatColor.RESET + "You can't break blocks here!");
+        player.sendMessage("You can't break blocks here!");
         event.setCancelled(true);
 
     }
@@ -129,7 +128,7 @@ public class WorldSettings implements Listener {
          if (player.hasPermission("geyserhub.blockplace")) {
              return;
          }
-        player.sendMessage(ChatColor.RESET + "You can't place blocks here!");
+        player.sendMessage("You can't place blocks here!");
         event.setCancelled(true);
     }
 }

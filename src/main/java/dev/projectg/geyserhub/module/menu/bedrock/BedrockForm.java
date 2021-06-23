@@ -190,7 +190,7 @@ public class BedrockForm {
         }
 
         // Create the form
-        SimpleForm serverSelector = SimpleForm.of(title, content, formattedButtons.stream().map(Button::getButtonComponent).collect(Collectors.toList()));
+        SimpleForm serverSelector = SimpleForm.of(PlaceholderUtils.setPlaceholders(player, title), PlaceholderUtils.setPlaceholders(player, content), formattedButtons.stream().map(Button::getButtonComponent).collect(Collectors.toList()));
 
         // Set the response handler
         serverSelector.setResponseHandler((responseData) -> {
