@@ -40,7 +40,7 @@ Java-Selector:
 
 Bedrock-Selector:
   Enable: true
-  # The default form can be opened with the item, /ghub
+
   Forms:
     # Name of the form. "default" must exist. Create as many more as you want.
     default:
