@@ -1,5 +1,6 @@
 package dev.projectg.geyserhub.module.menu;
 
+import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ public class CommandUtils {
         }
         // Split the input into two strings between ";" and get the second string
         String executableCommand = prefixedCommand.split(";", 2)[1];
+        SelectorLogger.getLogger().debug("Running command: " + executableCommand + " as " + sender.getName());
         Bukkit.getServer().dispatchCommand(sender, executableCommand);
     }
 }

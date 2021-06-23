@@ -79,7 +79,7 @@ Bedrock-Selector:
         spawnCommand:
           Button-Text: "Spawn"
           Commands:
-            - "console; tp %player_name% tp 0 80 0"
+            - "console; tp %player_name% 0 80 0"
     # An example secondary form.
     minigames:
       Title: "Minigames"
