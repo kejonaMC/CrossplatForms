@@ -23,8 +23,8 @@ public class CommandUtils {
             sender = player;
         }
         // Split the input into two strings between ";" and get the second string
-        String executableCommand = prefixedCommand.split(";", 2)[1];
-        SelectorLogger.getLogger().debug("Running command: " + executableCommand + " as " + sender.getName());
+        String executableCommand = prefixedCommand.split(";", 2)[1].stripLeading();
+        SelectorLogger.getLogger().debug("Running command: [" + executableCommand + "] as " + sender.getName());
         Bukkit.getServer().dispatchCommand(sender, executableCommand);
     }
 }
