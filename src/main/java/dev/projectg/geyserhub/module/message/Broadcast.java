@@ -3,7 +3,7 @@ package dev.projectg.geyserhub.module.message;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.config.ConfigId;
-import me.clip.placeholderapi.PlaceholderAPI;
+import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,7 +30,7 @@ public class Broadcast {
                 if (parentSection.contains(broadcastId, true) && parentSection.isList(broadcastId)) {
                     for (String message : parentSection.getStringList(broadcastId)) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(player, message)));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderUtils.setPlaceholders(player, message)));
                         }
                     }
                 } else {

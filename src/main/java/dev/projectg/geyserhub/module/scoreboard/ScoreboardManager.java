@@ -2,7 +2,7 @@ package dev.projectg.geyserhub.module.scoreboard;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
-import me.clip.placeholderapi.PlaceholderAPI;
+import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +27,7 @@ public class ScoreboardManager {
     public static void createScoreboard(Player player) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         Scoreboard board = Objects.requireNonNull(Bukkit.getServer().getScoreboardManager()).getNewScoreboard();
-        Objective objective = board.registerNewObjective("GeyserHub", "dummy", PlaceholderAPI.setPlaceholders(player, config.getString("Scoreboard.Title", "GeyserHub")));
+        Objective objective = board.registerNewObjective("GeyserHub", "dummy", PlaceholderUtils.setPlaceholders(player, config.getString("Scoreboard.Title", "GeyserHub")));
 
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         List<String> text = config.getStringList("Scoreboard.Lines");
@@ -36,7 +36,7 @@ public class ScoreboardManager {
         int limit = Math.min(text.size(), 15);
 
         for (int index = 0; index < limit; index++) {
-            String formattedLine = PlaceholderAPI.setPlaceholders(player, text.get(index));
+            String formattedLine = PlaceholderUtils.setPlaceholders(player, text.get(index));
             Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', formattedLine));
             score.setScore(limit - index);
         }

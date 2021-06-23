@@ -1,7 +1,6 @@
 package dev.projectg.geyserhub;
 
 import dev.projectg.geyserhub.command.GeyserHubCommand;
-import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.config.ConfigManager;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
@@ -11,7 +10,7 @@ import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
 import dev.projectg.geyserhub.module.teleporter.JoinTeleporter;
 import dev.projectg.geyserhub.module.world.WorldSettings;
-import dev.projectg.geyserhub.utils.Utils;
+import dev.projectg.geyserhub.utils.FileUtils;
 import dev.projectg.geyserhub.utils.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,7 +33,7 @@ public class GeyserHubMain extends JavaPlugin {
 
         try {
             Properties gitProperties = new Properties();
-            gitProperties.load(Utils.getResource("git.properties"));
+            gitProperties.load(FileUtils.getResource("git.properties"));
             logger.info("Branch: " + gitProperties.getProperty("git.branch", "Unknown") + ", Commit: " + gitProperties.getProperty("git.commit.id.abbrev", "Unknown"));
         } catch (IOException e) {
             logger.warn("Unable to load resource: git.properties");

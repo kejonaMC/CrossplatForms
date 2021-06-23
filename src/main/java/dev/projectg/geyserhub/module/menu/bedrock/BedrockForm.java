@@ -4,7 +4,7 @@ import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.Button;
 import dev.projectg.geyserhub.module.menu.CommandUtils;
-import me.clip.placeholderapi.PlaceholderAPI;
+import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -185,7 +185,7 @@ public class BedrockForm {
         List<Button> formattedButtons = new ArrayList<>();
         for (Button rawButton : allButtons) {
             Button copiedButton = new Button(rawButton);
-            copiedButton.setText(PlaceholderAPI.setPlaceholders(player, copiedButton.getText()));
+            copiedButton.setText(PlaceholderUtils.setPlaceholders(player, copiedButton.getText()));
             formattedButtons.add(copiedButton);
         }
 
@@ -206,7 +206,7 @@ public class BedrockForm {
             if (!button.getCommands().isEmpty()) {
                 // Get the commands from the list of commands and replace any playerName placeholders
                 for (String command : button.getCommands()) {
-                    CommandUtils.runCommand(PlaceholderAPI.setPlaceholders(player, command), player);
+                    CommandUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
                 }
             }
 
