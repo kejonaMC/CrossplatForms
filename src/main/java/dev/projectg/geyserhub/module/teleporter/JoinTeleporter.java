@@ -107,6 +107,7 @@ public class JoinTeleporter implements Listener, Reloadable {
                 int y = Integer.parseInt(coordinates[1]);
                 int z = Integer.parseInt(coordinates[2]);
                 location = new Location(world, x, y, z);
+                logger.debug("Join-Teleporter is enabled and has coordinates: [" + x + ", " + y + ", " + z + "] in [" + worldName + "].");
                 return true;
             } catch (NumberFormatException e) {
                 throw new AssertionError("Failed to decompose the following coordinates: " + composedCoords + " -> " + Arrays.toString(coordinates));
