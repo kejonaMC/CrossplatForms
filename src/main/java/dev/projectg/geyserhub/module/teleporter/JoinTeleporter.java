@@ -20,8 +20,14 @@ import java.util.Objects;
 
 public class JoinTeleporter implements Listener, Reloadable {
 
-    private static final String COORDINATE_REGEX = "^(-\\d+|\\d+);(-\\d+|\\d+);(-\\d+|\\d+)$\n";
+    /**
+     * Makes sure that the input looks something like "integer;integer;integer"
+     */
+    private static final String COORDINATE_REGEX = "(-\\d+|\\d+);(-\\d+|\\d+);(-\\d+|\\d+)";
 
+    /**
+     * True if the module isn't disabled in the config and all loading was successful.
+     */
     private boolean enabled;
     private Location location;
 
@@ -38,22 +44,41 @@ public class JoinTeleporter implements Listener, Reloadable {
         }
     }
 
+    /**
+     * Load the the JoinTeleporter
+     * @param config the config to pull from
+     * @return false if there was an error loading or if its disabled in the config
+     */
     private boolean load(@Nonnull FileConfiguration config) {
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        // Get our section
-        if (!(config.contains("Join-Teleporter", true) && config.isConfigurationSection("Join-Teleporter"))) {
+        if (!config.contains("Join-Teleporter", true) || !config.isConfigurationSection("Join-Teleporter")) {
             logger.warn("Configuration does not contain Join-Teleporter section, skipping module.");
             return false;
         }
         ConfigurationSection section = config.getConfigurationSection("Join-Teleporter");
         Objects.requireNonNull(section);
 
-        // Validate all our values
-        if (!(section.contains("Enable", true) && section.isBoolean(("Enable")))) {
-            logger.severe("Join-Teleporter config section does not contain a valid Enable value, skipping module!");
+        if (section.contains("Enable") && section.isBoolean("Enable")) {
+            if (section.getBoolean("Enable")) {
+                return setLocation(section);
+            } else {
+                return false;
+            }
+        } else {
+            logger.warn("Join-Teleporter config section does not contain a valid Enable value, skipping module!");
             return false;
         }
+    }
+
+    /**
+     * Set the location to teleport to.
+     * @param section the configuration section to pull the data from
+     * @return false if there was an error setting the location
+     */
+    private boolean setLocation(@Nonnull ConfigurationSection section) {
+        SelectorLogger logger = SelectorLogger.getLogger();
+
         if (!(section.contains("World") && section.isString("World"))) {
             logger.severe("Join-Teleporter config section does not contain a valid World string, skipping module!");
             return false;
@@ -66,12 +91,12 @@ public class JoinTeleporter implements Listener, Reloadable {
             return false;
         }
 
-        if (section.contains("Location") && section.isString("Location")) {
+        if (section.contains("Coordinates") && section.isString("Coordinates")) {
             // Make sure the given coordinates are in the correct format
-            String composedCoords = section.getString("Location");
+            String composedCoords = section.getString("Coordinates");
             Objects.requireNonNull(composedCoords);
             if (!composedCoords.matches(COORDINATE_REGEX)) {
-                logger.severe("Join-Teleporter.Location in the config is not of the format <integer;integer;integer>, skipping module!");
+                logger.severe("Join-Teleporter.Coordinates in the config is not of the format <integer;integer;integer>, skipping module!");
                 return false;
             }
 
@@ -87,15 +112,14 @@ public class JoinTeleporter implements Listener, Reloadable {
                 throw new AssertionError("Failed to decompose the following coordinates: " + composedCoords + " -> " + Arrays.toString(coordinates));
             }
         } else {
-            logger.severe("Join-Teleporter config section does not contain a Location value or it is not a string!");
+            logger.severe("Join-Teleporter config section does not contain a Coordinates value or it is not a string!");
             return false;
         }
     }
 
     @Override
     public boolean reload() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        enabled = load(config);
-        return enabled;
+        enabled = load(GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN));
+        return true;
     }
 }

@@ -22,9 +22,9 @@ public class BedrockFormRegistry implements Reloadable {
     public static final String DEFAULT = "default";
 
     /**
-     * If the bedrock form is enabled in the config. the {@link #getFormNames()} may still return an empty list.
+     * If bedrock forms are enabled. may be false if disabled in the config or if all forms failed to load.
      */
-    private boolean isEnabled = false;
+    private boolean isEnabled;
     private final Map<String, BedrockForm> enabledForms = new HashMap<>();
 
     public static BedrockFormRegistry getInstance() {
@@ -33,11 +33,11 @@ public class BedrockFormRegistry implements Reloadable {
 
     public BedrockFormRegistry() {
         ReloadableRegistry.registerReloadable(this);
-        load();
+        isEnabled = load();
         INSTANCE = this;
     }
 
-    private void load() {
+    private boolean load() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -49,7 +49,6 @@ public class BedrockFormRegistry implements Reloadable {
 
             if (selectorSection.contains("Enable", true) && selectorSection.isBoolean("Enable")) {
                 if (selectorSection.getBoolean("Enable")) {
-                    isEnabled = true;
                     if (selectorSection.contains("Forms", true) && selectorSection.isConfigurationSection("Forms")) {
                         ConfigurationSection forms = selectorSection.getConfigurationSection("Forms");
                         Objects.requireNonNull(forms);
@@ -75,15 +74,14 @@ public class BedrockFormRegistry implements Reloadable {
                             }
                         }
 
-                        if (noSuccess) {
-                            logger.warn("Failed to load ALL bedrock forms, due to configuration error.");
-                            return;
-                        } else {
-                            logger.info("Valid Bedrock forms are: " + enabledForms.keySet());
-                        }
-
                         if (!containsDefault) {
                             logger.warn("Failed to load a default form! The Server Selector compass will not work and players will not be able to open the default form with \"/ghub\"");
+                        }
+                        if (noSuccess) {
+                            logger.warn("Failed to load ALL bedrock forms, due to configuration error.");
+                        } else {
+                            logger.info("Valid Bedrock forms are: " + enabledForms.keySet());
+                            return true;
                         }
                     }
                 } else {
@@ -95,6 +93,7 @@ public class BedrockFormRegistry implements Reloadable {
         } else {
             logger.warn("Not enabling bedrock forms because the whole configuration section is not present.");
         }
+        return false;
     }
 
     public void sendForm(@Nonnull FloodgatePlayer player, @Nonnull String form) {
@@ -110,7 +109,7 @@ public class BedrockFormRegistry implements Reloadable {
 
     @Override
     public boolean reload() {
-        load();
-        return isEnabled;
+        isEnabled = load();
+        return true;
     }
 }
