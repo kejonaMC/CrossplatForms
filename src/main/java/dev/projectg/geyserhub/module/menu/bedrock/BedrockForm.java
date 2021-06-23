@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.module.menu.bedrock;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.Button;
+import dev.projectg.geyserhub.module.menu.CommandUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -205,7 +206,7 @@ public class BedrockForm {
             if (!button.getCommands().isEmpty()) {
                 // Get the commands from the list of commands and replace any playerName placeholders
                 for (String command : button.getCommands()) {
-                    Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), PlaceholderAPI.setPlaceholders(player, command));
+                    CommandUtils.runCommand(PlaceholderAPI.setPlaceholders(player, command), player);
                 }
             }
 

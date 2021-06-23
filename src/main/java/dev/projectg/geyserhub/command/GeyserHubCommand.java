@@ -32,7 +32,7 @@ public class GeyserHubCommand implements CommandExecutor {
         if (!(commandSender instanceof Player || commandSender instanceof ConsoleCommandSender)) {
             return false;
         }
-
+        // todo: cleanup
         if (args.length == 0) {
             // send the default form, help if console
             sendForm(commandSender, BedrockFormRegistry.DEFAULT);
