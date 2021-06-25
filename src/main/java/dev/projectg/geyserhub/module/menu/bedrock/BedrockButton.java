@@ -21,7 +21,7 @@ public class BedrockButton extends OutcomeButton {
     }
 
     /**
-     * Copy constructor
+     * Copy constructor.
      * @param button The button to make a copy of
      */
     public BedrockButton(@Nonnull BedrockButton button) {
@@ -37,8 +37,7 @@ public class BedrockButton extends OutcomeButton {
         this.image = image;
     }
 
-    @Nullable
-    public FormImage getImage() {
+    public @Nullable FormImage getImage() {
         return this.image; // Form image is immutable
     }
 
@@ -46,8 +45,7 @@ public class BedrockButton extends OutcomeButton {
      * Get the button component based off the text and image off the Button.
      * @return the button component
      */
-    @NonNull
-    public ButtonComponent getButtonComponent() {
+    public @NonNull ButtonComponent getButtonComponent() {
         return ButtonComponent.of(getText(), getImage());
     }
 

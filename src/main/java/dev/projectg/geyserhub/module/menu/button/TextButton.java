@@ -16,7 +16,7 @@ public class TextButton {
     }
 
     /**
-     * Copy constructor
+     * Copy constructor.
      * @param button The button to make a copy of
      */
     public TextButton(@Nonnull TextButton button) {
@@ -31,8 +31,7 @@ public class TextButton {
         this.text = Objects.requireNonNull(text);
     }
 
-    @Nonnull
-    public String getText() {
+    public @Nonnull String getText() {
         return this.text; // Strings are immutable
     }
 

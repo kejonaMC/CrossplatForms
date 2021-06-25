@@ -21,7 +21,7 @@ public class OutcomeButton extends TextButton {
     }
 
     /**
-     * Copy constructor
+     * Copy constructor.
      * @param button The button to make a copy of
      */
     public OutcomeButton(@Nonnull OutcomeButton button) {
@@ -32,7 +32,7 @@ public class OutcomeButton extends TextButton {
 
     /**
      * Set the commands list.
-     * @param commands the commands list, which can be empty.
+     * @param commands the commands list, which can be empty
      */
     public void setCommands(@Nonnull List<String> commands) {
         Objects.requireNonNull(commands);
@@ -48,16 +48,14 @@ public class OutcomeButton extends TextButton {
     }
 
     /**
-     * Get the commands that should be executed when this button is pressed
-     * @return a List of commands, which may be empty.
+     * Get the commands that should be executed when this button is pressed.
+     * @return a List of commands, which may be empty
      */
-    @Nonnull
-    public List<String> getCommands() {
+    public @Nonnull List<String> getCommands() {
         return new ArrayList<>(this.commands); // Lists are mutable
     }
 
-    @Nullable
-    public String getServer() {
+    public @Nullable String getServer() {
         return this.server; // Strings are immutable
     }
 }
