@@ -16,7 +16,6 @@ import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.management.ObjectName;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +31,12 @@ public class GeyserHubCommand implements CommandExecutor {
 
     private static final String NO_PERMISSION = "Sorry, you don't have permission to run that command!";
     private static final String UNKNOWN = "Sorry, that's an unknown command!";
+
+    private final BedrockFormRegistry bedrockRegistry;
+
+    public GeyserHubCommand(BedrockFormRegistry bedrockRegistry) {
+        this.bedrockRegistry = bedrockRegistry;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -110,9 +115,9 @@ public class GeyserHubCommand implements CommandExecutor {
             Player player = (Player) commandSender;
             UUID uuid = player.getUniqueId();
             if (FloodgateApi.getInstance().isFloodgatePlayer(uuid)) {
-                if (BedrockFormRegistry.getInstance().isEnabled()) {
-                    if (BedrockFormRegistry.getInstance().getFormNames().contains(formName)) {
-                        BedrockFormRegistry.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
+                if (bedrockRegistry.isEnabled()) {
+                    if (bedrockRegistry.getFormNames().contains(formName)) {
+                        bedrockRegistry.sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
                     } else {
                         sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
                     }

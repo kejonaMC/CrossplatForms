@@ -21,13 +21,19 @@ import java.util.Objects;
 
 public class CommonMenuListeners implements Listener {
 
+    private final BedrockFormRegistry bedrockFormRegistry;
+
+    public CommonMenuListeners(BedrockFormRegistry bedrockFormRegistry) {
+        this.bedrockFormRegistry = bedrockFormRegistry;
+    }
+
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // open the menu through the access item
         Player player = event.getPlayer();
         if (player.getInventory().getItemInMainHand().isSimilar(AccessItem.getItem())) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    BedrockFormRegistry.getInstance().sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()), BedrockFormRegistry.DEFAULT);
+                    bedrockFormRegistry.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()), BedrockFormRegistry.DEFAULT);
                 } else {
                     JavaMenu.openMenu(player, ConfigId.SELECTOR);
                 }
