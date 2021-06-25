@@ -57,7 +57,7 @@ public class BedrockFormRegistry implements Reloadable {
                             ConfigurationSection formInfo = forms.getConfigurationSection(entry);
                             Objects.requireNonNull(formInfo);
                             BedrockForm form = new BedrockForm(formInfo);
-                            if (form.isEnabled()) {
+                            if (form.isEnabled) {
                                 enabledForms.put(entry, form);
                                 noSuccess = false;
                             } else {

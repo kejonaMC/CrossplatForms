@@ -2,7 +2,7 @@ package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.CommandUtils;
+import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +26,10 @@ import java.util.stream.Collectors;
 
 public class BedrockForm {
 
-    private final boolean isEnabled;
+    private final SelectorLogger logger;
+
+    public final boolean isEnabled;
+    public final String formName;
 
     private String title;
     private String content;
@@ -35,49 +38,40 @@ public class BedrockForm {
     /**
      * Create a new bedrock selector form and initializes it with the current loaded config
      */
-    protected BedrockForm(@Nonnull ConfigurationSection section) {
-        isEnabled = load(section);
-    }
+    protected BedrockForm(@Nonnull ConfigurationSection configSection) {
+        logger = SelectorLogger.getLogger();
+        Objects.requireNonNull(configSection);
+        formName = configSection.getName();
 
-    protected boolean isEnabled() {
-        return isEnabled;
-    }
-
-    /**
-     * Initialize or refresh the server selector form
-     */
-    private boolean load(@Nonnull ConfigurationSection configSection) {
-
-        SelectorLogger logger = SelectorLogger.getLogger();
-
-        String title = configSection.getString("Title");
-        String content = configSection.getString("Content");
-        if (title == null || content == null) {
-            logger.severe("Value of Bedrock-Selector.Title or Bedrock-Selector.Content has no value in the config for form: "  + configSection.getName() + "! Failed to create the bedrock selector form.");
-            return false;
+        // Get the Title and Content
+        if (!configSection.contains("Title") || !configSection.contains("Content")) {
+            logger.warn("Bedrock Form: "  + formName + " does not contain a Title or Content value! Failed to create the form.");
+            isEnabled = false;
+            return;
+        } else {
+            this.title = Objects.requireNonNull(configSection.getString("Title"));
+            this.content = Objects.requireNonNull(configSection.getString("Content"));
         }
 
         // Get our Buttons
         if (!(configSection.contains("Buttons", true) && configSection.isConfigurationSection("Buttons"))) {
-            logger.warn("Form: " + configSection.getName() + " does not contain a Buttons section, unable to create form");
-            return false;
+            logger.warn("Bedrock Form: " + formName + " does not contain a Buttons section, unable to create form");
+            isEnabled = false;
+            return;
         }
         ConfigurationSection buttonSection = configSection.getConfigurationSection("Buttons");
         Objects.requireNonNull(buttonSection);
         List<BedrockButton> buttons = getButtons(buttonSection);
         if (buttons.isEmpty()) {
-            logger.warn("Failed to create any valid buttons of form: " + configSection.getName() + "! All listed buttons have a malformed section!");
-            return false;
+            logger.warn("Failed to create any valid buttons of Bedrock form: " + formName + "! All listed buttons have a malformed section!");
+            isEnabled = false;
+            return;
         } else {
-            logger.debug("Finished adding buttons to form: " + configSection.getName());
+            logger.debug("Finished adding buttons to bedrock form: " + formName);
         }
-
-        // Only set everything once it has been validated
-        this.title = title;
-        this.content = content;
         this.allButtons = buttons;
 
-        return true;
+        isEnabled = true;
     }
 
     /**
@@ -86,16 +80,6 @@ public class BedrockForm {
      * @return A list of Buttons, which may be empty.
      */
     private List<BedrockButton> getButtons(@Nonnull ConfigurationSection configSection) {
-        SelectorLogger logger = SelectorLogger.getLogger();
-
-        // Get the form name
-        String formName;
-        ConfigurationSection parent = configSection.getParent();
-        if (parent == null) {
-            formName = "null";
-        } else {
-            formName = parent.getName();
-        }
         logger.debug("Getting buttons for form: " + formName);
 
         // Get all the defined buttons in the buttons section
@@ -205,7 +189,7 @@ public class BedrockForm {
             if (!button.getCommands().isEmpty()) {
                 // Get the commands from the list of commands and replace any playerName placeholders
                 for (String command : button.getCommands()) {
-                    CommandUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
+                    MenuUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
                 }
             }
 
