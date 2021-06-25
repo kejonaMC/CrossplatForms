@@ -20,23 +20,61 @@ Selector-Item:
 Java-Selector:
   Enable: true
 
-  Title: "Server Selector"
-  Size: 9
-
-  Servers:
-    lobby:
-      Display-Name: "Lobby"
-      Material: Diamond
-      Lore:
-        - "&2Online players: %bungee_lobby%"
-      Slot: 2
-
-    survival:
-      Display-Name: "Survival"
-      Material: Emerald
-      Lore:
-        - "&2online players: %bungee_survival%"
-      Slot: 6
+  Menus:
+    default:
+      Title: "Server Selector"
+      Size: 9
+      Buttons:
+        2:
+          Display-Name: "Lobby"
+          Material: Diamond
+          Lore:
+            - "&2Online players: %bungee_lobby%"
+          Right-Click:
+            Server: "lobby"
+            Commands:
+              - "tell %player_name% Sending you to the lobby in a right click fashion..."
+          Left-Click:
+            Server: "lobby"
+            Commands:
+              - "tell %player_name% Sending you to the lobby in a left click fashion..."
+        4:
+          Display-Name: "Minigames"
+          Material: Grass
+          Lore:
+            - "Currently Available:"
+            - "Spleef"
+            - "Hide & Seek"
+          Any-Click:
+            Commands:
+              - "execute as %player_name% run ghub form minigames"
+        6:
+          Display-Name: "Survival"
+          Material: Emerald
+          Lore:
+            - "&2online players: %bungee_survival%"
+          Any-Click:
+            Server: "survival"
+            Commands:
+              - "tell %player_name% Sending you to Survival..."
+    minigames:
+      Title: "Server Selector"
+      Size: 3
+      Buttons:
+        0:
+          Display-Name: "Spleef"
+          Material: SNOWBALL
+          Lore:
+            - "Play Spleef!"
+          Any-Click:
+            Server: "spleef"
+        2:
+          Display-Name: "Hide & Seek"
+          Material: DIRT
+          Lore:
+            - "Play Hide & Seek!"
+          Any-Click:
+            Server: "hideseek"
 
 Bedrock-Selector:
   Enable: true
