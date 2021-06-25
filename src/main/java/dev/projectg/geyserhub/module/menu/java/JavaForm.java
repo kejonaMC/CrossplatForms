@@ -1,13 +1,19 @@
 package dev.projectg.geyserhub.module.menu.java;
 
+import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.MenuUtils;
+import dev.projectg.geyserhub.utils.PlaceholderUtils;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,9 +21,12 @@ import java.util.*;
 
 public class JavaForm {
 
+    private static final String PERSISTENT_KEY = "geyserHubButton";
+    private static final Byte PERSISTENT_VALUE = (byte) 1;
+
     private final SelectorLogger logger;
 
-    private final boolean isEnabled;
+    public final boolean isEnabled;
     @Nonnull private final String menuName;
 
     private String title;
@@ -66,8 +75,14 @@ public class JavaForm {
         }
         int minimumSize = highestGivenSlot + 1;
         if (minimumSize > size) {
-            logger.warn("Java Menu: " + menuName + " has a button with slot " + highestGivenSlot + ", but the inventory size is only " + size + ". Expanding the size to " + minimumSize + " (+" + (minimumSize - size) +  ")." );
+            logger.warn("Java Menu: " + menuName + " has a button with slot " + highestGivenSlot + ", but the inventory size is only " + size + ". Increasing the size.");
             size = minimumSize;
+        }
+
+        // Make sure that the inventory size is a multiple of 9
+        if (size % 9 != 0) {
+            // Divide the size by 9, round the ratio up to the next int value, then multiply by 9 to get the closest higher number that is a multiple of 9
+            size = (int) (9*(Math.ceil(Math.abs(size/9))));
         }
 
         isEnabled = true;
@@ -185,13 +200,34 @@ public class JavaForm {
             throw new AssertionError("Tried to send Java Menu: " + menuName + " to a player but the form was not enabled");
         }
 
-        Inventory selectorGUI = Bukkit.createInventory(player, size, ChatColor.DARK_AQUA + title);
+        Inventory selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
 
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
+
+            // Construct the item
+            ItemStack serverStack = new ItemStack(button.getMaterial());
+            ItemMeta itemMeta = serverStack.getItemMeta();
+            if (itemMeta != null) {
+                itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
+                itemMeta.setLore(PlaceholderAPI.setPlaceholders(player, button.getLore()));
+                serverStack.setItemMeta(itemMeta);
+            } else {
+                logger.warn("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, failed to set display name or lore.");
+            }
+
+            selectorGUI.setItem(slot, serverStack);
         }
 
-        // todo: finish
+        // Set a persistent data key in the first ItemStack with ItemMeta, to check in the future if the inventory is a menu
+        for (ItemStack stack : selectorGUI) {
+            ItemMeta meta = stack.getItemMeta();
+            if (meta != null) {
+                meta.getPersistentDataContainer().set(new NamespacedKey(GeyserHubMain.getInstance(), PERSISTENT_KEY), PersistentDataType.BYTE, PERSISTENT_VALUE);
+                break;
+            }
+        }
 
+        player.openInventory(selectorGUI);
     }
 }
