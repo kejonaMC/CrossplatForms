@@ -2,7 +2,6 @@ package dev.projectg.geyserhub.module.menu.bedrock;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.Button;
 import dev.projectg.geyserhub.module.menu.CommandUtils;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
@@ -31,7 +30,7 @@ public class BedrockForm {
 
     private String title;
     private String content;
-    private List<Button> allButtons;
+    private List<BedrockButton> allButtons;
 
     /**
      * Create a new bedrock selector form and initializes it with the current loaded config
@@ -65,7 +64,7 @@ public class BedrockForm {
         }
         ConfigurationSection buttonSection = configSection.getConfigurationSection("Buttons");
         Objects.requireNonNull(buttonSection);
-        List<Button> buttons = getButtons(buttonSection);
+        List<BedrockButton> buttons = getButtons(buttonSection);
         if (buttons.isEmpty()) {
             logger.warn("Failed to create any valid buttons of form: " + configSection.getName() + "! All listed buttons have a malformed section!");
             return false;
@@ -86,7 +85,7 @@ public class BedrockForm {
      * @param configSection The configuration section to pull the data from
      * @return A list of Buttons, which may be empty.
      */
-    private List<Button> getButtons(@Nonnull ConfigurationSection configSection) {
+    private List<BedrockButton> getButtons(@Nonnull ConfigurationSection configSection) {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         // Get the form name
@@ -107,7 +106,7 @@ public class BedrockForm {
         }
 
         // Create a list of buttons. For every defined button with a valid server or command configuration, we add its button.
-        List<Button> compiledButtons = new ArrayList<>();
+        List<BedrockButton> compiledButtons = new ArrayList<>();
         for (String buttonId : allButtonIds) {
             ConfigurationSection buttonInfo = configSection.getConfigurationSection(buttonId);
             if (buttonInfo == null) {
@@ -149,11 +148,11 @@ public class BedrockForm {
                     logger.debug(buttonId + " contains BungeeCord target server: " + serverName);
                 }
 
-                compiledButtons.add(
-                        new Button(buttonText)
-                        .setImage(image)
-                        .setCommands(commands)
-                        .setServer(serverName));
+                BedrockButton button = new BedrockButton(buttonText);
+                button.setImage(image);
+                button.setCommands(commands);
+                button.setServer(serverName);
+                compiledButtons.add(button);
 
                 logger.debug(buttonId + " was successfully added.");
             } else {
@@ -182,15 +181,15 @@ public class BedrockForm {
         }
 
         // Resolve any placeholders in the button text
-        List<Button> formattedButtons = new ArrayList<>();
-        for (Button rawButton : allButtons) {
-            Button copiedButton = new Button(rawButton);
+        List<BedrockButton> formattedButtons = new ArrayList<>();
+        for (BedrockButton rawButton : allButtons) {
+            BedrockButton copiedButton = new BedrockButton(rawButton);
             copiedButton.setText(PlaceholderUtils.setPlaceholders(player, copiedButton.getText()));
             formattedButtons.add(copiedButton);
         }
 
         // Create the form
-        SimpleForm serverSelector = SimpleForm.of(PlaceholderUtils.setPlaceholders(player, title), PlaceholderUtils.setPlaceholders(player, content), formattedButtons.stream().map(Button::getButtonComponent).collect(Collectors.toList()));
+        SimpleForm serverSelector = SimpleForm.of(PlaceholderUtils.setPlaceholders(player, title), PlaceholderUtils.setPlaceholders(player, content), formattedButtons.stream().map(BedrockButton::getButtonComponent).collect(Collectors.toList()));
 
         // Set the response handler
         serverSelector.setResponseHandler((responseData) -> {
@@ -201,7 +200,7 @@ public class BedrockForm {
                 return;
             }
 
-            Button button = formattedButtons.get(response.getClickedButtonId());
+            BedrockButton button = formattedButtons.get(response.getClickedButtonId());
 
             if (!button.getCommands().isEmpty()) {
                 // Get the commands from the list of commands and replace any playerName placeholders
