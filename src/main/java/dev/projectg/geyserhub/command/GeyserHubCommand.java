@@ -1,10 +1,9 @@
 package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -33,9 +32,11 @@ public class GeyserHubCommand implements CommandExecutor {
     private static final String UNKNOWN = "Sorry, that's an unknown command!";
 
     private final BedrockFormRegistry bedrockRegistry;
+    private final JavaMenuRegistry javaMenuRegistry;
 
-    public GeyserHubCommand(BedrockFormRegistry bedrockRegistry) {
+    public GeyserHubCommand(BedrockFormRegistry bedrockRegistry, JavaMenuRegistry javaMenuRegistry) {
         this.bedrockRegistry = bedrockRegistry;
+        this.javaMenuRegistry = javaMenuRegistry;
     }
 
     @Override
@@ -125,7 +126,15 @@ public class GeyserHubCommand implements CommandExecutor {
                     sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, Bedrock forms are disabled!");
                 }
             } else {
-                JavaMenu.openMenu(player, ConfigId.SELECTOR);
+                if (javaMenuRegistry.isEnabled()) {
+                    if (javaMenuRegistry.getFormNames().contains(formName)) {
+                        javaMenuRegistry.sendForm(player, formName);
+                    } else {
+                        sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
+                    }
+                } else {
+                    sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, Java menus are disabled!");
+                }
             }
         } else if (commandSender instanceof ConsoleCommandSender) {
             sendHelp(commandSender);

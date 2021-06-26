@@ -3,7 +3,7 @@ package dev.projectg.geyserhub.module.menu;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.module.menu.java.JavaMenu;
+import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -22,9 +22,11 @@ import java.util.Objects;
 public class CommonMenuListeners implements Listener {
 
     private final BedrockFormRegistry bedrockFormRegistry;
+    private final JavaMenuRegistry javaMenuRegistry;
 
-    public CommonMenuListeners(BedrockFormRegistry bedrockFormRegistry) {
+    public CommonMenuListeners(BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
         this.bedrockFormRegistry = bedrockFormRegistry;
+        this.javaMenuRegistry = javaMenuRegistry;
     }
 
     @EventHandler
@@ -35,7 +37,7 @@ public class CommonMenuListeners implements Listener {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
                     bedrockFormRegistry.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()), BedrockFormRegistry.DEFAULT);
                 } else {
-                    JavaMenu.openMenu(player, ConfigId.SELECTOR);
+                    javaMenuRegistry.sendForm(player, JavaMenuRegistry.DEFAULT);
                 }
             }
         }

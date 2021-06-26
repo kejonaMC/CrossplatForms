@@ -17,10 +17,10 @@ public class JavaMenuRegistry implements Reloadable {
     public static final String DEFAULT = "default";
 
     /**
-     * If bedrock forms are enabled. may be false if disabled in the config or if all forms failed to load.
+     * If java menus are enabled. may be false if disabled in the config or if all forms failed to load.
      */
     private boolean isEnabled;
-    private final Map<String, JavaForm> enabledMenus = new HashMap<>();
+    private final Map<String, JavaMenu> enabledMenus = new HashMap<>();
 
     public JavaMenuRegistry() {
         ReloadableRegistry.registerReloadable(this);
@@ -52,7 +52,7 @@ public class JavaMenuRegistry implements Reloadable {
                             }
                             ConfigurationSection formInfo = menus.getConfigurationSection(entry);
                             Objects.requireNonNull(formInfo);
-                            JavaForm menu = new JavaForm(formInfo);
+                            JavaMenu menu = new JavaMenu(formInfo);
                             if (menu.isEnabled) {
                                 enabledMenus.put(entry, menu);
                                 noSuccess = false;

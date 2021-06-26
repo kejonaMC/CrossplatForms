@@ -18,7 +18,6 @@ import java.util.Objects;
 
 public class JavaMenuListeners implements Listener {
 
-    @SuppressWarnings("unused")
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();

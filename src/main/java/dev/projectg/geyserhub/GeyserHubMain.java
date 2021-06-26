@@ -5,6 +5,7 @@ import dev.projectg.geyserhub.config.ConfigManager;
 import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
+import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.module.message.Broadcast;
 import dev.projectg.geyserhub.module.message.MessageJoin;
 import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
@@ -51,14 +52,15 @@ public class GeyserHubMain extends JavaPlugin {
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        // Load bedrock forms
+        // Load forms
         BedrockFormRegistry bedrockFormRegistry = new BedrockFormRegistry();
+        JavaMenuRegistry javaMenuRegistry = new JavaMenuRegistry();
 
         // todo: and add command suggestions/completions, help pages that only shows available commands
-        Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand(bedrockFormRegistry));
+        Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand(bedrockFormRegistry, javaMenuRegistry));
 
         // Listeners for the Bedrock and Java menus
-        Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(bedrockFormRegistry), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(bedrockFormRegistry, javaMenuRegistry), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(), this);
 
         // Listener the Join Teleporter module
