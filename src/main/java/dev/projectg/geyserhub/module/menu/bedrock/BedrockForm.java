@@ -35,8 +35,10 @@ public class BedrockForm {
     private String content;
     private List<BedrockButton> allButtons;
 
+    // todo: constructor that doesnt use config section
+
     /**
-     * Create a new bedrock selector form and initializes it with the current loaded config
+     * Create a new bedrock selector form and initializes it with the given form config section
      */
     protected BedrockForm(@Nonnull ConfigurationSection configSection) {
         logger = SelectorLogger.getLogger();

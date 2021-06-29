@@ -38,9 +38,7 @@ public class GeyserHubMain extends JavaPlugin {
             logger.info("Branch: " + gitProperties.getProperty("git.branch", "Unknown") + ", Commit: " + gitProperties.getProperty("git.commit.id.abbrev", "Unknown"));
         } catch (IOException e) {
             logger.warn("Unable to load resource: git.properties");
-            if (logger.isDebug()) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
 
         configManager = new ConfigManager();
@@ -58,6 +56,8 @@ public class GeyserHubMain extends JavaPlugin {
 
         // todo: and add command suggestions/completions, help pages that only shows available commands
         Objects.requireNonNull(getCommand("ghub")).setExecutor(new GeyserHubCommand(bedrockFormRegistry, javaMenuRegistry));
+
+        // todo: sort all of this, and make checking for enable value in config consistent
 
         // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(bedrockFormRegistry, javaMenuRegistry), this);

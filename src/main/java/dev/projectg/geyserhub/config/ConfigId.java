@@ -12,6 +12,8 @@ public enum ConfigId {
     public final String fileName;
     public final int version;
 
+    // todo: maybe load configs on enum init
+
     /**
      * @param fileName the filename, including the extension, of the configuration
      * @param version the version of the configuration

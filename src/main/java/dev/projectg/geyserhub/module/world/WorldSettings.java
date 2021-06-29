@@ -21,7 +21,9 @@ public class WorldSettings implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        if (!(event.getEntity() instanceof Player)) return;
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
         if (config.getBoolean("World-settings.disable-fall-damage")
                 && event.getCause() == EntityDamageEvent.DamageCause.FALL)

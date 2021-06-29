@@ -33,6 +33,11 @@ public class MenuUtils {
         Bukkit.getServer().dispatchCommand(sender, executableCommand);
     }
 
+    /**
+     * Gets the commands from a config section with a "Commands" string list.
+     * @param buttonData the config section with the string list
+     * @return the commands. will return an empty list in case of failure, or if the list was empty.
+     */
     @Nonnull
     public static List<String> getCommands(@Nonnull ConfigurationSection buttonData) {
         SelectorLogger logger = SelectorLogger.getLogger();
@@ -49,6 +54,11 @@ public class MenuUtils {
         return Collections.emptyList();
     }
 
+    /**
+     * Get the server name from a button configuration section
+     * @param buttonData the config section
+     * @return the server name, null if there was no server
+     */
     @Nullable
     public static String getServer(@Nonnull ConfigurationSection buttonData) {
         SelectorLogger logger = SelectorLogger.getLogger();
@@ -61,6 +71,11 @@ public class MenuUtils {
         return null;
     }
 
+    /**
+     * Get the name of the parent config section of the given config section
+     * @param configSection the config section to get the parent name of
+     * @return the parent name, "null" if there was no parent
+     */
     @Nonnull
     public static String getParentName(@Nonnull ConfigurationSection configSection) {
         ConfigurationSection parent = configSection.getParent();

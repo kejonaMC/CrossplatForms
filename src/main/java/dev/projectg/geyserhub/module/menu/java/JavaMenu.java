@@ -32,6 +32,11 @@ public class JavaMenu {
     private int size;
     private Map<Integer, ItemButton> buttons;
 
+    // todo: constructor that doesnt use config section
+
+    /**
+     * Create a new java selector menu and initializes it with the given menu config section
+     */
     protected JavaMenu(@Nonnull ConfigurationSection configSection) {
         logger = SelectorLogger.getLogger();
         Objects.requireNonNull(configSection);
