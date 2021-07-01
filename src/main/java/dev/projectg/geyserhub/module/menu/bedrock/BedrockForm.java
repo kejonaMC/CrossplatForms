@@ -153,7 +153,7 @@ public class BedrockForm {
      * Send the server selector
      * @param floodgatePlayer the floodgate player to send it to
      */
-    protected void sendForm(@Nonnull FloodgatePlayer floodgatePlayer) {
+    public void sendForm(@Nonnull FloodgatePlayer floodgatePlayer) {
         if (!isEnabled) {
             throw new AssertionError("Form: " + title + " that failed to load was called to be sent to a player!");
         }

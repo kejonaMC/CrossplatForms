@@ -199,7 +199,12 @@ public class JavaMenu {
         return button;
     }
 
-    protected void sendMenu(@Nonnull Player player) {
+    @Nonnull
+    public Map<Integer, ItemButton> getContents() {
+        return this.buttons;
+    }
+
+    public void sendMenu(@Nonnull Player player) {
         if (!isEnabled) {
             throw new AssertionError("Tried to send Java Menu: " + menuName + " to a player but the form was not enabled");
         }

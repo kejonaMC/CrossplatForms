@@ -7,14 +7,14 @@ import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.SelectorLogger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class BedrockFormRegistry implements Reloadable {
 
@@ -90,15 +90,30 @@ public class BedrockFormRegistry implements Reloadable {
         return false;
     }
 
-    public void sendForm(@Nonnull FloodgatePlayer player, @Nonnull String form) {
-        enabledForms.get(form).sendForm(player);
-    }
-
+    /**
+     * @return True, if Java menus are enabled.
+     */
     public boolean isEnabled() {
         return isEnabled;
     }
-    public List<String> getFormNames() {
-        return new ArrayList<>(enabledForms.keySet());
+
+    /**
+     * @return A copy of the keyset of the current enabled menus
+     */
+    @Nonnull
+    public Set<String> getFormNames() {
+        return new HashSet<>(enabledForms.keySet());
+    }
+
+    /**
+     * Get a Java menu, based off its name.
+     * @param menuName The menu name
+     * @return the JavaMenu, null if it doesn't exist.
+     */
+    @Nullable
+    public BedrockForm getMenu(@Nonnull String menuName) {
+        Objects.requireNonNull(menuName);
+        return enabledForms.get(menuName);
     }
 
     @Override

@@ -2,8 +2,11 @@ package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
+import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -35,9 +38,27 @@ public class CommonMenuListeners implements Listener {
         if (player.getInventory().getItemInMainHand().isSimilar(AccessItem.getItem())) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    bedrockFormRegistry.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()), BedrockFormRegistry.DEFAULT);
+                    if (bedrockFormRegistry.isEnabled()) {
+                        if (bedrockFormRegistry.getFormNames().contains(BedrockFormRegistry.DEFAULT)) {
+                            BedrockForm form = Objects.requireNonNull(bedrockFormRegistry.getMenu(BedrockFormRegistry.DEFAULT));
+                            form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
+                        } else {
+                            player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, this item can't be used because a default form hasn't been specified!");
+                        }
+                    } else {
+                        player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, Bedrock forms are not enabled!");
+                    }
                 } else {
-                    javaMenuRegistry.sendForm(player, JavaMenuRegistry.DEFAULT);
+                    if (javaMenuRegistry.isEnabled()) {
+                        if (javaMenuRegistry.getMenuNames().contains(JavaMenuRegistry.DEFAULT)) {
+                            JavaMenu menu = Objects.requireNonNull(javaMenuRegistry.getMenu(JavaMenuRegistry.DEFAULT));
+                            menu.sendMenu(player);
+                        } else {
+                            player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, this item can't be used because a default menu hasn't been specified!");
+                        }
+                    } else {
+                        player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, Java menus are not enabled!");
+                    }
                 }
             }
         }

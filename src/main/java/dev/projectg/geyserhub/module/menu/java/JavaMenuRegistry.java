@@ -7,9 +7,9 @@ import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class JavaMenuRegistry implements Reloadable {
@@ -86,15 +86,30 @@ public class JavaMenuRegistry implements Reloadable {
         return false;
     }
 
-    public void sendForm(@Nonnull Player player, @Nonnull String form) {
-        enabledMenus.get(form).sendMenu(player);
-    }
-
+    /**
+     * @return True, if Java menus are enabled.
+     */
     public boolean isEnabled() {
         return isEnabled;
     }
-    public List<String> getFormNames() {
-        return new ArrayList<>(enabledMenus.keySet());
+
+    /**
+     * @return A copy of the keyset of the current enabled menus
+     */
+    @Nonnull
+    public Set<String> getMenuNames() {
+        return new HashSet<>(enabledMenus.keySet());
+    }
+
+    /**
+     * Get a Java menu, based off its name.
+     * @param menuName The menu name
+     * @return the JavaMenu, null if it doesn't exist.
+     */
+    @Nullable
+    public JavaMenu getMenu(@Nonnull String menuName) {
+        Objects.requireNonNull(menuName);
+        return enabledMenus.get(menuName);
     }
 
     @Override

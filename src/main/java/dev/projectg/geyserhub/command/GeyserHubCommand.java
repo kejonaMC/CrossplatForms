@@ -1,6 +1,8 @@
 package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
+import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
@@ -16,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.util.UUID;
 
 public class GeyserHubCommand implements CommandExecutor {
 
@@ -114,11 +115,11 @@ public class GeyserHubCommand implements CommandExecutor {
 
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            UUID uuid = player.getUniqueId();
-            if (FloodgateApi.getInstance().isFloodgatePlayer(uuid)) {
+            if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
                 if (bedrockRegistry.isEnabled()) {
                     if (bedrockRegistry.getFormNames().contains(formName)) {
-                        bedrockRegistry.sendForm(FloodgateApi.getInstance().getPlayer(uuid), formName);
+                        BedrockForm form = Objects.requireNonNull(bedrockRegistry.getMenu(formName));
+                        form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
                     } else {
                         sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
                     }
@@ -127,8 +128,9 @@ public class GeyserHubCommand implements CommandExecutor {
                 }
             } else {
                 if (javaMenuRegistry.isEnabled()) {
-                    if (javaMenuRegistry.getFormNames().contains(formName)) {
-                        javaMenuRegistry.sendForm(player, formName);
+                    if (javaMenuRegistry.getMenuNames().contains(formName)) {
+                        JavaMenu menu = Objects.requireNonNull(javaMenuRegistry.getMenu(formName));
+                        menu.sendMenu(player);
                     } else {
                         sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
                     }
