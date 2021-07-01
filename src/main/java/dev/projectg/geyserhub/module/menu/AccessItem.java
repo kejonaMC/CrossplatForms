@@ -4,6 +4,7 @@ package dev.projectg.geyserhub.module.menu;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.config.ConfigId;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,6 +17,8 @@ import java.util.Objects;
 
 public class AccessItem {
 
+    private static final String NON_LEGACY_MATERIAL_VERSIONS = "(1\\.14\\S*)|(1\\.15\\S*|1\\.16\\S*|1\\.17\\S*|1\\.18\\S*)";
+
     private static final ItemStack ACCESS_ITEM;
     static {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
@@ -25,16 +28,21 @@ public class AccessItem {
         if (config.contains("Selector-Item.Material", true)) {
             String materialName = config.getString("Selector-Item.Material");
             Objects.requireNonNull(materialName);
-            material = Material.getMaterial(materialName, false);
+            material = Material.getMaterial(materialName);
             if (material == null) {
-                material = Material.getMaterial(materialName, true);
-                if (material == null) {
-                    SelectorLogger.getLogger().warn("Failed to find a Material for \"" + materialName + "\". Defaulting to COMPASS for the access item.");
-                    material = Material.COMPASS;
+                SelectorLogger.getLogger().warn("Failed to find a Material for \"" + materialName + "\". Defaulting to COMPASS for the access item.");
+                material = Material.COMPASS;
+            } else {
+                // Hacky way to avoid using enum values that don't exist on older versions if we are on older versions
+                if (Bukkit.getServer().getVersion().matches(NON_LEGACY_MATERIAL_VERSIONS)) {
+                    if (material == Material.AIR || material == Material.CAVE_AIR || material == Material.VOID_AIR) {
+                        SelectorLogger.getLogger().warn("\"Selector-Item.Material\" cannot be AIR! Choose a different material. Defaulting to COMPASS for the access item.");
+                    }
+                } else {
+                    if (material == Material.AIR) {
+                        SelectorLogger.getLogger().warn("\"Selector-Item.Material\" cannot be AIR! Choose a different material. Defaulting to COMPASS for the access item.");
+                    }
                 }
-            }
-            if (material == Material.AIR || material == Material.CAVE_AIR || material == Material.VOID_AIR) {
-                SelectorLogger.getLogger().warn("\"Selector-Item.Material\" cannot be AIR! Choose a different material. Defaulting to COMPASS for the access item.");
             }
         } else {
             SelectorLogger.getLogger().warn("Failed to find \"Selector-Item.Material\" in the config! Defaulting to COMPASS for the access item.");
