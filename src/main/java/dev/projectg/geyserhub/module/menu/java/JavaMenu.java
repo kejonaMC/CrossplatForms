@@ -66,7 +66,7 @@ public class JavaMenu {
         if (configSection.contains("Title") && configSection.contains("Size") && configSection.isInt("Size")) {
             title = Objects.requireNonNull(configSection.getString("Title"));
             size = configSection.getInt("Size");
-            logger.debug("Java Menu: " + menuName + " has Title: " + title + " Size: " + size);
+            logger.debug("Java Menu: " + menuName + " has Title: '" + title + "', Size: " + size);
         } else {
             logger.warn("Java Menu: " + menuName + " does not contain a Title or Size value, unable to create menu");
             isEnabled = false;
@@ -82,8 +82,6 @@ public class JavaMenu {
                 logger.warn("Failed to create any valid buttons of Bedrock form: " + menuName + "! All listed buttons have a malformed section!");
                 isEnabled = false;
                 return;
-            } else {
-                logger.debug("Finished adding buttons to Java menu: " + menuName);
             }
             this.buttons = buttons;
         } else {
@@ -150,7 +148,6 @@ public class JavaMenu {
             ItemButton button = getButton(buttonInfo);
             if (button != null) {
                 compiledButtons.put(slot, button);
-                logger.debug("Created Button: " + buttonId);
             }
         }
         return compiledButtons;
@@ -168,7 +165,7 @@ public class JavaMenu {
         if (buttonInfo.contains("Display-Name", true) && buttonInfo.isString("Display-Name")) {
             displayName = buttonInfo.getString("Display-Name");
             Objects.requireNonNull(displayName);
-            logger.debug("Java Button: " + menuName + "." + buttonId + " has Display-Name: " + displayName);
+            logger.debug(menuName + "." + buttonId + " has Display-Name: " + displayName);
         } else {
             logger.warn("Java Button: " + menuName + "." + buttonId + " does not contain a valid Button-Text value, not adding.");
             return null;
@@ -195,34 +192,45 @@ public class JavaMenu {
 
         // Create the button
         ItemButton button = new ItemButton(displayName, material);
+        OutcomeButton rightOutcome = button.getOutcomeButton(true);
+        OutcomeButton leftOutcome = button.getOutcomeButton(false);
 
         // Set server(s) and commands
-        ConfigurationSection rightClick = null;
-        if (buttonInfo.contains("Right-Click") && buttonInfo.isConfigurationSection("Right-Click")) {
-            rightClick = buttonInfo.getConfigurationSection("Right-Click");
-            Objects.requireNonNull(rightClick);
-            button.getOutcomeButton(true).setCommands(MenuUtils.getCommands(rightClick));
-            button.getOutcomeButton(true).setServer(MenuUtils.getServer(rightClick));
-        }
-        ConfigurationSection leftClick = null;
-        if (buttonInfo.contains("Left-Click") && buttonInfo.isConfigurationSection("Left-Click")) {
-            leftClick = buttonInfo.getConfigurationSection("Left-Click");
-            Objects.requireNonNull(leftClick);
-            button.getOutcomeButton(false).setCommands(MenuUtils.getCommands(leftClick));
-            button.getOutcomeButton(false).setServer(MenuUtils.getServer(leftClick));
-        }
-
-        if (buttonInfo.contains("Any-Click") && buttonInfo.isConfigurationSection("Any-Click")) {
+        ConfigurationSection rightClick = buttonInfo.getConfigurationSection("Right-Click");
+        ConfigurationSection leftClick = buttonInfo.getConfigurationSection("Left-Click");
+        ConfigurationSection anyClick = buttonInfo.getConfigurationSection("Any-Click");
+        if (anyClick != null) {
             if (rightClick != null || leftClick != null) {
                 logger.warn("Java Button: " + menuName + "." + buttonId + " Cannot define both Any-Click behaviour and also Right/Left-Click behaviour! Ignoring Any-Click section.");
-            } else {
-                ConfigurationSection anyClick = buttonInfo.getConfigurationSection("Any-Click");
-                Objects.requireNonNull(anyClick);
-                button.getOutcomeButton(true).setCommands(MenuUtils.getCommands(anyClick));
-                button.getOutcomeButton(true).setServer(MenuUtils.getServer(anyClick));
-                button.getOutcomeButton(false).setCommands(MenuUtils.getCommands(anyClick));
-                button.getOutcomeButton(false).setServer(MenuUtils.getServer(anyClick));
             }
+            List<String> commands = MenuUtils.getCommands(anyClick);
+            String server = MenuUtils.getServer(anyClick);
+            rightOutcome.setCommands(commands);
+            rightOutcome.setServer(server);
+            leftOutcome.setCommands(commands);
+            leftOutcome.setServer(server);
+        } else {
+            if (rightClick != null) {
+                rightOutcome.setCommands(MenuUtils.getCommands(rightClick));
+                rightOutcome.setServer(MenuUtils.getServer(rightClick));
+            }
+            if (leftClick != null) {
+                leftOutcome.setCommands(MenuUtils.getCommands(leftClick));
+                leftOutcome.setServer(MenuUtils.getServer(leftClick));
+            }
+        }
+
+        if (!rightOutcome.getCommands().isEmpty()) {
+            logger.debug(menuName + "." + buttonId + ".right" + " contains commands: " + rightOutcome.getCommands());
+        }
+        if (rightOutcome.getServer() != null) {
+            logger.debug(menuName + "." + buttonId + ".right" +  " contains target server: " + rightOutcome.getServer());
+        }
+        if (!leftOutcome.getCommands().isEmpty()) {
+            logger.debug(menuName + "." + buttonId + ".left" + " contains commands: " + leftOutcome.getCommands());
+        }
+        if (leftOutcome.getServer() != null) {
+            logger.debug(menuName + "." + buttonId + ".left" +  " contains target server: " + leftOutcome.getServer());
         }
 
         return button;

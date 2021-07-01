@@ -82,8 +82,6 @@ public class BedrockForm {
             logger.warn("Failed to create any valid buttons of Bedrock form: " + formName + "! All listed buttons have a malformed section!");
             isEnabled = false;
             return;
-        } else {
-            logger.debug("Finished adding buttons to bedrock form: " + formName);
         }
         this.allButtons = buttons;
 
@@ -95,7 +93,7 @@ public class BedrockForm {
      * @return A list of Buttons, which may be empty.
      */
     private List<BedrockButton> getButtons(@Nonnull ConfigurationSection configSection) {
-        logger.debug("Getting buttons for form: " + formName);
+        logger.debug("Getting buttons for Bedrock form: " + formName);
 
         // Get all the defined buttons in the buttons section
         Set<String> allButtonIds = configSection.getKeys(false);
@@ -117,7 +115,7 @@ public class BedrockForm {
             if (buttonInfo.contains("Button-Text", true) && buttonInfo.isString("Button-Text")) {
                 String buttonText = buttonInfo.getString("Button-Text");
                 Objects.requireNonNull(buttonText);
-                logger.debug(buttonId + " has Button-Text: " + buttonText);
+                logger.debug(formName + "." + buttonId + " has text: " + buttonText);
 
                 // Add image if specified
                 FormImage image = null;
@@ -125,26 +123,19 @@ public class BedrockForm {
                     String imageURL = buttonInfo.getString("ImageURL");
                     Objects.requireNonNull(imageURL);
                     image = FormImage.of(FormImage.Type.URL, imageURL);
-                    logger.debug(buttonId + " contains image with URL: " + image.getData());
+                    logger.debug(formName + "." + buttonId + " contains image: " + image.getData());
                 }
 
                 // Add commands if specified
-                List<String> commands = Collections.emptyList();
-                if (buttonInfo.contains("Commands") && buttonInfo.isList("Commands")) {
-                    if (buttonInfo.getStringList("Commands").isEmpty()) {
-                        logger.warn(buttonId + " contains commands list but the list was empty.");
-                    } else {
-                        commands = buttonInfo.getStringList("Commands");
-                        logger.debug(buttonId + " contains commands: " + commands);
-                    }
+                List<String> commands = MenuUtils.getCommands(buttonInfo);
+                if (!commands.isEmpty()) {
+                    logger.debug(formName + "." + buttonId + " contains commands: " + commands);
                 }
 
                 // Add server if specified
-                String serverName = null;
-                if (buttonInfo.contains("Server") && buttonInfo.isString("Server")) {
-                    serverName = buttonInfo.getString("Server");
-                    Objects.requireNonNull(serverName);
-                    logger.debug(buttonId + " contains BungeeCord target server: " + serverName);
+                String serverName = MenuUtils.getServer(buttonInfo);
+                if (serverName != null) {
+                    logger.debug(formName + "." + buttonId + " contains target server: " + serverName);
                 }
 
                 BedrockButton button = new BedrockButton(buttonText);
@@ -152,8 +143,6 @@ public class BedrockForm {
                 button.setCommands(commands);
                 button.setServer(serverName);
                 compiledButtons.add(button);
-
-                logger.debug(buttonId + " was successfully added.");
             } else {
                 logger.warn(buttonId + " does not contain a valid Button-Text value, not adding.");
             }
@@ -168,7 +157,7 @@ public class BedrockForm {
      */
     public void sendForm(@Nonnull FloodgatePlayer floodgatePlayer) {
         if (!isEnabled) {
-            throw new AssertionError("Form: " + title + " that failed to load was called to be sent to a player!");
+            throw new AssertionError("Bedrock Form: " + title + " that failed to load was called to be sent to a player!");
         }
 
         SelectorLogger logger = SelectorLogger.getLogger();

@@ -53,8 +53,6 @@ public class MenuUtils {
         }
     }
 
-
-
     /**
      * Process a prefixed command and run it
      * @param prefixedCommand A command that is prefixed with "player;" to run the command as the player, or "console;", to run the command as the console.
@@ -88,9 +86,7 @@ public class MenuUtils {
             if (buttonData.getStringList("Commands").isEmpty()) {
                 logger.warn(getParentName(buttonData) + "." + buttonData.getName() + " contains commands list but the list was empty.");
             } else {
-                List<String> commands = buttonData.getStringList("Commands");
-                logger.debug(getParentName(buttonData.getParent()) + "." + getParentName(buttonData) + "." + buttonData.getName() + " contains commands: " + commands);
-                return commands;
+                return buttonData.getStringList("Commands");
             }
         }
         return Collections.emptyList();
@@ -104,31 +100,26 @@ public class MenuUtils {
     @Nullable
     public static String getServer(@Nonnull ConfigurationSection buttonData) {
         Objects.requireNonNull(buttonData);
-        SelectorLogger logger = SelectorLogger.getLogger();
 
         if (buttonData.contains("Server") && buttonData.isString("Server")) {
-            String serverName = Objects.requireNonNull(buttonData.getString("Server"));
-            logger.debug(getParentName(buttonData.getParent()) + "." + getParentName(buttonData) + "." + buttonData.getName() + " contains BungeeCord target server: " + serverName);
-            return serverName;
+            return Objects.requireNonNull(buttonData.getString("Server"));
         }
         return null;
     }
 
     /**
-     * Get the name of the parent config section of the given config section
-     * @param configSection the config section to get the parent name of
+     * Get the name of the parent of a config section
+     * @param configSection the config section
      * @return the parent name, "null" if there was no parent, or if the the given configSection was null
      */
     @Nonnull
     public static String getParentName(@Nullable ConfigurationSection configSection) {
-
         if (configSection != null) {
             ConfigurationSection parent = configSection.getParent();
             if (parent != null) {
                 return parent.getName();
             }
         }
-
         return "null";
     }
 }
