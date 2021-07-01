@@ -27,7 +27,7 @@ Java-Selector:
       Buttons:
         2:
           Display-Name: "Lobby"
-          Material: Diamond
+          Material: DIAMOND
           Lore:
             - "&2Online players: %bungee_lobby%"
           Right-Click:
@@ -40,7 +40,7 @@ Java-Selector:
               - "tell %player_name% Sending you to the lobby in a left click fashion..."
         4:
           Display-Name: "Minigames"
-          Material: Grass
+          Material: GRASS
           Lore:
             - "Currently Available:"
             - "Spleef"
@@ -50,7 +50,7 @@ Java-Selector:
               - "player; ghub form minigames"
         6:
           Display-Name: "Survival"
-          Material: Emerald
+          Material: EMERALD
           Lore:
             - "&2online players: %bungee_survival%"
           Any-Click:
