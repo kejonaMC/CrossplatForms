@@ -1,6 +1,5 @@
 package dev.projectg.geyserhub.utils;
 
-import dev.projectg.geyserhub.SelectorLogger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,11 +15,14 @@ public class PlaceholderUtils {
      * @return the formatted text.
      */
     public static String setPlaceholders(@Nonnull Player player, @Nonnull String text) {
+        String processedText = text;
+
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            SelectorLogger.getLogger().debug("PlaceholderAPI was used.");
-            return PlaceholderAPI.setPlaceholders(player, text);
+            processedText = PlaceholderAPI.setPlaceholders(player, text);
         } else {
-            return text;
+            processedText = processedText.replace("%player_name%", player.getName()).replace("%player_uuid%", player.getUniqueId().toString());
         }
+
+        return processedText;
     }
 }

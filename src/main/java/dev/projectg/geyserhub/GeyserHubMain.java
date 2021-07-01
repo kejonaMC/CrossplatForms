@@ -31,6 +31,9 @@ public class GeyserHubMain extends JavaPlugin {
         new Metrics(this, 11427);
         // getting the logger forces the config to load before our loadConfiguration() is called...
         SelectorLogger logger = SelectorLogger.getLogger();
+        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
+        }
 
         try {
             Properties gitProperties = new Properties();
