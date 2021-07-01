@@ -89,7 +89,7 @@ public class MenuUtils {
                 logger.warn(getParentName(buttonData) + "." + buttonData.getName() + " contains commands list but the list was empty.");
             } else {
                 List<String> commands = buttonData.getStringList("Commands");
-                logger.debug(getParentName(buttonData) + "." + buttonData.getName() + " contains commands: " + commands);
+                logger.debug(getParentName(buttonData.getParent()) + "." + getParentName(buttonData) + "." + buttonData.getName() + " contains commands: " + commands);
                 return commands;
             }
         }
@@ -108,7 +108,7 @@ public class MenuUtils {
 
         if (buttonData.contains("Server") && buttonData.isString("Server")) {
             String serverName = Objects.requireNonNull(buttonData.getString("Server"));
-            logger.debug(getParentName(buttonData) + "." + buttonData.getName() + " contains BungeeCord target server: " + serverName);
+            logger.debug(getParentName(buttonData.getParent()) + "." + getParentName(buttonData) + "." + buttonData.getName() + " contains BungeeCord target server: " + serverName);
             return serverName;
         }
         return null;
@@ -117,17 +117,18 @@ public class MenuUtils {
     /**
      * Get the name of the parent config section of the given config section
      * @param configSection the config section to get the parent name of
-     * @return the parent name, "null" if there was no parent
+     * @return the parent name, "null" if there was no parent, or if the the given configSection was null
      */
     @Nonnull
-    public static String getParentName(@Nonnull ConfigurationSection configSection) {
-        Objects.requireNonNull(configSection);
+    public static String getParentName(@Nullable ConfigurationSection configSection) {
 
-        ConfigurationSection parent = configSection.getParent();
-        if (parent == null) {
-            return "null";
-        } else {
-            return parent.getName();
+        if (configSection != null) {
+            ConfigurationSection parent = configSection.getParent();
+            if (parent != null) {
+                return parent.getName();
+            }
         }
+
+        return "null";
     }
 }

@@ -118,7 +118,7 @@ public class JavaMenu {
      */
     @Nonnull
     private Map<Integer, ItemButton> getAllButtons(@Nonnull ConfigurationSection configSection) {
-        logger.debug("Getting buttons for java form: " + menuName);
+        logger.debug("Getting buttons for Java form: " + menuName);
 
         // Get all the defined buttons in the buttons section
         Set<String> allButtonIds = configSection.getKeys(false);
@@ -146,10 +146,11 @@ public class JavaMenu {
                 continue;
             }
 
+            logger.debug("Creating button: " + buttonId);
             ItemButton button = getButton(buttonInfo);
             if (button != null) {
                 compiledButtons.put(slot, button);
-                logger.debug("Java Button: " + menuName + "." + buttonId + " was successfully added.");
+                logger.debug("Created Button: " + buttonId);
             }
         }
         return compiledButtons;
