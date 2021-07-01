@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.module.menu.java;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.MenuUtils;
+import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
@@ -21,15 +22,34 @@ import java.util.*;
 
 public class JavaMenu {
 
-    private static final NamespacedKey BUTTON_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubButton");
+    public static final NamespacedKey MENU_NAME_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubMenu");
+    public static final PersistentDataType<String, String>  MENU_NAME_TYPE = PersistentDataType.STRING;
 
     private final SelectorLogger logger;
 
+    /**
+     * If the menu actually works and can be used.
+     */
     public final boolean isEnabled;
+
+    /**
+     * The name of the menu, from the config.
+     */
     @Nonnull private final String menuName;
 
+    /**
+     * The title of the inventory (shown in the GUI)
+     */
     private String title;
+
+    /**
+     * The size of the inventory
+     */
     private int size;
+
+    /**
+     * Map of inventory slot to ItemButton
+     */
     private Map<Integer, ItemButton> buttons;
 
     // todo: constructor that doesnt use config section
@@ -92,6 +112,10 @@ public class JavaMenu {
         isEnabled = true;
     }
 
+    /**
+     *  Get all the buttons in the "Buttons" section
+     * @return A list of Buttons, which may be empty.
+     */
     @Nonnull
     private Map<Integer, ItemButton> getAllButtons(@Nonnull ConfigurationSection configSection) {
         logger.debug("Getting buttons for java form: " + menuName);
@@ -131,6 +155,10 @@ public class JavaMenu {
         return compiledButtons;
     }
 
+    /**
+     * Process the config section of a single button config section
+     * @return the ItemButton. may be null.
+     */
     @Nullable
     private ItemButton getButton(@Nonnull ConfigurationSection buttonInfo) {
         String buttonId = buttonInfo.getName();
@@ -172,15 +200,15 @@ public class JavaMenu {
         if (buttonInfo.contains("Right-Click") && buttonInfo.isConfigurationSection("Right-Click")) {
             rightClick = buttonInfo.getConfigurationSection("Right-Click");
             Objects.requireNonNull(rightClick);
-            button.getRightClickButton().setCommands(MenuUtils.getCommands(rightClick));
-            button.getRightClickButton().setServer(MenuUtils.getServer(rightClick));
+            button.getOutcomeButton(true).setCommands(MenuUtils.getCommands(rightClick));
+            button.getOutcomeButton(true).setServer(MenuUtils.getServer(rightClick));
         }
         ConfigurationSection leftClick = null;
         if (buttonInfo.contains("Left-Click") && buttonInfo.isConfigurationSection("Left-Click")) {
             leftClick = buttonInfo.getConfigurationSection("Left-Click");
             Objects.requireNonNull(leftClick);
-            button.getLeftClickButton().setCommands(MenuUtils.getCommands(leftClick));
-            button.getLeftClickButton().setServer(MenuUtils.getServer(leftClick));
+            button.getOutcomeButton(false).setCommands(MenuUtils.getCommands(leftClick));
+            button.getOutcomeButton(false).setServer(MenuUtils.getServer(leftClick));
         }
 
         if (buttonInfo.contains("Any-Click") && buttonInfo.isConfigurationSection("Any-Click")) {
@@ -189,16 +217,19 @@ public class JavaMenu {
             } else {
                 ConfigurationSection anyClick = buttonInfo.getConfigurationSection("Any-Click");
                 Objects.requireNonNull(anyClick);
-                button.getRightClickButton().setCommands(MenuUtils.getCommands(anyClick));
-                button.getRightClickButton().setServer(MenuUtils.getServer(anyClick));
-                button.getLeftClickButton().setCommands(MenuUtils.getCommands(anyClick));
-                button.getLeftClickButton().setServer(MenuUtils.getServer(anyClick));
+                button.getOutcomeButton(true).setCommands(MenuUtils.getCommands(anyClick));
+                button.getOutcomeButton(true).setServer(MenuUtils.getServer(anyClick));
+                button.getOutcomeButton(false).setCommands(MenuUtils.getCommands(anyClick));
+                button.getOutcomeButton(false).setServer(MenuUtils.getServer(anyClick));
             }
         }
 
         return button;
     }
 
+    /**
+     * @return A non-copy of the contents of this form.
+     */
     @Nonnull
     public Map<Integer, ItemButton> getContents() {
         return this.buttons;
@@ -220,7 +251,7 @@ public class JavaMenu {
             if (itemMeta != null) {
                 itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
                 itemMeta.setLore(PlaceholderAPI.setPlaceholders(player, button.getLore()));
-                itemMeta.getPersistentDataContainer().set(BUTTON_KEY, PersistentDataType.STRING, menuName);
+                itemMeta.getPersistentDataContainer().set(MENU_NAME_KEY, PersistentDataType.STRING, menuName);
                 serverStack.setItemMeta(itemMeta);
             } else {
                 logger.warn("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, failed to set display name or lore. The button will not have any results.");
@@ -230,5 +261,26 @@ public class JavaMenu {
         }
 
         player.openInventory(selectorGUI);
+    }
+
+    /**
+     * @param slot The inventory slot
+     * @return If there is a button at the given inventory slot
+     */
+    public boolean isButton(int slot) {
+        return getContents().get(slot) != null;
+    }
+
+    /**
+     * Process a button click by a player in the menu.
+     * @param slot The slot in the inventory. Nothing will happen if the slot does not contain a button.
+     * @param rightClick True if it was a right click, false if a left click.
+     * @param player the Player who clicked on the button.
+     */
+    public void process(int slot, boolean rightClick, @Nonnull Player player) {
+        if (this.isButton(slot)) {
+            OutcomeButton button = this.getContents().get(slot).getOutcomeButton(rightClick);
+            MenuUtils.affectPlayer(button.getCommands(), button.getServer(), player);
+        }
     }
 }

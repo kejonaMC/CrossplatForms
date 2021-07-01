@@ -1,45 +1,43 @@
 package dev.projectg.geyserhub.module.menu.java;
 
-import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class JavaMenuListeners implements Listener {
 
+    private final JavaMenuRegistry javaMenuRegistry;
+
+    public JavaMenuListeners(@Nonnull JavaMenuRegistry javaMenuRegistry) {
+        this.javaMenuRegistry = Objects.requireNonNull(javaMenuRegistry);
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
-            return;
-        }
-        try {
-            String bungeeName = Objects.requireNonNull(Objects.requireNonNull(event.getCurrentItem()).getItemMeta()).getPersistentDataContainer().get(new NamespacedKey(GeyserHubMain.getInstance(), "bungeeName"), PersistentDataType.STRING);
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(b);
-            try {
-                out.writeUTF("Connect");
-                assert bungeeName != null;
-                out.writeUTF(bungeeName);
-                player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", b.toByteArray());
-                player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + bungeeName);
-            } catch (IOException er) {
-                SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
-            }
-            event.setCancelled(true);
-        } catch (Exception ignored) {
+        SelectorLogger logger = SelectorLogger.getLogger();
 
+        ItemStack item = event.getCurrentItem();
+        if (item != null) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                String menuName = meta.getPersistentDataContainer().get(JavaMenu.MENU_NAME_KEY, JavaMenu.MENU_NAME_TYPE);
+                if (menuName != null) {
+                    JavaMenu menu = javaMenuRegistry.getMenu(menuName);
+                    if (menu == null) {
+                        logger.warn("Failed to find any Java menu under the name '" + menuName + "' in order to process inventory click by player: " + player.getName());
+                    } else {
+                        menu.process(event.getSlot(), event.isRightClick(), player);
+                    }
+                }
+            }
         }
     }
 }

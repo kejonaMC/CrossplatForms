@@ -1,11 +1,9 @@
 package dev.projectg.geyserhub.module.menu.bedrock;
 
-import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.SimpleForm;
@@ -14,11 +12,9 @@ import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.floodgate.api.player.FloodgatePlayer;
 
 import javax.annotation.Nonnull;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -28,11 +24,29 @@ public class BedrockForm {
 
     private final SelectorLogger logger;
 
+    /**
+     * If the form actually works and can be used.
+     */
     public final boolean isEnabled;
+
+    /**
+     * The name of the form, from the config.
+     */
     public final String formName;
 
+    /**
+     * The title of the Bedrock form (shown in the GUI)
+     */
     private String title;
+
+    /**
+     * The text shown under the {@link #title}
+     */
     private String content;
+
+    /**
+     * A list of all the buttons. Index is the button ID.
+     */
     private List<BedrockButton> allButtons;
 
     // todo: constructor that doesnt use config section
@@ -77,8 +91,7 @@ public class BedrockForm {
     }
 
     /**
-     *  Get the server buttons and each button's server
-     * @param configSection The configuration section to pull the data from
+     *  Get all the buttons in the "Buttons" section
      * @return A list of Buttons, which may be empty.
      */
     private List<BedrockButton> getButtons(@Nonnull ConfigurationSection configSection) {
@@ -92,7 +105,7 @@ public class BedrockForm {
         }
 
         // Create a list of buttons. For every defined button with a valid server or command configuration, we add its button.
-        List<BedrockButton> compiledButtons = new ArrayList<>();
+        List<BedrockButton> compiledButtons = new LinkedList<>();
         for (String buttonId : allButtonIds) {
             ConfigurationSection buttonInfo = configSection.getConfigurationSection(buttonId);
             if (buttonInfo == null) {
@@ -188,26 +201,8 @@ public class BedrockForm {
 
             BedrockButton button = formattedButtons.get(response.getClickedButtonId());
 
-            if (!button.getCommands().isEmpty()) {
-                // Get the commands from the list of commands and replace any playerName placeholders
-                for (String command : button.getCommands()) {
-                    MenuUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
-                }
-            }
-
-            if (button.getServer() != null) {
-                // This should never be out of bounds considering its size is the number of valid buttons
-                String serverName = button.getServer();
-                try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(baos)) {
-                    out.writeUTF("Connect");
-                    out.writeUTF(serverName);
-                    player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", baos.toByteArray());
-                    player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + serverName);
-                } catch (IOException e) {
-                    logger.severe("Failed to send a plugin message to Bungeecord!");
-                    e.printStackTrace();
-                }
-            }
+            // Run the commands if given, move the player to another server if given.
+            MenuUtils.affectPlayer(button.getCommands(), button.getServer(), player);
         });
 
         // Send the form to the floodgate player

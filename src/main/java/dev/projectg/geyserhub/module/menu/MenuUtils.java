@@ -1,13 +1,19 @@
 package dev.projectg.geyserhub.module.menu;
 
+import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -18,11 +24,46 @@ public class MenuUtils {
     public static final String consolePrefix = "console;";
 
     /**
+     * @param commands Commands list, an empty list can be passed for no commands.
+     * @param serverName The server name, can passed as null for no server.
+     * @param player the Player to run everything on.
+     */
+    public static void affectPlayer(@Nonnull List<String> commands, @Nullable String serverName, @Nonnull Player player) {
+        Objects.requireNonNull(commands);
+        Objects.requireNonNull(player);
+
+        if (!commands.isEmpty()) {
+            // Get the commands from the list of commands and replace any playerName placeholders
+            for (String command : commands) {
+                MenuUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
+            }
+        }
+
+        if (serverName != null) {
+            // This should never be out of bounds considering its size is the number of valid buttons
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(baos)) {
+                out.writeUTF("Connect");
+                out.writeUTF(serverName);
+                player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", baos.toByteArray());
+                player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + serverName);
+            } catch (IOException e) {
+                SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    /**
      * Process a prefixed command and run it
      * @param prefixedCommand A command that is prefixed with "player;" to run the command as the player, or "console;", to run the command as the console.
      * @param player the Player to run the command as, if prefixed with "player;"
      */
     public static void runCommand(@Nonnull String prefixedCommand, @Nonnull Player player) {
+        Objects.requireNonNull(prefixedCommand);
+        Objects.requireNonNull(player);
+
         CommandSender sender = Bukkit.getServer().getConsoleSender();
         if (prefixedCommand.startsWith(playerPrefix)) {
             sender = player;
@@ -40,6 +81,7 @@ public class MenuUtils {
      */
     @Nonnull
     public static List<String> getCommands(@Nonnull ConfigurationSection buttonData) {
+        Objects.requireNonNull(buttonData);
         SelectorLogger logger = SelectorLogger.getLogger();
 
         if (buttonData.contains("Commands") && buttonData.isList("Commands")) {
@@ -61,6 +103,7 @@ public class MenuUtils {
      */
     @Nullable
     public static String getServer(@Nonnull ConfigurationSection buttonData) {
+        Objects.requireNonNull(buttonData);
         SelectorLogger logger = SelectorLogger.getLogger();
 
         if (buttonData.contains("Server") && buttonData.isString("Server")) {
@@ -78,6 +121,8 @@ public class MenuUtils {
      */
     @Nonnull
     public static String getParentName(@Nonnull ConfigurationSection configSection) {
+        Objects.requireNonNull(configSection);
+
         ConfigurationSection parent = configSection.getParent();
         if (parent == null) {
             return "null";

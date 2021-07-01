@@ -61,7 +61,7 @@ public class GeyserHubMain extends JavaPlugin {
 
         // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(bedrockFormRegistry, javaMenuRegistry), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(javaMenuRegistry), this);
 
         // Listener the Join Teleporter module
         Bukkit.getServer().getPluginManager().registerEvents(new JoinTeleporter(), this);

@@ -2,7 +2,6 @@ package dev.projectg.geyserhub.module.menu.java;
 
 import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
 import org.bukkit.Material;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,8 +40,8 @@ public class ItemButton {
         this.material = button.getMaterial();
         this.lore = button.getLore();
 
-        this.rightClickButton = button.getRightClickButton();
-        this.leftClickButton = button.getLeftClickButton();
+        this.rightClickButton = button.getOutcomeButton(true);
+        this.leftClickButton = button.getOutcomeButton(false);
     }
 
     public @Nonnull String getDisplayName() {
@@ -69,20 +68,16 @@ public class ItemButton {
     }
 
     /**
-     * Get the OutcomeButton for when the player right clicks on this ItemButton.
+     * Get the {@link OutcomeButton} for when the player clicks on this ItemButton.
      * Warning: the text of the OutcomeButton is ignored.
+     * @param rightClick True to get the right side OutcomeButton, or false to get the left side.
      * @return the OutcomeButton
      */
-    public @NotNull OutcomeButton getRightClickButton() {
-        return rightClickButton;
-    }
-
-    /**
-     * Get the OutcomeButton for when the player left clicks on this ItemButton.
-     * Warning: the text of the OutcomeButton is ignored.
-     * @return the OutcomeButton
-     */
-    public @NotNull OutcomeButton getLeftClickButton() {
-        return leftClickButton;
+    public @Nonnull OutcomeButton getOutcomeButton(boolean rightClick) {
+        if (rightClick) {
+            return rightClickButton;
+        } else {
+            return leftClickButton;
+        }
     }
 }
