@@ -3,9 +3,19 @@
 
 # GeyserHub
 
-Allow Floodgate players to switch BungeeCord servers using Bedrock forms. Also includes a GUI for Java players, along with a simple scoreboard, welcome message, auto broadcast and world settings. Everything can be customized or turned off.
+A crossplay lobby plugin for Spigot servers that provides server selector and command menus through Bedrock forms for Bedrock players, and inventory menus for Java players, with high customizability. Supports BungeeCord, and Velocity if BungeeCord plugin messaging is enabled in `velocity.toml`.
 
-The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GeyserHub/job/legacy-selector/).
+### Other Features:
+**Anything in bold can be toggled off.**
+- **Fully customizable Bedrock forms and Java inventory menus that can run commands and move players to other servers**
+- Hotbar item for access to the default form/menu
+- **Full Placeholder API support**
+- **Simple scoreboard**
+- **Welcome messages**
+- **Auto, random broadcast**
+- **World restrictions**
+
+ The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GeyserHub/job/legacy-selector/).
 ###### Note: This is NOT an official GeyserMC plugin. It is made to work with Geyser, but it is not maintained or produced by GeyserMC. If you need support with this plugin, please do not ask the Geyser developers — instead, please go to our Discord server which is linked above.
 
 ## Installation
@@ -27,9 +37,9 @@ See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-flood
 
 | Permission | Info |
 | -----------| ---- |
-| [Command Permissions](https://github.com/ProjectG-Plugins/GeyserHub/blob/master/README.md/#commands) | Permissions that are for commands| 
-| `geyserhub.blockbreak` | bypass the world settings to break blocks| 
-| `geyserhub.blockplace` | bypass the world settings to place blocks|
+| Command permissions listed above | Permissions that are for commands| 
+| `geyserhub.blockbreak` | Bypass the world settings to break blocks| 
+| `geyserhub.blockplace` | Bypass the world settings to place blocks|
 
 ## Configuration
 
