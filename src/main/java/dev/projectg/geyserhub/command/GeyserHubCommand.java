@@ -102,7 +102,6 @@ public class GeyserHubCommand implements CommandExecutor {
 
     private void sendHelp(CommandSender commandSender) {
         // todo: only show players with the given permissions certain entries? not sure if it can be integrated any way into spigot command completions
-        // todo: check if these are sent on consecutive lines or the same one :(
         commandSender.sendMessage(HELP);
     }
 
@@ -112,7 +111,7 @@ public class GeyserHubCommand implements CommandExecutor {
      * @param formName the form name to send
      */
     private void sendForm(@Nonnull CommandSender commandSender, @Nonnull String formName) {
-
+        // todo: same code is in MenuUtils
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
