@@ -259,7 +259,7 @@ public class JavaMenu {
             ItemMeta itemMeta = serverStack.getItemMeta();
             if (itemMeta != null) {
                 itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
-                itemMeta.setLore(PlaceholderAPI.setPlaceholders(player, button.getLore()));
+                itemMeta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
                 itemMeta.getPersistentDataContainer().set(MENU_NAME_KEY, PersistentDataType.STRING, menuName);
                 serverStack.setItemMeta(itemMeta);
             } else {
