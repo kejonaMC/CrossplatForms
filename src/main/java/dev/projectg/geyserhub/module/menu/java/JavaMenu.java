@@ -5,12 +5,12 @@ import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,6 +21,9 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class JavaMenu {
+
+    public static final int MAX_SIZE = 54;
+    public static final int HOPPER_SIZE = 5;
 
     public static final NamespacedKey MENU_NAME_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubMenu");
     public static final PersistentDataType<String, String>  MENU_NAME_TYPE = PersistentDataType.STRING;
@@ -65,7 +68,7 @@ public class JavaMenu {
         // Get the inventory title and size
         if (configSection.contains("Title") && configSection.contains("Size") && configSection.isInt("Size")) {
             title = Objects.requireNonNull(configSection.getString("Title"));
-            size = configSection.getInt("Size");
+            size = Math.abs(configSection.getInt("Size"));
             logger.debug("Java Menu: " + menuName + " has Title: '" + title + "', Size: " + size);
         } else {
             logger.warn("Java Menu: " + menuName + " does not contain a Title or Size value, unable to create menu");
@@ -90,22 +93,7 @@ public class JavaMenu {
             return;
         }
 
-        // Make sure the inventory will be able to hold all the buttons
-        int highestGivenSlot = 0;
-        for (Integer slot: buttons.keySet()) {
-            highestGivenSlot = Math.max(slot, highestGivenSlot);
-        }
-        int minimumSize = highestGivenSlot + 1;
-        if (minimumSize > size) {
-            logger.warn("Java Menu: " + menuName + " has a button with slot " + highestGivenSlot + ", but the inventory size is only " + size + ". Increasing the size.");
-            size = minimumSize;
-        }
-
-        // Make sure that the inventory size is a multiple of 9
-        if (size % 9 != 0) {
-            // Divide the size by 9, round the ratio up to the next int value, then multiply by 9 to get the closest higher number that is a multiple of 9
-            size = (int) (9*(Math.ceil(Math.abs(size/9))));
-        }
+        validateSize();
 
         isEnabled = true;
     }
@@ -237,6 +225,47 @@ public class JavaMenu {
     }
 
     /**
+     * Modifies the {@link #buttons} list and {@link #size} to not exceed what is allowed.
+     */
+    private void validateSize() {
+
+        int minimumSize = 0; // used for later
+        for (int slot = 0; slot < buttons.size(); slot++) {
+            if (buttons.containsKey(slot)) {
+                if (slot + 1 > MAX_SIZE) {
+                    buttons.remove(slot);
+                    logger.warn("Removing button with index " + slot + " from Java menu " + menuName + " because it exceeds the max index of " + (MAX_SIZE - 1) + "(max size of " + MAX_SIZE + ")");
+                } else {
+                    minimumSize = Math.max(slot + 1, minimumSize);
+                }
+            }
+        }
+
+        if (size > MAX_SIZE) {
+            size = MAX_SIZE;
+            logger.warn("Setting the size of Java menu " + menuName + " to " + MAX_SIZE + " because it exceeded the maximum size.");
+            return;
+        }
+
+        // Increase the size if the buttons don't fit
+        boolean increasedSize = false;
+        if (minimumSize > size) {
+            logger.warn("Java Menu: " + menuName + " has a button that needs a size of " + minimumSize + ", but the inventory size is only " + size + ". Increasing the size.");
+            size = minimumSize;
+            increasedSize = true;
+        }
+
+        // Make sure that the inventory size is a multiple of 9, unless its the hopper size.
+        if (size != HOPPER_SIZE && size % 9 != 0) {
+            // Divide the size by 9D, round the ratio up to the next int value, then multiply by 9 to get the closest higher number that is a multiple of 9
+            size = (int) (9*(Math.ceil(size/9D)));
+            if (!increasedSize) {
+                logger.warn("Java Menu: " + menuName + " size is not 5 (allowed value, for anvils), and is not a multiple of 9 between 9 and 54 (allowed values for chests). Increasing size to " + size);
+            }
+        }
+    }
+
+    /**
      * @return A non-copy of the contents of this form.
      */
     @Nonnull
@@ -249,7 +278,13 @@ public class JavaMenu {
             throw new AssertionError("Tried to send Java Menu: " + menuName + " to a player but the form was not enabled");
         }
 
-        Inventory selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
+        Inventory selectorGUI;
+        if (size == HOPPER_SIZE) {
+            selectorGUI = Bukkit.createInventory(player, InventoryType.ANVIL, PlaceholderUtils.setPlaceholders(player, title));
+        } else {
+            selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
+        }
+
 
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
@@ -257,16 +292,15 @@ public class JavaMenu {
             // Construct the item
             ItemStack serverStack = new ItemStack(button.getMaterial());
             ItemMeta itemMeta = serverStack.getItemMeta();
-            if (itemMeta != null) {
+            if (itemMeta == null) {
+                logger.warn("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
+            } else {
                 itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
                 itemMeta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
                 itemMeta.getPersistentDataContainer().set(MENU_NAME_KEY, PersistentDataType.STRING, menuName);
                 serverStack.setItemMeta(itemMeta);
-            } else {
-                logger.warn("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, failed to set display name or lore. The button will not have any results.");
+                selectorGUI.setItem(slot, serverStack);
             }
-
-            selectorGUI.setItem(slot, serverStack);
         }
 
         player.openInventory(selectorGUI);

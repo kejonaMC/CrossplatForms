@@ -54,20 +54,34 @@ public class MenuUtils {
     }
 
     /**
-     * Process a prefixed command and run it
-     * @param prefixedCommand A command that is prefixed with "player;" to run the command as the player, or "console;", to run the command as the console.
+     * Process a command and run it.
+     * If the command is prefixed with "player;" the command will be run as the player given, which CANNOT be null.
+     * If the command is prefixed with "console;" the command will be run as the console.
+     *
+     * @param command The command to run
      * @param player the Player to run the command as, if prefixed with "player;"
      */
-    public static void runCommand(@Nonnull String prefixedCommand, @Nonnull Player player) {
-        Objects.requireNonNull(prefixedCommand);
-        Objects.requireNonNull(player);
+    public static void runCommand(@Nonnull String command, @Nullable Player player) {
+        Objects.requireNonNull(command);
 
+        // Run as console by default
         CommandSender sender = Bukkit.getServer().getConsoleSender();
-        if (prefixedCommand.startsWith(playerPrefix)) {
-            sender = player;
+        if (command.startsWith(playerPrefix)) {
+            if (player == null) {
+                throw new IllegalArgumentException("The following command is denoted to be run by a player, but a null player was passed internally: " + command);
+            } else {
+                sender = player;
+            }
         }
-        // Split the input into two strings between ";" and get the second string
-        String executableCommand = prefixedCommand.split(";", 2)[1].stripLeading();
+
+        String executableCommand;
+        if (command.startsWith(playerPrefix) || command.startsWith(consolePrefix)) {
+            // Split the input into two strings between ";" and get the second string
+             executableCommand = command.split(";", 2)[1].trim();
+        } else {
+            executableCommand = command;
+        }
+
         SelectorLogger.getLogger().debug("Running command: [" + executableCommand + "] as " + sender.getName());
         Bukkit.getServer().dispatchCommand(sender, executableCommand);
     }

@@ -58,17 +58,17 @@ Java-Selector:
             Commands:
               - "tell %player_name% Sending you to Survival..."
     minigames:
-      Title: "Server Selector"
-      Size: 3
+      Title: "Minigames"
+      Size: 5
       Buttons:
-        0:
+        1:
           Display-Name: "Spleef"
           Material: SNOWBALL
           Lore:
             - "Play Spleef!"
           Any-Click:
             Server: "spleef"
-        2:
+        3:
           Display-Name: "Hide & Seek"
           Material: DIRT
           Lore:

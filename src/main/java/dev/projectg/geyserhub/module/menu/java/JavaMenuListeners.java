@@ -38,6 +38,7 @@ public class JavaMenuListeners implements Listener {
             if (meta != null) {
                 String menuName = meta.getPersistentDataContainer().get(JavaMenu.MENU_NAME_KEY, JavaMenu.MENU_NAME_TYPE);
                 if (menuName != null) {
+                    event.setCancelled(true);
                     JavaMenu menu = javaMenuRegistry.getMenu(menuName);
                     if (menu == null) {
                         logger.warn("Failed to find any Java menu under the name '" + menuName + "' in order to process inventory click by player: " + player.getName());
