@@ -6,7 +6,7 @@
 
     <groupId>dev.projectg</groupId>
     <artifactId>GeyserHub</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.2.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,10 +16,6 @@
     </properties>
 
     <repositories>
-        <repository>
-            <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -35,14 +31,6 @@
             </snapshots>
         </repository>
         <repository>
-            <id>essentials-snapshots</id>
-            <url>https://repo.essentialsx.net/snapshots/</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
             <id>opencollab-snapshot-repo</id>
             <url>https://repo.opencollab.dev/maven-snapshots/</url>
             <releases>
@@ -53,8 +41,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -65,10 +53,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
-            <scope>compile</scope>
+            <groupId>org.geysermc.cumulus</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.geysermc.floodgate</groupId>
@@ -77,30 +65,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.essentialsx</groupId>
-            <artifactId>EssentialsX</artifactId>
-            <version>2.19.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.geysermc.cumulus</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.10.9</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -111,6 +80,41 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <format>properties</format>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+                    <runOnlyOnce>false</runOnlyOnce>
+                    <verbose>true</verbose>
+                    <skipPoms>false</skipPoms>
+                    <excludeProperties>
+                        <excludeProperty>git.user.*</excludeProperty>
+                        <excludeProperty>git.*.user.*</excludeProperty>
+                        <excludeProperty>git.closest.*</excludeProperty>
+                        <excludeProperty>git.commit.id.describe</excludeProperty>
+                        <excludeProperty>git.commit.id.describe-short</excludeProperty>
+                        <excludeProperty>git.commit.message.short</excludeProperty>
+                    </excludeProperties>
+                    <commitIdGenerationMode>flat</commitIdGenerationMode>
+                    <gitDescribe>
+                        <always>true</always>
+                    </gitDescribe>
                 </configuration>
             </plugin>
         </plugins>

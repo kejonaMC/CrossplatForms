@@ -3,73 +3,17 @@
 # Toggle debug logging
 Enable-Debug: false
 
-# Don't touch this
-Config-Version: 3
-
-
-# Gives the player a compass which they can use to open the selector form
-Item-Join: true
-# The slot in which the item will be given
-Slot: 4
-# Stop the player from dropping the compass
-Allow-Item-Drop: false
-# Destroy the compass if the player drops it
-Destroy-Dropped-Item: true
-# Stop the player from moving the compass
-Allow-Item-Move: false
-
-# Please see our readme for information on configuring this section.
-# https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
-Java-Selector:
-  Enable: true
-
-  Title: "Server Selector"
-  Size: 9
-
-  Servers:
-    lobby:
-      Display-Name: "Lobby"
-      Material: Diamond
-      Lore:
-        - "&2Online players: %bungee_lobby%"
-      Slot: 2
-    survival:
-      Display-Name: "Survival"
-      Material: Emerald
-      Lore:
-        - "&2online players: %bungee_Survival%"
-      Slot: 6
-
-Bedrock-Selector:
-  Enable: true
-
-  Title: "Server Selector"
-  Content: "Click on the server button of choice."
-
-  Servers:
-    lobby:
-      Button-Text: "Server Lobby"
-      ImageURL: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
-    survival:
-      Button-Text: "Survival of the fittest"
-      ImageURL: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-  Commands:
-    extraOne:
-      Button-Text: "Spawn"
-      ImageURL: "https://www.digminecraft.com/decoration_recipes/images/lodestone.png"
-      Commands:
-        - "execute as {playerName} run spawn"
-    extraTwo:
-      Button-Text: "The Void"
-      Commands:
-        - "tp {playerName} 0 -10 0"
-        - "say {playerName} made a fatal decision."
-
-# Join and leave messages. {playerName} is replaced with the player's name.
-Enable-Join-Message: true
+# Join and leave messages. Supports papi placeholders.
 Join-Message:
-  - "&fWelcome &6{playerName}&f on geyser network!"
-  - "&bHave a great time playing on our network!"
+  Enable: true
+  Messages:
+    - "§fWelcome §6%player_name%§f on geyser network!"
+    - "§bHave a great time playing on our network!"
+
+Join-Teleporter:
+  Enable: false
+  World: world
+  Coordinates: 0;65;0
 
 Scoreboard:
   Enable: true
@@ -77,27 +21,26 @@ Scoreboard:
   Refresh-rate: 7
   Title: "Welcome to GeyserServer"
   Lines:
-    - "&f+----------------------+"
-    - "&f+&b          GeyserLobby      &f+"
-    - "&f+&b      Plugin provided by &f   +"
-    - "&f+&b            ProjectG.        &f +"
-    - "&f&f+----------------------+"
-    - "&a  *  &6https://projectg.dev  &a*"
+    - "§f+----------------------+"
+    - "§f+§b          GeyserLobby      §f+"
+    - "§f+§b      Plugin provided by §f   +"
+    - "§f+§b            ProjectG.        §f +"
+    - "§f§f+----------------------+"
+    - "§a  *  §6https://projectg.dev  §a*"
 
 
-Broadcasts-enabled: true
-# ticks between each broadcast (default: 3 minutes)
-Broadcast-interval: 3600
 Broadcasts:
-  Message1:
-    Messages:
-      - '&6 -*-*-  Welcome to GeyserNetwork  -*-*- '
-  Message2:
-    Messages:
-      - '&6*----------------*----------------* '
-      - '&b -*-*-*- GeyserHub -*-*-*-'
-      - '&b -*-*- Made by ProjectG -*-*-'
-      - '&6*----------------*----------------* '
+  Enable: true
+  # ticks between each broadcast (default: 3 minutes)
+  Interval: 3600
+  Messages:
+    Message1:
+      - '§6 -*-*-  Welcome to GeyserNetwork  -*-*- '
+    Message2:
+      - '§6*----------------*----------------* '
+      - '§b -*-*-*- GeyserHub -*-*-*-'
+      - '§b -*-*- Made by ProjectG -*-*-'
+      - '§6*----------------*----------------* '
 
 World-settings:
   disable-hunger-loss: true
@@ -113,4 +56,5 @@ World-settings:
   disable-block-place: true
   disable-block-break: true
 
-
+# Don't touch this
+Config-Version: 4

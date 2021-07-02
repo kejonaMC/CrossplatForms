@@ -1,18 +1,32 @@
-name: GeyserHub
 main: dev.projectg.geyserhub.GeyserHubMain
-version: 1.1.0
+name: GeyserHub
+version: 1.2.0
 api-version: 1.16
+description: A crossplay compatible lobby plugin
+
 depend:
   - floodgate
-description: An crossplay compatible lobby plugin
+softdepend:
+  - PlaceholderAPI
+
 commands:
-  ghteleporter:
-    description: Open a server selector form.
-    permission: geyserhub.teleporter
-  ghreload:
-    description: Reload the selector form.
-    permission: geyserhub.reload
+  ghub:
+    description: General command
+    permission: geyserhub.main
+
 permissions:
+  geyserhub.main:
+    description: Access to the base command /ghub. Opens the default form if a player runs the command.
+    default: true
+  geyserhub.form:
+    description: Access to /ghub form <form>
+    default: true
+  geyserhub.form.others:
+    description: Access to /ghub form <form> <playername>
+    default: op
+  geyserhub.reload:
+    description: Access to /ghub reload
+    default: op
   geyserhub.blockbreak:
     description: Allows player to break blocks
     default: op
