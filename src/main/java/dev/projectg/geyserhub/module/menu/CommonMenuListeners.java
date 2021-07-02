@@ -66,13 +66,14 @@ public class CommonMenuListeners implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) { // keep the access item in place
+        // todo: don't allow duplication for creative players
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
         if (!config.getBoolean("Selector-Item.Allow-Move") && event.getCurrentItem().isSimilar(AccessItem.getItem())) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

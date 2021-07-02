@@ -4,8 +4,9 @@ package dev.projectg.geyserhub.module.menu;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.reloadable.Reloadable;
+import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -15,12 +16,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class AccessItem {
+public class AccessItem implements Reloadable {
 
     private static final String NON_LEGACY_MATERIAL_VERSIONS = "(1\\.14\\S*)|(1\\.15\\S*|1\\.16\\S*|1\\.17\\S*|1\\.18\\S*)";
 
-    private static final ItemStack ACCESS_ITEM;
+    private static ItemStack ACCESS_ITEM;
     static {
+        new AccessItem();
+    }
+
+    public static ItemStack getItem() {
+        return ACCESS_ITEM;
+    }
+
+    public AccessItem() {
+        reload();
+        ReloadableRegistry.registerReloadable(this);
+    }
+
+    @Override
+    public boolean reload() {
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
 
         // Get the material
@@ -79,9 +94,7 @@ public class AccessItem {
         item.setItemMeta(meta);
         ACCESS_ITEM = item;
         SelectorLogger.getLogger().debug("Created and set the access item from the configuration.");
-    }
 
-    public static ItemStack getItem() {
-        return ACCESS_ITEM;
+        return true;
     }
 }
