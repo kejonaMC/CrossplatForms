@@ -6,6 +6,7 @@ import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -69,7 +70,7 @@ public class JavaMenu {
         if (configSection.contains("Title") && configSection.contains("Size") && configSection.isInt("Size")) {
             title = Objects.requireNonNull(configSection.getString("Title"));
             size = Math.abs(configSection.getInt("Size"));
-            logger.debug("Java Menu: " + menuName + " has Title: '" + title + "', Size: " + size);
+            logger.debug("Java Menu: " + menuName + " has Title: " + title);
         } else {
             logger.warn("Java Menu: " + menuName + " does not contain a Title or Size value, unable to create menu");
             isEnabled = false;
@@ -94,6 +95,7 @@ public class JavaMenu {
         }
 
         validateSize();
+        logger.debug("Java menu '" + menuName + "' has a total inventory size of " + size);
 
         isEnabled = true;
     }
@@ -104,7 +106,6 @@ public class JavaMenu {
      */
     @Nonnull
     private Map<Integer, ItemButton> getAllButtons(@Nonnull ConfigurationSection configSection) {
-        logger.debug("Getting buttons for Java form: " + menuName);
 
         // Get all the defined buttons in the buttons section
         Set<String> allButtonIds = configSection.getKeys(false);
@@ -132,7 +133,6 @@ public class JavaMenu {
                 continue;
             }
 
-            logger.debug("Creating button: " + buttonId);
             ItemButton button = getButton(buttonInfo);
             if (button != null) {
                 compiledButtons.put(slot, button);
@@ -153,14 +153,24 @@ public class JavaMenu {
         if (buttonInfo.contains("Display-Name", true) && buttonInfo.isString("Display-Name")) {
             displayName = buttonInfo.getString("Display-Name");
             Objects.requireNonNull(displayName);
+            displayName = ChatColor.translateAlternateColorCodes('&', displayName);
             logger.debug(menuName + "." + buttonId + " has Display-Name: " + displayName);
         } else {
             logger.warn("Java Button: " + menuName + "." + buttonId + " does not contain a valid Button-Text value, not adding.");
             return null;
         }
 
+        List<String> lore = new LinkedList<>();
+        if (buttonInfo.contains("Lore", true) && buttonInfo.isList("Lore")) {
+            List<String> unprocessedLore = buttonInfo.getStringList("Lore");
+            for (String line : unprocessedLore) {
+                lore.add(ChatColor.translateAlternateColorCodes('&', line));
+            }
+            logger.debug(menuName + "." + buttonId + "has Lore: " + unprocessedLore);
+        }
+
         Material material;
-        if (buttonInfo.contains("Material") && buttonInfo.isString("Material")) {
+        if (buttonInfo.contains("Material", true) && buttonInfo.isString("Material")) {
             String materialName = buttonInfo.getString("Material");
             Objects.requireNonNull(materialName);
             material = Material.getMaterial(materialName, false);
@@ -180,6 +190,7 @@ public class JavaMenu {
 
         // Create the button
         ItemButton button = new ItemButton(displayName, material);
+        button.setLore(lore);
         OutcomeButton rightOutcome = button.getOutcomeButton(true);
         OutcomeButton leftOutcome = button.getOutcomeButton(false);
 
@@ -250,7 +261,7 @@ public class JavaMenu {
         // Increase the size if the buttons don't fit
         boolean increasedSize = false;
         if (minimumSize > size) {
-            logger.warn("Java Menu: " + menuName + " has a button that needs a size of " + minimumSize + ", but the inventory size is only " + size + ". Increasing the size.");
+            logger.warn("Java Menu: " + menuName + " has a button that needs a size of " + minimumSize + ", but the inventory size is only " + size);
             size = minimumSize;
             increasedSize = true;
         }
@@ -260,7 +271,7 @@ public class JavaMenu {
             // Divide the size by 9D, round the ratio up to the next int value, then multiply by 9 to get the closest higher number that is a multiple of 9
             size = (int) (9*(Math.ceil(size/9D)));
             if (!increasedSize) {
-                logger.warn("Java Menu: " + menuName + " size is not 5 (allowed value, for anvils), and is not a multiple of 9 between 9 and 54 (allowed values for chests). Increasing size to " + size);
+                logger.warn("Java Menu: " + menuName + " size is not 5 (allowed value, for hopper), and is not a multiple of 9 between 9 and 54 (allowed values for chests). Increasing size to " + size);
             }
         }
     }
@@ -280,7 +291,7 @@ public class JavaMenu {
 
         Inventory selectorGUI;
         if (size == HOPPER_SIZE) {
-            selectorGUI = Bukkit.createInventory(player, InventoryType.ANVIL, PlaceholderUtils.setPlaceholders(player, title));
+            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, PlaceholderUtils.setPlaceholders(player, title));
         } else {
             selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
         }
