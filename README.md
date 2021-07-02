@@ -18,19 +18,22 @@ See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-flood
 
 | Command | Permission | Info |
 | ------- | -----------| ---- |
-| `ghteleporter` | `geyserhub.teleporter` | Open the server selector.| 
-| `ghreload` | `geyserhub.reload` | Reload the configuration. |
+| `ghub` | `geyserhub.main` | Open the default server selector (The help page if console)| 
+| `ghub form` | `geyserhub.form` | Open a form/menu (The help page if console)|
+| `ghub <form> <player>` | `geyserhub.form.others` | Make someone else open a form/menu |
+| `ghub reload` | `geyserhub.reload` | Reload the configuration |
 
 ## Permissions:
 
 | Permission | Info |
 | -----------| ---- |
-| `geyserhub.blockbreak` | bypass the world settings to break blocks.| 
-| `geyserhub.blockplace` | bypass the world settings to place blocks.|
+| [Command Permissions](https://github.com/ProjectG-Plugins/GeyserHub/blob/master/README.md/#commands) | Permissions that are for commands| 
+| `geyserhub.blockbreak` | bypass the world settings to break blocks| 
+| `geyserhub.blockplace` | bypass the world settings to place blocks|
 
 ## Configuration
 
-See the documentation for our config [here](https://github.com/ProjectG-Plugins/GeyserServerSelector/wiki/Configuration-Docs).
+See the documentation for our config [here](https://github.com/ProjectG-Plugins/GeyserHub/wiki/Configuration-Docs).
 
 ## Creators
 Jens & Konicai
