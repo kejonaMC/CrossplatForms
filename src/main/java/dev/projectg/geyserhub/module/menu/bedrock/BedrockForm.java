@@ -60,7 +60,7 @@ public class BedrockForm {
         formName = configSection.getName();
 
         // Get the Title and Content
-        if (!configSection.contains("Title") || !configSection.contains("Content")) {
+        if (!configSection.contains("Title", true) || !configSection.contains("Content")) {
             logger.warn("Bedrock Form: "  + formName + " does not contain a Title or Content value! Failed to create the form.");
             isEnabled = false;
             return;

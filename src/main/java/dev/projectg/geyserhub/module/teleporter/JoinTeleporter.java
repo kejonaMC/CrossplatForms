@@ -59,7 +59,7 @@ public class JoinTeleporter implements Listener, Reloadable {
         ConfigurationSection section = config.getConfigurationSection("Join-Teleporter");
         Objects.requireNonNull(section);
 
-        if (section.contains("Enable") && section.isBoolean("Enable")) {
+        if (section.contains("Enable", true) && section.isBoolean("Enable")) {
             if (section.getBoolean("Enable")) {
                 return setLocation(section);
             } else {
@@ -79,7 +79,7 @@ public class JoinTeleporter implements Listener, Reloadable {
     private boolean setLocation(@Nonnull ConfigurationSection section) {
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        if (!(section.contains("World") && section.isString("World"))) {
+        if (!(section.contains("World", true) && section.isString("World"))) {
             logger.severe("Join-Teleporter config section does not contain a valid World string, skipping module!");
             return false;
         }
@@ -91,7 +91,7 @@ public class JoinTeleporter implements Listener, Reloadable {
             return false;
         }
 
-        if (section.contains("Coordinates") && section.isString("Coordinates")) {
+        if (section.contains("Coordinates", true) && section.isString("Coordinates")) {
             // Make sure the given coordinates are in the correct format
             String composedCoords = section.getString("Coordinates");
             Objects.requireNonNull(composedCoords);

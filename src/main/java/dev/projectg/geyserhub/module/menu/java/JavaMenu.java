@@ -25,7 +25,7 @@ public class JavaMenu {
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
-    public static final NamespacedKey MENU_NAME_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubMenu");
+    public static final NamespacedKey MENU_NAME_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubButton");
     public static final PersistentDataType<String, String>  MENU_NAME_TYPE = PersistentDataType.STRING;
 
     private final SelectorLogger logger;
@@ -66,7 +66,7 @@ public class JavaMenu {
         menuName = configSection.getName();
 
         // Get the inventory title and size
-        if (configSection.contains("Title") && configSection.contains("Size") && configSection.isInt("Size")) {
+        if (configSection.contains("Title", true) && configSection.contains("Size") && configSection.isInt("Size")) {
             title = Objects.requireNonNull(configSection.getString("Title"));
             size = Math.abs(configSection.getInt("Size"));
             logger.debug("Java Menu: " + menuName + " has Title: " + title);

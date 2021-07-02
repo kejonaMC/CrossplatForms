@@ -24,10 +24,12 @@ import java.util.Objects;
 
 public class CommonMenuListeners implements Listener {
 
+    private final AccessItemRegistry accessItemRegistry;
     private final BedrockFormRegistry bedrockFormRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
 
-    public CommonMenuListeners(BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
+    public CommonMenuListeners(AccessItemRegistry accessItemRegistry, BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
+        this.accessItemRegistry = accessItemRegistry;
         this.bedrockFormRegistry = bedrockFormRegistry;
         this.javaMenuRegistry = javaMenuRegistry;
     }
@@ -35,7 +37,7 @@ public class CommonMenuListeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // open the menu through the access item
         Player player = event.getPlayer();
-        if (player.getInventory().getItemInMainHand().isSimilar(AccessItem.getItem())) {
+        if (player.getInventory().getItemInMainHand().isSimilar(AccessItemRegistry.getItem())) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
                     if (bedrockFormRegistry.isEnabled()) {
@@ -71,7 +73,7 @@ public class CommonMenuListeners implements Listener {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
             return;
         }
-        if (!config.getBoolean("Selector-Item.Allow-Move") && event.getCurrentItem().isSimilar(AccessItem.getItem())) {
+        if (!config.getBoolean("Selector-Item.Allow-Move") && event.getCurrentItem().isSimilar(AccessItemRegistry.getItem())) {
             event.setCancelled(true);
         }
     }
@@ -79,7 +81,7 @@ public class CommonMenuListeners implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) { // dont let the access item be dropped
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        if (event.getItemDrop().getItemStack().isSimilar(AccessItem.getItem())) {
+        if (event.getItemDrop().getItemStack().isSimilar(AccessItemRegistry.getItem())) {
             if (!config.getBoolean("Selector-Item.Allow-Drop")) {
                 event.setCancelled(true);
             } else if (config.getBoolean("Selector-Item.Destroy-Dropped")) {
@@ -91,27 +93,36 @@ public class CommonMenuListeners implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        event.getPlayer().getInventory().setHeldItemSlot(GeyserHubMain.getInstance().getConfig().getInt("Selector-Item.Slot"));
-        if (config.getBoolean("Selector-Item.Join")) {
-            Player player = event.getPlayer();
-            ItemStack accessItem = AccessItem.getItem();
-            if (player.getInventory().contains(accessItem)) {
-                return;
-            }
 
-            int desiredSlot = config.getInt("Selector-Item.Slot");
-            ItemStack oldItem = player.getInventory().getItem(desiredSlot);
-            if (oldItem == null || oldItem.getType() == Material.AIR) {
-                player.getInventory().setItem(desiredSlot, accessItem);
-            } else {
-                for (int i = 0; i < 10; i++) {
-                    if (player.getInventory().getItem(i) == null || Objects.requireNonNull(player.getInventory().getItem(i)).getType() == Material.AIR) {
-                        player.getInventory().setItem(i, oldItem);
-                        player.getInventory().setItem(desiredSlot, accessItem);
-                        break;
-                    }
+        Player player = event.getPlayer();
+
+        for (AccessItem accessItem : accessItemRegistry.getAccessItems().values()) {
+            if (accessItem.onJoin) {
+                ItemStack accessItemStack = accessItem.getItemStack(player);
+                if (player.getInventory().contains(accessItemStack)) {
+                    return;
                 }
-                // If the player doesn't have the space in their hotbar then they don't get it
+
+                int desiredSlot = config.getInt("Selector-Item.Slot");
+                ItemStack oldItem = player.getInventory().getItem(desiredSlot);
+                boolean success = false;
+                if (oldItem == null || oldItem.getType() == Material.AIR) {
+                    player.getInventory().setItem(desiredSlot, accessItemStack);
+                    success = true;
+                } else {
+                    for (int i = 0; i < 10; i++) {
+                        if (player.getInventory().getItem(i) == null || Objects.requireNonNull(player.getInventory().getItem(i)).getType() == Material.AIR) {
+                            player.getInventory().setItem(i, oldItem);
+                            player.getInventory().setItem(desiredSlot, accessItemStack);
+                            success = true;
+                            break;
+                        }
+                    }
+                    // If the player doesn't have the space in their hotbar then they don't get it
+                }
+                if (success) {
+                    event.getPlayer().getInventory().setHeldItemSlot(GeyserHubMain.getInstance().getConfig().getInt("Selector-Item.Slot"));
+                }
             }
         }
     }

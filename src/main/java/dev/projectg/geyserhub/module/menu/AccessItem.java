@@ -1,100 +1,66 @@
 package dev.projectg.geyserhub.module.menu;
 
-
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.config.ConfigId;
-import dev.projectg.geyserhub.reloadable.Reloadable;
-import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
-import org.bukkit.Bukkit;
+import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Collections;
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 
-public class AccessItem implements Reloadable {
+public class AccessItem {
 
-    private static final String NON_LEGACY_MATERIAL_VERSIONS = "(1\\.14\\S*)|(1\\.15\\S*|1\\.16\\S*|1\\.17\\S*|1\\.18\\S*)";
+    public final String itemId;
+    public final int slot;
+    private final String displayName;
+    private final Material material;
+    private final List<String> lore;
 
-    private static ItemStack ACCESS_ITEM;
-    static {
-        new AccessItem();
-    }
+    public final boolean onJoin;
+    public final boolean allowDrop;
+    public final boolean destroyDropped;
+    public final boolean allowMove;
 
-    public static ItemStack getItem() {
-        return ACCESS_ITEM;
-    }
-
-    public AccessItem() {
-        reload();
-        ReloadableRegistry.registerReloadable(this);
-    }
-
-    @Override
-    public boolean reload() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-
-        // Get the material
-        Material material;
-        if (config.contains("Selector-Item.Material", true)) {
-            String materialName = config.getString("Selector-Item.Material");
-            Objects.requireNonNull(materialName);
-            material = Material.getMaterial(materialName);
-            if (material == null) {
-                SelectorLogger.getLogger().warn("Failed to find a Material for \"" + materialName + "\". Defaulting to COMPASS for the access item.");
-                material = Material.COMPASS;
-            } else {
-                // Hacky way to avoid using enum values that don't exist on older versions if we are on older versions
-                if (Bukkit.getServer().getVersion().matches(NON_LEGACY_MATERIAL_VERSIONS)) {
-                    if (material == Material.AIR || material == Material.CAVE_AIR || material == Material.VOID_AIR) {
-                        SelectorLogger.getLogger().warn("\"Selector-Item.Material\" cannot be AIR! Choose a different material. Defaulting to COMPASS for the access item.");
-                    }
-                } else {
-                    if (material == Material.AIR) {
-                        SelectorLogger.getLogger().warn("\"Selector-Item.Material\" cannot be AIR! Choose a different material. Defaulting to COMPASS for the access item.");
-                    }
-                }
-            }
-        } else {
-            SelectorLogger.getLogger().warn("Failed to find \"Selector-Item.Material\" in the config! Defaulting to COMPASS for the access item.");
-            material = Material.COMPASS;
+    public AccessItem(@Nonnull String itemId, int slot, @Nonnull String displayName, @Nonnull Material material, @Nonnull List<String> lore,
+                      boolean onJoin, boolean allowDrop, boolean destroyDropped, boolean allowMove,
+                      @Nonnull String formName) {
+        Objects.requireNonNull(material);
+        if (new ItemStack(material).getItemMeta() == null) {
+            throw new IllegalArgumentException("Cannot create an access item with a Material that results in an ItemStack with null ItemMeta!");
         }
+        this.itemId = Objects.requireNonNull(itemId);
+        this.slot = slot;
+        this.displayName = Objects.requireNonNull(displayName);
+        this.material = material;
+        this.lore = Objects.requireNonNull(lore);
 
-        // Create a new item with the material, get the meta
+        this.onJoin = onJoin;
+        this.allowDrop = allowDrop;
+        this.destroyDropped = destroyDropped;
+        this.allowMove = allowMove;
+    }
+
+
+    private ItemStack createItemStack(@Nonnull String displayName, @Nonnull Material material, @Nonnull List<String> lore) {
         ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        Objects.requireNonNull(meta);
-
-        // Set the display name in the meta
-        String name;
-        if (config.contains("Selector-Item.Name", true)) {
-            name = config.getString("Selector-Item.Name");
-            Objects.requireNonNull(name);
-        } else {
-            SelectorLogger.getLogger().warn("\"Selector-Item.Name\" in the config does not exist. Defaulting to \"&6Server Selector\" for the access item name.");
-            name = "&6Server Selector";
-        }
-        meta.setDisplayName(name);
-
-        // Set the lore in the meta
-        List<String> lore;
-        if (config.contains("Selector-Item.Lore") && config.isList("Selector-Item.Lore")) {
-            lore = config.getStringList("Selector-Item.Lore");
-        } else {
-            lore = Collections.emptyList();
-        }
+        ItemMeta meta = Objects.requireNonNull(item.getItemMeta());
+        meta.setDisplayName(displayName);
         meta.setLore(lore);
-
-
-        // Set the meta and set the field
+        meta.getPersistentDataContainer().get(new NamespacedKey("geyserHubAccessItem", ))
         item.setItemMeta(meta);
-        ACCESS_ITEM = item;
-        SelectorLogger.getLogger().debug("Created and set the access item from the configuration.");
+        return item;
+    }
 
-        return true;
+    public ItemStack getItemStack() {
+        return createItemStack(displayName, material, lore);
+    }
+
+    public ItemStack getItemStack(@Nonnull Player player) {
+        String displayName = PlaceholderUtils.setPlaceholders(player, this.displayName);
+        List<String> lore = PlaceholderUtils.setPlaceholders(player, this.lore);
+        return createItemStack(displayName, material, lore);
     }
 }

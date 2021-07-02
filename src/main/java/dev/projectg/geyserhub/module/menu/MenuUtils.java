@@ -2,12 +2,17 @@ package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
+import dev.projectg.geyserhub.module.menu.java.JavaMenu;
+import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,6 +27,33 @@ public class MenuUtils {
 
     public static final String playerPrefix = "player;";
     public static final String consolePrefix = "console;";
+
+    public static void sendForm(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
+        if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+            if (bedrockRegistry.isEnabled()) {
+                if (bedrockRegistry.getFormNames().contains(formName)) {
+                    BedrockForm form = Objects.requireNonNull(bedrockRegistry.getMenu(formName));
+                    form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
+                } else {
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>\'");
+                }
+            } else {
+                player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
+            }
+        } else {
+            if (javaMenuRegistry.isEnabled()) {
+                if (javaMenuRegistry.getMenuNames().contains(formName)) {
+                    JavaMenu menu = Objects.requireNonNull(javaMenuRegistry.getMenu(formName));
+                    menu.sendMenu(player);
+                } else {
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                }
+            } else {
+                player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Java menus are disabled!");
+            }
+        }
+
+    }
 
     /**
      * @param commands Commands list, an empty list can be passed for no commands.
@@ -96,7 +128,7 @@ public class MenuUtils {
         Objects.requireNonNull(buttonData);
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        if (buttonData.contains("Commands") && buttonData.isList("Commands")) {
+        if (buttonData.contains("Commands", true) && buttonData.isList("Commands")) {
             if (buttonData.getStringList("Commands").isEmpty()) {
                 logger.warn(getParentName(buttonData) + "." + buttonData.getName() + " contains commands list but the list was empty.");
             } else {
@@ -115,7 +147,7 @@ public class MenuUtils {
     public static String getServer(@Nonnull ConfigurationSection buttonData) {
         Objects.requireNonNull(buttonData);
 
-        if (buttonData.contains("Server") && buttonData.isString("Server")) {
+        if (buttonData.contains("Server", true) && buttonData.isString("Server")) {
             return Objects.requireNonNull(buttonData.getString("Server"));
         }
         return null;
