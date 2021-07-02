@@ -30,7 +30,7 @@ public class Broadcast {
                 if (parentSection.contains(broadcastId, true) && parentSection.isList(broadcastId)) {
                     for (String message : parentSection.getStringList(broadcastId)) {
                         for (Player player : Bukkit.getOnlinePlayers()) {
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderUtils.setPlaceholders(player, message)));
+                            player.sendMessage(PlaceholderUtils.setPlaceholders(player, message));
                         }
                     }
                 } else {

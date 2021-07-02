@@ -4,7 +4,6 @@ import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
@@ -37,7 +36,7 @@ public class ScoreboardManager {
 
         for (int index = 0; index < limit; index++) {
             String formattedLine = PlaceholderUtils.setPlaceholders(player, text.get(index));
-            Score score = objective.getScore(ChatColor.translateAlternateColorCodes('&', formattedLine));
+            Score score = objective.getScore(formattedLine);
             score.setScore(limit - index);
         }
         player.setScoreboard(board);

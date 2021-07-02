@@ -3,7 +3,6 @@ package dev.projectg.geyserhub.module.message;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +20,7 @@ public class MessageJoin implements Listener {
         List<String> messages = config.getStringList("Join-Message.Messages");
 
         for (String message : messages) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', PlaceholderUtils.setPlaceholders(player, message)));
+            player.sendMessage(PlaceholderUtils.setPlaceholders(player, message));
         }
     }
 }

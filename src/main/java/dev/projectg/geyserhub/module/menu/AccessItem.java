@@ -63,7 +63,7 @@ public class AccessItem {
             SelectorLogger.getLogger().warn("\"Selector-Item.Name\" in the config does not exist. Defaulting to \"&6Server Selector\" for the access item name.");
             name = "&6Server Selector";
         }
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        meta.setDisplayName(name);
 
         // Set the lore in the meta
         List<String> lore;

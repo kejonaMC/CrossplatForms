@@ -7,8 +7,8 @@ Enable-Debug: false
 Join-Message:
   Enable: true
   Messages:
-    - "&fWelcome &6%player_name%&f on geyser network!"
-    - "&bHave a great time playing on our network!"
+    - "§fWelcome §6%player_name%§f on geyser network!"
+    - "§bHave a great time playing on our network!"
 
 Join-Teleporter:
   Enable: false
@@ -21,12 +21,12 @@ Scoreboard:
   Refresh-rate: 7
   Title: "Welcome to GeyserServer"
   Lines:
-    - "&f+----------------------+"
-    - "&f+&b          GeyserLobby      &f+"
-    - "&f+&b      Plugin provided by &f   +"
-    - "&f+&b            ProjectG.        &f +"
-    - "&f&f+----------------------+"
-    - "&a  *  &6https://projectg.dev  &a*"
+    - "§f+----------------------+"
+    - "§f+§b          GeyserLobby      §f+"
+    - "§f+§b      Plugin provided by §f   +"
+    - "§f+§b            ProjectG.        §f +"
+    - "§f§f+----------------------+"
+    - "§a  *  §6https://projectg.dev  §a*"
 
 
 Broadcasts:
@@ -35,12 +35,12 @@ Broadcasts:
   Interval: 3600
   Messages:
     Message1:
-      - '&6 -*-*-  Welcome to GeyserNetwork  -*-*- '
+      - '§6 -*-*-  Welcome to GeyserNetwork  -*-*- '
     Message2:
-      - '&6*----------------*----------------* '
-      - '&b -*-*-*- GeyserHub -*-*-*-'
-      - '&b -*-*- Made by ProjectG -*-*-'
-      - '&6*----------------*----------------* '
+      - '§6*----------------*----------------* '
+      - '§b -*-*-*- GeyserHub -*-*-*-'
+      - '§b -*-*- Made by ProjectG -*-*-'
+      - '§6*----------------*----------------* '
 
 World-settings:
   disable-hunger-loss: true

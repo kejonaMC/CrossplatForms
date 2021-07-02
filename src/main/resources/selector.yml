@@ -1,7 +1,7 @@
 # Item to access the default menu
 Selector-Item:
   Material: COMPASS
-  Name: "&6Server Selector"
+  Name: "§6Server Selector"
   Lore:
     - "Right click me!"
   Slot: 4
@@ -22,14 +22,14 @@ Java-Selector:
 
   Menus:
     default:
-      Title: "Server Selector"
+      Title: "§6Server Selector"
       Size: 9
       Buttons:
         2:
           Display-Name: "Lobby"
           Material: DIAMOND
           Lore:
-            - "&2Online players: %bungee_lobby%"
+            - "§2Online players: %bungee_lobby%"
           Right-Click:
             Server: "lobby"
             Commands:
@@ -39,12 +39,12 @@ Java-Selector:
             Commands:
               - "tell %player_name% Sending you to the lobby in a left click fashion..."
         4:
-          Display-Name: "Minigames"
+          Display-Name: "§6Minigames"
           Material: GRASS
           Lore:
             - "Currently Available:"
-            - "Spleef"
-            - "Hide & Seek"
+            - "§fSpleef"
+            - "§fHide § Seek"
           Any-Click:
             Commands:
               - "player; ghub form minigames"
@@ -52,7 +52,7 @@ Java-Selector:
           Display-Name: "Survival"
           Material: EMERALD
           Lore:
-            - "&2online players: %bungee_survival%"
+            - "§2online players: %bungee_survival%"
           Any-Click:
             Server: "survival"
             Commands:
@@ -69,10 +69,10 @@ Java-Selector:
           Any-Click:
             Server: "spleef"
         3:
-          Display-Name: "Hide & Seek"
+          Display-Name: "Hide § Seek"
           Material: DIRT
           Lore:
-            - "Play Hide & Seek!"
+            - "Play Hide § Seek!"
           Any-Click:
             Server: "hideseek"
 

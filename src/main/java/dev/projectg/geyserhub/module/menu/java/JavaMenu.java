@@ -6,7 +6,6 @@ import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -153,20 +152,16 @@ public class JavaMenu {
         if (buttonInfo.contains("Display-Name", true) && buttonInfo.isString("Display-Name")) {
             displayName = buttonInfo.getString("Display-Name");
             Objects.requireNonNull(displayName);
-            displayName = ChatColor.translateAlternateColorCodes('&', displayName);
             logger.debug(menuName + "." + buttonId + " has Display-Name: " + displayName);
         } else {
             logger.warn("Java Button: " + menuName + "." + buttonId + " does not contain a valid Button-Text value, not adding.");
             return null;
         }
 
-        List<String> lore = new LinkedList<>();
+        List<String> lore = Collections.emptyList();
         if (buttonInfo.contains("Lore", true) && buttonInfo.isList("Lore")) {
-            List<String> unprocessedLore = buttonInfo.getStringList("Lore");
-            for (String line : unprocessedLore) {
-                lore.add(ChatColor.translateAlternateColorCodes('&', line));
-            }
-            logger.debug(menuName + "." + buttonId + "has Lore: " + unprocessedLore);
+            lore = buttonInfo.getStringList("Lore");
+            logger.debug(menuName + "." + buttonId + " has Lore: " + lore);
         }
 
         Material material;
