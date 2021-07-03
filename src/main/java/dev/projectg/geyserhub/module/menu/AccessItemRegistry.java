@@ -40,23 +40,23 @@ public class AccessItemRegistry implements Reloadable {
                 return;
             }
         }
-        if (!selectorConfig.contains("Items") || !selectorConfig.isConfigurationSection("Items")) {
+        if (!accessSection.contains("Items") || !accessSection.isConfigurationSection("Items")) {
             logger.warn("Not creating any access items because Selector-Item in selector.yml does not list any items!");
             return;
         }
-        ConfigurationSection configItems = Objects.requireNonNull(selectorConfig.getConfigurationSection("Items"));
+        ConfigurationSection configItems = Objects.requireNonNull(accessSection.getConfigurationSection("Items"));
 
         for (String itemId : configItems.getKeys(false)) {
             if (!configItems.isConfigurationSection(itemId)) {
                 continue;
             }
-            ConfigurationSection itemSection = configItems.getConfigurationSection(itemId);
-            Objects.requireNonNull(itemSection);
+            ConfigurationSection itemEntry = configItems.getConfigurationSection(itemId);
+            Objects.requireNonNull(itemEntry);
 
             // Get the material
             Material material;
-            if (itemSection.contains("Material", true)) {
-                String materialName = itemSection.getString("Material");
+            if (itemEntry.contains("Material", true)) {
+                String materialName = itemEntry.getString("Material");
                 Objects.requireNonNull(materialName);
                 material = Material.getMaterial(materialName);
                 if (material == null) {
@@ -78,8 +78,8 @@ public class AccessItemRegistry implements Reloadable {
 
             // Set the display name in the meta
             String name;
-            if (itemSection.contains("Name", true)) {
-                name = itemSection.getString("Selector-Item.Name");
+            if (itemEntry.contains("Name", true)) {
+                name = itemEntry.getString("Name");
                 Objects.requireNonNull(name);
             } else {
                 SelectorLogger.getLogger().warn("Failed to find Selector-Item. " + itemId + ".Name in the config! Defaulting to '§6Server Selector'.");
@@ -89,8 +89,8 @@ public class AccessItemRegistry implements Reloadable {
 
             // Set the lore in the meta
             List<String> lore;
-            if (itemSection.contains("Lore", true) && itemSection.isList("Lore")) {
-                lore = itemSection.getStringList("Selector-Item.Lore");
+            if (itemEntry.contains("Lore", true) && itemEntry.isList("Lore")) {
+                lore = itemEntry.getStringList("Lore");
             } else {
                 lore = Collections.emptyList();
             }
@@ -99,22 +99,22 @@ public class AccessItemRegistry implements Reloadable {
             // Set the meta and set the field
             item.setItemMeta(meta);
 
-            if (!itemSection.contains("Form") || !itemSection.isString("Form")) {
+            if (!itemEntry.contains("Form") || !itemEntry.isString("Form")) {
                 logger.warn("Access item: " + itemId + " does not contain a form! Not registering the item.");
                 continue;
             }
-            String formName = Objects.requireNonNull(itemSection.getString("Form"));
+            String formName = Objects.requireNonNull(itemEntry.getString("Form"));
 
-            if (itemSection.contains("Slot", true) && itemSection.isInt("Slot")) {
-                if ( !itemSection.contains("Join") || !itemSection.contains("Allow-Drop") || !itemSection.contains("Destroy-Dropped") || !itemSection.contains("Allow-Move")
-                || !itemSection.isBoolean("Join") || !itemSection.isBoolean("Allow-Drop") || !itemSection.isBoolean("Destroy-Dropped") || !itemSection.isBoolean("Allow-Move")) {
+            if (itemEntry.contains("Slot", true) && itemEntry.isInt("Slot")) {
+                if ( !itemEntry.contains("Join") || !itemEntry.contains("Allow-Drop") || !itemEntry.contains("Destroy-Dropped") || !itemEntry.contains("Allow-Move")
+                || !itemEntry.isBoolean("Join") || !itemEntry.isBoolean("Allow-Drop") || !itemEntry.isBoolean("Destroy-Dropped") || !itemEntry.isBoolean("Allow-Move")) {
                     logger.warn("Failed to create access item " + itemId + " because it is missing config values!");
                     continue;
                 }
-                int slot = Math.abs(configItems.getInt("Slot"));
+                int slot = Math.abs(itemEntry.getInt("Slot"));
                 items.put(itemId, new AccessItem(itemId, slot, name, material, lore,
-                        itemSection.getBoolean("Join"), itemSection.getBoolean("Allow-Drop"),
-                        itemSection.getBoolean("Destroy-Dropped"), itemSection.getBoolean("Allow-Move"),
+                        itemEntry.getBoolean("Join"), itemEntry.getBoolean("Allow-Drop"),
+                        itemEntry.getBoolean("Destroy-Dropped"), itemEntry.getBoolean("Allow-Move"),
                         formName));
 
                 isEnabled = true;

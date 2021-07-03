@@ -34,12 +34,12 @@ public class CommonMenuListeners implements Listener {
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            event.setCancelled(true); // todo: should we cancel this?
             Player player = event.getPlayer();
             ItemStack item = event.getItem();
             if (item != null) {
                 AccessItem accessItem = accessItemRegistry.getAccessItem(item);
                 if (accessItem != null) {
+                    event.setCancelled(true); // todo: what happens if we don't cancel this? does the chest open before or after ours?
                     String formName = accessItem.formName;
                     MenuUtils.sendForm(player, bedrockFormRegistry, javaMenuRegistry, formName);
                 }
@@ -94,7 +94,10 @@ public class CommonMenuListeners implements Listener {
 
                 // Remove any access items that are already in the inventory
                 for (ItemStack item : player.getInventory().getContents()) {
-                    if (AccessItemRegistry.getAccessItemId(item) != null) { // todo: this might cause an npe
+                    if (item == null) {
+                        continue;
+                    }
+                    if (AccessItemRegistry.getAccessItemId(item) != null) {
                         player.getInventory().remove(item);
                     }
                 }

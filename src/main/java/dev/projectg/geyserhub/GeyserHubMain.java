@@ -28,6 +28,7 @@ public class GeyserHubMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        long start = System.currentTimeMillis();
         plugin = this;
         new Metrics(this, 11427);
         // getting the logger forces the config to load before our loadConfiguration() is called...
@@ -86,6 +87,8 @@ public class GeyserHubMain extends JavaPlugin {
 
         // The random interval broadcast module
         Broadcast.startBroadcastTimer(getServer().getScheduler());
+
+        logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot GeyserHub.");
     }
 
     public void initializeScoreboard() {
