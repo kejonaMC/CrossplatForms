@@ -88,19 +88,19 @@ public class CommonMenuListeners implements Listener {
 
         Player player = event.getPlayer();
 
+        // Remove any access items that are already in the inventory
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item == null) {
+                continue;
+            }
+            if (AccessItemRegistry.getAccessItemId(item) != null) {
+                player.getInventory().remove(item);
+            }
+        }
+
         for (AccessItem accessItem : accessItemRegistry.getAccessItems().values()) {
             if (accessItem.onJoin) {
                 ItemStack accessItemStack = accessItem.getItemStack(player); // todo update placeholders
-
-                // Remove any access items that are already in the inventory
-                for (ItemStack item : player.getInventory().getContents()) {
-                    if (item == null) {
-                        continue;
-                    }
-                    if (AccessItemRegistry.getAccessItemId(item) != null) {
-                        player.getInventory().remove(item);
-                    }
-                }
 
                 int desiredSlot = accessItem.slot;
                 ItemStack oldItem = player.getInventory().getItem(desiredSlot);
