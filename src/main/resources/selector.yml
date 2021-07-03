@@ -1,7 +1,9 @@
 # Item to access the default menu
 Selector-Item:
-  default:
-    Material: COMPASS
+  Enable: true
+  Items:
+    default:
+      Material: COMPASS
       Name: "§6Server Selector"
       Lore:
         - "Right click me!"

@@ -31,22 +31,22 @@ public class MenuUtils {
     public static void sendForm(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
         if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
             if (bedrockRegistry.isEnabled()) {
-                if (bedrockRegistry.getFormNames().contains(formName)) {
-                    BedrockForm form = Objects.requireNonNull(bedrockRegistry.getMenu(formName));
-                    form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
+                BedrockForm form = bedrockRegistry.getMenu(formName);
+                if (form == null) {
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
-                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>\'");
+                    form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
                 }
             } else {
                 player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
             }
         } else {
             if (javaMenuRegistry.isEnabled()) {
-                if (javaMenuRegistry.getMenuNames().contains(formName)) {
-                    JavaMenu menu = Objects.requireNonNull(javaMenuRegistry.getMenu(formName));
-                    menu.sendMenu(player);
-                } else {
+                JavaMenu menu = javaMenuRegistry.getMenu(formName);
+                if (menu == null) {
                     player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                } else {
+                    menu.sendMenu(player);
                 }
             } else {
                 player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Java menus are disabled!");

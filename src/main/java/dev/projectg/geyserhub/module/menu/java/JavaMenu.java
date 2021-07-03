@@ -25,8 +25,8 @@ public class JavaMenu {
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
-    public static final NamespacedKey MENU_NAME_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubButton");
-    public static final PersistentDataType<String, String>  MENU_NAME_TYPE = PersistentDataType.STRING;
+    protected static final NamespacedKey BUTTON_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubButton");
+    protected static final PersistentDataType<String, String> BUTTON_KEY_TYPE = PersistentDataType.STRING;
 
     private final SelectorLogger logger;
 
@@ -303,7 +303,7 @@ public class JavaMenu {
             } else {
                 itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
                 itemMeta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
-                itemMeta.getPersistentDataContainer().set(MENU_NAME_KEY, PersistentDataType.STRING, menuName);
+                itemMeta.getPersistentDataContainer().set(BUTTON_KEY, PersistentDataType.STRING, menuName);
                 serverStack.setItemMeta(itemMeta);
                 selectorGUI.setItem(slot, serverStack);
             }

@@ -11,10 +11,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public class BedrockFormRegistry implements Reloadable {
 
@@ -98,17 +96,9 @@ public class BedrockFormRegistry implements Reloadable {
     }
 
     /**
-     * @return A copy of the keyset of the current enabled menus
-     */
-    @Nonnull
-    public Set<String> getFormNames() {
-        return new HashSet<>(enabledForms.keySet());
-    }
-
-    /**
-     * Get a Java menu, based off its name.
+     * Get a BedrockForm, based off its name.
      * @param menuName The menu name
-     * @return the JavaMenu, null if it doesn't exist.
+     * @return the BedrockForm, null if it doesn't exist.
      */
     @Nullable
     public BedrockForm getMenu(@Nonnull String menuName) {

@@ -1,14 +1,8 @@
 package dev.projectg.geyserhub.module.menu;
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.config.ConfigId;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.module.menu.java.JavaMenu;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +12,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.Objects;
 
@@ -36,55 +29,52 @@ public class CommonMenuListeners implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // open the menu through the access item
-        Player player = event.getPlayer();
-        if (player.getInventory().getItemInMainHand().isSimilar(AccessItemRegistry.getItem())) {
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                    if (bedrockFormRegistry.isEnabled()) {
-                        if (bedrockFormRegistry.getFormNames().contains(BedrockFormRegistry.DEFAULT)) {
-                            BedrockForm form = Objects.requireNonNull(bedrockFormRegistry.getMenu(BedrockFormRegistry.DEFAULT));
-                            form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
-                        } else {
-                            player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, this item can't be used because a default form hasn't been specified!");
-                        }
-                    } else {
-                        player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, Bedrock forms are not enabled!");
-                    }
-                } else {
-                    if (javaMenuRegistry.isEnabled()) {
-                        if (javaMenuRegistry.getMenuNames().contains(JavaMenuRegistry.DEFAULT)) {
-                            JavaMenu menu = Objects.requireNonNull(javaMenuRegistry.getMenu(JavaMenuRegistry.DEFAULT));
-                            menu.sendMenu(player);
-                        } else {
-                            player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, this item can't be used because a default menu hasn't been specified!");
-                        }
-                    } else {
-                        player.sendMessage("[GeyserHub]" + ChatColor.RED + " Sorry, Java menus are not enabled!");
-                    }
+        if (!accessItemRegistry.isEnabled()) {
+            return;
+        }
+
+        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            event.setCancelled(true); // todo: should we cancel this?
+            Player player = event.getPlayer();
+            ItemStack item = event.getItem();
+            if (item != null) {
+                AccessItem accessItem = accessItemRegistry.getAccessItem(item);
+                if (accessItem != null) {
+                    String formName = accessItem.formName;
+                    MenuUtils.sendForm(player, bedrockFormRegistry, javaMenuRegistry, formName);
                 }
             }
         }
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) { // keep the access item in place
-        // todo: don't allow duplication for creative players
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+    public void onInventoryClick(InventoryClickEvent event) { // keep the access item in place (depending on config)
+        if (!accessItemRegistry.isEnabled()) {
             return;
         }
-        if (!config.getBoolean("Selector-Item.Allow-Move") && event.getCurrentItem().isSimilar(AccessItemRegistry.getItem())) {
-            event.setCancelled(true);
+
+        // todo: don't allow duplication for creative players
+        ItemStack item = event.getCurrentItem();
+        if (item != null) {
+            AccessItem accessItem = accessItemRegistry.getAccessItem(item);
+            if (accessItem != null) {
+                event.setCancelled(!accessItem.allowMove);
+            }
         }
     }
 
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event) { // dont let the access item be dropped
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        if (event.getItemDrop().getItemStack().isSimilar(AccessItemRegistry.getItem())) {
-            if (!config.getBoolean("Selector-Item.Allow-Drop")) {
+    public void onPlayerDropItem(PlayerDropItemEvent event) { // don't let the access item be dropped, destroy it if it is (depending on config)
+        if (!accessItemRegistry.isEnabled()) {
+            return;
+        }
+
+        ItemStack item = event.getItemDrop().getItemStack();
+        AccessItem accessItem = accessItemRegistry.getAccessItem(item);
+        if (accessItem != null) {
+            if (!accessItem.allowDrop) {
                 event.setCancelled(true);
-            } else if (config.getBoolean("Selector-Item.Destroy-Dropped")) {
+            } else if (accessItem.destroyDropped) {
                 event.getItemDrop().remove();
             }
         }
@@ -92,18 +82,24 @@ public class CommonMenuListeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        if (!accessItemRegistry.isEnabled()) {
+            return;
+        }
 
         Player player = event.getPlayer();
 
         for (AccessItem accessItem : accessItemRegistry.getAccessItems().values()) {
             if (accessItem.onJoin) {
-                ItemStack accessItemStack = accessItem.getItemStack(player);
-                if (player.getInventory().contains(accessItemStack)) {
-                    return;
+                ItemStack accessItemStack = accessItem.getItemStack(player); // todo update placeholders
+
+                // Remove any access items that are already in the inventory
+                for (ItemStack item : player.getInventory().getContents()) {
+                    if (AccessItemRegistry.getAccessItemId(item) != null) { // todo: this might cause an npe
+                        player.getInventory().remove(item);
+                    }
                 }
 
-                int desiredSlot = config.getInt("Selector-Item.Slot");
+                int desiredSlot = accessItem.slot;
                 ItemStack oldItem = player.getInventory().getItem(desiredSlot);
                 boolean success = false;
                 if (oldItem == null || oldItem.getType() == Material.AIR) {
@@ -121,7 +117,7 @@ public class CommonMenuListeners implements Listener {
                     // If the player doesn't have the space in their hotbar then they don't get it
                 }
                 if (success) {
-                    event.getPlayer().getInventory().setHeldItemSlot(GeyserHubMain.getInstance().getConfig().getInt("Selector-Item.Slot"));
+                    event.getPlayer().getInventory().setHeldItemSlot(accessItem.slot);
                 }
             }
         }

@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -33,17 +32,14 @@ public class JavaMenuListeners implements Listener {
 
         ItemStack item = event.getCurrentItem();
         if (item != null) {
-            ItemMeta meta = item.getItemMeta();
-            if (meta != null) {
-                String menuName = meta.getPersistentDataContainer().get(JavaMenu.MENU_NAME_KEY, JavaMenu.MENU_NAME_TYPE);
-                if (menuName != null) {
-                    event.setCancelled(true);
-                    JavaMenu menu = javaMenuRegistry.getMenu(menuName);
-                    if (menu == null) {
-                        logger.warn("Failed to find any Java menu under the name '" + menuName + "' in order to process inventory click by player: " + player.getName());
-                    } else {
-                        menu.process(event.getSlot(), event.isRightClick(), player);
-                    }
+            String menuName = JavaMenuRegistry.getMenuName(item);
+            if (menuName != null) {
+                event.setCancelled(true);
+                JavaMenu menu = javaMenuRegistry.getMenu(menuName);
+                if (menu == null) {
+                    logger.warn("Failed to find any Java menu under the name '" + menuName + "' in order to process inventory click by player: " + player.getName());
+                } else {
+                    menu.process(event.getSlot(), event.isRightClick(), player);
                 }
             }
         }
