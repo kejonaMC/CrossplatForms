@@ -5,7 +5,7 @@ package dev.projectg.geyserhub.config;
  */
 public enum ConfigId {
     MAIN("config.yml", 4),
-    SELECTOR("selector.yml", 1);
+    SELECTOR("selector.yml", 2);
 
     public static final ConfigId[] VALUES = values();
 
