@@ -1,3 +1,5 @@
+[![Build Status](https://ci.projectg.dev/job/GeyserHub/job/master/badge/icon)](https://ci.projectg.dev/job/GeyserHub/job/master/)
+[![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/ProjectG-Plugins/GeyserUpdater/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/806179549498966058?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/xXzzdAXa2b)
 
 
