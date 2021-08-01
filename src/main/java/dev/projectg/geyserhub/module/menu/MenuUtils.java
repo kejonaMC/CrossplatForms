@@ -2,11 +2,13 @@ package dev.projectg.geyserhub.module.menu;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
@@ -31,7 +33,7 @@ public class MenuUtils {
     public static void affectPlayer(@Nonnull List<String> commands, @Nullable String serverName, @Nonnull Player player) {
         Objects.requireNonNull(commands);
         Objects.requireNonNull(player);
-
+        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         if (!commands.isEmpty()) {
             // Get the commands from the list of commands and replace any playerName placeholders
             for (String command : commands) {
@@ -45,7 +47,7 @@ public class MenuUtils {
                 out.writeUTF("Connect");
                 out.writeUTF(serverName);
                 player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", baos.toByteArray());
-                player.sendMessage(ChatColor.DARK_AQUA + "Trying to send you to: " + ChatColor.GREEN + serverName);
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',Objects.requireNonNull(Objects.requireNonNull(config.getString("Bungeecord-Message")).replace("%server%",serverName))));
             } catch (IOException e) {
                 SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
                 e.printStackTrace();
