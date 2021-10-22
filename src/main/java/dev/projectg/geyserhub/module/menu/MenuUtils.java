@@ -129,10 +129,11 @@ public class MenuUtils {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         if (buttonData.contains("Commands", true) && buttonData.isList("Commands")) {
-            if (buttonData.getStringList("Commands").isEmpty()) {
+            List<String> commands = buttonData.getStringList("Commands");
+            if (commands.isEmpty()) {
                 logger.warn(getParentName(buttonData) + "." + buttonData.getName() + " contains commands list but the list was empty.");
             } else {
-                return buttonData.getStringList("Commands");
+                return commands;
             }
         }
         return Collections.emptyList();

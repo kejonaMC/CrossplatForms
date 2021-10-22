@@ -60,13 +60,13 @@ public class BedrockForm {
         formName = configSection.getName();
 
         // Get the Title and Content
-        if (!configSection.contains("Title", true) || !configSection.contains("Content")) {
+        if (configSection.contains("Title", true) && configSection.contains("Content", true)) {
+            this.title = Objects.requireNonNull(configSection.getString("Title"));
+            this.content = Objects.requireNonNull(configSection.getString("Content"));
+        } else {
             logger.warn("Bedrock Form: "  + formName + " does not contain a Title or Content value! Failed to create the form.");
             isEnabled = false;
             return;
-        } else {
-            this.title = Objects.requireNonNull(configSection.getString("Title"));
-            this.content = Objects.requireNonNull(configSection.getString("Content"));
         }
 
         // Get our Buttons

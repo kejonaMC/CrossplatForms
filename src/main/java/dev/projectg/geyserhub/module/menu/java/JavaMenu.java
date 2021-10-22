@@ -66,7 +66,7 @@ public class JavaMenu {
         menuName = configSection.getName();
 
         // Get the inventory title and size
-        if (configSection.contains("Title", true) && configSection.contains("Size") && configSection.isInt("Size")) {
+        if (configSection.contains("Title", true) && configSection.contains("Size", true) && configSection.isInt("Size")) {
             title = Objects.requireNonNull(configSection.getString("Title"));
             size = Math.abs(configSection.getInt("Size"));
             logger.debug("Java Menu: " + menuName + " has Title: " + title);
