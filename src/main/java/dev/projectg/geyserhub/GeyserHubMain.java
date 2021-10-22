@@ -33,17 +33,18 @@ public class GeyserHubMain extends JavaPlugin {
         new Metrics(this, 11427);
         // getting the logger forces the config to load before our loadConfiguration() is called...
         SelectorLogger logger = SelectorLogger.getLogger();
-        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
-        }
 
         try {
             Properties gitProperties = new Properties();
             gitProperties.load(FileUtils.getResource("git.properties"));
             logger.info("Branch: " + gitProperties.getProperty("git.branch", "Unknown") + ", Commit: " + gitProperties.getProperty("git.commit.id.abbrev", "Unknown"));
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException | IllegalArgumentException e) {
             logger.warn("Unable to load resource: git.properties");
             e.printStackTrace();
+        }
+
+        if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
         }
 
         configManager = new ConfigManager();
