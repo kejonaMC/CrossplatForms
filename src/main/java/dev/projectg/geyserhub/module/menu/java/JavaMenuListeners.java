@@ -23,6 +23,8 @@ public class JavaMenuListeners implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
+        // This is used for processing inventory clicks WITHIN the java menu GUI
+
         FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         if (!config.getBoolean("Java-Selector.Enable")) {
             return;
@@ -32,15 +34,12 @@ public class JavaMenuListeners implements Listener {
 
         ItemStack item = event.getCurrentItem();
         if (item != null) {
-            String menuName = JavaMenuRegistry.getMenuName(item);
-            if (menuName != null) {
+            JavaMenu menu = javaMenuRegistry.getMenu(item);
+            if (menu == null) {
+                logger.warn("Failed to find any Java menu for the itemstack of'" + (item.hasItemMeta() ? Objects.requireNonNull(item.getItemMeta()).getDisplayName() : item.toString()) + "' in order to process inventory click by player: " + player.getName());
+            } else {
                 event.setCancelled(true);
-                JavaMenu menu = javaMenuRegistry.getMenu(menuName);
-                if (menu == null) {
-                    logger.warn("Failed to find any Java menu under the name '" + menuName + "' in order to process inventory click by player: " + player.getName());
-                } else {
-                    menu.process(event.getSlot(), event.isRightClick(), player);
-                }
+                menu.process(event.getSlot(), event.isRightClick(), player);
             }
         }
     }

@@ -107,7 +107,7 @@ public class JavaMenuRegistry implements Reloadable {
     }
 
     /**
-     * Attempt to retrieve the menu that an ItemStack is contained in
+     * Attempt to retrieve the menu that an ItemStack points to
      * @param itemStack The ItemStack to check. If it contains null ItemMeta, this will return null.
      * @return The menu if the ItemStack contained the menu name and the menu exists. If no menu name was contained or the menu contained doesn't exist, this will return null.
      */
@@ -127,7 +127,7 @@ public class JavaMenuRegistry implements Reloadable {
      * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
      */
     @Nullable
-    public static String getMenuName(@Nonnull ItemStack itemStack) {
+    public String getMenuName(@Nonnull ItemStack itemStack) {
         Objects.requireNonNull(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {

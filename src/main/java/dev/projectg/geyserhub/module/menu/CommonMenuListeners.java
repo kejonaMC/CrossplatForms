@@ -98,6 +98,7 @@ public class CommonMenuListeners implements Listener {
             }
         }
 
+        boolean setHeldSlot = false; // If we have changed the item being held
         for (AccessItem accessItem : accessItemRegistry.getAccessItems().values()) {
             if (accessItem.onJoin) {
                 ItemStack accessItemStack = accessItem.getItemStack(player); // todo update placeholders
@@ -109,7 +110,7 @@ public class CommonMenuListeners implements Listener {
                     player.getInventory().setItem(desiredSlot, accessItemStack);
                     success = true;
                 } else {
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 0; i < 10 && i != desiredSlot; i++) {
                         if (player.getInventory().getItem(i) == null || Objects.requireNonNull(player.getInventory().getItem(i)).getType() == Material.AIR) {
                             player.getInventory().setItem(i, oldItem);
                             player.getInventory().setItem(desiredSlot, accessItemStack);
@@ -119,8 +120,10 @@ public class CommonMenuListeners implements Listener {
                     }
                     // If the player doesn't have the space in their hotbar then they don't get it
                 }
-                if (success) {
+                if (success && !setHeldSlot) {
+                    // Set the held item to the first access item
                     event.getPlayer().getInventory().setHeldItemSlot(accessItem.slot);
+                    setHeldSlot = true;
                 }
             }
         }
