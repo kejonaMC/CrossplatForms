@@ -235,38 +235,44 @@ public class JavaMenu {
      */
     private void validateSize() {
 
-        int minimumSize = 0; // used for later
-        for (int slot = 0; slot < buttons.size(); slot++) {
-            if (buttons.containsKey(slot)) {
-                if (slot + 1 > MAX_SIZE) {
-                    buttons.remove(slot);
-                    logger.warn("Removing button with index " + slot + " from Java menu " + menuName + " because it exceeds the max index of " + (MAX_SIZE - 1) + "(max size of " + MAX_SIZE + ")");
-                } else {
-                    minimumSize = Math.max(slot + 1, minimumSize);
-                }
-            }
-        }
-
+        // ensure size is not greater than max size
         if (size > MAX_SIZE) {
             size = MAX_SIZE;
             logger.warn("Setting the size of Java menu " + menuName + " to " + MAX_SIZE + " because it exceeded the maximum size.");
-            return;
         }
 
-        // Increase the size if the buttons don't fit
-        boolean increasedSize = false;
-        if (minimumSize > size) {
-            logger.warn("Java Menu: " + menuName + " has a button that needs a size of " + minimumSize + ", but the inventory size is only " + size);
-            size = minimumSize;
+        int min_size = 5; // assume an initial minimum size of 5
+
+        // Remove buttons that are impossible to fit in any inventory and determined the minimum size to fit all buttons.
+        for (Integer index: buttons.keySet()) {
+            if (index > MAX_SIZE - 1) {
+                logger.warn("Removing button with index " + index + " from Java menu " + menuName + " because it exceeds the max possible index of " + (MAX_SIZE - 1) + "(max possible size of " + MAX_SIZE + ")");
+                buttons.remove(index);
+                continue;
+            }
+
+            // Minimum size should be equal to or less than max size
+            min_size = Math.max(min_size, index + 1);
+        }
+
+        boolean increasedSize;
+        // Increased the size to fit all buttons if necessary.
+        // Buttons that exceeded the MAX_SIZE were not considered for the minimum size,
+        // so this should not increase the size past the maximum size.
+        if (min_size > size) {
+            size = min_size;
             increasedSize = true;
+            logger.warn("Java Menu: " + menuName + " has a button that needs a size of " + min_size + ", but the inventory size is only " + size + ". Increased size to " + min_size);
+        } else {
+            increasedSize = false;
         }
 
-        // Make sure that the inventory size is a multiple of 9, unless its the hopper size.
+        // Make sure that the inventory size is a multiple of 9, or the hopper size.
         if (size != HOPPER_SIZE && size % 9 != 0) {
             // Divide the size by 9D, round the ratio up to the next int value, then multiply by 9 to get the closest higher number that is a multiple of 9
             size = (int) (9*(Math.ceil(size/9D)));
             if (!increasedSize) {
-                logger.warn("Java Menu: " + menuName + " size is not 5 (allowed value, for hopper), and is not a multiple of 9 between 9 and 54 (allowed values for chests). Increasing size to " + size);
+                logger.warn("Java Menu: " + menuName + " size is not 5 (allowed value for hopper), and is not a multiple of 9 between 9 and 54 (allowed values for chests). Increasing size to " + size);
             }
         }
     }
@@ -296,16 +302,16 @@ public class JavaMenu {
             ItemButton button = buttons.get(slot);
 
             // Construct the item
-            ItemStack serverStack = new ItemStack(button.getMaterial());
-            ItemMeta itemMeta = serverStack.getItemMeta();
+            ItemStack buttonItem = new ItemStack(button.getMaterial());
+            ItemMeta itemMeta = buttonItem.getItemMeta();
             if (itemMeta == null) {
                 logger.warn("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
             } else {
                 itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
                 itemMeta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
                 itemMeta.getPersistentDataContainer().set(MENU_NAME_KEY, PersistentDataType.STRING, menuName);
-                serverStack.setItemMeta(itemMeta);
-                selectorGUI.setItem(slot, serverStack);
+                buttonItem.setItemMeta(itemMeta);
+                selectorGUI.setItem(slot, buttonItem);
             }
         }
 
