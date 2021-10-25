@@ -159,7 +159,8 @@ public class AccessItemRegistry implements Reloadable {
     }
 
     /**
-     * Attempt to retrieve the Access Item ID that an ItemStack points to
+     * Attempt to retrieve the Access Item ID that an ItemStack points to. The Access Item ID may or may not refer
+     * to an actual AccessItem
      * @param itemStack The ItemStack to check
      * @return The AccessItem ID if the ItemStack contained the name, null if not.
      */

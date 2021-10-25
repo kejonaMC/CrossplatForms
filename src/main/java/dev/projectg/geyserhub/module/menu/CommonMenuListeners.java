@@ -34,12 +34,13 @@ public class CommonMenuListeners implements Listener {
         }
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player player = event.getPlayer();
             ItemStack item = event.getItem();
             if (item != null) {
                 AccessItem accessItem = accessItemRegistry.getAccessItem(item);
                 if (accessItem != null) {
                     event.setCancelled(true); // todo: what happens if we don't cancel this? does the chest open before or after ours?
+
+                    Player player = event.getPlayer();
                     String formName = accessItem.formName;
                     MenuUtils.sendForm(player, bedrockFormRegistry, javaMenuRegistry, formName);
                 }
@@ -107,9 +108,11 @@ public class CommonMenuListeners implements Listener {
                 ItemStack oldItem = player.getInventory().getItem(desiredSlot);
                 boolean success = false;
                 if (oldItem == null || oldItem.getType() == Material.AIR) {
+                    // put the item in the desired place
                     player.getInventory().setItem(desiredSlot, accessItemStack);
                     success = true;
                 } else {
+                    // find somewhere else to put it in the hotbar
                     for (int i = 0; i < 10 && i != desiredSlot; i++) {
                         if (player.getInventory().getItem(i) == null || Objects.requireNonNull(player.getInventory().getItem(i)).getType() == Material.AIR) {
                             player.getInventory().setItem(i, oldItem);
