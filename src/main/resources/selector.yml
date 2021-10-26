@@ -1,5 +1,5 @@
 # Item to access the default menu
-Selector-Item:
+Access-Items:
   Enable: true
   Items:
     default:

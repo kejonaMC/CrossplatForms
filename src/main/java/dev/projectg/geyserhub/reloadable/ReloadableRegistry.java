@@ -25,13 +25,6 @@ public class ReloadableRegistry {
         reloadables.add(reloadable);
     }
 
-    /**
-     * @return A copy of all registered reloadables
-     */
-    public static Reloadable[] getRegisteredReloadables() {
-        return reloadables.toArray(new Reloadable[0]);
-    }
-
     public static boolean reloadAll() {
         SelectorLogger logger = SelectorLogger.getLogger();
 
@@ -48,7 +41,7 @@ public class ReloadableRegistry {
         logger.info("Reloaded the configuration, reloading modules...");
 
         boolean success = true;
-        for (Reloadable reloadable : ReloadableRegistry.getRegisteredReloadables()) {
+        for (Reloadable reloadable : reloadables) {
             if (!reloadable.reload()) {
                 logger.severe(ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
                 success = false;

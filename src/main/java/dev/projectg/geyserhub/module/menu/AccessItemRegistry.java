@@ -34,18 +34,18 @@ public class AccessItemRegistry implements Reloadable {
         SelectorLogger logger = SelectorLogger.getLogger();
 
         FileConfiguration selectorConfig = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        if (!selectorConfig.contains("Selector-Item") || !selectorConfig.isConfigurationSection("Selector-Item")) {
-            logger.warn("Not creating any access items because selector.yml does not contain the Selector-Item config!");
+        if (!selectorConfig.contains("Access-Items") || !selectorConfig.isConfigurationSection("Access-Items")) {
+            logger.warn("Not creating any access items because selector.yml does not contain the Access-Items config!");
             return;
         }
-        ConfigurationSection accessSection = Objects.requireNonNull(selectorConfig.getConfigurationSection("Selector-Item"));
+        ConfigurationSection accessSection = Objects.requireNonNull(selectorConfig.getConfigurationSection("Access-Items"));
         if (accessSection.contains("Enable") && accessSection.isBoolean("Enable")) {
             if (!accessSection.getBoolean("Enable")) {
                 return;
             }
         }
         if (!accessSection.contains("Items") || !accessSection.isConfigurationSection("Items")) {
-            logger.warn("Not creating any access items because Selector-Item in selector.yml does not list any items!");
+            logger.warn("Not creating any access items because Access-Items in selector.yml does not list any items!");
             return;
         }
         ConfigurationSection configItems = Objects.requireNonNull(accessSection.getConfigurationSection("Items"));
@@ -68,7 +68,7 @@ public class AccessItemRegistry implements Reloadable {
                     material = Material.COMPASS;
                 }
             } else {
-                SelectorLogger.getLogger().warn("Failed to find Selector-Item. " + itemId + ".Material in the config! Defaulting to COMPASS.");
+                SelectorLogger.getLogger().warn("Failed to find Access-Items. " + itemId + ".Material in the config! Defaulting to COMPASS.");
                 material = Material.COMPASS;
             }
 
@@ -86,7 +86,7 @@ public class AccessItemRegistry implements Reloadable {
                 name = itemEntry.getString("Name");
                 Objects.requireNonNull(name);
             } else {
-                SelectorLogger.getLogger().warn("Failed to find Selector-Item. " + itemId + ".Name in the config! Defaulting to '§6Server Selector'.");
+                SelectorLogger.getLogger().warn("Failed to find Access-Items. " + itemId + ".Name in the config! Defaulting to '§6Server Selector'.");
                 name = "§6Server Selector";
             }
             meta.setDisplayName(name);

@@ -54,9 +54,7 @@ public class GeyserHubCommand implements CommandExecutor {
         switch (args[0]) {
             case "reload":
                 if (commandSender.hasPermission("geyserhub.reload")) {
-                    if (ReloadableRegistry.reloadAll()) {
-                        sendMessage(commandSender, SelectorLogger.Level.INFO, "Successfully reloaded.");
-                    } else {
+                    if (!ReloadableRegistry.reloadAll()) {
                         sendMessage(commandSender, SelectorLogger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
                     }
                 } else {
