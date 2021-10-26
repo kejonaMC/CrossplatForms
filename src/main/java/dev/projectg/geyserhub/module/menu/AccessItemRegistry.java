@@ -26,6 +26,10 @@ public class AccessItemRegistry implements Reloadable {
         ReloadableRegistry.registerReloadable(this);
     }
 
+    /**
+     * Adds access items in {@link this#items} from {@link ConfigId#SELECTOR}.
+     * Does not clear existing items.
+     */
     private void load() {
         SelectorLogger logger = SelectorLogger.getLogger();
 

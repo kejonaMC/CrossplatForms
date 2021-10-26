@@ -28,7 +28,7 @@ public class CommonMenuListeners implements Listener {
     }
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) { // open the menu through the access item
+    public void onInteract(PlayerInteractEvent event) { // opening menus through access items
         if (!accessItemRegistry.isEnabled()) {
             return;
         }
@@ -49,7 +49,7 @@ public class CommonMenuListeners implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) { // keep the access item in place (depending on config)
+    public void onInventoryClick(InventoryClickEvent event) { // keep the access items in place
         if (!accessItemRegistry.isEnabled()) {
             return;
         }
@@ -65,7 +65,7 @@ public class CommonMenuListeners implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event) { // don't let the access item be dropped, destroy it if it is (depending on config)
+    public void onPlayerDropItem(PlayerDropItemEvent event) { // don't let the access item be dropped, destroy it if it is
         if (!accessItemRegistry.isEnabled()) {
             return;
         }
@@ -95,6 +95,8 @@ public class CommonMenuListeners implements Listener {
                 continue;
             }
             if (AccessItemRegistry.getAccessItemId(item) != null) {
+                // Even if this specific item/access item is no longer registered
+                // The fact it has the ID inside of it means it once was or still is
                 player.getInventory().remove(item);
             }
         }
@@ -102,7 +104,7 @@ public class CommonMenuListeners implements Listener {
         boolean setHeldSlot = false; // If we have changed the item being held
         for (AccessItem accessItem : accessItemRegistry.getAccessItems().values()) {
             if (accessItem.onJoin) {
-                ItemStack accessItemStack = accessItem.getItemStack(player); // todo update placeholders
+                ItemStack accessItemStack = accessItem.getItemStack(player); // todo update placeholders after the fact. but when?
 
                 int desiredSlot = accessItem.slot;
                 ItemStack oldItem = player.getInventory().getItem(desiredSlot);

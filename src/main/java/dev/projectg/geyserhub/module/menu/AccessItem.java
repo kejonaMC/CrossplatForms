@@ -27,7 +27,9 @@ public class AccessItem {
     public final String itemId;
 
     /**
-     * The inventory slot for the item to be in by default
+     * The hotbar slot for the item to be, by default.
+     * Should be placed elsewhere in the hotbar if not possible.
+     * Should not be given if the hotbar is full.
      */
     public final int slot;
 

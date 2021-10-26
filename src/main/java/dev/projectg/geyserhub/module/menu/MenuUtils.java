@@ -30,6 +30,15 @@ public class MenuUtils {
     public static final String playerPrefix = "player;";
     public static final String consolePrefix = "console;";
 
+    /**
+     * Sends a given form, identified by its name, to a BE or JE player.
+     * If the form does not exist for their platform, they will be sent a message.
+     * If forms are disabled on their platform, they will be sent a message.
+     * @param player The {@link Player} to send the form to
+     * @param bedrockRegistry The registry to pull bedrock forms from
+     * @param javaMenuRegistry The registry to pull java inventory GUIs from
+     * @param formName The name of the form to open
+     */
     public static void sendForm(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
         if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
             if (bedrockRegistry.isEnabled()) {
