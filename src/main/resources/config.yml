@@ -15,6 +15,8 @@ Join-Teleporter:
   World: world
   Coordinates: 0;65;0
 
+# The message to be sent to players whenever they are moving to a new server using a button in a form/meu
+# which uses the Server functionality. Supports papi placeholders, as well as %server%, the name of the server they are moving to.
 Bungeecord-Message: "§fTeleporting to §b%server%"
 
 Scoreboard:
