@@ -9,14 +9,14 @@
 A crossplay lobby plugin for Spigot servers that provides server selector and command menus through Bedrock forms for Bedrock players, and inventory menus for Java players, with high customizability. Supports BungeeCord, and Velocity if BungeeCord plugin messaging is enabled in `velocity.toml`.
 
 ### Other Features:
-**Anything in bold can be toggled off.**
-- **Fully customizable Bedrock forms and Java inventory menus that can run commands and move players to other servers**
-- Hotbar item for access to the default form/menu
-- **Full Placeholder API support**
-- **Simple scoreboard**
-- **Welcome messages**
-- **Auto, random broadcast**
-- **World restrictions**
+Anything can be toggled off.
+- Fully customizable Bedrock forms and Java inventory menus that can run commands and move players to other servers
+- Hotbar items for quick access to different forms/menus
+- Full Placeholder API support
+- Simple scoreboard
+- Welcome messages**
+- Automatic broadcasts
+- World restrictions
 
  The legacy simple ServerSelector only for Geyser players can be found [here](https://ci.projectg.dev/job/GeyserHub/job/legacy-selector/).
 ###### Note: This is NOT an official GeyserMC plugin. It is made to work with Geyser, but it is not maintained or produced by GeyserMC. If you need support with this plugin, please do not ask the Geyser developers — instead, please go to our Discord server which is linked above.
@@ -24,7 +24,7 @@ A crossplay lobby plugin for Spigot servers that provides server selector and co
 ## Installation
 
 GeyserHub is a lobby plugin that must be installed on any backend servers you want the selector on.
-Floodgate 2.0 must be installed on the backend servers.
+Floodgate must be installed on the backend servers.
 See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-floodgate-on-spigot-servers-behind-bungeecord-or-velocity) for more information
 
 ## Commands:

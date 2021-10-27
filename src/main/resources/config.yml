@@ -15,7 +15,7 @@ Join-Teleporter:
   World: world
   Coordinates: 0;65;0
 
-Bungeecord-Message: "&fTeleporting to &b%server%"
+Bungeecord-Message: "§fTeleporting to §b%server%"
 
 Scoreboard:
   Enable: true
