@@ -88,7 +88,10 @@ public class MenuUtils {
                 out.writeUTF("Connect");
                 out.writeUTF(serverName);
                 player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", baos.toByteArray());
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',Objects.requireNonNull(Objects.requireNonNull(config.getString("Bungeecord-Message")).replace("%server%",serverName))));
+                String message = config.getString("Bungeecord-Message", "");
+                if (!message.isEmpty()) {
+                    player.sendMessage(PlaceholderUtils.setPlaceholders(player, message).replace("%server%", serverName));
+                }
             } catch (IOException e) {
                 SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
                 e.printStackTrace();

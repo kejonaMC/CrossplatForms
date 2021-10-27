@@ -2,6 +2,7 @@ package dev.projectg.geyserhub.config;
 
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.config.updaters.MAIN_4;
 import dev.projectg.geyserhub.config.updaters.SELECTOR_1;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -22,6 +23,7 @@ public class ConfigManager {
     static {
         // todo: this is awful but oh well
         updaters.put(ConfigId.SELECTOR, Collections.singletonMap(1, SELECTOR_1.class));
+        updaters.put(ConfigId.MAIN, Collections.singletonMap(4, MAIN_4.class));
     }
 
     private final Map<ConfigId, FileConfiguration> configurations = new HashMap<>();
