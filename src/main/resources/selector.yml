@@ -1,19 +1,32 @@
 # Item to access the default menu
-Selector-Item:
-  Material: COMPASS
-  Name: "§6Server Selector"
-  Lore:
-    - "Right click me!"
-  Slot: 4
+Access-Items:
+  Enable: true
+  Items:
+    default:
+      Material: COMPASS
+      Name: "§6Server Selector"
+      Lore:
+        - "Right click me!"
+      Slot: 4
+      Form: default
 
-  # Gives the player the item which they can use to open the default form
-  Join: true
-  # Stop the player from dropping the item
-  Allow-Drop: false
-  # Destroy the compass if the player drops it
-  Destroy-Dropped: true
-  # Stop the player from moving the compass in their inventory
-  Allow-Move: false
+      # Gives the player the item which they can use to open the default form
+      Join: true
+      # Stop the player from dropping the item
+      Allow-Drop: false
+      # Destroy the compass if the player drops it
+      Destroy-Dropped: true
+      # Stop the player from moving the compass in their inventory
+      Allow-Move: false
+    minigamesShortcut:
+      Material: CARROT_ON_A_STICK
+      Name: "§6Minigames Shortcut"
+      Slot: 5
+      Form: minigames
+      Join: true
+      Allow-Drop: true
+      Destroy-Dropped: true
+      Allow-Move: false
 
 # Please see our readme for information on configuring this section.
 # https://github.com/ProjectG-Plugins/GeyserServerSelector#Configuration
@@ -137,4 +150,4 @@ Bedrock-Selector:
           Server: "hideseek"
 
 # Don't touch this
-Config-Version: 1
+Config-Version: 2

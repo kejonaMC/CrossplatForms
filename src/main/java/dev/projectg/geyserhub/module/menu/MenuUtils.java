@@ -3,6 +3,10 @@ package dev.projectg.geyserhub.module.menu;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
+import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
+import dev.projectg.geyserhub.module.menu.java.JavaMenu;
+import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -24,6 +29,42 @@ public class MenuUtils {
 
     public static final String playerPrefix = "player;";
     public static final String consolePrefix = "console;";
+
+    /**
+     * Sends a given form, identified by its name, to a BE or JE player.
+     * If the form does not exist for their platform, they will be sent a message.
+     * If forms are disabled on their platform, they will be sent a message.
+     * @param player The {@link Player} to send the form to
+     * @param bedrockRegistry The registry to pull bedrock forms from
+     * @param javaMenuRegistry The registry to pull java inventory GUIs from
+     * @param formName The name of the form to open
+     */
+    public static void sendForm(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
+        if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+            if (bedrockRegistry.isEnabled()) {
+                BedrockForm form = bedrockRegistry.getMenu(formName);
+                if (form == null) {
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                } else {
+                    form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
+                }
+            } else {
+                player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
+            }
+        } else {
+            if (javaMenuRegistry.isEnabled()) {
+                JavaMenu menu = javaMenuRegistry.getMenu(formName);
+                if (menu == null) {
+                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                } else {
+                    menu.sendMenu(player);
+                }
+            } else {
+                player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Java menus are disabled!");
+            }
+        }
+
+    }
 
     /**
      * @param commands Commands list, an empty list can be passed for no commands.
@@ -98,11 +139,12 @@ public class MenuUtils {
         Objects.requireNonNull(buttonData);
         SelectorLogger logger = SelectorLogger.getLogger();
 
-        if (buttonData.contains("Commands") && buttonData.isList("Commands")) {
-            if (buttonData.getStringList("Commands").isEmpty()) {
+        if (buttonData.contains("Commands", true) && buttonData.isList("Commands")) {
+            List<String> commands = buttonData.getStringList("Commands");
+            if (commands.isEmpty()) {
                 logger.warn(getParentName(buttonData) + "." + buttonData.getName() + " contains commands list but the list was empty.");
             } else {
-                return buttonData.getStringList("Commands");
+                return commands;
             }
         }
         return Collections.emptyList();
@@ -117,7 +159,7 @@ public class MenuUtils {
     public static String getServer(@Nonnull ConfigurationSection buttonData) {
         Objects.requireNonNull(buttonData);
 
-        if (buttonData.contains("Server") && buttonData.isString("Server")) {
+        if (buttonData.contains("Server", true) && buttonData.isString("Server")) {
             return Objects.requireNonNull(buttonData.getString("Server"));
         }
         return null;

@@ -1,8 +1,7 @@
 package dev.projectg.geyserhub.command;
 
 import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
-import dev.projectg.geyserhub.module.menu.java.JavaMenu;
+import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
@@ -13,7 +12,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -32,11 +30,11 @@ public class GeyserHubCommand implements CommandExecutor {
     private static final String NO_PERMISSION = "Sorry, you don't have permission to run that command!";
     private static final String UNKNOWN = "Sorry, that's an unknown command!";
 
-    private final BedrockFormRegistry bedrockRegistry;
+    private final BedrockFormRegistry bedrockFormRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
 
-    public GeyserHubCommand(BedrockFormRegistry bedrockRegistry, JavaMenuRegistry javaMenuRegistry) {
-        this.bedrockRegistry = bedrockRegistry;
+    public GeyserHubCommand(BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
+        this.bedrockFormRegistry = bedrockFormRegistry;
         this.javaMenuRegistry = javaMenuRegistry;
     }
 
@@ -56,9 +54,7 @@ public class GeyserHubCommand implements CommandExecutor {
         switch (args[0]) {
             case "reload":
                 if (commandSender.hasPermission("geyserhub.reload")) {
-                    if (ReloadableRegistry.reloadAll()) {
-                        sendMessage(commandSender, SelectorLogger.Level.INFO, "Successfully reloaded.");
-                    } else {
+                    if (!ReloadableRegistry.reloadAll()) {
                         sendMessage(commandSender, SelectorLogger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
                     }
                 } else {
@@ -111,38 +107,14 @@ public class GeyserHubCommand implements CommandExecutor {
      * @param formName the form name to send
      */
     private void sendForm(@Nonnull CommandSender commandSender, @Nonnull String formName) {
-        // todo: same code is in MenuUtils
         if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
-                if (bedrockRegistry.isEnabled()) {
-                    if (bedrockRegistry.getFormNames().contains(formName)) {
-                        BedrockForm form = Objects.requireNonNull(bedrockRegistry.getMenu(formName));
-                        form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
-                    } else {
-                        sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
-                    }
-                } else {
-                    sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, Bedrock forms are disabled!");
-                }
-            } else {
-                if (javaMenuRegistry.isEnabled()) {
-                    if (javaMenuRegistry.getMenuNames().contains(formName)) {
-                        JavaMenu menu = Objects.requireNonNull(javaMenuRegistry.getMenu(formName));
-                        menu.sendMenu(player);
-                    } else {
-                        sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, that form doesn't exist! Specify a form with \"/ghub form <form>\"");
-                    }
-                } else {
-                    sendMessage(player, SelectorLogger.Level.SEVERE, "Sorry, Java menus are disabled!");
-                }
-            }
+            MenuUtils.sendForm((Player) commandSender, bedrockFormRegistry, javaMenuRegistry, formName);
         } else if (commandSender instanceof ConsoleCommandSender) {
             sendHelp(commandSender);
         }
     }
 
-    private void sendMessage(@Nonnull CommandSender sender, @Nonnull SelectorLogger.Level level, @Nonnull String message) {
+    public static void sendMessage(@Nonnull CommandSender sender, @Nonnull SelectorLogger.Level level, @Nonnull String message) {
         Objects.requireNonNull(sender);
         Objects.requireNonNull(level);
         Objects.requireNonNull(message);
