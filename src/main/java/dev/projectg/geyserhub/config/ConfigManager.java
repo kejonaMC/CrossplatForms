@@ -3,6 +3,7 @@ package dev.projectg.geyserhub.config;
 import dev.projectg.geyserhub.GeyserHubMain;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.config.updaters.MAIN_4;
+import dev.projectg.geyserhub.config.updaters.MAIN_5;
 import dev.projectg.geyserhub.config.updaters.SELECTOR_1;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -22,8 +23,12 @@ public class ConfigManager {
 
     static {
         // todo: this is awful but oh well
+        Map<Integer, Class<? extends ConfigUpdater>> mainUpdaters = new HashMap<>();
+        mainUpdaters.put(4, MAIN_4.class);
+        mainUpdaters.put(5, MAIN_5.class);
+
         updaters.put(ConfigId.SELECTOR, Collections.singletonMap(1, SELECTOR_1.class));
-        updaters.put(ConfigId.MAIN, Collections.singletonMap(4, MAIN_4.class));
+        updaters.put(ConfigId.MAIN, mainUpdaters);
     }
 
     private final Map<ConfigId, FileConfiguration> configurations = new HashMap<>();
@@ -184,7 +189,7 @@ public class ConfigManager {
      * Converts a ConfigurationSection into a Map, whose keys and values are those of the ConfigurationSection.
      * Child ConfigurationSections will also be converted into Maps.
      */
-    public static Map<String, Object> getMap(@Nonnull ConfigurationSection config) {
+    public static Map<String, Object> asMap(@Nonnull ConfigurationSection config) {
         Map<String, Object> map = new LinkedHashMap<>();
 
         for (String key : config.getKeys(false)) {
@@ -193,7 +198,7 @@ public class ConfigManager {
                 ConfigurationSection subSection = config.getConfigurationSection(key);
                 Objects.requireNonNull(subSection);
 
-                value = getMap(subSection);
+                value = asMap(subSection);
             } else {
                 value = config.get(key);
             }

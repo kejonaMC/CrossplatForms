@@ -15,15 +15,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class JoinTeleporter implements Listener, Reloadable {
-
-    /**
-     * Makes sure that the input looks something like "integer;integer;integer"
-     */
-    private static final String COORDINATE_REGEX = "(-\\d+|\\d+);(-\\d+|\\d+);(-\\d+|\\d+)";
 
     /**
      * True if the module isn't disabled in the config and all loading was successful.
@@ -91,29 +85,23 @@ public class JoinTeleporter implements Listener, Reloadable {
             return false;
         }
 
-        if (section.contains("Coordinates", true) && section.isString("Coordinates")) {
-            // Make sure the given coordinates are in the correct format
-            String composedCoords = section.getString("Coordinates");
-            Objects.requireNonNull(composedCoords);
-            if (!composedCoords.matches(COORDINATE_REGEX)) {
-                logger.severe("Join-Teleporter.Coordinates in the config is not of the format <integer;integer;integer>, skipping module!");
+        if (section.contains("X") && section.contains("Y") && section.contains("Z") && section.contains("Pitch") && section.contains("Yaw")) {
+            if (!(section.isInt("X") && section.isInt("Y") && section.isInt("Z") && section.isInt("Pitch") && section.isInt("Yaw"))) {
+                logger.severe("Coordinate and Pitch/Yaw values must all be integers in the Join-Teleporter config section");
                 return false;
             }
 
-            // Decompose the coordinate string into usable values, and set the location to use if successful
-            String[] coordinates = composedCoords.split(";", 3);
-            try {
-                int x = Integer.parseInt(coordinates[0]);
-                int y = Integer.parseInt(coordinates[1]);
-                int z = Integer.parseInt(coordinates[2]);
-                location = new Location(world, x, y, z);
-                logger.debug("Join-Teleporter is enabled and has coordinates: [" + x + ", " + y + ", " + z + "] in [" + worldName + "].");
-                return true;
-            } catch (NumberFormatException e) {
-                throw new AssertionError("Failed to decompose the following coordinates: " + composedCoords + " -> " + Arrays.toString(coordinates));
-            }
+            int x = section.getInt("X");
+            int y = section.getInt("Y");
+            int z = section.getInt("Z");
+            int pitch = section.getInt("Pitch");
+            int yaw = section.getInt("Yaw");
+            location = new Location(world, x, y, z, yaw, pitch);
+            logger.debug("Join-Teleporter is enabled and has coordinates: [" + x + ", " + y + ", " + z + "] with Pitch and Yaw [" + pitch + ", " + yaw + "] in [" + worldName + "].");
+
+            return true;
         } else {
-            logger.severe("Join-Teleporter config section does not contain a Coordinates value or it is not a string!");
+            logger.severe("Join-Teleporter must have Coordinate and Pitch/Yaw integer values");
             return false;
         }
     }

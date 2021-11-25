@@ -13,7 +13,11 @@ Join-Message:
 Join-Teleporter:
   Enable: false
   World: world
-  Coordinates: 0;65;0
+  X: 0
+  Y: 65
+  Z: 0
+  Pitch: 0
+  Yaw: 0
 
 # The message to be sent to players whenever they are moving to a new server using a button in a form/meu
 # which uses the Server functionality. Supports papi placeholders, as well as %server%, the name of the server they are moving to.
@@ -61,4 +65,4 @@ World-settings:
   disable-block-break: true
 
 # Don't touch this
-Config-Version: 5
+Config-Version: 6

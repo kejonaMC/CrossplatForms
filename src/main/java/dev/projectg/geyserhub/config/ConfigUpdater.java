@@ -2,6 +2,9 @@ package dev.projectg.geyserhub.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+/**
+ * All implementing classes must have a zero-argument constructor.
+ */
 public interface ConfigUpdater {
 
     /**

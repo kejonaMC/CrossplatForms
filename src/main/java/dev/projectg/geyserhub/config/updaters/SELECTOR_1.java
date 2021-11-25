@@ -26,7 +26,7 @@ public class SELECTOR_1 implements ConfigUpdater {
         config.set("Selector-Item", null);
 
         // A map containing the same information as the configuration section
-        Map<String, Object> defaultItem = ConfigManager.getMap(items);
+        Map<String, Object> defaultItem = ConfigManager.asMap(items);
         defaultItem.put("Form", "default"); // new data
 
         // Clear the section
@@ -40,7 +40,7 @@ public class SELECTOR_1 implements ConfigUpdater {
         items.createSection("Items.default", defaultItem); // re-insert the old data into the default access item
 
         // Add the Selector-Item section back in, under the new name
-        config.createSection("Access-Items", ConfigManager.getMap(items));
+        config.createSection("Access-Items", ConfigManager.asMap(items));
 
         // bump version
         config.set("Config-Version", 2);
