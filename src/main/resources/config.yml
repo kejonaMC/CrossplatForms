@@ -16,8 +16,8 @@ Join-Teleporter:
   X: 0
   Y: 65
   Z: 0
-  Pitch: 0
   Yaw: 0
+  Pitch: 0
 
 # The message to be sent to players whenever they are moving to a new server using a button in a form/meu
 # which uses the Server functionality. Supports papi placeholders, as well as %server%, the name of the server they are moving to.

@@ -85,8 +85,8 @@ public class JoinTeleporter implements Listener, Reloadable {
             return false;
         }
 
-        if (section.contains("X") && section.contains("Y") && section.contains("Z") && section.contains("Pitch") && section.contains("Yaw")) {
-            if (!(section.isInt("X") && section.isInt("Y") && section.isInt("Z") && section.isInt("Pitch") && section.isInt("Yaw"))) {
+        if (section.contains("X") && section.contains("Y") && section.contains("Z") && section.contains("Yaw") && section.contains("Pitch")) {
+            if (!(section.isInt("X") && section.isInt("Y") && section.isInt("Z") && section.isInt("Yaw") && section.isInt("Pitch"))) {
                 logger.severe("Coordinate and Pitch/Yaw values must all be integers in the Join-Teleporter config section");
                 return false;
             }
@@ -94,8 +94,8 @@ public class JoinTeleporter implements Listener, Reloadable {
             int x = section.getInt("X");
             int y = section.getInt("Y");
             int z = section.getInt("Z");
-            int pitch = section.getInt("Pitch");
             int yaw = section.getInt("Yaw");
+            int pitch = section.getInt("Pitch");
             location = new Location(world, x, y, z, yaw, pitch);
             logger.debug("Join-Teleporter is enabled and has coordinates: [" + x + ", " + y + ", " + z + "] with Pitch and Yaw [" + pitch + ", " + yaw + "] in [" + worldName + "].");
 

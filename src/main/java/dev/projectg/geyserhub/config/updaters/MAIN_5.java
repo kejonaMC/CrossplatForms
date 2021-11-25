@@ -23,8 +23,8 @@ public class MAIN_5 implements ConfigUpdater {
             teleporter.set("X", Integer.parseInt(coordinates[0]));
             teleporter.set("Y", Integer.parseInt(coordinates[1]));
             teleporter.set("Z", Integer.parseInt(coordinates[2]));
-            teleporter.set("Pitch", 0); // Default
             teleporter.set("Yaw", 0); // Default
+            teleporter.set("Pitch", 0); // Default
 
             config.set("Join-Teleporter.Coordinates", null); // Remove
             config.set("Config-Version", 6);
