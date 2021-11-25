@@ -14,7 +14,7 @@ Anything can be toggled off.
 - Hotbar items for quick access to different forms/menus
 - Full Placeholder API support
 - Simple scoreboard
-- Welcome messages**
+- Welcome messages
 - Automatic broadcasts
 - World restrictions
 
@@ -25,7 +25,7 @@ Anything can be toggled off.
 
 GeyserHub is a lobby plugin that must be installed on any backend servers you want the selector on.
 [Floodgate](https://github.com/GeyserMC/Floodgate) must be installed on the backend servers, AND properly configured. 
-See this [guide](https://github.com/GeyserMC/Geyser/wiki/Floodgate#running-floodgate-on-spigot-servers-behind-bungeecord-or-velocity) for more information.
+See this [guide](https://github.com/GeyserMC/Floodgate/wiki/Setup-and-Usage#installing-floodgate-also-on-spigot-servers-behind-bungeecord-or-velocity) for more information.
 
 ## Commands:
 
