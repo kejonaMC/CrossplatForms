@@ -27,7 +27,7 @@ public class MAIN_5 implements ConfigUpdater {
             teleporter.set("Yaw", 0); // Default
 
             config.set("Join-Teleporter.Coordinates", null); // Remove
-            config.set("Config-Version", 5);
+            config.set("Config-Version", 6);
 
             return true;
         } catch (NumberFormatException e) {
