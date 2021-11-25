@@ -156,7 +156,7 @@ public class ConfigManager {
             if (configuration.getInt("Config-Version") == config.version) {
                 logger.info(config.fileName + " was successfully updated to the latest version");
             } else {
-                logger.warn("Failed to fully update " + config.fileName + " from version " + oldVersion + " to " + config.version);
+                logger.severe("Failed to fully update " + config.fileName + " from version " + oldVersion + " to " + config.version);
                 return false;
             }
         }
