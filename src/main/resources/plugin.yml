@@ -1,6 +1,6 @@
 main: dev.projectg.geyserhub.GeyserHubMain
-name: {$project.name}
-version: {$project.version}
+name: ${project.name}
+version: ${project.version}
 api-version: 1.16
 description: A crossplay compatible lobby plugin
 
