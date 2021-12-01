@@ -29,17 +29,17 @@ public class JavaMenuListeners implements Listener {
         if (!config.getBoolean("Java-Selector.Enable")) {
             return;
         }
-        Player player = (Player) event.getWhoClicked();
-        SelectorLogger logger = SelectorLogger.getLogger();
 
-        ItemStack item = event.getCurrentItem();
-        if (item != null) {
-            JavaMenu menu = javaMenuRegistry.getMenu(item);
-            if (menu == null) {
-                logger.warn("Failed to find any Java menu for the itemstack of'" + (item.hasItemMeta() ? Objects.requireNonNull(item.getItemMeta()).getDisplayName() : item.toString()) + "' in order to process inventory click by player: " + player.getName());
-            } else {
-                event.setCancelled(true);
-                menu.process(event.getSlot(), event.isRightClick(), player);
+        if (event.getWhoClicked() instanceof Player) {
+            Player player = (Player) event.getWhoClicked();
+            ItemStack item = event.getCurrentItem();
+
+            if (item != null) {
+                JavaMenu menu = javaMenuRegistry.getMenu(item);
+                if (menu != null) {
+                    event.setCancelled(true);
+                    menu.process(event.getSlot(), event.isRightClick(), player);
+                }
             }
         }
     }
