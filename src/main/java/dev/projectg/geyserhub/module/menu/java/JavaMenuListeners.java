@@ -1,7 +1,6 @@
 package dev.projectg.geyserhub.module.menu.java;
 
 import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.config.ConfigId;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

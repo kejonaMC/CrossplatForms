@@ -3,7 +3,7 @@ package dev.projectg.geyserhub;
 import dev.projectg.geyserhub.command.GeyserHubCommand;
 import dev.projectg.geyserhub.config.ConfigManager;
 import dev.projectg.geyserhub.module.menu.AccessItemRegistry;
-import dev.projectg.geyserhub.module.menu.CommonMenuListeners;
+import dev.projectg.geyserhub.module.menu.InventoryManager;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuListeners;
 import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
@@ -67,7 +67,7 @@ public class GeyserHubMain extends JavaPlugin {
         // todo: sort all of this, and make checking for enable value in config consistent
 
         // Listeners for the Bedrock and Java menus
-        Bukkit.getServer().getPluginManager().registerEvents(new CommonMenuListeners(accessItemRegistry, bedrockFormRegistry, javaMenuRegistry), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new InventoryManager(accessItemRegistry, bedrockFormRegistry, javaMenuRegistry), this);
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(javaMenuRegistry), this);
 
         // Listener the Join Teleporter module

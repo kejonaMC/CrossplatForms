@@ -110,15 +110,17 @@ public class AccessItemRegistry implements Reloadable {
             String formName = Objects.requireNonNull(itemEntry.getString("Form"));
 
             if (itemEntry.contains("Slot", true) && itemEntry.isInt("Slot")) {
-                if ( !itemEntry.contains("Join") || !itemEntry.contains("Allow-Drop") || !itemEntry.contains("Destroy-Dropped") || !itemEntry.contains("Allow-Move")
-                || !itemEntry.isBoolean("Join") || !itemEntry.isBoolean("Allow-Drop") || !itemEntry.isBoolean("Destroy-Dropped") || !itemEntry.isBoolean("Allow-Move")) {
-                    logger.warn("Failed to create access item " + itemId + " because it is missing config values!");
-                    continue;
-                }
                 int slot = Math.abs(itemEntry.getInt("Slot"));
-                items.put(itemId, new AccessItem(itemId, slot, name, material, lore,
-                        itemEntry.getBoolean("Join"), itemEntry.getBoolean("Allow-Drop"),
-                        itemEntry.getBoolean("Destroy-Dropped"), itemEntry.getBoolean("Allow-Move"),
+                items.put(itemId, new AccessItem(itemId,
+                        slot,
+                        name,
+                        material,
+                        lore,
+                        itemEntry.getBoolean("Join", true),
+                        itemEntry.getBoolean("Respawn", true),
+                        itemEntry.getBoolean("Allow-Drop", false),
+                        itemEntry.getBoolean("Destroy-Dropped", true),
+                        itemEntry.getBoolean("Allow-Move", false),
                         formName));
 
                 isEnabled = true;

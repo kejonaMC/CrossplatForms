@@ -297,21 +297,20 @@ public class JavaMenu {
             selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
         }
 
-
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
 
             // Construct the item
-            ItemStack serverStack = new ItemStack(button.getMaterial());
-            ItemMeta itemMeta = serverStack.getItemMeta();
-            if (itemMeta == null) {
-                logger.warn("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
+            ItemStack item = new ItemStack(button.getMaterial());
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) {
+                logger.severe("Java Button: " + menuName + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
             } else {
-                itemMeta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
-                itemMeta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
-                itemMeta.getPersistentDataContainer().set(BUTTON_KEY, PersistentDataType.STRING, menuName);
-                serverStack.setItemMeta(itemMeta);
-                selectorGUI.setItem(slot, serverStack);
+                meta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
+                meta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
+                meta.getPersistentDataContainer().set(BUTTON_KEY, PersistentDataType.STRING, menuName);
+                item.setItemMeta(meta);
+                selectorGUI.setItem(slot, item);
             }
         }
 
