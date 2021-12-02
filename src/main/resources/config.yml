@@ -1,11 +1,8 @@
 # GeyserHub by Jens & Konicai
 
-# Toggle debug logging
-Enable-Debug: false
-
 # Join and leave messages. Supports papi placeholders.
 Join-Message:
-  Enable: true
+  Enable: false
   Messages:
     - "§fWelcome §6%player_name%§f on geyser network!"
     - "§bHave a great time playing on our network!"
@@ -24,7 +21,7 @@ Join-Teleporter:
 Bungeecord-Message: "§fTeleporting to §b%server%"
 
 Scoreboard:
-  Enable: true
+  Enable: false
   # Refresh rate in seconds.
   Refresh-rate: 7
   Title: "Welcome to GeyserServer"
@@ -38,7 +35,7 @@ Scoreboard:
 
 
 Broadcasts:
-  Enable: true
+  Enable: false
   # ticks between each broadcast (default: 3 minutes)
   Interval: 3600
   Messages:
@@ -51,18 +48,24 @@ Broadcasts:
       - '§6*----------------*----------------* '
 
 World-settings:
-  disable-hunger-loss: true
-  disable-fall-damage: true
-  disable-drowning: true
-  disable-fire-damage: true
-  disable-player-pvp: true
-  disable-weather-change: true
-  disable-mob-spawning: true
-  disable-block-burn: true
-  disable-block-fire-spread: true
-  disable_block-leaf-decay: true
-  disable-block-place: true
-  disable-block-break: true
+  disable-hunger-loss: false
+  disable-fall-damage: false
+  disable-drowning: false
+  disable-fire-damage: false
+  disable-player-pvp: false
+  disable-weather-change: false
+  disable-mob-spawning: false
+  disable-block-burn: false
+  disable-block-fire-spread: false
+  disable_block-leaf-decay: false
+  disable-block-place: false
+  disable-block-break: false
+
+# Publish helpful and anonymous server metrics to https://bstats.org/plugin/bukkit/GeyserHub/13469
+Bstats: true
+
+# Toggle debug logging
+Enable-Debug: false
 
 # Don't touch this
 Config-Version: 6

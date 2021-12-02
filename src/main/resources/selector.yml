@@ -10,9 +10,9 @@ Access-Items:
       Slot: 4
       Form: default
 
-      # Give the form on server join
+      # Give the access item on server join
       Join: true
-      # Give the form on player join
+      # Give the access item on player respawn, excluding server join
       Respawn: true
       # Stop the player from dropping the item
       Allow-Drop: false

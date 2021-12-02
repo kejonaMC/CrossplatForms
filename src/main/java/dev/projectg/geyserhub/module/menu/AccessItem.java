@@ -75,6 +75,7 @@ public class AccessItem {
      * @param material The material for the ItemStack to be
      * @param lore The lore for the ItemStack
      * @param onJoin True for players to receive it when they join
+     * @param onRespawn True for players to receive it when they respawn (excluding server join)
      * @param allowDrop True for players to be able to drop the item
      * @param destroyDropped True for the item to be destroyed when dropped
      * @param allowMove True for players to be able to move the item

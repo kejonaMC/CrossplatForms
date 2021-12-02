@@ -10,9 +10,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.function.Predicate;
 
@@ -83,8 +83,9 @@ public class InventoryManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerSpawnLocationEvent event) { // give the access item when the player joins
-        giveAccessItems(event.getPlayer(), accessItemRegistry, accessItem -> accessItem.onJoin);
+    public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
+        // Regarding the predicate: All server joins are respawns. If it is given on respawn, then don't use the join event.
+        giveAccessItems(event.getPlayer(), accessItemRegistry, accessItem -> accessItem.onJoin && !accessItem.onRespawn);
     }
 
     @EventHandler
