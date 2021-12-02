@@ -43,6 +43,11 @@ public class AccessItem {
     public final boolean onJoin;
 
     /**
+     * True for players to receive it when they respawn
+     */
+    public final boolean onRespawn;
+
+    /**
      * True for players to be able to drop the item
      */
     public final boolean allowDrop;
@@ -70,13 +75,14 @@ public class AccessItem {
      * @param material The material for the ItemStack to be
      * @param lore The lore for the ItemStack
      * @param onJoin True for players to receive it when they join
+     * @param onRespawn True for players to receive it when they respawn (excluding server join)
      * @param allowDrop True for players to be able to drop the item
      * @param destroyDropped True for the item to be destroyed when dropped
      * @param allowMove True for players to be able to move the item
      * @param formName The form/menu name to open.
      */
     public AccessItem(@Nonnull String itemId, int slot, @Nonnull String displayName, @Nonnull Material material, @Nonnull List<String> lore,
-                      boolean onJoin, boolean allowDrop, boolean destroyDropped, boolean allowMove,
+                      boolean onJoin, boolean onRespawn, boolean allowDrop, boolean destroyDropped, boolean allowMove,
                       @Nonnull String formName) {
         Objects.requireNonNull(material);
         if (new ItemStack(material).getItemMeta() == null) {
@@ -89,6 +95,7 @@ public class AccessItem {
         this.lore = Objects.requireNonNull(lore);
 
         this.onJoin = onJoin;
+        this.onRespawn = onRespawn;
         this.allowDrop = allowDrop;
         this.destroyDropped = destroyDropped;
         this.allowMove = allowMove;

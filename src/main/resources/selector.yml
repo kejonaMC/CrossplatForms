@@ -10,8 +10,10 @@ Access-Items:
       Slot: 4
       Form: default
 
-      # Gives the player the item which they can use to open the default form
+      # Give the access item on server join
       Join: true
+      # Give the access item on player respawn
+      Respawn: true
       # Stop the player from dropping the item
       Allow-Drop: false
       # Destroy the compass if the player drops it
@@ -24,6 +26,7 @@ Access-Items:
       Slot: 5
       Form: minigames
       Join: true
+      Respawn: true
       Allow-Drop: true
       Destroy-Dropped: true
       Allow-Move: false

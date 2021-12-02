@@ -48,5 +48,4 @@ public class BedrockButton extends OutcomeButton {
     public @NonNull ButtonComponent getButtonComponent() {
         return ButtonComponent.of(getText(), getImage());
     }
-
 }

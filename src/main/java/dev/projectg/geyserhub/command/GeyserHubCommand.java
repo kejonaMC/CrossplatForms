@@ -1,5 +1,6 @@
 package dev.projectg.geyserhub.command;
 
+import com.google.common.collect.ImmutableMap;
 import dev.projectg.geyserhub.SelectorLogger;
 import dev.projectg.geyserhub.module.menu.MenuUtils;
 import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
@@ -15,9 +16,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.util.Objects;
 
 public class GeyserHubCommand implements CommandExecutor {
+
+    private static final Map<SelectorLogger.Level, ChatColor> LOGGER_COLORS = ImmutableMap.of(
+            SelectorLogger.Level.INFO, ChatColor.RESET,
+            SelectorLogger.Level.WARN, ChatColor.GOLD,
+            SelectorLogger.Level.SEVERE, ChatColor.RED);
 
     private static final String[] HELP = {
             "/ghub - Opens the default form if one exists. If not, shows the help page",
@@ -122,20 +129,7 @@ public class GeyserHubCommand implements CommandExecutor {
         if (sender instanceof ConsoleCommandSender) {
             SelectorLogger.getLogger().log(level, message);
         } else {
-            ChatColor colour;
-            switch (level) {
-                default: // intentional fallthrough
-                case INFO:
-                    colour = ChatColor.RESET;
-                    break;
-                case WARN:
-                    colour = ChatColor.GOLD;
-                    break;
-                case SEVERE:
-                    colour = ChatColor.RED;
-                    break;
-            }
-            sender.sendMessage("[GeyserHub] " + colour + message);
+            sender.sendMessage("[GeyserHub] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }
     }
 }
