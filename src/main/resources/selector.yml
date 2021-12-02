@@ -12,7 +12,7 @@ Access-Items:
 
       # Give the access item on server join
       Join: true
-      # Give the access item on player respawn, excluding server join
+      # Give the access item on player respawn
       Respawn: true
       # Stop the player from dropping the item
       Allow-Drop: false

@@ -84,8 +84,7 @@ public class InventoryManager implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
-        // Regarding the predicate: All server joins are respawns. If it is given on respawn, then don't use the join event.
-        giveAccessItems(event.getPlayer(), accessItemRegistry, accessItem -> accessItem.onJoin && !accessItem.onRespawn);
+        giveAccessItems(event.getPlayer(), accessItemRegistry, accessItem -> accessItem.onJoin);
     }
 
     @EventHandler
