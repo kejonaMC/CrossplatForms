@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.config;
+package dev.projectg.crossplatforms.config;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.Logger;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;

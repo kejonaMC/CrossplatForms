@@ -1,10 +1,10 @@
-package dev.projectg.geyserhub.form.java;
+package dev.projectg.crossplatforms.form.java;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.Logger;
-import dev.projectg.geyserhub.form.MenuUtils;
-import dev.projectg.geyserhub.form.button.OutcomeButton;
-import dev.projectg.geyserhub.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.form.MenuUtils;
+import dev.projectg.crossplatforms.form.button.OutcomeButton;
+import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

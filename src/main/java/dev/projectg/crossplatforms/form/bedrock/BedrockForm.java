@@ -1,8 +1,8 @@
-package dev.projectg.geyserhub.form.bedrock;
+package dev.projectg.crossplatforms.form.bedrock;
 
-import dev.projectg.geyserhub.Logger;
-import dev.projectg.geyserhub.form.MenuUtils;
-import dev.projectg.geyserhub.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.form.MenuUtils;
+import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

@@ -1,14 +1,13 @@
-package dev.projectg.geyserhub;
+package dev.projectg.crossplatforms;
 
-import dev.projectg.geyserhub.command.MainCommand;
-import dev.projectg.geyserhub.config.ConfigManager;
-import dev.projectg.geyserhub.form.AccessItemRegistry;
-import dev.projectg.geyserhub.form.InventoryManager;
-import dev.projectg.geyserhub.form.java.JavaMenuListeners;
-import dev.projectg.geyserhub.form.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.form.java.JavaMenuRegistry;
-import dev.projectg.geyserhub.module.scoreboard.ScoreboardManager;
-import dev.projectg.geyserhub.utils.FileUtils;
+import dev.projectg.crossplatforms.command.MainCommand;
+import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.form.AccessItemRegistry;
+import dev.projectg.crossplatforms.form.InventoryManager;
+import dev.projectg.crossplatforms.form.java.JavaMenuListeners;
+import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.utils.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -55,7 +54,6 @@ public class CrossplatForms extends JavaPlugin {
         BedrockFormRegistry bedrockFormRegistry = new BedrockFormRegistry();
         JavaMenuRegistry javaMenuRegistry = new JavaMenuRegistry();
 
-        // todo: and add command suggestions/completions, help pages that only shows available commands
         Objects.requireNonNull(getCommand("forms")).setExecutor(new MainCommand(bedrockFormRegistry, javaMenuRegistry));
 
         // Listeners for the Bedrock and Java menus
@@ -63,16 +61,6 @@ public class CrossplatForms extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(javaMenuRegistry), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
-    }
-
-    public void initializeScoreboard() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            try {
-                ScoreboardManager.addScoreboard();
-            } catch (Exception var2) {
-                var2.printStackTrace();
-            }
-        }, 20L, ScoreboardManager.REFRESH_RATE * 20L);
     }
 
     public static CrossplatForms getInstance() {

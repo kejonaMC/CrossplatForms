@@ -1,11 +1,11 @@
-package dev.projectg.geyserhub.command;
+package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
-import dev.projectg.geyserhub.Logger;
-import dev.projectg.geyserhub.form.MenuUtils;
-import dev.projectg.geyserhub.form.java.JavaMenuRegistry;
-import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
-import dev.projectg.geyserhub.form.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.form.MenuUtils;
+import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

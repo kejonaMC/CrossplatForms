@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub;
+package dev.projectg.crossplatforms;
 
-import dev.projectg.geyserhub.reloadable.Reloadable;
-import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
+import dev.projectg.crossplatforms.reloadable.Reloadable;
+import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
 public class Logger implements Reloadable {
 

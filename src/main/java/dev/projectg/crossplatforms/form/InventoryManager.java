@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.form;
+package dev.projectg.crossplatforms.form;
 
-import dev.projectg.geyserhub.form.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.form;
+package dev.projectg.crossplatforms.form;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;

@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.config;
+package dev.projectg.crossplatforms.config;
 
 /**
  * An enum containing the identities of all valid configuration files.

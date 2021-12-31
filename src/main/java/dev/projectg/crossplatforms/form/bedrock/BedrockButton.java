@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.form.bedrock;
+package dev.projectg.crossplatforms.form.bedrock;
 
-import dev.projectg.geyserhub.form.button.OutcomeButton;
+import dev.projectg.crossplatforms.form.button.OutcomeButton;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.util.FormImage;

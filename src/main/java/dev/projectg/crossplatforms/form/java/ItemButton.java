@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.form.java;
+package dev.projectg.crossplatforms.form.java;
 
-import dev.projectg.geyserhub.form.button.OutcomeButton;
+import dev.projectg.crossplatforms.form.button.OutcomeButton;
 import org.bukkit.Material;
 
 import javax.annotation.Nonnull;

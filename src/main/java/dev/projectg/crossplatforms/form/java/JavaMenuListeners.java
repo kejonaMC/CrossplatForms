@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.form.java;
+package dev.projectg.crossplatforms.form.java;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.config.ConfigId;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.config.ConfigId;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

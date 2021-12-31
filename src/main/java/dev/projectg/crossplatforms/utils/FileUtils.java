@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.utils;
+package dev.projectg.crossplatforms.utils;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;

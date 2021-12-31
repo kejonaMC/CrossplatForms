@@ -1,10 +1,10 @@
-package dev.projectg.geyserhub.form.bedrock;
+package dev.projectg.crossplatforms.form.bedrock;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.config.ConfigId;
-import dev.projectg.geyserhub.reloadable.Reloadable;
-import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
-import dev.projectg.geyserhub.Logger;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.config.ConfigId;
+import dev.projectg.crossplatforms.reloadable.Reloadable;
+import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.projectg.crossplatforms.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 

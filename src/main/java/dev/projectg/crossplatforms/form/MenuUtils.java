@@ -1,13 +1,13 @@
-package dev.projectg.geyserhub.form;
+package dev.projectg.crossplatforms.form;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.Logger;
-import dev.projectg.geyserhub.config.ConfigId;
-import dev.projectg.geyserhub.form.java.JavaMenu;
-import dev.projectg.geyserhub.form.bedrock.BedrockForm;
-import dev.projectg.geyserhub.form.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.form.java.JavaMenuRegistry;
-import dev.projectg.geyserhub.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.config.ConfigId;
+import dev.projectg.crossplatforms.form.java.JavaMenu;
+import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

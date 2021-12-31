@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.utils;
+package dev.projectg.crossplatforms.utils;
 
-import dev.projectg.geyserhub.Logger;
+import dev.projectg.crossplatforms.Logger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

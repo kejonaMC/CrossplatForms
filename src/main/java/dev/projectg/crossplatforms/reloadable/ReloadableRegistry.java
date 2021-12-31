@@ -1,9 +1,9 @@
-package dev.projectg.geyserhub.reloadable;
+package dev.projectg.crossplatforms.reloadable;
 
-import dev.projectg.geyserhub.CrossplatForms;
-import dev.projectg.geyserhub.Logger;
-import dev.projectg.geyserhub.config.ConfigId;
-import dev.projectg.geyserhub.config.ConfigManager;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.config.ConfigId;
+import dev.projectg.crossplatforms.config.ConfigManager;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;

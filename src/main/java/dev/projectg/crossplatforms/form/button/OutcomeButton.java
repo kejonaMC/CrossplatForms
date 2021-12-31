@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.form.button;
+package dev.projectg.crossplatforms.form.button;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
