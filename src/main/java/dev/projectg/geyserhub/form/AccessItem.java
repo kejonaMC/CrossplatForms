@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.module.menu;
+package dev.projectg.geyserhub.form;
 
-import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.CrossplatForms;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -18,7 +18,7 @@ public class AccessItem {
     /**
      * A key that should be of type {@link #ACCESS_ITEM_KEY_TYPE}, with the value being the {@link #itemId}
      */
-    public static final NamespacedKey ACCESS_ITEM_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubAccessItem");
+    public static final NamespacedKey ACCESS_ITEM_KEY = new NamespacedKey(CrossplatForms.getInstance(), "geyserHubAccessItem");
     public static final PersistentDataType<String, String> ACCESS_ITEM_KEY_TYPE = PersistentDataType.STRING;
 
     /**

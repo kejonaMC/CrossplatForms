@@ -1,8 +1,8 @@
-package dev.projectg.geyserhub.module.menu;
+package dev.projectg.geyserhub.form;
 
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.CrossplatForms;
+import dev.projectg.geyserhub.Logger;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
@@ -31,9 +31,9 @@ public class AccessItemRegistry implements Reloadable {
      * Does not clear existing items.
      */
     private void load() {
-        SelectorLogger logger = SelectorLogger.getLogger();
+        Logger logger = Logger.getLogger();
 
-        FileConfiguration selectorConfig = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        FileConfiguration selectorConfig = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         if (!selectorConfig.contains("Access-Items") || !selectorConfig.isConfigurationSection("Access-Items")) {
             logger.warn("Not creating any access items because selector.yml does not contain the Access-Items config!");
             return;
@@ -64,11 +64,11 @@ public class AccessItemRegistry implements Reloadable {
                 Objects.requireNonNull(materialName);
                 material = Material.getMaterial(materialName);
                 if (material == null) {
-                    SelectorLogger.getLogger().warn("Failed to find a Material for '" + materialName + "' for access item: " + itemId + ". Defaulting to COMPASS for the access item.");
+                    Logger.getLogger().warn("Failed to find a Material for '" + materialName + "' for access item: " + itemId + ". Defaulting to COMPASS for the access item.");
                     material = Material.COMPASS;
                 }
             } else {
-                SelectorLogger.getLogger().warn("Failed to find Access-Items. " + itemId + ".Material in the config! Defaulting to COMPASS.");
+                Logger.getLogger().warn("Failed to find Access-Items. " + itemId + ".Material in the config! Defaulting to COMPASS.");
                 material = Material.COMPASS;
             }
 
@@ -86,7 +86,7 @@ public class AccessItemRegistry implements Reloadable {
                 name = itemEntry.getString("Name");
                 Objects.requireNonNull(name);
             } else {
-                SelectorLogger.getLogger().warn("Failed to find Access-Items. " + itemId + ".Name in the config! Defaulting to '§6Server Selector'.");
+                Logger.getLogger().warn("Failed to find Access-Items. " + itemId + ".Name in the config! Defaulting to '§6Server Selector'.");
                 name = "§6Server Selector";
             }
             meta.setDisplayName(name);

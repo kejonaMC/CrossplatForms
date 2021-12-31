@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.module.menu.bedrock;
+package dev.projectg.geyserhub.form.bedrock;
 
-import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
+import dev.projectg.geyserhub.form.button.OutcomeButton;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.util.FormImage;

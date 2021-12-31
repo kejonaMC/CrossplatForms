@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.module.menu.java;
+package dev.projectg.geyserhub.form.java;
 
-import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
+import dev.projectg.geyserhub.form.button.OutcomeButton;
 import org.bukkit.Material;
 
 import javax.annotation.Nonnull;

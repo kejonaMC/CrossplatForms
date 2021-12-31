@@ -1,11 +1,11 @@
 package dev.projectg.geyserhub.command;
 
 import com.google.common.collect.ImmutableMap;
-import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.MenuUtils;
-import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
+import dev.projectg.geyserhub.Logger;
+import dev.projectg.geyserhub.form.MenuUtils;
+import dev.projectg.geyserhub.form.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
+import dev.projectg.geyserhub.form.bedrock.BedrockFormRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -19,12 +19,12 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
 
-public class GeyserHubCommand implements CommandExecutor {
+public class MainCommand implements CommandExecutor {
 
-    private static final Map<SelectorLogger.Level, ChatColor> LOGGER_COLORS = ImmutableMap.of(
-            SelectorLogger.Level.INFO, ChatColor.RESET,
-            SelectorLogger.Level.WARN, ChatColor.GOLD,
-            SelectorLogger.Level.SEVERE, ChatColor.RED);
+    private static final Map<Logger.Level, ChatColor> LOGGER_COLORS = ImmutableMap.of(
+            Logger.Level.INFO, ChatColor.RESET,
+            Logger.Level.WARN, ChatColor.GOLD,
+            Logger.Level.SEVERE, ChatColor.RED);
 
     private static final String[] HELP = {
             "/ghub - Opens the default form if one exists. If not, shows the help page",
@@ -40,7 +40,7 @@ public class GeyserHubCommand implements CommandExecutor {
     private final BedrockFormRegistry bedrockFormRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
 
-    public GeyserHubCommand(BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
+    public MainCommand(BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
         this.bedrockFormRegistry = bedrockFormRegistry;
         this.javaMenuRegistry = javaMenuRegistry;
     }
@@ -62,10 +62,10 @@ public class GeyserHubCommand implements CommandExecutor {
             case "reload":
                 if (commandSender.hasPermission("geyserhub.reload")) {
                     if (!ReloadableRegistry.reloadAll()) {
-                        sendMessage(commandSender, SelectorLogger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
+                        sendMessage(commandSender, Logger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
                     }
                 } else {
-                    sendMessage(commandSender, SelectorLogger.Level.SEVERE, NO_PERMISSION);
+                    sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
                 }
                 break;
             case "help":
@@ -74,30 +74,30 @@ public class GeyserHubCommand implements CommandExecutor {
             case "form":
                 if (commandSender.hasPermission("geyserhub.form")) {
                     if (args.length == 1) {
-                        sendMessage(commandSender, SelectorLogger.Level.SEVERE, "Please specify a form to open! Specify a form with \"/ghub form <form>\"");
+                        sendMessage(commandSender, Logger.Level.SEVERE, "Please specify a form to open! Specify a form with \"/ghub form <form>\"");
                     } else if (args.length == 2) {
                         sendForm(commandSender, args[1]);
                     } else if (args.length == 3) {
                         if (commandSender.hasPermission("geyserhub.form.others")) {
                             Player target = Bukkit.getServer().getPlayer(args[2]);
                             if (target == null) {
-                                sendMessage(commandSender, SelectorLogger.Level.SEVERE, "That player doesn't exist!");
+                                sendMessage(commandSender, Logger.Level.SEVERE, "That player doesn't exist!");
                             } else {
                                 sendForm(target, args[1]);
-                                sendMessage(commandSender, SelectorLogger.Level.INFO, "Made " + target.getName() + " open form: " + args[1]);
+                                sendMessage(commandSender, Logger.Level.INFO, "Made " + target.getName() + " open form: " + args[1]);
                             }
                         } else {
-                            sendMessage(commandSender, SelectorLogger.Level.SEVERE, NO_PERMISSION);
+                            sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
                         }
                     } else {
-                        sendMessage(commandSender, SelectorLogger.Level.SEVERE, "Too many command arguments!");
+                        sendMessage(commandSender, Logger.Level.SEVERE, "Too many command arguments!");
                     }
                 } else {
-                    sendMessage(commandSender, SelectorLogger.Level.SEVERE, NO_PERMISSION);
+                    sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
                 }
                 break;
             default:
-                sendMessage(commandSender, SelectorLogger.Level.SEVERE, UNKNOWN);
+                sendMessage(commandSender, Logger.Level.SEVERE, UNKNOWN);
                 break;
         }
         return true;
@@ -121,13 +121,13 @@ public class GeyserHubCommand implements CommandExecutor {
         }
     }
 
-    public static void sendMessage(@Nonnull CommandSender sender, @Nonnull SelectorLogger.Level level, @Nonnull String message) {
+    public static void sendMessage(@Nonnull CommandSender sender, @Nonnull Logger.Level level, @Nonnull String message) {
         Objects.requireNonNull(sender);
         Objects.requireNonNull(level);
         Objects.requireNonNull(message);
 
         if (sender instanceof ConsoleCommandSender) {
-            SelectorLogger.getLogger().log(level, message);
+            Logger.getLogger().log(level, message);
         } else {
             sender.sendMessage("[GeyserHub] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }

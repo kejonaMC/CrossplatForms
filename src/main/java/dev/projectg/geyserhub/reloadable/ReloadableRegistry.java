@@ -1,7 +1,7 @@
 package dev.projectg.geyserhub.reloadable;
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.CrossplatForms;
+import dev.projectg.geyserhub.Logger;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.config.ConfigManager;
 import org.bukkit.ChatColor;
@@ -26,9 +26,9 @@ public class ReloadableRegistry {
     }
 
     public static boolean reloadAll() {
-        SelectorLogger logger = SelectorLogger.getLogger();
+        Logger logger = Logger.getLogger();
 
-        ConfigManager configManager = GeyserHubMain.getInstance().getConfigManager();
+        ConfigManager configManager = CrossplatForms.getInstance().getConfigManager();
         // loadConfiguration() will never remove a key so I don't think this will result in ConcurrentModificationException...
         for (ConfigId configId : configManager.getAllFileConfigurations().keySet()) {
             if (configManager.loadConfig(configId)) {

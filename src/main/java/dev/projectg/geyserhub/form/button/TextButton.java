@@ -1,4 +1,4 @@
-package dev.projectg.geyserhub.module.menu.button;
+package dev.projectg.geyserhub.form.button;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

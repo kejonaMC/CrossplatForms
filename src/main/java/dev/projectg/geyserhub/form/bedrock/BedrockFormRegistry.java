@@ -1,10 +1,10 @@
-package dev.projectg.geyserhub.module.menu.bedrock;
+package dev.projectg.geyserhub.form.bedrock;
 
-import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.CrossplatForms;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -30,8 +30,8 @@ public class BedrockFormRegistry implements Reloadable {
     }
 
     private boolean load() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        SelectorLogger logger = SelectorLogger.getLogger();
+        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        Logger logger = Logger.getLogger();
 
         enabledForms.clear();
 

@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.module.menu.java;
+package dev.projectg.geyserhub.form.java;
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.CrossplatForms;
+import dev.projectg.geyserhub.Logger;
 import dev.projectg.geyserhub.config.ConfigId;
 import dev.projectg.geyserhub.reloadable.Reloadable;
 import dev.projectg.geyserhub.reloadable.ReloadableRegistry;
@@ -30,8 +30,8 @@ public class JavaMenuRegistry implements Reloadable {
     }
 
     private boolean load() {
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
-        SelectorLogger logger = SelectorLogger.getLogger();
+        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        Logger logger = Logger.getLogger();
 
         enabledMenus.clear();
 

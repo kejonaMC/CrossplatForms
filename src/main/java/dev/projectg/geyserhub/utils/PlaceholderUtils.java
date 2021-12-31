@@ -1,6 +1,6 @@
 package dev.projectg.geyserhub.utils;
 
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.Logger;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -13,7 +13,7 @@ public class PlaceholderUtils {
 
     private static final boolean usePlaceholders;
     static {
-        SelectorLogger.getLogger().debug("Initializing PlaceholderUtils");
+        Logger.getLogger().debug("Initializing PlaceholderUtils");
         usePlaceholders = Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 

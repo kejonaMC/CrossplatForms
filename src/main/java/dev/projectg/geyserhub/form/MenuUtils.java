@@ -1,12 +1,12 @@
-package dev.projectg.geyserhub.module.menu;
+package dev.projectg.geyserhub.form;
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
+import dev.projectg.geyserhub.CrossplatForms;
+import dev.projectg.geyserhub.Logger;
 import dev.projectg.geyserhub.config.ConfigId;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockForm;
-import dev.projectg.geyserhub.module.menu.bedrock.BedrockFormRegistry;
-import dev.projectg.geyserhub.module.menu.java.JavaMenu;
-import dev.projectg.geyserhub.module.menu.java.JavaMenuRegistry;
+import dev.projectg.geyserhub.form.java.JavaMenu;
+import dev.projectg.geyserhub.form.bedrock.BedrockForm;
+import dev.projectg.geyserhub.form.bedrock.BedrockFormRegistry;
+import dev.projectg.geyserhub.form.java.JavaMenuRegistry;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -74,7 +74,7 @@ public class MenuUtils {
     public static void affectPlayer(@Nonnull List<String> commands, @Nullable String serverName, @Nonnull Player player) {
         Objects.requireNonNull(commands);
         Objects.requireNonNull(player);
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
+        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
         if (!commands.isEmpty()) {
             // Get the commands from the list of commands and replace any playerName placeholders
             for (String command : commands) {
@@ -87,13 +87,13 @@ public class MenuUtils {
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(baos)) {
                 out.writeUTF("Connect");
                 out.writeUTF(serverName);
-                player.sendPluginMessage(GeyserHubMain.getInstance(), "BungeeCord", baos.toByteArray());
+                player.sendPluginMessage(CrossplatForms.getInstance(), "BungeeCord", baos.toByteArray());
                 String message = config.getString("Bungeecord-Message", "");
                 if (!message.isEmpty()) {
                     player.sendMessage(PlaceholderUtils.setPlaceholders(player, message).replace("%server%", serverName));
                 }
             } catch (IOException e) {
-                SelectorLogger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                Logger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
                 e.printStackTrace();
             }
         }
@@ -128,7 +128,7 @@ public class MenuUtils {
             executableCommand = command;
         }
 
-        SelectorLogger.getLogger().debug("Running command: [" + executableCommand + "] as " + sender.getName());
+        Logger.getLogger().debug("Running command: [" + executableCommand + "] as " + sender.getName());
         Bukkit.getServer().dispatchCommand(sender, executableCommand);
     }
 
@@ -140,7 +140,7 @@ public class MenuUtils {
     @Nonnull
     public static List<String> getCommands(@Nonnull ConfigurationSection buttonData) {
         Objects.requireNonNull(buttonData);
-        SelectorLogger logger = SelectorLogger.getLogger();
+        Logger logger = Logger.getLogger();
 
         if (buttonData.contains("Commands", true) && buttonData.isList("Commands")) {
             List<String> commands = buttonData.getStringList("Commands");

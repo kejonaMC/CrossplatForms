@@ -1,10 +1,7 @@
 package dev.projectg.geyserhub.config;
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.config.updaters.MAIN_4;
-import dev.projectg.geyserhub.config.updaters.MAIN_5;
-import dev.projectg.geyserhub.config.updaters.SELECTOR_1;
+import dev.projectg.geyserhub.CrossplatForms;
+import dev.projectg.geyserhub.Logger;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,27 +10,18 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class ConfigManager {
 
     private static ConfigManager CONFIG_MANAGER;
-    private static final Map<ConfigId, Map<Integer, Class<? extends ConfigUpdater>>> updaters = new HashMap<>();
-
-    static {
-        // todo: this is awful but oh well
-        Map<Integer, Class<? extends ConfigUpdater>> mainUpdaters = new HashMap<>();
-        mainUpdaters.put(4, MAIN_4.class);
-        mainUpdaters.put(5, MAIN_5.class);
-
-        updaters.put(ConfigId.SELECTOR, Collections.singletonMap(1, SELECTOR_1.class));
-        updaters.put(ConfigId.MAIN, mainUpdaters);
-    }
 
     private final Map<ConfigId, FileConfiguration> configurations = new HashMap<>();
 
-    private final SelectorLogger logger;
+    private final Logger logger;
 
     public ConfigManager() {
         if (CONFIG_MANAGER == null) {
@@ -42,7 +30,7 @@ public class ConfigManager {
             throw new UnsupportedOperationException("Only one instance of ConfigManager is allowed!");
         }
 
-        this.logger = SelectorLogger.getLogger();
+        this.logger = Logger.getLogger();
     }
 
     /**
@@ -66,7 +54,7 @@ public class ConfigManager {
      * @return The success state
      */
     public boolean loadConfig(@Nonnull ConfigId config) {
-        GeyserHubMain plugin = GeyserHubMain.getInstance();
+        CrossplatForms plugin = CrossplatForms.getInstance();
 
         // Get the file
         File file = new File(plugin.getDataFolder(), config.fileName);
@@ -105,60 +93,8 @@ public class ConfigManager {
 
         int oldVersion = configuration.getInt("Config-Version");
         if (oldVersion != config.version) {
-            logger.warn("Mismatched config version in " + config.fileName + ". Expected version " + config.version + ", file is " + oldVersion);
-
-            Map<Integer, Class<? extends ConfigUpdater>> relevantUpdaters = updaters.get(config);
-            if (relevantUpdaters != null && !relevantUpdaters.isEmpty()) {
-                logger.info("Attempting to automatically update " + config.fileName + ". Comments will be lost.");
-
-                try {
-                    String[] splitName = config.fileName.split("\\.");
-                    configuration.save(new File(plugin.getDataFolder(), splitName[0] + "-old." + splitName[1]));
-                } catch (IOException e) {
-                    logger.severe("Failed to make a copy of " + config.fileName + " before attempting to automatically update it");
-                    e.printStackTrace();
-                    return false;
-                }
-
-                for (int version = oldVersion; version < config.version; version++) {
-                    if (relevantUpdaters.containsKey(version)) {
-                        logger.info("Updating " + config.fileName + " from version " + version + " to " + (version + 1));
-                        try {
-                            ConfigUpdater updater = ((ConfigUpdater) relevantUpdaters.get(version).getConstructors()[0].newInstance());
-
-                            boolean fail;
-                            try {
-                                fail = !updater.update(configuration);
-                            } catch (IllegalArgumentException e) {
-                                fail = true;
-                                e.printStackTrace();
-                            }
-                            if (fail) {
-                                logger.severe("Failed to update " + config.fileName + " from version " + version + " to " + (version + 1));
-                                break;
-                            }
-                        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                            logger.severe("Failed to fetch a ConfigUpdater which should exist");
-                            e.printStackTrace();
-                            break;
-                        }
-                    }
-                }
-
-                try {
-                    configuration.save(file);
-                } catch (IOException e) {
-                    logger.severe("Failed to save the updated version of " + config.fileName);
-                    e.printStackTrace();
-                }
-            }
-
-            if (configuration.getInt("Config-Version") == config.version) {
-                logger.info(config.fileName + " was successfully updated to the latest version");
-            } else {
-                logger.severe("Failed to fully update " + config.fileName + " from version " + oldVersion + " to " + config.version);
-                return false;
-            }
+            logger.severe("Mismatched config version in " + config.fileName + ". Expected version " + config.version + ", file is " + oldVersion);
+            return false;
         }
 
 

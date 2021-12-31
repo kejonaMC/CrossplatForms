@@ -1,9 +1,9 @@
-package dev.projectg.geyserhub.module.menu.java;
+package dev.projectg.geyserhub.form.java;
 
-import dev.projectg.geyserhub.GeyserHubMain;
-import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.MenuUtils;
-import dev.projectg.geyserhub.module.menu.button.OutcomeButton;
+import dev.projectg.geyserhub.CrossplatForms;
+import dev.projectg.geyserhub.Logger;
+import dev.projectg.geyserhub.form.MenuUtils;
+import dev.projectg.geyserhub.form.button.OutcomeButton;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,10 +25,10 @@ public class JavaMenu {
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
-    protected static final NamespacedKey BUTTON_KEY = new NamespacedKey(GeyserHubMain.getInstance(), "geyserHubButton");
+    protected static final NamespacedKey BUTTON_KEY = new NamespacedKey(CrossplatForms.getInstance(), "geyserHubButton");
     protected static final PersistentDataType<String, String> BUTTON_KEY_TYPE = PersistentDataType.STRING;
 
-    private final SelectorLogger logger;
+    private final Logger logger;
 
     /**
      * If the menu actually works and can be used.
@@ -61,7 +61,7 @@ public class JavaMenu {
      * Create a new java selector menu and initializes it with the given menu config section
      */
     protected JavaMenu(@Nonnull ConfigurationSection configSection) {
-        logger = SelectorLogger.getLogger();
+        logger = Logger.getLogger();
         Objects.requireNonNull(configSection);
         menuName = configSection.getName();
 

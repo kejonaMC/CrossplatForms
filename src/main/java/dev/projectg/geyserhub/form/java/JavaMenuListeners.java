@@ -1,6 +1,6 @@
-package dev.projectg.geyserhub.module.menu.java;
+package dev.projectg.geyserhub.form.java;
 
-import dev.projectg.geyserhub.GeyserHubMain;
+import dev.projectg.geyserhub.CrossplatForms;
 import dev.projectg.geyserhub.config.ConfigId;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class JavaMenuListeners implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         // This is used for processing inventory clicks WITHIN the java menu GUI
 
-        FileConfiguration config = GeyserHubMain.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
         if (!config.getBoolean("Java-Selector.Enable")) {
             return;
         }

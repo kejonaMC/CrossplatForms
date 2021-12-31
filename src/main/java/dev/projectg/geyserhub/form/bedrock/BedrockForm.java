@@ -1,7 +1,7 @@
-package dev.projectg.geyserhub.module.menu.bedrock;
+package dev.projectg.geyserhub.form.bedrock;
 
-import dev.projectg.geyserhub.SelectorLogger;
-import dev.projectg.geyserhub.module.menu.MenuUtils;
+import dev.projectg.geyserhub.Logger;
+import dev.projectg.geyserhub.form.MenuUtils;
 import dev.projectg.geyserhub.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class BedrockForm {
 
-    private final SelectorLogger logger;
+    private final Logger logger;
 
     /**
      * If the form actually works and can be used.
@@ -55,7 +55,7 @@ public class BedrockForm {
      * Create a new bedrock selector form and initializes it with the given form config section
      */
     protected BedrockForm(@Nonnull ConfigurationSection configSection) {
-        logger = SelectorLogger.getLogger();
+        logger = Logger.getLogger();
         Objects.requireNonNull(configSection);
         formName = configSection.getName();
 
@@ -160,7 +160,7 @@ public class BedrockForm {
             throw new AssertionError("Bedrock Form: " + title + " that failed to load was called to be sent to a player!");
         }
 
-        SelectorLogger logger = SelectorLogger.getLogger();
+        Logger logger = Logger.getLogger();
 
         Player player = Bukkit.getServer().getPlayer(floodgatePlayer.getCorrectUniqueId());
         if (player == null) {
