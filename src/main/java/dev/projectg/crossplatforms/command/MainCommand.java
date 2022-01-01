@@ -27,11 +27,11 @@ public class MainCommand implements CommandExecutor {
             Logger.Level.SEVERE, ChatColor.RED);
 
     private static final String[] HELP = {
-            "/ghub - Opens the default form if one exists. If not, shows the help page",
-            "/ghub - Opens the help page",
-            "/ghub form <form> - Open a form with the defined name",
-            "/ghub form <form> <player> - Sends a form to a given player",
-            "/ghub reload - reloads the selector"
+            "/crossplatforms - Opens the default form if one exists. If not, shows the help page",
+            "/crossplatforms - Opens the help page",
+            "/crossplatforms form <form> - Open a form with the defined name",
+            "/crossplatforms form <form> <player> - Sends a form to a given player",
+            "/crossplatforms reload - reloads the selector"
     };
 
     private static final String NO_PERMISSION = "Sorry, you don't have permission to run that command!";
@@ -60,7 +60,7 @@ public class MainCommand implements CommandExecutor {
         // At least one arg
         switch (args[0]) {
             case "reload":
-                if (commandSender.hasPermission("geyserhub.reload")) {
+                if (commandSender.hasPermission("crossplatforms.reload")) {
                     if (!ReloadableRegistry.reloadAll()) {
                         sendMessage(commandSender, Logger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
                     }
@@ -72,13 +72,13 @@ public class MainCommand implements CommandExecutor {
                 sendHelp(commandSender);
                 break;
             case "form":
-                if (commandSender.hasPermission("geyserhub.form")) {
+                if (commandSender.hasPermission("crossplatforms.form")) {
                     if (args.length == 1) {
-                        sendMessage(commandSender, Logger.Level.SEVERE, "Please specify a form to open! Specify a form with \"/ghub form <form>\"");
+                        sendMessage(commandSender, Logger.Level.SEVERE, "Please specify a form to open! Specify a form with \"/forms form <form>\"");
                     } else if (args.length == 2) {
                         sendForm(commandSender, args[1]);
                     } else if (args.length == 3) {
-                        if (commandSender.hasPermission("geyserhub.form.others")) {
+                        if (commandSender.hasPermission("crossplatforms.form.others")) {
                             Player target = Bukkit.getServer().getPlayer(args[2]);
                             if (target == null) {
                                 sendMessage(commandSender, Logger.Level.SEVERE, "That player doesn't exist!");
@@ -129,7 +129,7 @@ public class MainCommand implements CommandExecutor {
         if (sender instanceof ConsoleCommandSender) {
             Logger.getLogger().log(level, message);
         } else {
-            sender.sendMessage("[GeyserHub] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
+            sender.sendMessage("[CrossplatForms] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }
     }
 }

@@ -70,7 +70,7 @@ Java-Selector:
             - "§fHide § Seek"
           Any-Click:
             Commands:
-              - "player; ghub form minigames"
+              - "player; crossplatforms form minigames"
         6:
           Display-Name: "§6Survival"
           Material: EMERALD
@@ -132,7 +132,7 @@ Bedrock-Selector:
           Button-Text: "Minigames"
           Image-URL: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
           Commands:
-            - "player; ghub form minigames"
+            - "player; crossplatforms form minigames"
 
         spawnCommand:
           Button-Text: "Spawn"
@@ -153,4 +153,4 @@ Bedrock-Selector:
           Server: "hideseek"
 
 # Don't touch this
-Config-Version: 2
+Config-Version: 1

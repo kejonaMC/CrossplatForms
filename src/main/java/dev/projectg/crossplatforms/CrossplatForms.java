@@ -54,7 +54,7 @@ public class CrossplatForms extends JavaPlugin {
         BedrockFormRegistry bedrockFormRegistry = new BedrockFormRegistry();
         JavaMenuRegistry javaMenuRegistry = new JavaMenuRegistry();
 
-        Objects.requireNonNull(getCommand("forms")).setExecutor(new MainCommand(bedrockFormRegistry, javaMenuRegistry));
+        Objects.requireNonNull(getCommand("crossplatform")).setExecutor(new MainCommand(bedrockFormRegistry, javaMenuRegistry));
 
         // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryManager(accessItemRegistry, bedrockFormRegistry, javaMenuRegistry), this);

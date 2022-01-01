@@ -9,20 +9,22 @@ softdepend:
   - PlaceholderAPI
 
 commands:
-  forms:
+  crossplatforms:
     description: General command
-    permission: crossplatforms.forms
+    permission: crossplatforms
+    aliases:
+      - cp
 
 permissions:
   crossplatforms.main:
     description: Access to the base command /forms. Opens the default form if a player runs the command.
     default: true
   crossplatforms.form:
-    description: Access to /forms open <form>
+    description: Access to /crossplatform forms open <form>
     default: true
   crossplatforms.form.others:
-    description: Access to /forms open <form> <playername>
+    description: Access to /crossplatform forms open <form> <playername>
     default: op
   crossplatforms.reload:
-    description: Access to /forms reload
+    description: Access to /crossplatform reload
     default: op
