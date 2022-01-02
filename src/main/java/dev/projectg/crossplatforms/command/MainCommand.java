@@ -27,11 +27,11 @@ public class MainCommand implements CommandExecutor {
             Logger.Level.SEVERE, ChatColor.RED);
 
     private static final String[] HELP = {
-            "/crossplatforms - Opens the default form if one exists. If not, shows the help page",
-            "/crossplatforms - Opens the help page",
-            "/crossplatforms form <form> - Open a form with the defined name",
-            "/crossplatforms form <form> <player> - Sends a form to a given player",
-            "/crossplatforms reload - reloads the selector"
+            "/forms - Opens the default form if one exists. If not, shows the help page",
+            "/forms help - Opens the help page",
+            "/forms open <form> - Open a form with the defined name",
+            "/forms open <form> <player> - Sends a form to a given player",
+            "/forms reload - reloads the configurations"
     };
 
     private static final String NO_PERMISSION = "Sorry, you don't have permission to run that command!";
@@ -50,7 +50,12 @@ public class MainCommand implements CommandExecutor {
         if (!(commandSender instanceof Player || commandSender instanceof ConsoleCommandSender)) {
             return false;
         }
-        // todo: cleanup
+
+        if (commandSender.hasPermission(Permissions.BASE)) {
+            sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
+            return true;
+        }
+
         if (args.length == 0) {
             // send the default form, help if console
             sendForm(commandSender, BedrockFormRegistry.DEFAULT);
@@ -60,7 +65,7 @@ public class MainCommand implements CommandExecutor {
         // At least one arg
         switch (args[0]) {
             case "reload":
-                if (commandSender.hasPermission("crossplatforms.reload")) {
+                if (commandSender.hasPermission(Permissions.RELOAD_COMMAND)) {
                     if (!ReloadableRegistry.reloadAll()) {
                         sendMessage(commandSender, Logger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
                     }
@@ -71,14 +76,14 @@ public class MainCommand implements CommandExecutor {
             case "help":
                 sendHelp(commandSender);
                 break;
-            case "form":
-                if (commandSender.hasPermission("crossplatforms.form")) {
+            case "open":
+                if (commandSender.hasPermission(Permissions.OPEN_COMMAND)) {
                     if (args.length == 1) {
                         sendMessage(commandSender, Logger.Level.SEVERE, "Please specify a form to open! Specify a form with \"/forms form <form>\"");
                     } else if (args.length == 2) {
                         sendForm(commandSender, args[1]);
                     } else if (args.length == 3) {
-                        if (commandSender.hasPermission("crossplatforms.form.others")) {
+                        if (commandSender.hasPermission(Permissions.OPEN_COMMAND_OTHER)) {
                             Player target = Bukkit.getServer().getPlayer(args[2]);
                             if (target == null) {
                                 sendMessage(commandSender, Logger.Level.SEVERE, "That player doesn't exist!");
@@ -100,6 +105,7 @@ public class MainCommand implements CommandExecutor {
                 sendMessage(commandSender, Logger.Level.SEVERE, UNKNOWN);
                 break;
         }
+
         return true;
     }
 
