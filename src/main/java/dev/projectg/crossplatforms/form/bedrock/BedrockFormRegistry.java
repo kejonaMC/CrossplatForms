@@ -30,7 +30,7 @@ public class BedrockFormRegistry implements Reloadable {
     }
 
     private boolean load() {
-        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.FORMS);
         Logger logger = Logger.getLogger();
 
         enabledForms.clear();

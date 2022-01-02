@@ -5,7 +5,7 @@ package dev.projectg.crossplatforms.config;
  */
 public enum ConfigId {
     MAIN("config.yml", 1),
-    SELECTOR("selector.yml", 1);
+    FORMS("forms.yml", 1);
 
     public static final ConfigId[] VALUES = values();
 

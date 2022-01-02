@@ -24,7 +24,7 @@ public class JavaMenuListeners implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         // This is used for processing inventory clicks WITHIN the java menu GUI
 
-        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.FORMS);
         if (!config.getBoolean("Java-Selector.Enable")) {
             return;
         }

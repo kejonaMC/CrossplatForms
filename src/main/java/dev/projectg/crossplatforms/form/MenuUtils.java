@@ -27,8 +27,8 @@ import java.util.Objects;
 
 public class MenuUtils {
 
-    public static final String playerPrefix = "player;";
-    public static final String consolePrefix = "console;";
+    public static final String PLAYER_PREFIX = "player;";
+    public static final String CONSOLE_PREFIX = "console;";
 
     /**
      * Sends a given form, identified by its name, to a BE or JE player.
@@ -112,7 +112,7 @@ public class MenuUtils {
 
         // Run as console by default
         CommandSender sender = Bukkit.getServer().getConsoleSender();
-        if (command.startsWith(playerPrefix)) {
+        if (command.startsWith(PLAYER_PREFIX)) {
             if (player == null) {
                 throw new IllegalArgumentException("The following command is denoted to be run by a player, but a null player was passed internally: " + command);
             } else {
@@ -121,7 +121,7 @@ public class MenuUtils {
         }
 
         String executableCommand;
-        if (command.startsWith(playerPrefix) || command.startsWith(consolePrefix)) {
+        if (command.startsWith(PLAYER_PREFIX) || command.startsWith(CONSOLE_PREFIX)) {
             // Split the input into two strings between ";" and get the second string
              executableCommand = command.split(";", 2)[1].trim();
         } else {

@@ -27,13 +27,13 @@ public class AccessItemRegistry implements Reloadable {
     }
 
     /**
-     * Adds access items in {@link this#items} from {@link ConfigId#SELECTOR}.
+     * Adds access items in {@link this#items} from {@link ConfigId#FORMS}.
      * Does not clear existing items.
      */
     private void load() {
         Logger logger = Logger.getLogger();
 
-        FileConfiguration selectorConfig = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.SELECTOR);
+        FileConfiguration selectorConfig = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.FORMS);
         if (!selectorConfig.contains("Access-Items") || !selectorConfig.isConfigurationSection("Access-Items")) {
             logger.warn("Not creating any access items because selector.yml does not contain the Access-Items config!");
             return;
