@@ -3,4 +3,4 @@
 
 # CrossplatForms
 
-A plugin aimed at unifying inventory menus for Java Edition with Bedrock Edition forms, on servers running Geyser.
+A plugin aimed at providing fast, easy, and dynamic creation of Bedrock Edition forms through configurations. Also allows for creation of inventory menus for Java Edition.
