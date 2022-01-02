@@ -46,6 +46,7 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -66,12 +67,27 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>configurate-yaml</artifactId>
+            <version>4.1.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Optional -->
+        <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.10.10</version>
+            <version>2.11.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Misc -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
     <build>
         <resources>
             <resource>
@@ -88,6 +104,27 @@
                     <source>11</source>
                     <target>11</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.spongepowered.configurate</pattern>
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.configurate</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
