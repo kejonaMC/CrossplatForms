@@ -43,7 +43,7 @@ public class InventoryManager implements Listener {
 
                     Player player = event.getPlayer();
                     String formName = accessItem.formName;
-                    MenuUtils.sendForm(player, bedrockFormRegistry, javaMenuRegistry, formName);
+                    InterfaceUtils.sendInterface(player, bedrockFormRegistry, javaMenuRegistry, formName);
                 }
             }
         }

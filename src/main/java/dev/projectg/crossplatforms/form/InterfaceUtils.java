@@ -2,30 +2,26 @@ package dev.projectg.crossplatforms.form;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.ConfigId;
-import dev.projectg.crossplatforms.form.java.JavaMenu;
-import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.config.mapping.ClickAction;
+import dev.projectg.crossplatforms.config.mapping.bedrock.Form;
+import dev.projectg.crossplatforms.config.mapping.java.Menu;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.geysermc.floodgate.api.FloodgateApi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class MenuUtils {
+public class InterfaceUtils {
 
     public static final String PLAYER_PREFIX = "player;";
     public static final String CONSOLE_PREFIX = "console;";
@@ -39,21 +35,21 @@ public class MenuUtils {
      * @param javaMenuRegistry The registry to pull java inventory GUIs from
      * @param formName The name of the form to open
      */
-    public static void sendForm(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
-        if (FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId())) {
+    public static void sendInterface(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
+        if (CrossplatForms.getInstance().getBedrockHandler().isBedrockPlayer(player.getUniqueId())) {
             if (bedrockRegistry.isEnabled()) {
-                BedrockForm form = bedrockRegistry.getMenu(formName);
+                Form form = bedrockRegistry.getMenu(formName);
                 if (form == null) {
                     player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
-                    form.sendForm(FloodgateApi.getInstance().getPlayer(player.getUniqueId()));
+                    form.sendForm(player.getUniqueId());
                 }
             } else {
                 player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
             }
         } else {
             if (javaMenuRegistry.isEnabled()) {
-                JavaMenu menu = javaMenuRegistry.getMenu(formName);
+                Menu menu = javaMenuRegistry.getMenu(formName);
                 if (menu == null) {
                     player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
@@ -66,32 +62,24 @@ public class MenuUtils {
 
     }
 
-    /**
-     * @param commands Commands list, an empty list can be passed for no commands.
-     * @param serverName The server name, can passed as null for no server.
-     * @param player the Player to run everything on.
-     */
-    public static void affectPlayer(@Nonnull List<String> commands, @Nullable String serverName, @Nonnull Player player) {
-        Objects.requireNonNull(commands);
-        Objects.requireNonNull(player);
-        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.MAIN);
-        if (!commands.isEmpty()) {
+    public static void affectPlayer(ClickAction clickAction, @Nonnull Player player) {
+        Objects.requireNonNull(clickAction);
+
+        List<String> commands = clickAction.getCommands();
+        if (commands != null && !commands.isEmpty()) {
             // Get the commands from the list of commands and replace any playerName placeholders
             for (String command : commands) {
-                MenuUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
+                InterfaceUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
             }
         }
 
-        if (serverName != null) {
+        String serverName = clickAction.getServer();
+        if (serverName != null && !serverName.isEmpty()) {
             // This should never be out of bounds considering its size is the number of valid buttons
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(baos)) {
                 out.writeUTF("Connect");
                 out.writeUTF(serverName);
                 player.sendPluginMessage(CrossplatForms.getInstance(), "BungeeCord", baos.toByteArray());
-                String message = config.getString("Bungeecord-Message", "");
-                if (!message.isEmpty()) {
-                    player.sendMessage(PlaceholderUtils.setPlaceholders(player, message).replace("%server%", serverName));
-                }
             } catch (IOException e) {
                 Logger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
                 e.printStackTrace();
@@ -111,13 +99,15 @@ public class MenuUtils {
         Objects.requireNonNull(command);
 
         // Run as console by default
-        CommandSender sender = Bukkit.getServer().getConsoleSender();
+        CommandSender sender;
         if (command.startsWith(PLAYER_PREFIX)) {
             if (player == null) {
                 throw new IllegalArgumentException("The following command is denoted to be run by a player, but a null player was passed internally: " + command);
             } else {
                 sender = player;
             }
+        } else {
+            sender = Bukkit.getServer().getConsoleSender();
         }
 
         String executableCommand;
@@ -130,57 +120,5 @@ public class MenuUtils {
 
         Logger.getLogger().debug("Running command: [" + executableCommand + "] as " + sender.getName());
         Bukkit.getServer().dispatchCommand(sender, executableCommand);
-    }
-
-    /**
-     * Gets the commands from a config section with a "Commands" string list.
-     * @param buttonData the config section with the string list
-     * @return the commands. will return an empty list in case of failure, or if the list was empty.
-     */
-    @Nonnull
-    public static List<String> getCommands(@Nonnull ConfigurationSection buttonData) {
-        Objects.requireNonNull(buttonData);
-        Logger logger = Logger.getLogger();
-
-        if (buttonData.contains("Commands", true) && buttonData.isList("Commands")) {
-            List<String> commands = buttonData.getStringList("Commands");
-            if (commands.isEmpty()) {
-                logger.warn(getParentName(buttonData) + "." + buttonData.getName() + " contains commands list but the list was empty.");
-            } else {
-                return commands;
-            }
-        }
-        return Collections.emptyList();
-    }
-
-    /**
-     * Get the server name from a button configuration section
-     * @param buttonData the config section
-     * @return the server name, null if there was no server
-     */
-    @Nullable
-    public static String getServer(@Nonnull ConfigurationSection buttonData) {
-        Objects.requireNonNull(buttonData);
-
-        if (buttonData.contains("Server", true) && buttonData.isString("Server")) {
-            return Objects.requireNonNull(buttonData.getString("Server"));
-        }
-        return null;
-    }
-
-    /**
-     * Get the name of the parent of a config section
-     * @param configSection the config section
-     * @return the parent name, "null" if there was no parent, or if the the given configSection was null
-     */
-    @Nonnull
-    public static String getParentName(@Nullable ConfigurationSection configSection) {
-        if (configSection != null) {
-            ConfigurationSection parent = configSection.getParent();
-            if (parent != null) {
-                return parent.getName();
-            }
-        }
-        return "null";
     }
 }

@@ -1,12 +1,10 @@
 package dev.projectg.crossplatforms.form.bedrock;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.config.ConfigId;
+import dev.projectg.crossplatforms.config.mapping.bedrock.FormConfig;
+import dev.projectg.crossplatforms.config.mapping.bedrock.Form;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
-import dev.projectg.crossplatforms.Logger;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -16,13 +14,11 @@ import java.util.Objects;
 
 public class BedrockFormRegistry implements Reloadable {
 
-    public static final String DEFAULT = "default";
-
     /**
      * If bedrock forms are enabled. may be false if disabled in the config or if all forms failed to load.
      */
     private boolean isEnabled;
-    private final Map<String, BedrockForm> enabledForms = new HashMap<>();
+    private final Map<String, Form> enabledForms = new HashMap<>();
 
     public BedrockFormRegistry() {
         ReloadableRegistry.registerReloadable(this);
@@ -30,62 +26,12 @@ public class BedrockFormRegistry implements Reloadable {
     }
 
     private boolean load() {
-        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.FORMS);
-        Logger logger = Logger.getLogger();
-
+        FormConfig config = CrossplatForms.getInstance().getConfigManager().getConfig(FormConfig.class);
         enabledForms.clear();
-
-        if (config.contains("Bedrock-Selector", true) && config.isConfigurationSection("Bedrock-Selector")) {
-            ConfigurationSection selectorSection = config.getConfigurationSection("Bedrock-Selector");
-            Objects.requireNonNull(selectorSection);
-
-            if (selectorSection.contains("Enable", true) && selectorSection.isBoolean("Enable")) {
-                if (selectorSection.getBoolean("Enable")) {
-                    if (selectorSection.contains("Forms", true) && selectorSection.isConfigurationSection("Forms")) {
-                        ConfigurationSection forms = selectorSection.getConfigurationSection("Forms");
-                        Objects.requireNonNull(forms);
-
-                        boolean noSuccess = true;
-                        boolean containsDefault = false;
-                        for (String entry : forms.getKeys(false)) {
-                            if (!forms.isConfigurationSection(entry)) {
-                                logger.warn("Bedrock form with name " + entry + " is being skipped because it is not a configuration section");
-                                continue;
-                            }
-                            ConfigurationSection formInfo = forms.getConfigurationSection(entry);
-                            Objects.requireNonNull(formInfo);
-                            BedrockForm form = new BedrockForm(formInfo);
-                            if (form.isEnabled) {
-                                enabledForms.put(entry, form);
-                                noSuccess = false;
-                            } else {
-                                logger.warn("Not adding form for config section: " + entry + " because there was a failure loading it.");
-                            }
-                            if ("default".equals(entry)) {
-                                containsDefault = true;
-                            }
-                        }
-
-                        if (!containsDefault) {
-                            logger.warn("Failed to load a default form! The Server Selector compass will not work and players will not be able to open the default form with \"/ghub\"");
-                        }
-                        if (noSuccess) {
-                            logger.warn("Failed to load ALL bedrock forms, due to configuration error.");
-                        } else {
-                            logger.info("Valid Bedrock forms are: " + enabledForms.keySet());
-                            return true;
-                        }
-                    }
-                } else {
-                    logger.debug("Not enabling bedrock forms because it is disabled in the config.");
-                }
-            } else {
-                logger.warn("Not enabling bedrock forms because the Enable value is not present in the config.");
-            }
-        } else {
-            logger.warn("Not enabling bedrock forms because the whole configuration section is not present.");
+        if (config.isEnable()) {
+            enabledForms.putAll(config.getElements());
         }
-        return false;
+        return true;
     }
 
     /**
@@ -101,7 +47,7 @@ public class BedrockFormRegistry implements Reloadable {
      * @return the BedrockForm, null if it doesn't exist.
      */
     @Nullable
-    public BedrockForm getMenu(@Nonnull String menuName) {
+    public Form getMenu(@Nonnull String menuName) {
         Objects.requireNonNull(menuName);
         return enabledForms.get(menuName);
     }

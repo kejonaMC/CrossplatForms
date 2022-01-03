@@ -1,0 +1,38 @@
+# Configuration of access items, items in hotbars that are shortcuts.
+
+enable: true
+
+items:
+  servers:
+    material: COMPASS
+    name: "§6Server Selector"
+    lore:
+      - "Right click me!"
+    # First hotbar slot is 0
+    slot: 4
+    # The form/menu to open
+    form: servers
+    # Which platform the access item should be available to. JAVA for Java Edition only, BEDROCK for Bedrock Edition only, ALL for both.
+    platforms: ALL
+    # Give the access item on server join
+    join: true
+    # Give the access item on player respawn
+    respawn: true
+    # Stop the player from dropping the item
+    allow-drop: false
+    # Destroy the compass if the player drops it
+    destroy-dropped: true
+    # Stop the player from moving the compass in their inventory
+    allow-move: false
+  minigames:
+    material: CARROT_ON_A_STICK
+    name: "§6Minigames"
+    slot: 5
+    form: minigames
+    join: true
+    respawn: true
+    allow-drop: true
+    destroy-dropped: true
+    allow-move: false
+
+config-version: 1

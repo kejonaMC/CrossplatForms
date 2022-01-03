@@ -7,5 +7,6 @@ public class Permissions {
     public static final String BASE = PREFIX + ".base";
     public static final String OPEN_COMMAND = PREFIX + ".form";
     public static final String OPEN_COMMAND_OTHER = PREFIX + OPEN_COMMAND + ".others";
+    public static final String VERSION_COMMAND = PREFIX + ".version";
     public static final String RELOAD_COMMAND = PREFIX + ".reload";
 }

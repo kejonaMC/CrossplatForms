@@ -1,8 +1,8 @@
 package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.config.ConfigId;
-import org.bukkit.configuration.file.FileConfiguration;
+import dev.projectg.crossplatforms.config.mapping.java.MenuConfig;
+import dev.projectg.crossplatforms.config.mapping.java.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,8 +24,7 @@ public class JavaMenuListeners implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         // This is used for processing inventory clicks WITHIN the java menu GUI
 
-        FileConfiguration config = CrossplatForms.getInstance().getConfigManager().getFileConfiguration(ConfigId.FORMS);
-        if (!config.getBoolean("Java-Selector.Enable")) {
+        if (!CrossplatForms.getInstance().getConfigManager().getConfig(MenuConfig.class).isEnable()) {
             return;
         }
 
@@ -34,7 +33,7 @@ public class JavaMenuListeners implements Listener {
             ItemStack item = event.getCurrentItem();
 
             if (item != null) {
-                JavaMenu menu = javaMenuRegistry.getMenu(item);
+                Menu menu = javaMenuRegistry.getMenu(item);
                 if (menu != null) {
                     event.setCancelled(true);
                     menu.process(event.getSlot(), event.isRightClick(), player);

@@ -1,5 +1,18 @@
-# Toggle debug logging
-Enable-Debug: false
+# General config
 
+commands:
+  # The command name
+  servers:
+    # The form/menu to open
+    target: servers
+    # The permission required for the command. If the permission is not listed here, it will be take the form "crossplatforms.shortcut.<command name>"
+    permission: crossplatforms.shortcut.*
+
+permissions:
+  # Define default values for permissions. "true" for given by default. "false" for not given by default. "op" for only ops by default.
+  crossplatforms.shortcut.*: true
+
+# Toggle debug logging
+enable-debug: false
 # Don't touch this
-Config-Version: 1
+config-version: 1

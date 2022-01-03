@@ -1,8 +1,9 @@
 package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
+import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.form.MenuUtils;
+import dev.projectg.crossplatforms.form.InterfaceUtils;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
@@ -51,14 +52,13 @@ public class MainCommand implements CommandExecutor {
             return false;
         }
 
-        if (commandSender.hasPermission(Permissions.BASE)) {
+        if (!commandSender.hasPermission(Permissions.BASE)) {
             sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
             return true;
         }
 
         if (args.length == 0) {
-            // send the default form, help if console
-            sendForm(commandSender, BedrockFormRegistry.DEFAULT);
+            sendHelp(commandSender);
             return true;
         }
 
@@ -70,12 +70,19 @@ public class MainCommand implements CommandExecutor {
                         sendMessage(commandSender, Logger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
                     }
                 } else {
-                    sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
+                    deny(commandSender);
                 }
                 break;
             case "help":
                 sendHelp(commandSender);
                 break;
+            case "version":
+                if (commandSender.hasPermission(Permissions.VERSION_COMMAND)) {
+                    sendMessage(commandSender, Logger.Level.INFO, "CrossplatForms version:");
+                    sendMessage(commandSender, Logger.Level.INFO, "Branch: " + CrossplatForms.getInstance().getBranch() + ", Commit: " + CrossplatForms.getInstance().getCommit());
+                } else {
+                    deny(commandSender);
+                }
             case "open":
                 if (commandSender.hasPermission(Permissions.OPEN_COMMAND)) {
                     if (args.length == 1) {
@@ -92,13 +99,13 @@ public class MainCommand implements CommandExecutor {
                                 sendMessage(commandSender, Logger.Level.INFO, "Made " + target.getName() + " open form: " + args[1]);
                             }
                         } else {
-                            sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
+                            deny(commandSender);
                         }
                     } else {
                         sendMessage(commandSender, Logger.Level.SEVERE, "Too many command arguments!");
                     }
                 } else {
-                    sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
+                    deny(commandSender);
                 }
                 break;
             default:
@@ -107,6 +114,10 @@ public class MainCommand implements CommandExecutor {
         }
 
         return true;
+    }
+
+    private void deny(CommandSender commandSender) {
+        sendMessage(commandSender, Logger.Level.SEVERE, NO_PERMISSION);
     }
 
     private void sendHelp(CommandSender commandSender) {
@@ -121,7 +132,7 @@ public class MainCommand implements CommandExecutor {
      */
     private void sendForm(@Nonnull CommandSender commandSender, @Nonnull String formName) {
         if (commandSender instanceof Player) {
-            MenuUtils.sendForm((Player) commandSender, bedrockFormRegistry, javaMenuRegistry, formName);
+            InterfaceUtils.sendInterface((Player) commandSender, bedrockFormRegistry, javaMenuRegistry, formName);
         } else if (commandSender instanceof ConsoleCommandSender) {
             sendHelp(commandSender);
         }

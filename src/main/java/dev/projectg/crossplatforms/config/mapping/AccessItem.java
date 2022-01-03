@@ -9,7 +9,10 @@ import java.util.List;
 
 @Getter
 @ConfigSerializable
-public class AccessItem {
+public class AccessItem extends Configuration {
+
+    @Getter
+    private static final int defaultVersion = 1;
 
     private String material;
     private String name;

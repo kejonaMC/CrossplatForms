@@ -15,7 +15,7 @@ commands:
 
 permissions:
   crossplatforms.base:
-    description: Access to the base command /forms. Opens the default form if a player runs the command.
+    description: Access to the base command /forms
     default: true
   crossplatforms.form:
     description: Access to /crossplatform forms open <form>

@@ -1,0 +1,65 @@
+# Configuration for Java Edition inventory menus
+
+Enable: true
+
+Menus:
+  servers:
+    # The title of the inventory that the player sees
+    Title: "§0Server Selector"
+    # The size of the inventory. Must be greater by at least one than the highest button number. Must be 5, or a multiple of 9 (54 or lower).
+    Size: 9
+    Buttons:
+      # The slot of the button in the inventory
+      2:
+        Display-Name: "§6Lobby"
+        # The material of the item. Must exist here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+        Material: DIAMOND
+        # The lore for the item. Can be removed.
+        Lore:
+          - "§2Online players: %bungee_lobby%"
+        # You can specify different functionality for different clicks.
+        Right-Click:
+          # Both Server and Commands are optional; they can be removed. Commands are run before the player is moved to the new server.
+          Commands:
+            - "console; tell %player_name% Sending you to the lobby in a right click fashion..."
+          Server: "lobby"
+        Left-Click:
+          Commands:
+            - "console; tell %player_name% Sending you to the lobby in a left click fashion..."
+          Server: "lobby"
+      4:
+        Display-Name: "§6Minigames"
+        Material: GRASS
+        Lore:
+          - "Currently Available:"
+          - "§fSpleef"
+          - "§fHide § Seek"
+        Any-Click:
+          Commands:
+            - "player; forms open minigames"
+      6:
+        Display-Name: "§6Survival"
+        Material: EMERALD
+        Lore:
+          - "§2online players: %bungee_survival%"
+        # You can also only use "Any-Click" to specify identical behaviour for both left and right clicks.
+        Any-Click:
+          Commands:
+            - "console; tell %player_name% Sending you to Survival..."
+          Server: "survival"
+  minigames:
+    Title: "§0Minigames"
+    Size: 5
+    Buttons:
+      1:
+        Display-Name: "§6Spleef"
+        Material: SNOWBALL
+        Any-Click:
+          Server: "spleef"
+      3:
+        Display-Name: "§6Hide § Seek"
+        Material: DIRT
+        Any-Click:
+          Server: "hideseek"
+
+Config-Version: 1

@@ -2,9 +2,7 @@ package dev.projectg.crossplatforms.reloadable;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -29,21 +27,15 @@ public class ReloadableRegistry {
         Logger logger = Logger.getLogger();
 
         ConfigManager configManager = CrossplatForms.getInstance().getConfigManager();
-        // loadConfiguration() will never remove a key so I don't think this will result in ConcurrentModificationException...
-        for (ConfigId configId : configManager.getAllFileConfigurations().keySet()) {
-            if (configManager.loadConfig(configId)) {
-                logger.debug("Reloaded config file: " + configId.fileName);
-            } else {
-                logger.severe(ChatColor.RED + "Failed to reload configuration: " + configId.fileName);
-                return false;
-            }
+        if (!configManager.loadAllConfigs()) {
+            return false;
         }
         logger.info("Reloaded the configuration, reloading modules...");
 
         boolean success = true;
         for (Reloadable reloadable : reloadables) {
             if (!reloadable.reload()) {
-                logger.severe(ChatColor.RED + "Failed to reload class: " + ChatColor.RESET + reloadable.getClass().toString());
+                logger.severe("Failed to reload class: " + reloadable.getClass().toString());
                 success = false;
             }
         }

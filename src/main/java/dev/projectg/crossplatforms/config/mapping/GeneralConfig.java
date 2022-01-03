@@ -2,17 +2,15 @@ package dev.projectg.crossplatforms.config.mapping;
 
 import lombok.Getter;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-
-import java.util.Map;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @Getter
 @ConfigSerializable
-public class AccessItems extends Configuration {
+public class GeneralConfig extends Configuration {
 
     @Getter
     private static final int defaultVersion = 1;
 
-    private boolean enable;
-
-    private Map<String, AccessItem> items;
+    @Setting("enable-debug")
+    private boolean enableDebug;
 }
