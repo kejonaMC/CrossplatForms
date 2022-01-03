@@ -43,7 +43,7 @@ public class CrossplatForms extends JavaPlugin {
             branch = gitProperties.getProperty("git.branch", "unknown");
             commit = gitProperties.getProperty("git.commit.id.abbrev", "unknown");
             logger.info("Branch: " + branch + ", Commit: " + commit);
-        } catch (IOException | NullPointerException | IllegalArgumentException e) {
+        } catch (Exception e) {
             logger.warn("Unable to load resource: git.properties");
             e.printStackTrace();
         }
