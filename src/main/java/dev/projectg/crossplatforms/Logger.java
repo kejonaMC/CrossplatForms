@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms;
 
+import dev.projectg.crossplatforms.config.mapping.GeneralConfig;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
@@ -16,7 +17,7 @@ public class Logger implements Reloadable {
 
     private Logger(CrossplatForms plugin) {
         this.plugin = plugin;
-        debug = plugin.getConfig().getBoolean("Enable-Debug", false);
+        debug = plugin.getConfigManager().getConfig(GeneralConfig.class).isEnableDebug();
         ReloadableRegistry.registerReloadable(this);
     }
 
@@ -65,7 +66,7 @@ public class Logger implements Reloadable {
 
     @Override
     public boolean reload() {
-        debug = plugin.getConfig().getBoolean("Enable-Debug", false);
+        debug = plugin.getConfigManager().getConfig(GeneralConfig.class).isEnableDebug();
         return true;
     }
 }

@@ -21,7 +21,7 @@ forms:
         # All commands are run before the player is teleported to the server (if specified).
         commands:
           - "console; tell %player_name% Taking you to the lobby."
-        # Server has to be exact the same (case sensitive) as in the bungeecord config!
+        # Server has to be exact the same (case sensitive) as in the BungeeCord config!
         server: "lobby"
 
       - text: "Survival: %bungee_survival% players"

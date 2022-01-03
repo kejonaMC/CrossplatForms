@@ -16,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -72,7 +71,7 @@ public class CrossplatForms extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // Load forms
-        AccessItemRegistry accessItemRegistry = new AccessItemRegistry();
+        AccessItemRegistry accessItemRegistry = new AccessItemRegistry(this);
         BedrockFormRegistry bedrockFormRegistry = new BedrockFormRegistry();
         JavaMenuRegistry javaMenuRegistry = new JavaMenuRegistry();
 

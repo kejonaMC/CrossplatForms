@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.form;
 
+import dev.projectg.crossplatforms.config.mapping.AccessItem;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import org.bukkit.Material;
@@ -42,7 +43,7 @@ public class InventoryManager implements Listener {
                     event.setCancelled(true); // todo: what happens if we don't cancel this? does the chest open before or after ours?
 
                     Player player = event.getPlayer();
-                    String formName = accessItem.formName;
+                    String formName = accessItem.getForm();
                     InterfaceUtils.sendInterface(player, bedrockFormRegistry, javaMenuRegistry, formName);
                 }
             }
@@ -60,7 +61,7 @@ public class InventoryManager implements Listener {
         if (item != null) {
             AccessItem accessItem = accessItemRegistry.getAccessItem(item);
             if (accessItem != null) {
-                event.setCancelled(!accessItem.allowMove);
+                event.setCancelled(!accessItem.isAllowMove());
             }
         }
     }
@@ -74,9 +75,9 @@ public class InventoryManager implements Listener {
         ItemStack item = event.getItemDrop().getItemStack();
         AccessItem accessItem = accessItemRegistry.getAccessItem(item);
         if (accessItem != null) {
-            if (!accessItem.allowDrop) {
+            if (!accessItem.isAllowDrop()) {
                 event.setCancelled(true);
-            } else if (accessItem.destroyDropped) {
+            } else if (accessItem.isDestroyDropped()) {
                 event.getItemDrop().remove();
             }
         }
@@ -84,12 +85,12 @@ public class InventoryManager implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
-        giveAccessItems(event.getPlayer(), accessItemRegistry, accessItem -> accessItem.onJoin);
+        giveAccessItems(event.getPlayer(), accessItemRegistry, AccessItem::isJoin);
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access item when the player respawns
-        giveAccessItems(event.getPlayer(), accessItemRegistry, accessItem -> accessItem.onRespawn);
+        giveAccessItems(event.getPlayer(), accessItemRegistry, AccessItem::isRespawn);
     }
 
     /**
@@ -141,9 +142,9 @@ public class InventoryManager implements Listener {
      * @return True if the access item was successfully given
      */
     private static boolean giveAccessItem(Player player, AccessItem accessItem, boolean setHeldSlot) {
-        ItemStack accessItemStack = accessItem.getItemStack(player); // todo update placeholders after the fact. but when?
+        ItemStack accessItemStack = accessItem.createItemStack(player); // todo update placeholders after the fact. but when?
 
-        int desiredSlot = accessItem.slot;
+        int desiredSlot = accessItem.getSlot();
         ItemStack oldItem = player.getInventory().getItem(desiredSlot);
         boolean success = false;
         if (oldItem == null || oldItem.getType() == Material.AIR) {
@@ -170,7 +171,7 @@ public class InventoryManager implements Listener {
         if (success) {
             if (setHeldSlot) {
                 // Set the held item to the slot of the access item
-                player.getInventory().setHeldItemSlot(accessItem.slot);
+                player.getInventory().setHeldItemSlot(accessItem.getSlot());
             }
             return true;
         } else {

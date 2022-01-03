@@ -22,6 +22,8 @@ public class ConfigManager {
      * Load every config in {@link ConfigId}
      * @return false if there was a failure loading any of configurations
      */
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean loadAllConfigs() {
         boolean totalSuccess = true;
         for (ConfigId configId : ConfigId.VALUES) {
