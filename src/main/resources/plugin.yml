@@ -11,18 +11,21 @@ softdepend:
 commands:
   forms:
     description: Base command for CrossplatForms
-    permission: crossplatforms
+    permission: crossplatforms.base
 
 permissions:
   crossplatforms.base:
     description: Access to the base command /forms
     default: true
   crossplatforms.form:
-    description: Access to /crossplatform forms open <form>
+    description: Access to /forms open <form>
     default: true
   crossplatforms.form.others:
-    description: Access to /crossplatform forms open <form> <playername>
+    description: Access to /forms open <form> <playername>
     default: op
   crossplatforms.reload:
-    description: Access to /crossplatform reload
+    description: Access to /forms reload
+    default: op
+  crossplatforms.version:
+    description: Access to /forms version
     default: op
