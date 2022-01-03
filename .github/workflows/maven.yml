@@ -26,6 +26,6 @@ jobs:
       uses: actions/upload-artifact@v2.2.3
       if: success()
       with:
-        name: GeyserHubMain.jar
-        path: target/GeyserHub*.jar
+        name: CrossplatForms.jar
+        path: target/CrossplatForms*.jar
         retention-days: 15
