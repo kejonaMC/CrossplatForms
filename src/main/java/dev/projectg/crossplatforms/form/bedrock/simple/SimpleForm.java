@@ -6,7 +6,6 @@ import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.component.ButtonComponent;
@@ -19,9 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@Getter
 @ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class SimpleForm extends BedrockForm {
 
     private String title = "";
