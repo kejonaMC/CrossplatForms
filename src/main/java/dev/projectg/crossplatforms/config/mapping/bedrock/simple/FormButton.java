@@ -13,12 +13,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Getter
-@Setter
-@Builder(toBuilder = true)
+@AllArgsConstructor
 @ConfigSerializable
+@SuppressWarnings("FieldMayBeFinal")
 public class FormButton extends ClickAction implements ButtonComponent {
 
     @Nonnull
+    @With
     @Required
     private String text;
 

@@ -3,8 +3,8 @@ package dev.projectg.crossplatforms.form;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.config.mapping.ClickAction;
-import dev.projectg.crossplatforms.config.mapping.bedrock.Form;
-import dev.projectg.crossplatforms.config.mapping.java.Menu;
+import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.config.mapping.java.JavaMenu;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
@@ -38,7 +38,7 @@ public class InterfaceUtils {
     public static void sendInterface(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
         if (CrossplatForms.getInstance().getBedrockHandler().isBedrockPlayer(player.getUniqueId())) {
             if (bedrockRegistry.isEnabled()) {
-                Form form = bedrockRegistry.getMenu(formName);
+                BedrockForm form = bedrockRegistry.getMenu(formName);
                 if (form == null) {
                     player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
@@ -49,7 +49,7 @@ public class InterfaceUtils {
             }
         } else {
             if (javaMenuRegistry.isEnabled()) {
-                Menu menu = javaMenuRegistry.getMenu(formName);
+                JavaMenu menu = javaMenuRegistry.getMenu(formName);
                 if (menu == null) {
                     player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
@@ -76,12 +76,12 @@ public class InterfaceUtils {
         String serverName = clickAction.getServer();
         if (serverName != null && !serverName.isEmpty()) {
             // This should never be out of bounds considering its size is the number of valid buttons
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(baos)) {
+            try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
                 out.writeUTF("Connect");
                 out.writeUTF(serverName);
-                player.sendPluginMessage(CrossplatForms.getInstance(), "BungeeCord", baos.toByteArray());
+                player.sendPluginMessage(CrossplatForms.getInstance(), "BungeeCord", stream.toByteArray());
             } catch (IOException e) {
-                Logger.getLogger().severe("Failed to send a plugin message to Bungeecord!");
+                Logger.getLogger().severe("Failed to send a plugin message to BungeeCord!");
                 e.printStackTrace();
             }
         }

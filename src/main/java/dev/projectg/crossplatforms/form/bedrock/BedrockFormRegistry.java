@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.form.bedrock;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.config.mapping.bedrock.FormConfig;
-import dev.projectg.crossplatforms.config.mapping.bedrock.Form;
+import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
@@ -18,7 +18,7 @@ public class BedrockFormRegistry implements Reloadable {
      * If bedrock forms are enabled. may be false if disabled in the config or if all forms failed to load.
      */
     private boolean isEnabled;
-    private final Map<String, Form> enabledForms = new HashMap<>();
+    private final Map<String, BedrockForm> enabledForms = new HashMap<>();
 
     public BedrockFormRegistry() {
         ReloadableRegistry.registerReloadable(this);
@@ -47,7 +47,7 @@ public class BedrockFormRegistry implements Reloadable {
      * @return the BedrockForm, null if it doesn't exist.
      */
     @Nullable
-    public Form getMenu(@Nonnull String menuName) {
+    public BedrockForm getMenu(@Nonnull String menuName) {
         Objects.requireNonNull(menuName);
         return enabledForms.get(menuName);
     }

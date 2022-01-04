@@ -1,65 +1,65 @@
 # Configuration for Java Edition inventory menus
 
-Enable: true
+enable: true
 
-Menus:
+menus:
   servers:
     # The title of the inventory that the player sees
-    Title: "§0Server Selector"
+    title: "§0server Selector"
     # The size of the inventory. Must be greater by at least one than the highest button number. Must be 5, or a multiple of 9 (54 or lower).
-    Size: 9
-    Buttons:
+    size: 9
+    buttons:
       # The slot of the button in the inventory
       2:
-        Display-Name: "§6Lobby"
+        display-name: "§6Lobby"
         # The material of the item. Must exist here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
-        Material: DIAMOND
+        material: DIAMOND
         # The lore for the item. Can be removed.
-        Lore:
+        lore:
           - "§2Online players: %bungee_lobby%"
         # You can specify different functionality for different clicks.
-        Right-Click:
-          # Both Server and Commands are optional; they can be removed. Commands are run before the player is moved to the new server.
-          Commands:
+        right-click:
+          # Both server and commands are optional; they can be removed. commands are run before the player is moved to the new server.
+          commands:
             - "console; tell %player_name% Sending you to the lobby in a right click fashion..."
-          Server: "lobby"
-        Left-Click:
-          Commands:
+          server: "lobby"
+        left-click:
+          commands:
             - "console; tell %player_name% Sending you to the lobby in a left click fashion..."
-          Server: "lobby"
+          server: "lobby"
       4:
-        Display-Name: "§6Minigames"
-        Material: GRASS
-        Lore:
+        display-name: "§6Minigames"
+        material: GRASS
+        lore:
           - "Currently Available:"
           - "§fSpleef"
           - "§fHide § Seek"
-        Any-Click:
-          Commands:
+        any-click:
+          commands:
             - "player; forms open minigames"
       6:
-        Display-Name: "§6Survival"
-        Material: EMERALD
-        Lore:
+        display-name: "§6Survival"
+        material: EMERALD
+        lore:
           - "§2online players: %bungee_survival%"
-        # You can also only use "Any-Click" to specify identical behaviour for both left and right clicks.
-        Any-Click:
-          Commands:
+        # You can also only use "any-click" to specify identical behaviour for both left and right clicks.
+        any-click:
+          commands:
             - "console; tell %player_name% Sending you to Survival..."
-          Server: "survival"
+          server: "survival"
   minigames:
-    Title: "§0Minigames"
-    Size: 5
-    Buttons:
+    title: "§0Minigames"
+    size: 5
+    buttons:
       1:
-        Display-Name: "§6Spleef"
-        Material: SNOWBALL
-        Any-Click:
-          Server: "spleef"
+        display-name: "§6Spleef"
+        material: SNOWBALL
+        any-click:
+          server: "spleef"
       3:
-        Display-Name: "§6Hide § Seek"
-        Material: DIRT
-        Any-Click:
-          Server: "hideseek"
+        display-name: "§6Hide § Seek"
+        material: DIRT
+        any-click:
+          server: "hideseek"
 
-Config-Version: 1
+config-version: 1

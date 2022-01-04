@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class Menu {
+public class JavaMenu {
 
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
@@ -41,7 +41,7 @@ public class Menu {
     /**
      * Title within the inventory that the player sees
      */
-    private String title = "";
+    private String displayName = "";
     private int size = 5; // Hopper size
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
@@ -50,9 +50,9 @@ public class Menu {
 
         Inventory selectorGUI;
         if (size == HOPPER_SIZE) {
-            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, PlaceholderUtils.setPlaceholders(player, title));
+            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, PlaceholderUtils.setPlaceholders(player, displayName));
         } else {
-            selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
+            selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, displayName));
         }
 
         for (Integer slot : buttons.keySet()) {

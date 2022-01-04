@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @ConfigSerializable
-public abstract class Form {
+public abstract class BedrockForm {
 
     @Required
     private FormType type;

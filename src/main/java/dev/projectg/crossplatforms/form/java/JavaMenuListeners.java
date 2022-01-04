@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.config.mapping.java.MenuConfig;
-import dev.projectg.crossplatforms.config.mapping.java.Menu;
+import dev.projectg.crossplatforms.config.mapping.java.JavaMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +33,7 @@ public class JavaMenuListeners implements Listener {
             ItemStack item = event.getCurrentItem();
 
             if (item != null) {
-                Menu menu = javaMenuRegistry.getMenu(item);
+                JavaMenu menu = javaMenuRegistry.getMenu(item);
                 if (menu != null) {
                     event.setCancelled(true);
                     menu.process(event.getSlot(), event.isRightClick(), player);

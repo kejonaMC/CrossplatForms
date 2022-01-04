@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.config.mapping.bedrock.simple;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.mapping.bedrock.Form;
+import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.form.InterfaceUtils;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class SimpleForm extends Form {
+public class SimpleForm extends BedrockForm {
 
     private String title = "";
     private String content = "";
@@ -45,7 +45,7 @@ public class SimpleForm extends Form {
         // Resolve any placeholders in the button text
         List<FormButton> formattedButtons = new ArrayList<>();
         for (FormButton rawButton : buttons) {
-            FormButton copiedButton = rawButton.toBuilder().text(PlaceholderUtils.setPlaceholders(player, rawButton.getText())).build();
+            FormButton copiedButton = rawButton.withText(PlaceholderUtils.setPlaceholders(player, rawButton.getText()));
             formattedButtons.add(copiedButton);
         }
 

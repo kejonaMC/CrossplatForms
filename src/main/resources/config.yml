@@ -1,5 +1,6 @@
 # General config
 
+# Commands can be dynamically defined here, to open specific forms.
 commands:
   # The command name
   servers:

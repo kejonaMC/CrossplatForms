@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.config.mapping.java.MenuConfig;
-import dev.projectg.crossplatforms.config.mapping.java.Menu;
+import dev.projectg.crossplatforms.config.mapping.java.JavaMenu;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +20,7 @@ public class JavaMenuRegistry implements Reloadable {
      * If java menus are enabled. may be false if disabled in the config or if all forms failed to load.
      */
     private boolean isEnabled;
-    private final Map<String, Menu> enabledMenus = new HashMap<>();
+    private final Map<String, JavaMenu> enabledMenus = new HashMap<>();
 
     public JavaMenuRegistry() {
         ReloadableRegistry.registerReloadable(this);
@@ -49,7 +49,7 @@ public class JavaMenuRegistry implements Reloadable {
      * @return the JavaMenu, null if it doesn't exist.
      */
     @Nullable
-    public Menu getMenu(@Nonnull String menuName) {
+    public JavaMenu getMenu(@Nonnull String menuName) {
         Objects.requireNonNull(menuName);
         return enabledMenus.get(menuName);
     }
@@ -60,7 +60,7 @@ public class JavaMenuRegistry implements Reloadable {
      * @return The menu if the ItemStack contained the menu name and the menu exists. If no menu name was contained or the menu contained doesn't exist, this will return null.
      */
     @Nullable
-    public Menu getMenu(@Nonnull ItemStack itemStack) {
+    public JavaMenu getMenu(@Nonnull ItemStack itemStack) {
         String menuName = getMenuName(itemStack);
         if (menuName == null) {
             return null;
@@ -79,7 +79,7 @@ public class JavaMenuRegistry implements Reloadable {
         Objects.requireNonNull(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            return meta.getPersistentDataContainer().get(Menu.BUTTON_KEY, Menu.BUTTON_KEY_TYPE);
+            return meta.getPersistentDataContainer().get(JavaMenu.BUTTON_KEY, JavaMenu.BUTTON_KEY_TYPE);
         }
         return null;
     }

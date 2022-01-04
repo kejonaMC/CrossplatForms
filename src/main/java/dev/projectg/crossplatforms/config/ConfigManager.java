@@ -2,6 +2,10 @@ package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.config.mapping.Configuration;
+import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.config.serialization.BedrockFormSerializer;
+import dev.projectg.crossplatforms.config.serialization.FormImageSerializer;
+import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
@@ -11,11 +15,18 @@ import java.util.Map;
 
 public class ConfigManager {
 
+    private final YamlConfigurationLoader.Builder loaderBuilder;
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
     private final Logger logger;
 
     public ConfigManager(Logger logger) {
         this.logger = logger;
+
+        loaderBuilder = YamlConfigurationLoader.builder();
+        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
+            builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
+            builder.registerExact(FormImage.class, new FormImageSerializer());
+        })));
     }
 
     /**
@@ -47,7 +58,7 @@ public class ConfigManager {
      */
     private boolean loadConfig(ConfigId config) throws ConfigurateException {
         File file = new File(config.fileName);
-        YamlConfigurationLoader loader = YamlConfigurationLoader.builder().file(file).build();
+        YamlConfigurationLoader loader = loaderBuilder.file(file).build();
         Configuration mapped = loader.load().get(config.clazz);
 
         if (mapped == null) {
