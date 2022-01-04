@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.config.mapping.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.form.InterfaceUtils;
+import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;

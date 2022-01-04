@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.config.mapping.bedrock.simple;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.form.InterfaceUtils;
+import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;

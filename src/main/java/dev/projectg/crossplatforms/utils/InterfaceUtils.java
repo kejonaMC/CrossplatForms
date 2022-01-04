@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.form;
+package dev.projectg.crossplatforms.utils;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.config.mapping.java.JavaMenu;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

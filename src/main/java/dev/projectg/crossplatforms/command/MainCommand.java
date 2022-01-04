@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.command;
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.form.InterfaceUtils;
+import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
