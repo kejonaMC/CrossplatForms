@@ -10,7 +10,7 @@ import java.util.Map;
 public class AccessItems extends Configuration {
 
     @Getter
-    private static final int defaultVersion = 1;
+    private final int defaultVersion = 1;
 
     private boolean enable;
 

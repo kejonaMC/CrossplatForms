@@ -23,10 +23,7 @@ import java.util.Objects;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class AccessItem extends Configuration {
-
-    @Getter
-    private static final int defaultVersion = 1;
+public class AccessItem {
 
     /**
      * A key that should be of type {@link #ACCESS_ITEM_KEY_TYPE}, with the value being the {@link #identifier} of the Access Item.

@@ -6,5 +6,5 @@ import lombok.Getter;
 public class FormConfig extends InterfaceCollection<BedrockForm> {
 
     @Getter
-    private static final int defaultVersion = 1;
+    private final int defaultVersion = 1;
 }

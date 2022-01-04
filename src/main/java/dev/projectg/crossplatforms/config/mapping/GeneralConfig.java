@@ -10,7 +10,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 public class GeneralConfig extends Configuration {
 
     @Getter
-    private static final int defaultVersion = 1;
+    private final int defaultVersion = 1;
 
     @Setting("enable-debug")
     private boolean enableDebug = false;

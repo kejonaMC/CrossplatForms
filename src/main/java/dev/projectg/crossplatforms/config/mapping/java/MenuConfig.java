@@ -6,5 +6,5 @@ import lombok.Getter;
 public class MenuConfig extends InterfaceCollection<JavaMenu> {
 
     @Getter
-    private static final int defaultVersion = 1;
+    private final int defaultVersion = 1;
 }
