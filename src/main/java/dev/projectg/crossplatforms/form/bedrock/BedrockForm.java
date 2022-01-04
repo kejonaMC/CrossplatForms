@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.mapping.bedrock;
+package dev.projectg.crossplatforms.form.bedrock;
 
 import lombok.Getter;
 import org.geysermc.cumulus.util.FormType;

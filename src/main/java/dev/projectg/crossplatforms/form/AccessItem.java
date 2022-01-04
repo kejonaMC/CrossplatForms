@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.mapping;
+package dev.projectg.crossplatforms.form;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;

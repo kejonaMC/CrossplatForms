@@ -1,8 +1,6 @@
 package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.config.mapping.java.MenuConfig;
-import dev.projectg.crossplatforms.config.mapping.java.JavaMenu;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +29,7 @@ public class JavaMenuRegistry implements Reloadable {
         MenuConfig config = CrossplatForms.getInstance().getConfigManager().getConfig(MenuConfig.class);
         enabledMenus.clear();
         if (config.isEnable()) {
-            enabledMenus.putAll(config.getElements());
+            enabledMenus.putAll(config.getMenus());
         }
         return true;
     }

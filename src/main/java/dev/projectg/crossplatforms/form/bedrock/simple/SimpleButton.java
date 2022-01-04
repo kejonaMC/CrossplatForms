@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.config.mapping.bedrock.simple;
+package dev.projectg.crossplatforms.form.bedrock.simple;
 
 
-import dev.projectg.crossplatforms.config.mapping.ClickAction;
+import dev.projectg.crossplatforms.form.ClickAction;
 import lombok.*;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.util.FormImage;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 @AllArgsConstructor
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class FormButton extends ClickAction implements ButtonComponent {
+public class SimpleButton extends ClickAction implements ButtonComponent {
 
     @Nonnull
     @With
@@ -26,5 +26,4 @@ public class FormButton extends ClickAction implements ButtonComponent {
     @Nullable
     @Setting("image")
     private FormImage image;
-    // todo: serializer
 }

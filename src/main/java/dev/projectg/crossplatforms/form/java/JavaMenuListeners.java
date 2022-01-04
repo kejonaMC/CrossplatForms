@@ -1,8 +1,6 @@
 package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.config.mapping.java.MenuConfig;
-import dev.projectg.crossplatforms.config.mapping.java.JavaMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,8 +26,7 @@ public class JavaMenuListeners implements Listener {
             return;
         }
 
-        if (event.getWhoClicked() instanceof Player) {
-            Player player = (Player) event.getWhoClicked();
+        if (event.getWhoClicked() instanceof Player player) {
             ItemStack item = event.getCurrentItem();
 
             if (item != null) {

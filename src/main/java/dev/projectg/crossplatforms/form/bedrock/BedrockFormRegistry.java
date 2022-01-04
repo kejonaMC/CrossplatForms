@@ -1,8 +1,6 @@
 package dev.projectg.crossplatforms.form.bedrock;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.config.mapping.bedrock.FormConfig;
-import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
@@ -29,7 +27,7 @@ public class BedrockFormRegistry implements Reloadable {
         FormConfig config = CrossplatForms.getInstance().getConfigManager().getConfig(FormConfig.class);
         enabledForms.clear();
         if (config.isEnable()) {
-            enabledForms.putAll(config.getElements());
+            enabledForms.putAll(config.getForms());
         }
         return true;
     }

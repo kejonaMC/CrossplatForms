@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.config.mapping.bedrock.simple;
+package dev.projectg.crossplatforms.form.bedrock.simple;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
@@ -26,26 +26,27 @@ public class SimpleForm extends BedrockForm {
 
     private String title = "";
     private String content = "";
-    private List<FormButton> buttons = Collections.emptyList();
+    private List<SimpleButton> buttons = Collections.emptyList();
 
-    public void sendForm(@Nonnull UUID uuid) {
+    public void sendForm(@Nonnull UUID bedrockPlayer) {
         Logger logger = Logger.getLogger();
 
-        Player player = Bukkit.getServer().getPlayer(uuid);
+        Player player = Bukkit.getServer().getPlayer(bedrockPlayer);
         if (player == null) {
-            logger.severe("Unable to find a Bukkit Player for the given UUID: " + uuid);
+            logger.severe("Unable to find a Bukkit Player for the given UUID: " + bedrockPlayer);
             return;
         }
 
         BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
-        if (!bedrockHandler.isBedrockPlayer(uuid)) {
-            logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
+        if (!bedrockHandler.isBedrockPlayer(bedrockPlayer)) {
+            logger.severe("Player with UUID " + bedrockPlayer + " is not a Bedrock Player!");
+            return;
         }
 
         // Resolve any placeholders in the button text
-        List<FormButton> formattedButtons = new ArrayList<>();
-        for (FormButton rawButton : buttons) {
-            FormButton copiedButton = rawButton.withText(PlaceholderUtils.setPlaceholders(player, rawButton.getText()));
+        List<SimpleButton> formattedButtons = new ArrayList<>();
+        for (SimpleButton rawButton : buttons) {
+            SimpleButton copiedButton = rawButton.withText(PlaceholderUtils.setPlaceholders(player, rawButton.getText()));
             formattedButtons.add(copiedButton);
         }
 
@@ -65,13 +66,13 @@ public class SimpleForm extends BedrockForm {
                 return;
             }
 
-            FormButton button = formattedButtons.get(response.getClickedButtonId());
+            SimpleButton button = formattedButtons.get(response.getClickedButtonId());
 
             // Handle effects of pressing the button
             InterfaceUtils.affectPlayer(button, player);
         });
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(uuid, form);
+        bedrockHandler.sendForm(bedrockPlayer, form);
     }
 }

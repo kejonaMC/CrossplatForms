@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.mapping.java;
+package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;

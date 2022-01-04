@@ -1,6 +1,5 @@
 package dev.projectg.crossplatforms.form;
 
-import dev.projectg.crossplatforms.config.mapping.AccessItem;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;

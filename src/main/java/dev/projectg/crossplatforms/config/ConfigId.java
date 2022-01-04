@@ -1,10 +1,8 @@
 package dev.projectg.crossplatforms.config;
 
-import dev.projectg.crossplatforms.config.mapping.AccessItems;
-import dev.projectg.crossplatforms.config.mapping.Configuration;
-import dev.projectg.crossplatforms.config.mapping.GeneralConfig;
-import dev.projectg.crossplatforms.config.mapping.bedrock.FormConfig;
-import dev.projectg.crossplatforms.config.mapping.java.MenuConfig;
+import dev.projectg.crossplatforms.form.AccessItems;
+import dev.projectg.crossplatforms.form.bedrock.FormConfig;
+import dev.projectg.crossplatforms.form.java.MenuConfig;
 import lombok.RequiredArgsConstructor;
 
 /**

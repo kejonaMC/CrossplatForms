@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.config.mapping.java;
+package dev.projectg.crossplatforms.form.java;
 
 
-import dev.projectg.crossplatforms.config.mapping.ClickAction;
+import dev.projectg.crossplatforms.form.ClickAction;
 import lombok.Getter;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;

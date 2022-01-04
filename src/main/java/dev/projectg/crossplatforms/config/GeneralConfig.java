@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.mapping;
+package dev.projectg.crossplatforms.config;
 
 import lombok.Getter;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -9,7 +9,6 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 @SuppressWarnings("FieldMayBeFinal")
 public class GeneralConfig extends Configuration {
 
-    @Getter
     private final int defaultVersion = 1;
 
     @Setting("enable-debug")

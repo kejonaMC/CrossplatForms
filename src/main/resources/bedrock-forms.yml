@@ -5,8 +5,8 @@ enable: true
 forms:
   # Name of the form. Create as many more as you want.
   servers:
-    # The type of the form. Currently only SIMPLE is supported, a list of buttons.
-    type: SIMPLE
+    # The type of the form. Currently only SIMPLE_FORM (list of buttons) and MODAL_FORM (two buttons)
+    type: SIMPLE_FORM
     # Title of the form.
     title: "Server Selector"
     # Content of the form.
@@ -38,7 +38,7 @@ forms:
           - "console; tp %player_name% 0 80 0"
 
   minigames:
-    type: SIMPLE
+    type: SIMPLE_FORM
     command: minigames
     permission: crossplatforms.command.basic
     title: "Minigames"

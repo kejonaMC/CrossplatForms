@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.config.serialization;
+package dev.projectg.crossplatforms.form.bedrock;
 
-import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.config.mapping.bedrock.simple.SimpleForm;
+import dev.projectg.crossplatforms.form.bedrock.modal.ModalForm;
+import dev.projectg.crossplatforms.form.bedrock.simple.SimpleForm;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.cumulus.util.FormType;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -19,14 +19,11 @@ public class BedrockFormSerializer implements TypeSerializer<BedrockForm> {
             throw new SerializationException("Bedrock form at " + node.path() + " must contain a form type!");
         }
 
-        switch (formType) {
-            case SIMPLE_FORM:
-                return node.get(SimpleForm.class);
-            case MODAL_FORM:
-            case CUSTOM_FORM:
-            default:
-                throw new SerializationException("FormType " + formType + " is not supported!");
-        }
+        return switch (formType) {
+            case SIMPLE_FORM -> node.get(SimpleForm.class);
+            case MODAL_FORM -> node.get(ModalForm.class);
+            default -> throw new SerializationException("FormType " + formType + " is not supported!");
+        };
     }
 
     @Override

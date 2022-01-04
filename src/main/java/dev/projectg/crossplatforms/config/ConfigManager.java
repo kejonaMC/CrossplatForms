@@ -1,10 +1,9 @@
 package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.mapping.Configuration;
-import dev.projectg.crossplatforms.config.mapping.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.config.serialization.BedrockFormSerializer;
-import dev.projectg.crossplatforms.config.serialization.FormImageSerializer;
+import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.form.bedrock.BedrockFormSerializer;
+import dev.projectg.crossplatforms.form.bedrock.simple.FormImageSerializer;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;

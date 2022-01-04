@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.serialization;
+package dev.projectg.crossplatforms.form.bedrock.simple;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.cumulus.util.FormImage;

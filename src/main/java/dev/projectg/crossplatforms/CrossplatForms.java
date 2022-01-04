@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.command.MainCommand;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.config.mapping.GeneralConfig;
+import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.form.AccessItemRegistry;
 import dev.projectg.crossplatforms.form.InventoryManager;
 import dev.projectg.crossplatforms.form.java.JavaMenuListeners;
@@ -55,6 +55,7 @@ public class CrossplatForms extends JavaPlugin {
             bedrockHandler = new GeyserHandler();
         } else {
             logger.severe("Neither Floodgate or Geyser are installed! Disabling.");
+            return;
         }
 
         if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
