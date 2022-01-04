@@ -5,7 +5,9 @@ name: Java CI with Maven for PRs on master
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
+  push:
+    branches: [ main ]
 
 jobs:
   build:
