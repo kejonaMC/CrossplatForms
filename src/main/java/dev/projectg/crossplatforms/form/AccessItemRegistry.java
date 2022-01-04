@@ -34,7 +34,6 @@ public class AccessItemRegistry implements Reloadable {
      * Does not clear existing items.
      */
     private void load() {
-        Logger logger = Logger.getLogger();
         AccessItems config = crossplatForms.getConfigManager().getConfig(AccessItems.class);
         enabled = config.isEnable();
         if (enabled) {

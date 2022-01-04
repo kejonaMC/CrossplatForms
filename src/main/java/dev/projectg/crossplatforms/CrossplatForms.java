@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.command.MainCommand;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.config.mapping.GeneralConfig;
 import dev.projectg.crossplatforms.form.AccessItemRegistry;
 import dev.projectg.crossplatforms.form.InventoryManager;
 import dev.projectg.crossplatforms.form.java.JavaMenuListeners;
@@ -33,7 +34,6 @@ public class CrossplatForms extends JavaPlugin {
     public void onEnable() {
         long start = System.currentTimeMillis();
         instance = this;
-        // getting the logger forces the config to load before our loadConfiguration() is called...
         Logger logger = Logger.getLogger();
 
         try {
@@ -66,6 +66,7 @@ public class CrossplatForms extends JavaPlugin {
             logger.severe("Disabling due to configuration error.");
             return;
         }
+        logger.setDebug(configManager.getConfig(GeneralConfig.class).isEnableDebug());
 
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");

@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.reloadable;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.config.mapping.GeneralConfig;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -30,6 +31,7 @@ public class ReloadableRegistry {
         if (!configManager.loadAllConfigs()) {
             return false;
         }
+        logger.setDebug(configManager.getConfig(GeneralConfig.class).isEnableDebug());
         logger.info("Reloaded the configuration, reloading modules...");
 
         boolean success = true;

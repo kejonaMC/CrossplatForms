@@ -1,14 +1,16 @@
 package dev.projectg.crossplatforms;
 
-import dev.projectg.crossplatforms.config.mapping.GeneralConfig;
-import dev.projectg.crossplatforms.reloadable.Reloadable;
-import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import lombok.Getter;
+import lombok.Setter;
 
-public class Logger implements Reloadable {
+public class Logger {
 
     private static final Logger LOGGER = new Logger(CrossplatForms.getInstance());
 
-    private final CrossplatForms plugin;
+    private final java.util.logging.Logger handle;
+
+    @Getter
+    @Setter
     private boolean debug;
 
     public static Logger getLogger() {
@@ -16,57 +18,35 @@ public class Logger implements Reloadable {
     }
 
     private Logger(CrossplatForms plugin) {
-        this.plugin = plugin;
-        debug = plugin.getConfigManager().getConfig(GeneralConfig.class).isEnableDebug();
-        ReloadableRegistry.registerReloadable(this);
+        this.handle = plugin.getLogger();
     }
 
     public void log(Level level, String message) {
-        switch (level) {
-            default: // intentional fallthrough
-            case INFO:
-                info(message);
-                break;
-            case WARN:
-                warn(message);
-                break;
-            case SEVERE:
-                severe(message);
-                break;
-            case DEBUG:
-                debug(message);
-                break;
+        switch (level) { // intentional fallthrough
+            case INFO -> info(message);
+            case WARN -> warn(message);
+            case SEVERE -> severe(message);
+            case DEBUG -> debug(message);
         }
     }
     public void info(String message) {
-        plugin.getLogger().info(message);
+        handle.info(message);
     }
     public void warn(String message) {
-        plugin.getLogger().warning(message);
+        handle.warning(message);
     }
     public void severe(String message) {
-        plugin.getLogger().severe(message);
+        handle.severe(message);
     }
     public void debug(String message) {
         if (debug) {
-            plugin.getLogger().info(message);
+            handle.info(message);
         }
     }
-
     public enum Level {
         INFO,
         WARN,
         SEVERE,
         DEBUG
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    @Override
-    public boolean reload() {
-        debug = plugin.getConfigManager().getConfig(GeneralConfig.class).isEnableDebug();
-        return true;
     }
 }
