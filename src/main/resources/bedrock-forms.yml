@@ -52,4 +52,4 @@ forms:
         server: "hideseek"
 
 # Don't touch this
-Config-Version: 1
+config-version: 1

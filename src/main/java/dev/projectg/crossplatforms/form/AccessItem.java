@@ -36,6 +36,7 @@ public class AccessItem {
      * The ID of the Access Item.
      */
     @NodeKey
+    @Required
     private String identifier;
 
     /**

@@ -10,14 +10,13 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public enum ConfigId {
-    GENERAL("config.yml", GeneralConfig.class, true),
-    ACCESS_ITEMS("access-items.yml", AccessItems.class, false),
-    BEDROCK_FORMS("bedrock-forms.yml", FormConfig.class, false),
-    JAVA_MENUS("java-menus.yml", MenuConfig.class, false);
+    GENERAL("config.yml", GeneralConfig.class),
+    ACCESS_ITEMS("access-items.yml", AccessItems.class),
+    BEDROCK_FORMS("bedrock-forms.yml", FormConfig.class),
+    JAVA_MENUS("java-menus.yml", MenuConfig.class);
 
     public static final ConfigId[] VALUES = values();
 
     public final String fileName;
     public final Class<? extends Configuration> clazz;
-    public final boolean critical;
 }

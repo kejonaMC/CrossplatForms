@@ -9,16 +9,15 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class SimpleButton extends ClickAction implements ButtonComponent {
 
-    @Nonnull
     @With
     @Required
     private String text;

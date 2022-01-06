@@ -62,7 +62,7 @@ public class CrossplatForms extends JavaPlugin {
             logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
         }
 
-        configManager = new ConfigManager(logger);
+        configManager = new ConfigManager(getDataFolder(), logger);
         if (!configManager.loadAllConfigs()) {
             logger.severe("Disabling due to configuration error.");
             return;
@@ -77,7 +77,7 @@ public class CrossplatForms extends JavaPlugin {
         BedrockFormRegistry bedrockFormRegistry = new BedrockFormRegistry();
         JavaMenuRegistry javaMenuRegistry = new JavaMenuRegistry();
 
-        Objects.requireNonNull(getCommand("crossplatforms")).setExecutor(new MainCommand(bedrockFormRegistry, javaMenuRegistry));
+        Objects.requireNonNull(getCommand("forms")).setExecutor(new MainCommand(bedrockFormRegistry, javaMenuRegistry));
 
         // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryManager(accessItemRegistry, bedrockFormRegistry, javaMenuRegistry), this);

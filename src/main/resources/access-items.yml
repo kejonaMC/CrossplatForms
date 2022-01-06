@@ -5,7 +5,7 @@ enable: true
 items:
   servers:
     material: COMPASS
-    name: "§6Server Selector"
+    display-name: "§6Server Selector"
     lore:
       - "Right click me!"
     # First hotbar slot is 0
@@ -26,7 +26,7 @@ items:
     allow-move: false
   minigames:
     material: CARROT_ON_A_STICK
-    name: "§6Minigames"
+    display-name: "§6Minigames"
     slot: 5
     form: minigames
     join: true

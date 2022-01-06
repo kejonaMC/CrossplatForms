@@ -4,11 +4,12 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormSerializer;
 import dev.projectg.crossplatforms.form.bedrock.simple.FormImageSerializer;
+import dev.projectg.crossplatforms.utils.FileUtils;
 import org.geysermc.cumulus.util.FormImage;
-import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +17,11 @@ public class ConfigManager {
 
     private final YamlConfigurationLoader.Builder loaderBuilder;
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
+    private final File directory;
     private final Logger logger;
 
-    public ConfigManager(Logger logger) {
+    public ConfigManager(File directory, Logger logger) {
+        this.directory = directory;
         this.logger = logger;
 
         loaderBuilder = YamlConfigurationLoader.builder();
@@ -35,19 +38,19 @@ public class ConfigManager {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean loadAllConfigs() {
-        boolean totalSuccess = true;
         for (ConfigId configId : ConfigId.VALUES) {
             try {
                 if (!loadConfig(configId)) {
-                    totalSuccess = false;
                     logger.severe("Configuration error in " + configId.fileName + " - Fix the issue or regenerate a new file.");
+                    return false;
                 }
-            } catch (ConfigurateException e) {
-                totalSuccess = false;
-                logger.severe("Configuration error in " + configId.fileName + " - Fix the issue or regenerate a new file.");
+            } catch (IOException e) {
+                logger.severe("Failed to load configuration " + configId.fileName);
+                e.printStackTrace();
+                return false;
             }
         }
-        return totalSuccess;
+        return true;
     }
 
     /**
@@ -55,8 +58,8 @@ public class ConfigManager {
      * @param config The configuration to load
      * @return The success state
      */
-    private boolean loadConfig(ConfigId config) throws ConfigurateException {
-        File file = new File(config.fileName);
+    private boolean loadConfig(ConfigId config) throws IOException {
+        File file = FileUtils.fileOrCopiedFromResource(new File(directory, config.fileName));
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();
         Configuration mapped = loader.load().get(config.clazz);
 
