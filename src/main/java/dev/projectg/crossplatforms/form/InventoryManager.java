@@ -117,11 +117,11 @@ public class InventoryManager implements Listener {
      * @param addItem Should test true if the access item should be added
      */
     private static void giveAccessItems(Player player, AccessItemRegistry registry, Predicate<AccessItem> addItem) {
+        removeAccessItems(player);
+
         if (!registry.isEnabled()) {
             return;
         }
-
-        removeAccessItems(player);
 
         boolean holdItem = true; // True if the next access item should have be set as the held slot
         for (AccessItem accessItem : registry.getAccessItems().values()) {
