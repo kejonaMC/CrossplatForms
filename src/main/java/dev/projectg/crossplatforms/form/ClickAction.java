@@ -18,16 +18,21 @@ public class ClickAction {
     @Nullable
     private String server;
 
-    public ClickAction withPlaceholders(Function<String, String> applyPlaceholders) {
+    /**
+     * Resolve placeholders in all applicable components of the ClickActions
+     * @param resolver The placeholder resolver.
+     * @return A new instance of the click action with any placeholders resolved
+     */
+    public ClickAction withPlaceholders(Function<String, String> resolver) {
         ClickAction action = new ClickAction();
         if (commands != null) {
             action.commands = new ArrayList<>();
             for (String command : this.commands) {
-                action.commands.add(applyPlaceholders.apply(command));
+                action.commands.add(resolver.apply(command));
             }
         }
 
-        action.server = applyPlaceholders.apply(this.server);
+        action.server = resolver.apply(this.server);
 
         return action;
     }
