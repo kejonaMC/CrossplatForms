@@ -7,7 +7,6 @@ import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import javax.annotation.Nullable;
 
@@ -23,6 +22,5 @@ public class SimpleButton extends ClickAction implements ButtonComponent {
     private String text;
 
     @Nullable
-    @Setting("image")
     private FormImage image;
 }

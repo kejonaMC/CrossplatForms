@@ -22,7 +22,6 @@ import java.util.UUID;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class SimpleForm extends BedrockForm {
 
-    private String title = "";
     private String content = "";
     private List<SimpleButton> buttons = Collections.emptyList();
 
@@ -51,7 +50,7 @@ public class SimpleForm extends BedrockForm {
         // Create the form
         @SuppressWarnings("unchecked")
         org.geysermc.cumulus.SimpleForm form = org.geysermc.cumulus.SimpleForm.of(
-                PlaceholderUtils.setPlaceholders(player, title),
+                PlaceholderUtils.setPlaceholders(player, super.getTitle()),
                 PlaceholderUtils.setPlaceholders(player, content),
                 (List<ButtonComponent>)(List<?>) formattedButtons); // sad noises
 

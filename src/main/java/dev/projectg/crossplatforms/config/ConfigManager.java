@@ -3,6 +3,8 @@ package dev.projectg.crossplatforms.config;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormSerializer;
+import dev.projectg.crossplatforms.form.bedrock.custom.Component;
+import dev.projectg.crossplatforms.form.bedrock.custom.ComponentSerializer;
 import dev.projectg.crossplatforms.form.bedrock.simple.FormImageSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import org.geysermc.cumulus.util.FormImage;
@@ -28,6 +30,7 @@ public class ConfigManager {
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());
+            builder.registerExact(Component.class, new ComponentSerializer());
         })));
     }
 

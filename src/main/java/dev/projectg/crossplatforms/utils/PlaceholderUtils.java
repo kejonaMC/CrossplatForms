@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PlaceholderUtils {
 
@@ -17,6 +18,10 @@ public class PlaceholderUtils {
         usePlaceholders = Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
+    private PlaceholderUtils() {
+        // no instantiation
+    }
+
     /**
      * Returns the inputted text with placeholders set, if PlaceholderAPI is loaded. If not, it returns the same text.
      * @param player The player
@@ -24,6 +29,10 @@ public class PlaceholderUtils {
      * @return the formatted text.
      */
     public static String setPlaceholders(@Nonnull Player player, @Nonnull String text) {
+        if (text.isBlank()) {
+            return text;
+        }
+
         if (usePlaceholders) {
             return PlaceholderAPI.setPlaceholders(player, text);
         } else {
@@ -39,8 +48,58 @@ public class PlaceholderUtils {
      */
     public static List<String> setPlaceholders(@Nonnull Player player, @Nonnull List<String> text) {
         List<String> processedText = new ArrayList<>();
+        if (text.isEmpty()) {
+            return processedText;
+        }
+
         for (String line : text) {
             processedText.add(setPlaceholders(player, line));
+        }
+        return processedText;
+    }
+
+    /**
+     * Returns the inputted text with placeholders set, if PlaceholderAPI is loaded. If not, it returns the same text.
+     * @param player The player
+     * @param text The text
+     * @param additional Additional placeholders to apply
+     * @return the formatted text.
+     */
+    public static String setPlaceholders(@Nonnull Player player, @Nonnull String text, @Nonnull Map<String, String> additional) {
+        if (text.isBlank()) {
+            return text;
+        }
+
+        String resolved = text;
+
+        for (String key : additional.keySet()) {
+            if (resolved.contains(key)) {
+                resolved = resolved.replace(key, additional.get(key));
+            }
+        }
+
+        if (usePlaceholders) {
+            return PlaceholderAPI.setPlaceholders(player, resolved);
+        } else {
+            return resolved.replace("%player_name%", player.getName()).replace("%player_uuid%", player.getUniqueId().toString());
+        }
+    }
+
+    /**
+     * Returns the inputted text with placeholders set, if PlaceholderAPI is loaded. If not, it returns the same text.
+     * @param player The player
+     * @param text The text
+     * @param additional Additional placeholders to apply
+     * @return the formatted text.
+     */
+    public static List<String> setPlaceholders(@Nonnull Player player, @Nonnull List<String> text, Map<String, String> additional) {
+        List<String> processedText = new ArrayList<>();
+        if (text.isEmpty()) {
+            return processedText;
+        }
+
+        for (String line : text) {
+            processedText.add(setPlaceholders(player, line, additional));
         }
         return processedText;
     }

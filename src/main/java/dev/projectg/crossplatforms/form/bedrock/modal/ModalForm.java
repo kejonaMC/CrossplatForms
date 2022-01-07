@@ -20,7 +20,6 @@ import java.util.UUID;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class ModalForm extends BedrockForm {
 
-    private String title = "";
     private String content = "";
 
     @Required
@@ -46,7 +45,7 @@ public class ModalForm extends BedrockForm {
         }
 
         org.geysermc.cumulus.ModalForm form = org.geysermc.cumulus.ModalForm.of(
-                PlaceholderUtils.setPlaceholders(player, title),
+                PlaceholderUtils.setPlaceholders(player, super.getTitle()),
                 PlaceholderUtils.setPlaceholders(player, content),
                 PlaceholderUtils.setPlaceholders(player, button1.getText()),
                 PlaceholderUtils.setPlaceholders(player, button2.getText()));

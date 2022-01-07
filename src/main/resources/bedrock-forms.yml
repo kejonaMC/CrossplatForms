@@ -3,25 +3,15 @@
 enable: true
 
 forms:
-  # Name of the form. Create as many more as you want.
   servers:
-    # The type of the form. Currently only SIMPLE_FORM (list of buttons) and MODAL_FORM (two buttons)
     type: SIMPLE_FORM
-    # Title of the form.
     title: "Server Selector"
-    # Content of the form.
     content: "Click on the server button of choice."
-    # The list of buttons. Add as many buttons as you want.
-    # Button-Text is a required value. ImageURL can be removed. Each button can contain a Commands list, a Server value, or both.
     buttons:
       - text: "Server Lobby: %bungee_lobby% players"
-        # Here you can set your own custom icon, This has to be an URL or you can delete it if not needed!
         image: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
-        # A list of commands to run. prefix with "console;" to run the command from the console, or "player;" to run the command as the player.
-        # All commands are run before the player is teleported to the server (if specified).
         commands:
           - "console; tell %player_name% Taking you to the lobby."
-        # Server has to be exact the same (case sensitive) as in the BungeeCord config!
         server: "lobby"
 
       - text: "Survival: %bungee_survival% players"
@@ -50,6 +40,28 @@ forms:
 
       - text: "Hide & Seek"
         server: "hideseek"
+
+  leave:
+    type: MODAL_FORM
+    title: "Do you want to leave the server?"
+    content: "This will result in you leaving the server. Are you sure?"
+    button1:
+      text: "Yes"
+      commands:
+        - "console; kick %player_name%"
+    button2:
+      text: "No"
+
+  broadcast:
+    type: CUSTOM_FORM
+    title: "Choose something to broadcast"
+    components:
+      - type: INPUT
+        title: "Enter a broadcast"
+
+    action:
+      commands:
+        - "say %input_1%"
 
 # Don't touch this
 config-version: 1

@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.form.bedrock;
 
+import dev.projectg.crossplatforms.form.bedrock.custom.CustomForm;
 import dev.projectg.crossplatforms.form.bedrock.modal.ModalForm;
 import dev.projectg.crossplatforms.form.bedrock.simple.SimpleForm;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -22,7 +23,7 @@ public class BedrockFormSerializer implements TypeSerializer<BedrockForm> {
         return switch (formType) {
             case SIMPLE_FORM -> node.get(SimpleForm.class);
             case MODAL_FORM -> node.get(ModalForm.class);
-            default -> throw new SerializationException("FormType " + formType + " is not supported!");
+            case CUSTOM_FORM -> node.get(CustomForm.class);
         };
     }
 
@@ -37,7 +38,9 @@ public class BedrockFormSerializer implements TypeSerializer<BedrockForm> {
             case SIMPLE_FORM:
                 node.set(SimpleForm.class, form);
             case MODAL_FORM:
+                node.set(ModalForm.class, form);
             case CUSTOM_FORM:
+                node.set(CustomForm.class, form);
             default:
                 throw new SerializationException("FormType " + form.getType() + " is not supported!");
         }

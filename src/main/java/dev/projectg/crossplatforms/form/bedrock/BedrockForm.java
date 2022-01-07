@@ -10,10 +10,13 @@ import java.util.UUID;
 
 @Getter
 @ConfigSerializable
+@SuppressWarnings("FieldMayBeFinal")
 public abstract class BedrockForm {
 
     @Required
     private FormType type;
+
+    private String title = "";
 
     public abstract void sendForm(@Nonnull UUID bedrockPlayer);
 }
