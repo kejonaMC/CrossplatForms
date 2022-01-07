@@ -25,14 +25,16 @@ public class ClickAction {
      */
     public ClickAction withPlaceholders(Function<String, String> resolver) {
         ClickAction action = new ClickAction();
-        if (commands != null) {
+        if (this.commands != null) {
             action.commands = new ArrayList<>();
             for (String command : this.commands) {
                 action.commands.add(resolver.apply(command));
             }
         }
 
-        action.server = resolver.apply(this.server);
+        if (this.server != null) {
+            action.server = resolver.apply(this.server);
+        }
 
         return action;
     }

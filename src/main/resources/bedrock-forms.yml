@@ -57,7 +57,7 @@ forms:
     title: "Choose something to broadcast"
     components:
       - type: INPUT
-        title: "Enter a broadcast"
+        text: "Enter a broadcast"
 
     action:
       commands:
