@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.command;
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
@@ -38,10 +39,12 @@ public class MainCommand implements CommandExecutor {
     private static final String NO_PERMISSION = "Sorry, you don't have permission to run that command!";
     private static final String UNKNOWN = "Sorry, that's an unknown command!";
 
+    private final BedrockHandler bedrockHandler;
     private final BedrockFormRegistry bedrockFormRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
 
-    public MainCommand(BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
+    public MainCommand(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
+        this.bedrockHandler = bedrockHandler;
         this.bedrockFormRegistry = bedrockFormRegistry;
         this.javaMenuRegistry = javaMenuRegistry;
     }
@@ -83,6 +86,31 @@ public class MainCommand implements CommandExecutor {
                 } else {
                     deny(commandSender);
                 }
+                break;
+            case "identify":
+                if (args.length == 1) {
+                    if (commandSender instanceof Player player) {
+                        String message = bedrockHandler.isBedrockPlayer(player.getUniqueId()) ? "You are a bedrock player" : "You are not a bedrock player";
+                        sendMessage(commandSender, Logger.Level.INFO, message);
+                    } else {
+                        sendMessage(commandSender, Logger.Level.SEVERE, "Specify a player to identify");
+                    }
+                } else if (args.length == 2) {
+                    if (commandSender.hasPermission(Permissions.IDENTIFY_COMMAND)) {
+                        Player target = Bukkit.getPlayer(args[1]);
+                        if (target == null) {
+                            sendMessage(commandSender, Logger.Level.SEVERE, "That player doesn't exist");
+                        } else {
+                            String message = args[1] + (bedrockHandler.isBedrockPlayer(target.getUniqueId()) ? " is a Bedrock player" : " is not a Bedrock player");
+                            sendMessage(commandSender, Logger.Level.INFO, message);
+                        }
+                    } else {
+                        deny(commandSender);
+                    }
+                } else {
+                    sendMessage(commandSender, Logger.Level.SEVERE, "Too many arguments!");
+                }
+                break;
             case "open":
                 if (commandSender.hasPermission(Permissions.OPEN_COMMAND)) {
                     if (args.length == 1) {

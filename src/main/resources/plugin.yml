@@ -14,8 +14,11 @@ commands:
     permission: crossplatforms.forms
 
 permissions:
-  crossplatforms.forms:
+  crossplatforms.base:
     description: Access to the base command /forms
+    default: true
+  crossplatforms.identify:
+    description: Access to /forms identify <player
     default: true
   crossplatforms.open:
     description: Access to /forms open <form>
