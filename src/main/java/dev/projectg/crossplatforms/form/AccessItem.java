@@ -102,10 +102,10 @@ public class AccessItem {
 
     private static ItemStack createItemStack(@Nonnull String identifier, @Nonnull String displayName, @Nonnull String materialId, @Nonnull List<String> lore) {
         Material material = Material.getMaterial(materialId);
-        Logger.getLogger().severe("Failed to find material from string '" + materialId + "' in Access Item: " + identifier);
         if (material == null) {
-            // todo validate materials
-            throw new AssertionError("Need to catch bad materials somewhere else");
+            Logger.getLogger().severe("Failed to find material from string '" + materialId + "' in Access Item: " + identifier);
+            material = Material.STONE;
+            // todo: do this better somewhere else
         }
 
         ItemStack item = new ItemStack(material);
