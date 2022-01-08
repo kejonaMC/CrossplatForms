@@ -7,8 +7,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class FormImageSerializer implements TypeSerializer<FormImage> {
 
@@ -19,13 +17,14 @@ public class FormImageSerializer implements TypeSerializer<FormImage> {
             throw new SerializationException("Button image (web link or file location) is null (not given) at " + node.path());
         }
 
+        FormImage.Type imageType;
         if (location.startsWith("http://") || location.startsWith("https://")) {
-            return FormImage.of(FormImage.Type.URL, location);
-        } else if (Files.isRegularFile(Path.of(location))) {
-            return FormImage.of(FormImage.Type.PATH, location);
+            imageType = FormImage.Type.URL;
         } else {
-            throw new SerializationException("Failed to determine if button image was a web link or file location at " + node.path());
+            imageType = FormImage.Type.PATH;
         }
+
+        return FormImage.of(imageType, location);
     }
 
     @Override
@@ -34,6 +33,7 @@ public class FormImageSerializer implements TypeSerializer<FormImage> {
             node.raw(null);
             return;
         }
+        node.set(FormImage.Type.class, image.getType());
         node.set(String.class, image.getData());
     }
 }

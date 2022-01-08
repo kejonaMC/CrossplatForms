@@ -56,7 +56,7 @@ public class CustomForm extends BedrockForm {
 
         @SuppressWarnings("unchecked")
         org.geysermc.cumulus.CustomForm customForm = org.geysermc.cumulus.CustomForm.of(
-                super.getTitle(),
+                PlaceholderUtils.setPlaceholders(player, super.getTitle()),
                 image,
                 (List<org.geysermc.cumulus.component.Component>)(List<?>) components // sad noises
         );
@@ -82,6 +82,13 @@ public class CustomForm extends BedrockForm {
                 }
 
                 resultPlaceholders.put("%result_" + i + "%", primitive.getAsString());
+            }
+
+            if (logger.isDebug()) {
+                logger.info("Placeholder results for CustomForm " + getTitle());
+                for (Map.Entry<String, String> entry : resultPlaceholders.entrySet()) {
+                    logger.info(entry.getKey() + ": " + entry.getValue());
+                }
             }
 
             // Handle effects of pressing the button
