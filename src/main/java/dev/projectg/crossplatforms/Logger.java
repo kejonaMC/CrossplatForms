@@ -5,6 +5,8 @@ import lombok.Setter;
 
 public class Logger {
 
+    // todo abstract or interface logger
+
     private static final Logger LOGGER = new Logger(CrossplatForms.getInstance());
 
     private final java.util.logging.Logger handle;

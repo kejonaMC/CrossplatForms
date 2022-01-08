@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.command;
 
 public class Permissions {
-
+    // todo: fix issue with default perms not being applied
     private static final String PREFIX = "crossplatforms";
 
     public static final String BASE = PREFIX + ".base";

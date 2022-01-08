@@ -74,6 +74,11 @@ public class AccessItem {
      * Which platform(s) the Access Item should be given to.
      */
     private Platform platform = Platform.ALL;
+    // todo: use this
+
+    // todo: permissions for access items themselves
+
+    // todo: this stuff definitely has bugs:
 
     /**
      * If the Access Item should be given when the player joins the server.

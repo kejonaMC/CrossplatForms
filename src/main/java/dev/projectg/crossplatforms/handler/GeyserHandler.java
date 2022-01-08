@@ -16,7 +16,9 @@ public class GeyserHandler implements BedrockHandler {
     @Override
     public void sendForm(UUID uuid, Form form) {
         GeyserSession session = GeyserImpl.getInstance().connectionByUuid(uuid);
-        if (session != null) {
+        if (session == null) {
+            throw new NullPointerException("Failed to get GeyserSession for UUID " + uuid);
+        } else {
             session.getFormCache().showForm(form);
         }
     }

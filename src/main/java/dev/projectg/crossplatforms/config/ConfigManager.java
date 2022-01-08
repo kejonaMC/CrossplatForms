@@ -66,6 +66,8 @@ public class ConfigManager {
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();
         Configuration mapped = loader.load().get(config.clazz);
 
+        // todo: config translation for different config-versions
+
         if (mapped == null) {
             logger.severe("Failed to deserialize " + config.fileName + " to " + config.clazz + ": Mapped object returned null.");
             return false;

@@ -62,6 +62,7 @@ public class InterfaceUtils {
     }
 
     public static void affectPlayer(ClickAction clickAction, @Nonnull Player player) {
+        // todo: move this to ClickAction
         Objects.requireNonNull(clickAction);
 
         List<String> commands = clickAction.getCommands();
