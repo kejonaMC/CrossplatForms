@@ -16,6 +16,8 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.geysermc.geyser.GeyserImpl;
+import org.geysermc.geyser.session.auth.AuthType;
 
 import java.util.Objects;
 import java.util.Properties;
@@ -50,11 +52,17 @@ public class CrossplatForms extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         if (pluginManager.isPluginEnabled("floodgate")) {
-            bedrockHandler = new FloodgateHandler();
+            if (pluginManager.isPluginEnabled("Geyser-Spigot") && GeyserImpl.getInstance().getConfig().getRemote().getAuthType() != AuthType.FLOODGATE ) {
+                logger.warn("Floodgate is installed but auth-type in Geyser's config is not set to Floodgate! Ignoring Floodgate.");
+                bedrockHandler = new GeyserHandler();
+            } else {
+                bedrockHandler = new FloodgateHandler();
+            }
         } else if (pluginManager.isPluginEnabled("Geyser-Spigot")) {
             bedrockHandler = new GeyserHandler();
+            logger.warn("Floodgate is recommended and more stable!");
         } else {
-            logger.severe("Neither Floodgate or Geyser are installed! Disabling.");
+            logger.severe("Geyser or Floodgate is required! Disabling.");
             return;
         }
 
