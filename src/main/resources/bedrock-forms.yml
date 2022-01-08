@@ -61,7 +61,7 @@ forms:
 
     action:
       commands:
-        - "say %input_1%"
+        - "say %result_0%"
 
 # Don't touch this
 config-version: 1
