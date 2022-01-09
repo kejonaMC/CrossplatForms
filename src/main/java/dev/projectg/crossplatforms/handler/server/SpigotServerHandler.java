@@ -21,7 +21,7 @@ public class SpigotServerHandler implements ServerHandler {
     }
 
     @Override
-    public boolean isPluginEnabled(String name) {
-        return server.getPluginManager().isPluginEnabled(name);
+    public boolean isPluginEnabled(String id) {
+        return server.getPluginManager().isPluginEnabled(id);
     }
 }

@@ -12,12 +12,25 @@ import java.util.UUID;
 
 public interface CommandOrigin {
 
+    /**
+     * Mapping of Logger levels to Bukkit chat colours
+     */
     Map<Logger.Level, ChatColor> LOGGER_COLORS = ImmutableMap.of(
             Logger.Level.INFO, ChatColor.RESET,
             Logger.Level.WARN, ChatColor.GOLD,
             Logger.Level.SEVERE, ChatColor.RED);
 
+    /**
+     * Check the command origin has a permission
+     * @param permission the permission to check
+     * @return True if the command origin has the permission
+     */
     boolean hasPermission(String permission);
+
+    /**
+     * Send a raw message without any plugin name prefix
+     * @param message The message to send
+     */
     void sendRaw(String message);
 
     /**
@@ -31,6 +44,9 @@ public interface CommandOrigin {
      */
     boolean isConsole();
 
+    /**
+     * @return The underlying implementation handle
+     */
     Object getHandle();
 
     /**
@@ -38,6 +54,11 @@ public interface CommandOrigin {
      */
     Optional<UUID> getUUID();
 
+    /**
+     * Send a message with the plugin prefix, and colour.
+     * @param level The Logger level (mapped to a colour if the origin is a player)
+     * @param message The message to send
+     */
     default void sendMessage(@Nonnull Logger.Level level, @Nonnull String message) {
         Objects.requireNonNull(level);
         Objects.requireNonNull(message);

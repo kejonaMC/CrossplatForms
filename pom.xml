@@ -20,6 +20,7 @@
 
     <pluginRepositories>
         <pluginRepository>
+            <!-- Can remove when maven-shade-plugin 3.0.0 is released -->
             <id>apache.snapshots</id>
             <url>https://repository.apache.org/snapshots/</url>
         </pluginRepository>
@@ -117,7 +118,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Shade configurate -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -132,11 +132,12 @@
                             <relocations>
                                 <relocation>
                                     <pattern>cloud.commandframework</pattern>
-                                    <shadedPattern>dev.projectg.crossplatforms.shaded.cloud</shadedPattern> <!-- Replace this -->
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.cloud</shadedPattern>
                                 </relocation>
                                 <relocation>
+                                    <!-- Used by cloud and configurate -->
                                     <pattern>io.leangen.geantyref</pattern>
-                                    <shadedPattern>dev.projectg.crossplatforms.shaded.typetoken</shadedPattern> <!-- Replace this -->
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.typetoken</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.spongepowered.configurate</pattern>
