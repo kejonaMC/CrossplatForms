@@ -8,17 +8,15 @@ softdepend:
   - floodgate
   - PlaceholderAPI
 
-commands:
-  forms:
-    description: Base command for CrossplatForms
-    permission: crossplatforms.forms
-
 permissions:
   crossplatforms.base:
     description: Access to the base command /forms
     default: true
-  crossplatforms.identify:
-    description: Access to /forms identify <player
+  crossplatforms.help:
+    description: Access to /forms help
+    default: true
+  crossplatforms.list:
+    description: Access to /forms list
     default: true
   crossplatforms.open:
     description: Access to /forms open <form>
@@ -26,9 +24,12 @@ permissions:
   crossplatforms.open.others:
     description: Access to /forms open <form> <playername>
     default: op
-  crossplatforms.reload:
-    description: Access to /forms reload
+  crossplatforms.identify:
+    description: Access to /forms identify <player>
     default: op
   crossplatforms.version:
     description: Access to /forms version
+    default: op
+  crossplatforms.reload:
+    description: Access to /forms reload
     default: op

@@ -67,6 +67,12 @@
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Command framework -->
+        <dependency>
+            <groupId>cloud.commandframework</groupId>
+            <artifactId>cloud-bukkit</artifactId>
+            <version>1.6.1</version>
+        </dependency>
         <!-- Configuration -->
         <dependency>
             <groupId>org.spongepowered</groupId>
@@ -124,6 +130,14 @@
                         </goals>
                         <configuration>
                             <relocations>
+                                <relocation>
+                                    <pattern>cloud.commandframework</pattern>
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.cloud</shadedPattern> <!-- Replace this -->
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.leangen.geantyref</pattern>
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.typetoken</shadedPattern> <!-- Replace this -->
+                                </relocation>
                                 <relocation>
                                     <pattern>org.spongepowered.configurate</pattern>
                                     <shadedPattern>dev.projectg.crossplatforms.shaded.configurate</shadedPattern>

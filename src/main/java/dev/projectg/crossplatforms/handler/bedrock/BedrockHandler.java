@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.handler;
+package dev.projectg.crossplatforms.handler.bedrock;
 
 import org.geysermc.cumulus.Form;
 

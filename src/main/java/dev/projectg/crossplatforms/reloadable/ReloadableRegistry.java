@@ -42,7 +42,12 @@ public class ReloadableRegistry {
             }
         }
 
-        logger.info("Finished reload.");
+        if (success) {
+            logger.info("Successfully reloaded");
+        } else {
+            logger.severe("There was an error reloading!");
+        }
+
         return success;
     }
 }
