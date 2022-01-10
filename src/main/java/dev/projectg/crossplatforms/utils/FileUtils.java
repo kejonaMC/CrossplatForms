@@ -27,7 +27,7 @@ public class FileUtils {
         file.getParentFile().mkdirs();
         file.createNewFile();
         FileOutputStream output = new FileOutputStream(file);
-        output.write(input.readAllBytes());
+        input.transferTo(output);
         output.close();
         input.close();
         return file;
