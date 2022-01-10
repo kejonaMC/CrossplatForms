@@ -41,7 +41,7 @@ public class JavaMenu {
     /**
      * Title within the inventory that the player sees
      */
-    private String displayName = "";
+    private String title = "";
     private int size = 5; // Hopper size
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
@@ -50,9 +50,9 @@ public class JavaMenu {
 
         Inventory selectorGUI;
         if (size == HOPPER_SIZE) {
-            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, PlaceholderUtils.setPlaceholders(player, displayName));
+            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, PlaceholderUtils.setPlaceholders(player, title));
         } else {
-            selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, displayName));
+            selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
         }
 
         for (Integer slot : buttons.keySet()) {

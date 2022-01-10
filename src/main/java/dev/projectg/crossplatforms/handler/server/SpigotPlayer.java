@@ -1,14 +1,13 @@
 package dev.projectg.crossplatforms.handler.server;
 
 import lombok.AllArgsConstructor;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 @AllArgsConstructor
-public class SpigotPlayer implements dev.projectg.crossplatforms.handler.server.Player {
+public class SpigotPlayer implements Player {
 
-    private final Player handle;
+    private final org.bukkit.entity.Player handle;
 
     @Override
     public UUID getUUID() {
