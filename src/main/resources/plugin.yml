@@ -21,7 +21,7 @@ permissions:
   crossplatforms.open:
     description: Access to /forms open <form>
     default: true
-  crossplatforms.open.others:
+  crossplatforms.open.other:
     description: Access to /forms open <form> <playername>
     default: op
   crossplatforms.inspect:
