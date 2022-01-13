@@ -73,6 +73,7 @@
             <groupId>cloud.commandframework</groupId>
             <artifactId>cloud-bukkit</artifactId>
             <version>1.6.1</version>
+            <scope>compile</scope>
         </dependency>
         <!-- Configuration -->
         <dependency>
@@ -158,6 +159,14 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>com.google.*:*</exclude>
+                            <exclude>org.yaml:*</exclude>
+                        </excludes>
+                    </artifactSet>
+                </configuration>
             </plugin>
 
             <plugin>
