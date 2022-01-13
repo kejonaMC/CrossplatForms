@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.form.java;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -12,33 +13,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@Getter
 public class JavaMenuRegistry implements Reloadable {
 
     /**
      * If java menus are enabled. may be false if disabled in the config or if all forms failed to load.
      */
-    private boolean isEnabled;
-    private final Map<String, JavaMenu> enabledMenus = new HashMap<>();
+    private boolean enabled;
+    private final Map<String, JavaMenu> menus = new HashMap<>();
 
     public JavaMenuRegistry() {
         ReloadableRegistry.registerReloadable(this);
-        isEnabled = load();
+        load();
     }
 
-    private boolean load() {
+    private void load() {
         MenuConfig config = CrossplatForms.getInstance().getConfigManager().getConfig(MenuConfig.class);
-        enabledMenus.clear();
-        if (config.isEnable()) {
-            enabledMenus.putAll(config.getMenus());
+        menus.clear();
+        if (enabled = config.isEnable()) {
+            menus.putAll(config.getMenus());
         }
-        return true;
-    }
-
-    /**
-     * @return True, if Java menus are enabled.
-     */
-    public boolean isEnabled() {
-        return isEnabled;
     }
 
     /**
@@ -49,7 +43,7 @@ public class JavaMenuRegistry implements Reloadable {
     @Nullable
     public JavaMenu getMenu(@Nonnull String menuName) {
         Objects.requireNonNull(menuName);
-        return enabledMenus.get(menuName);
+        return menus.get(menuName);
     }
 
     /**
@@ -73,7 +67,7 @@ public class JavaMenuRegistry implements Reloadable {
      * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
      */
     @Nullable
-    public String getMenuName(@Nonnull ItemStack itemStack) {
+    public static String getMenuName(@Nonnull ItemStack itemStack) {
         Objects.requireNonNull(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
@@ -84,7 +78,7 @@ public class JavaMenuRegistry implements Reloadable {
 
     @Override
     public boolean reload() {
-        isEnabled = load();
+        load();
         return true;
     }
 }

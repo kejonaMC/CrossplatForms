@@ -68,7 +68,7 @@ public class InspectCommand implements FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String name = context.get("item");
-                    AccessItem item = accessItemRegistry.getAccessItems().get(name);
+                    AccessItem item = accessItemRegistry.getItems().get(name);
                     if (item == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That Access Item doesn't exist!");
                     } else {

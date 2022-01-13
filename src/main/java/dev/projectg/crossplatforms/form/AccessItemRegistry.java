@@ -18,12 +18,14 @@ public class AccessItemRegistry implements Reloadable {
 
     @Getter
     private boolean enabled = false;
+
+    @Getter
     private final Map<String, AccessItem> items = new HashMap<>();
 
     public AccessItemRegistry(CrossplatForms crossplatForms) {
         this.crossplatForms = crossplatForms;
-        load();
         ReloadableRegistry.registerReloadable(this);
+        load();
     }
 
     /**
@@ -32,8 +34,8 @@ public class AccessItemRegistry implements Reloadable {
      */
     private void load() {
         AccessItems config = crossplatForms.getConfigManager().getConfig(AccessItems.class);
-        enabled = config.isEnable();
-        if (enabled) {
+        items.clear();
+        if (enabled = config.isEnable()) {
             for (String identifier : config.getItems().keySet()) {
                 AccessItem item = config.getItems().get(identifier);
                 items.put(identifier, item);
@@ -43,17 +45,8 @@ public class AccessItemRegistry implements Reloadable {
 
     @Override
     public boolean reload() {
-        items.clear();
         load();
         return true;
-    }
-
-    /**
-     * Get all the Access Items
-     * @return A map whose keys are the identifiers of the access items, and the values are the access items
-     */
-    public HashMap<String, AccessItem> getAccessItems() {
-        return new HashMap<>(items);
     }
 
     /**
@@ -62,8 +55,8 @@ public class AccessItemRegistry implements Reloadable {
      * @return The Access Item if the ItemStack contained the identifier of the Access Item, and the Access Item exists. Will return null if their conditions are false.
      */
     @Nullable
-    public AccessItem getAccessItem(@Nonnull ItemStack itemStack) {
-        String identifier = getAccessItemId(itemStack);
+    public AccessItem getItem(@Nonnull ItemStack itemStack) {
+        String identifier = getItemId(itemStack);
         if (identifier == null) {
             return null;
         } else {
@@ -78,7 +71,7 @@ public class AccessItemRegistry implements Reloadable {
      * @return The AccessItem ID if the ItemStack contained the name, null if not.
      */
     @Nullable
-    public static String getAccessItemId(@Nonnull ItemStack itemStack) {
+    public static String getItemId(@Nonnull ItemStack itemStack) {
         Objects.requireNonNull(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

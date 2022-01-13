@@ -38,7 +38,7 @@ public class InventoryManager implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             ItemStack item = event.getItem();
             if (item != null) {
-                AccessItem accessItem = accessItemRegistry.getAccessItem(item);
+                AccessItem accessItem = accessItemRegistry.getItem(item);
                 if (accessItem != null) {
                     event.setCancelled(true); // todo: what happens if we don't cancel this? does the chest open before or after ours?
 
@@ -59,7 +59,7 @@ public class InventoryManager implements Listener {
         // todo: don't allow duplication for creative players
         ItemStack item = event.getCurrentItem();
         if (item != null) {
-            AccessItem accessItem = accessItemRegistry.getAccessItem(item);
+            AccessItem accessItem = accessItemRegistry.getItem(item);
             if (accessItem != null) {
                 event.setCancelled(!accessItem.isAllowMove());
             }
@@ -73,7 +73,7 @@ public class InventoryManager implements Listener {
         }
 
         ItemStack item = event.getItemDrop().getItemStack();
-        AccessItem accessItem = accessItemRegistry.getAccessItem(item);
+        AccessItem accessItem = accessItemRegistry.getItem(item);
         if (accessItem != null) {
             if (!accessItem.isAllowDrop()) {
                 event.setCancelled(true);
@@ -101,7 +101,7 @@ public class InventoryManager implements Listener {
         // Remove any access items that are already in the inventory
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
-                if (AccessItemRegistry.getAccessItemId(item) != null) {
+                if (AccessItemRegistry.getItemId(item) != null) {
                     // Even if this specific item/access item is no longer registered
                     // The fact it has the ID inside of it means it once was or still is
                     player.getInventory().remove(item);
@@ -124,7 +124,7 @@ public class InventoryManager implements Listener {
         }
 
         boolean holdItem = true; // True if the next access item should have be set as the held slot
-        for (AccessItem accessItem : registry.getAccessItems().values()) {
+        for (AccessItem accessItem : registry.getItems().values()) {
             if (addItem.test(accessItem)) {
                 if (giveAccessItem(player, accessItem, holdItem)) {
                     // Only set the held item once
