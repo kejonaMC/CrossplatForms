@@ -4,6 +4,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@ToString
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")

@@ -41,13 +41,13 @@ public class BedrockFormRegistry implements Reloadable {
 
     /**
      * Get a BedrockForm, based off its name.
-     * @param menuName The menu name
+     * @param formName The menu name
      * @return the BedrockForm, null if it doesn't exist.
      */
     @Nullable
-    public BedrockForm getMenu(@Nonnull String menuName) {
-        Objects.requireNonNull(menuName);
-        return enabledForms.get(menuName);
+    public BedrockForm getForm(@Nonnull String formName) {
+        Objects.requireNonNull(formName);
+        return enabledForms.get(formName);
     }
 
     @Override

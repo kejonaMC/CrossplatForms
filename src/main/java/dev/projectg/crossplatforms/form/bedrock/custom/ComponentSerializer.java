@@ -8,10 +8,10 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class ComponentSerializer implements TypeSerializer<Component> {
+public class ComponentSerializer implements TypeSerializer<CustomComponent> {
 
     @Override
-    public Component deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public CustomComponent deserialize(Type type, ConfigurationNode node) throws SerializationException {
         ComponentType componentType = node.node("type").get(ComponentType.class);
         if (componentType == null) {
             throw new SerializationException("Bedrock form at " + node.path() + " must contain a form type!");
@@ -28,7 +28,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable Component component, ConfigurationNode node) throws SerializationException {
+    public void serialize(Type type, @Nullable CustomComponent component, ConfigurationNode node) throws SerializationException {
         if (component == null) {
             node.raw(null);
             return;

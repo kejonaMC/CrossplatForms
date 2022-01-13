@@ -1,15 +1,17 @@
 package dev.projectg.crossplatforms.form.bedrock.custom;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.util.function.Function;
 
+@ToString
 @Getter
 @ConfigSerializable
-public abstract class Component implements org.geysermc.cumulus.component.Component {
+public abstract class CustomComponent implements org.geysermc.cumulus.component.Component {
 
     @Required
     protected ComponentType type;
@@ -20,5 +22,5 @@ public abstract class Component implements org.geysermc.cumulus.component.Compon
      * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
      * @return A new instance with placeholders resolved.
      */
-    public abstract Component withPlaceholders(Function<String, String> resolver);
+    public abstract CustomComponent withPlaceholders(Function<String, String> resolver);
 }

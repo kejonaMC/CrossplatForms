@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.form.ClickAction;
 import lombok.Getter;
+import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
@@ -10,6 +11,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+@ToString
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")

@@ -24,6 +24,9 @@ permissions:
   crossplatforms.open.others:
     description: Access to /forms open <form> <playername>
     default: op
+  crossplatforms.inspect:
+    description: Access to /forms inspect <form|menu|item> <name>
+    default: op
   crossplatforms.identify:
     description: Access to /forms identify <player>
     default: op

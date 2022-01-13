@@ -37,7 +37,7 @@ public class InterfaceUtils {
     public static void sendInterface(@Nonnull Player player, @Nonnull BedrockFormRegistry bedrockRegistry, @Nonnull JavaMenuRegistry javaMenuRegistry, @Nonnull String formName) {
         if (CrossplatForms.getInstance().getBedrockHandler().isBedrockPlayer(player.getUniqueId())) {
             if (bedrockRegistry.isEnabled()) {
-                BedrockForm form = bedrockRegistry.getMenu(formName);
+                BedrockForm form = bedrockRegistry.getForm(formName);
                 if (form == null) {
                     player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {

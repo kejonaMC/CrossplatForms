@@ -7,6 +7,7 @@ import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.bedrock.BedrockHandler;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.response.ModalFormResponse;
@@ -16,6 +17,7 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.util.UUID;
 
+@ToString
 @ConfigSerializable
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class ModalForm extends BedrockForm {

@@ -28,7 +28,7 @@ import java.util.UUID;
 public class CustomForm extends BedrockForm {
 
     private FormImage image = null;
-    private List<Component> components = Collections.emptyList();
+    private List<CustomComponent> components = Collections.emptyList();
 
     @Required
     private ClickAction action = null;
@@ -49,8 +49,8 @@ public class CustomForm extends BedrockForm {
             return;
         }
 
-        List<Component> components = new ArrayList<>();
-        for (Component component : this.components) {
+        List<CustomComponent> components = new ArrayList<>();
+        for (CustomComponent component : this.components) {
             components.add(component.withPlaceholders((text) -> PlaceholderUtils.setPlaceholders(player, text)));
         }
 

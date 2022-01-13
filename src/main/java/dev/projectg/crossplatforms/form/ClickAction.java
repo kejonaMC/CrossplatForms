@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.form;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nullable;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+@ToString
 @Getter
 @ConfigSerializable
 public class ClickAction {
