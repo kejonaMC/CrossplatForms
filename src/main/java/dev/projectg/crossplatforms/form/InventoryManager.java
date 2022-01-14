@@ -86,20 +86,17 @@ public class InventoryManager implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
-        Player player = event.getPlayer();
-        regive(event.getPlayer(), accessItem -> accessItem.isOnJoin() && Platform.matches(player.getUniqueId(), accessItem.getPlatform(), bedrockHandler));
+        regive(event.getPlayer(), AccessItem::isOnJoin);
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access item when the player respawns
-        Player player = event.getPlayer();
-        regive(event.getPlayer(), accessItem -> accessItem.isOnRespawn() && Platform.matches(player.getUniqueId(), accessItem.getPlatform(), bedrockHandler));
+        regive(event.getPlayer(), AccessItem::isOnRespawn);
     }
 
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-        Player player = event.getPlayer();
-        regive(event.getPlayer(), accessItem -> accessItem.isOnWorldChange() && Platform.matches(player.getUniqueId(), accessItem.getPlatform(), bedrockHandler));
+        regive(event.getPlayer(), AccessItem::isOnWorldChange);
     }
 
     @EventHandler
