@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class PlaceholderUtils {
 
-    private static final boolean usePlaceholders;
+    private static final boolean usePAPI;
     static {
         Logger.getLogger().debug("Initializing PlaceholderUtils");
-        usePlaceholders = Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+        usePAPI = Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
     private PlaceholderUtils() {
@@ -33,7 +33,7 @@ public class PlaceholderUtils {
             return text;
         }
 
-        if (usePlaceholders) {
+        if (usePAPI) {
             return PlaceholderAPI.setPlaceholders(player, text);
         } else {
             return text.replace("%player_name%", player.getName()).replace("%player_uuid%", player.getUniqueId().toString());
@@ -72,13 +72,15 @@ public class PlaceholderUtils {
 
         String resolved = text;
 
-        for (String key : additional.keySet()) {
-            if (resolved.contains(key)) {
-                resolved = resolved.replace(key, additional.get(key));
+        if (!additional.isEmpty()) {
+            for (String key : additional.keySet()) {
+                if (resolved.contains(key)) {
+                    resolved = resolved.replace(key, additional.get(key));
+                }
             }
         }
 
-        if (usePlaceholders) {
+        if (usePAPI) {
             return PlaceholderAPI.setPlaceholders(player, resolved);
         } else {
             return resolved.replace("%player_name%", player.getName()).replace("%player_uuid%", player.getUniqueId().toString());

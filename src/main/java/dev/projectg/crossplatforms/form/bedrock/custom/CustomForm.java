@@ -5,8 +5,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.form.ClickAction;
 import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.handler.bedrock.BedrockHandler;
-import dev.projectg.crossplatforms.utils.InterfaceUtils;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -92,9 +91,7 @@ public class CustomForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            InterfaceUtils.affectPlayer(
-                    action.withPlaceholders((text) -> PlaceholderUtils.setPlaceholders(player, text, resultPlaceholders)),
-                    player);
+            action.affectPlayer(player, resultPlaceholders);
         });
 
         // Send the form to the floodgate player

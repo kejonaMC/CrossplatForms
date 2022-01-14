@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.form.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.utils.InterfaceUtils;
+import dev.projectg.crossplatforms.form.ClickAction;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -102,12 +102,21 @@ public class JavaMenu {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
 
-            InterfaceUtils.affectPlayer(button.getAnyClick(), player);
+            ClickAction any;
+            if ((any = button.getAnyClick()) != null) {
+                any.affectPlayer(player);
+            }
 
             if (rightClick) {
-                InterfaceUtils.affectPlayer(button.getRightClick(), player);
+                ClickAction right;
+                if ((right = button.getRightClick()) != null) {
+                    right.affectPlayer(player);
+                }
             } else {
-                InterfaceUtils.affectPlayer(button.getLeftClick(), player);
+                ClickAction left;
+                if ((left = button.getLeftClick()) != null) {
+                    left.affectPlayer(player);
+                }
             }
         }
     }

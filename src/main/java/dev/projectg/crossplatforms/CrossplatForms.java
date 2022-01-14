@@ -15,11 +15,11 @@ import dev.projectg.crossplatforms.form.InventoryManager;
 import dev.projectg.crossplatforms.form.java.JavaMenuListeners;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.handler.bedrock.BedrockHandler;
-import dev.projectg.crossplatforms.handler.bedrock.FloodgateHandler;
-import dev.projectg.crossplatforms.handler.bedrock.GeyserHandler;
-import dev.projectg.crossplatforms.handler.server.ServerHandler;
-import dev.projectg.crossplatforms.handler.server.SpigotServerHandler;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.FloodgateHandler;
+import dev.projectg.crossplatforms.handler.GeyserHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
+import dev.projectg.crossplatforms.handler.SpigotServerHandler;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -140,7 +140,14 @@ public class CrossplatForms extends JavaPlugin {
         }
 
         // Listeners for the Bedrock and Java menus
-        Bukkit.getServer().getPluginManager().registerEvents(new InventoryManager(accessItemRegistry, bedrockFormRegistry, javaMenuRegistry), this);
+        Bukkit.getServer().getPluginManager().registerEvents(
+                new InventoryManager(
+                        accessItemRegistry,
+                        bedrockFormRegistry,
+                        javaMenuRegistry,
+                        bedrockHandler),
+                this);
+
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(javaMenuRegistry), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");

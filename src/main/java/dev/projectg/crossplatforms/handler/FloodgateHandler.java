@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.handler.bedrock;
+package dev.projectg.crossplatforms.handler;
 
 import org.geysermc.cumulus.Form;
 import org.geysermc.floodgate.api.FloodgateApi;

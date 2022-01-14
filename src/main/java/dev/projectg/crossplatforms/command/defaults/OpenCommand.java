@@ -8,7 +8,7 @@ import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.handler.server.ServerHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;

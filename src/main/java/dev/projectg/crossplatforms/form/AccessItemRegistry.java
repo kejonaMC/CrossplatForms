@@ -2,9 +2,12 @@ package dev.projectg.crossplatforms.form;
 
 
 import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.permission.DefaultPermission;
+import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,6 +21,13 @@ public class AccessItemRegistry implements Reloadable {
 
     @Getter
     private boolean enabled = false;
+
+    @Getter
+    @Accessors(fluent = true)
+    private boolean setHeldSlot;
+
+    @Getter
+    private DefaultPermission globalDefaultPermission;
 
     @Getter
     private final Map<String, AccessItem> items = new HashMap<>();
@@ -36,15 +46,32 @@ public class AccessItemRegistry implements Reloadable {
         AccessItems config = crossplatForms.getConfigManager().getConfig(AccessItems.class);
         items.clear();
         if (enabled = config.isEnable()) {
+            setHeldSlot = config.isSetHeldSlot();
+            globalDefaultPermission = config.getGlobalDefaultPermission();
+
             for (String identifier : config.getItems().keySet()) {
                 AccessItem item = config.getItems().get(identifier);
                 items.put(identifier, item);
+
+                // Register permissions with the server
+                item.generatePermissions(crossplatForms.getAccessItemRegistry());
+                for (Permission entry : item.getPermissions()) {
+                    crossplatForms.getServerHandler().registerPermission(entry.key(), entry.description(), entry.defaultPermission());
+                }
             }
         }
     }
 
     @Override
     public boolean reload() {
+        if (enabled) {
+            for (AccessItem accessItem : items.values()) {
+                for (Permission permission : accessItem.getPermissions()) {
+                    crossplatForms.getServerHandler().unregisterPermission(permission.key());
+                }
+            }
+        }
+
         load();
         return true;
     }
@@ -72,7 +99,6 @@ public class AccessItemRegistry implements Reloadable {
      */
     @Nullable
     public static String getItemId(@Nonnull ItemStack itemStack) {
-        Objects.requireNonNull(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             return null;

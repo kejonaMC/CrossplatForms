@@ -6,7 +6,7 @@ commands:
   servers:
     # The form/menu to open
     target: servers
-    # The permission required for the command. If the permission is not listed here, it will be take the form "crossplatforms.shortcut.<command name>"
+    # The permission required for the command. If the permission is not listed here, it will default to "crossplatforms.shortcut.<command name>"
     permission: crossplatforms.shortcut.*
 
 permissions:

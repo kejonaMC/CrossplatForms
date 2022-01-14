@@ -6,9 +6,9 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.handler.bedrock.BedrockHandler;
-import dev.projectg.crossplatforms.handler.server.Player;
-import dev.projectg.crossplatforms.handler.server.ServerHandler;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

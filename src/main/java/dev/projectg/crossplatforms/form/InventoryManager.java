@@ -1,33 +1,31 @@
 package dev.projectg.crossplatforms.form;
 
+import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
+import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
+@AllArgsConstructor
 public class InventoryManager implements Listener {
 
     private final AccessItemRegistry accessItemRegistry;
     private final BedrockFormRegistry bedrockFormRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
-
-    public InventoryManager(AccessItemRegistry accessItemRegistry, BedrockFormRegistry bedrockFormRegistry, JavaMenuRegistry javaMenuRegistry) {
-        this.accessItemRegistry = accessItemRegistry;
-        this.bedrockFormRegistry = bedrockFormRegistry;
-        this.javaMenuRegistry = javaMenuRegistry;
-    }
+    private final BedrockHandler bedrockHandler;
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // opening menus through access items
@@ -61,13 +59,13 @@ public class InventoryManager implements Listener {
         if (item != null) {
             AccessItem accessItem = accessItemRegistry.getItem(item);
             if (accessItem != null) {
-                event.setCancelled(!accessItem.isAllowMove());
+                event.setCancelled(!event.getWhoClicked().hasPermission(accessItem.getMovePermission()));
             }
         }
     }
 
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event) { // don't let the access item be dropped, destroy it if it is
+    public void onPlayerDropItem(PlayerDropItemEvent event) { // restricting dropping
         if (!accessItemRegistry.isEnabled()) {
             return;
         }
@@ -75,33 +73,39 @@ public class InventoryManager implements Listener {
         ItemStack item = event.getItemDrop().getItemStack();
         AccessItem accessItem = accessItemRegistry.getItem(item);
         if (accessItem != null) {
-            if (!accessItem.isAllowDrop()) {
+            Player player = event.getPlayer();
+            if (player.hasPermission(accessItem.getDropPermission())) {
+                if (!player.hasPermission(accessItem.getNoDestroyPermission())) {
+                    event.getItemDrop().remove();
+                }
+            } else {
                 event.setCancelled(true);
-            } else if (accessItem.isDestroyDropped()) {
-                event.getItemDrop().remove();
             }
         }
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
-        giveAccessItems(event.getPlayer(), accessItemRegistry, AccessItem::isJoin);
+        regive(event.getPlayer(), AccessItem::isOnJoin);
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access item when the player respawns
-        giveAccessItems(event.getPlayer(), accessItemRegistry, AccessItem::isRespawn);
+        regive(event.getPlayer(), AccessItem::isOnRespawn);
     }
 
-    /**
-     * Remove all the access items from a player's inventory
-     * @param player The player whose inventory to remove from
-     */
-    private static void removeAccessItems(Player player) {
-        // Remove any access items that are already in the inventory
+    @EventHandler
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+        regive(event.getPlayer(), AccessItem::isOnWorldChange);
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
-                if (AccessItemRegistry.getItemId(item) != null) {
+                AccessItem access = accessItemRegistry.getItem(item);
+                if (access != null && !access.isPersist()) {
                     // Even if this specific item/access item is no longer registered
                     // The fact it has the ID inside of it means it once was or still is
                     player.getInventory().remove(item);
@@ -110,25 +114,34 @@ public class InventoryManager implements Listener {
         }
     }
 
-    /**
-     * Clears all access items a player has, gives them all access items from a given registry
-     * @param player The player to give the access items to
-     * @param registry The registry to get access items from
-     * @param addItem Should test true if the access item should be added
-     */
-    private static void giveAccessItems(Player player, AccessItemRegistry registry, Predicate<AccessItem> addItem) {
-        removeAccessItems(player);
+    private void regive(Player player, Predicate<AccessItem> give) {
+        List<String> contained = new ArrayList<>(); // Access items the player already has and that will not be removed
 
-        if (!registry.isEnabled()) {
-            return;
+        // Remove any access items that are now longer allowed
+        for (ItemStack item : player.getInventory()) {
+            if (item != null) {
+                AccessItem access = accessItemRegistry.getItem(item);
+                if (access != null) {
+                    if (player.hasPermission(access.getMainPermission())) {
+                        contained.add(access.getIdentifier());
+                    } else {
+                        player.getInventory().remove(item);
+                    }
+                }
+            }
         }
 
-        boolean holdItem = true; // True if the next access item should have be set as the held slot
-        for (AccessItem accessItem : registry.getItems().values()) {
-            if (addItem.test(accessItem)) {
-                if (giveAccessItem(player, accessItem, holdItem)) {
-                    // Only set the held item once
-                    holdItem = false;
+        // Give any access items that should be given
+        boolean changedHand = false; // If we have changed the item the player is holding
+        for (AccessItem access : accessItemRegistry.getItems().values()) {
+            if (give.test(access) && Platform.matches(player.getUniqueId(), access.getPlatform(), bedrockHandler)) {
+                if (!contained.contains(access.getIdentifier())) {
+                    if (accessItemRegistry.setHeldSlot() && !changedHand) {
+                        giveAccessItem(player, access, true);
+                        changedHand = true;
+                    } else {
+                        giveAccessItem(player, access, false);
+                    }
                 }
             }
         }
@@ -175,6 +188,7 @@ public class InventoryManager implements Listener {
             }
             return true;
         } else {
+            // todo: send message about no success
             return false;
         }
     }

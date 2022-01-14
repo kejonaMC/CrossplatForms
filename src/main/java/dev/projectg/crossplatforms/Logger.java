@@ -24,7 +24,7 @@ public class Logger {
     }
 
     public void log(Level level, String message) {
-        switch (level) { // intentional fallthrough
+        switch (level) {
             case INFO -> info(message);
             case WARN -> warn(message);
             case SEVERE -> severe(message);

@@ -6,8 +6,8 @@ import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.form.AccessItemRegistry;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.handler.bedrock.BedrockHandler;
-import dev.projectg.crossplatforms.handler.server.ServerHandler;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import lombok.Getter;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.handler.server;
+package dev.projectg.crossplatforms.handler;
 
 import java.util.UUID;
 

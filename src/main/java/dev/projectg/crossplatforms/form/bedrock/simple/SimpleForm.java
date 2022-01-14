@@ -4,7 +4,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
-import dev.projectg.crossplatforms.handler.bedrock.BedrockHandler;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -68,7 +68,7 @@ public class SimpleForm extends BedrockForm {
             SimpleButton button = formattedButtons.get(response.getClickedButtonId());
 
             // Handle effects of pressing the button
-            InterfaceUtils.affectPlayer(button, player);
+            button.affectPlayer(player);
         });
 
         // Send the form to the floodgate player

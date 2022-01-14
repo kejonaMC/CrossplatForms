@@ -61,32 +61,6 @@ public class InterfaceUtils {
 
     }
 
-    public static void affectPlayer(ClickAction clickAction, @Nonnull Player player) {
-        // todo: move this to ClickAction
-        Objects.requireNonNull(clickAction);
-
-        List<String> commands = clickAction.getCommands();
-        if (commands != null && !commands.isEmpty()) {
-            // Get the commands from the list of commands and replace any playerName placeholders
-            for (String command : commands) {
-                InterfaceUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command), player);
-            }
-        }
-
-        String serverName = clickAction.getServer();
-        if (serverName != null && !serverName.isEmpty()) {
-            // This should never be out of bounds considering its size is the number of valid buttons
-            try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
-                out.writeUTF("Connect");
-                out.writeUTF(serverName);
-                player.sendPluginMessage(CrossplatForms.getInstance(), "BungeeCord", stream.toByteArray());
-            } catch (IOException e) {
-                Logger.getLogger().severe("Failed to send a plugin message to BungeeCord!");
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * Process a command and run it.
      * If the command is prefixed with "player;" the command will be run as the player given, which CANNOT be null.
