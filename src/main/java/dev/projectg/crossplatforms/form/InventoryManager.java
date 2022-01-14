@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.form;
 
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -22,6 +24,7 @@ import java.util.function.Predicate;
 @AllArgsConstructor
 public class InventoryManager implements Listener {
 
+    private final Logger logger = Logger.getLogger();
     private final AccessItemRegistry accessItemRegistry;
     private final BedrockFormRegistry bedrockFormRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
@@ -85,17 +88,36 @@ public class InventoryManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        if (!accessItemRegistry.isEnabled()) {
+            return;
+        }
+
+        Player player = event.getEntity();
+        List<ItemStack> items = event.getDrops();
+        for (ItemStack item : items) {
+            AccessItem accessItem = accessItemRegistry.getItem(item);
+            if (accessItem != null && !player.hasPermission(accessItem.getNoDestroyPermission())) {
+                event.getDrops().remove(item);
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
+        logger.debug("Player join event");
         regive(event.getPlayer(), AccessItem::isOnJoin);
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access item when the player respawns
+        logger.debug("Player respawn event");
         regive(event.getPlayer(), AccessItem::isOnRespawn);
     }
 
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+        logger.debug("Player change world event");
         regive(event.getPlayer(), AccessItem::isOnWorldChange);
     }
 
@@ -109,6 +131,7 @@ public class InventoryManager implements Listener {
                     // Even if this specific item/access item is no longer registered
                     // The fact it has the ID inside of it means it once was or still is
                     player.getInventory().remove(item);
+                    logger.debug("Removing access item %s from %s".formatted(access.getIdentifier(), player.getName()));
                 }
             }
         }
@@ -124,8 +147,10 @@ public class InventoryManager implements Listener {
                 if (access != null) {
                     if (player.hasPermission(access.getMainPermission())) {
                         contained.add(access.getIdentifier());
+                        logger.debug("%s is keeping access item %s".formatted(player.getName(), access.getIdentifier()));
                     } else {
                         player.getInventory().remove(item);
+                        logger.debug("Removed %s from %s because they don't have permission for it".formatted(access.getIdentifier(), player.getName()));
                     }
                 }
             }
@@ -139,9 +164,14 @@ public class InventoryManager implements Listener {
                     if (accessItemRegistry.setHeldSlot() && !changedHand) {
                         giveAccessItem(player, access, true);
                         changedHand = true;
+                        logger.debug("Set held slot to " + access.getSlot());
                     } else {
                         giveAccessItem(player, access, false);
                     }
+
+                    logger.debug("Gave access item %s to %s".formatted(access.getIdentifier(), player.getName()));
+                } else {
+                    logger.debug("%s has permission for access item %s, but they already have it".formatted(player.getName(), access.getIdentifier()));
                 }
             }
         }

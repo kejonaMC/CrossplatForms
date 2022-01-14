@@ -13,11 +13,14 @@ items:
     # The form/menu to open
     form: servers
     # Which platform the access item should be available to. JAVA for Java Edition only, BEDROCK for Bedrock Edition only, ALL for both.
-    platforms: ALL
+    platform: ALL
     # Give the access item on server join
-    join: true
+    on-join: true
     # Give the access item on player respawn
-    respawn: true
+    on-respawn: true
+    default-permission:
+    # Give the access item on world change
+    on-world-change: false
     # Stop the player from dropping the item
     allow-drop: false
     # Destroy the compass if the player drops it
@@ -29,8 +32,8 @@ items:
     display-name: "§6Minigames"
     slot: 5
     form: minigames
-    join: true
-    respawn: true
+    on-join: true
+    on-respawn: true
     allow-drop: true
     destroy-dropped: true
     allow-move: false

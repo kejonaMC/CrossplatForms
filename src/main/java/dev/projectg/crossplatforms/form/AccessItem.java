@@ -39,7 +39,7 @@ public class AccessItem {
     public static final NamespacedKey ACCESS_ITEM_KEY = new NamespacedKey(CrossplatForms.getInstance(), "crossplatFormsAccessItem");
     public static final PersistentDataType<String, String> ACCESS_ITEM_KEY_TYPE = PersistentDataType.STRING;
 
-    private static final String permissionBase = "crossplatforms.accessitem.";
+    private static final String permissionBase = "crossplatforms.item.";
 
     /**
      * The ID of the Access Item.
@@ -47,8 +47,6 @@ public class AccessItem {
     @NodeKey
     @Required
     private String identifier = "";
-
-    private transient String mainPermission = permissionBase + identifier;
 
     /**
      * The material of the item. Currently must be a string representation of Bukkit's Material enum.
@@ -103,29 +101,31 @@ public class AccessItem {
     private boolean onWorldChange = false;
     // todo: example
 
+    private transient String mainPermission;
+
     /**
      * True if the player can retrieve the access item through commands
      */
     @Nullable
-    private DefaultPermission defaultPermission = null;
+    private DefaultPermission defaultPermission = null; // intentionally set null to let the registry provide default
 
     /**
      * If the player should be allowed to drop the item.
      */
     private boolean allowDrop = false;
-    private transient String dropPermission = mainPermission + ".drop";
+    private transient String dropPermission;
 
     /**
      * If the item should be destroyed when it is dropped.
      */
     private boolean destroyDropped = true;
-    private transient String noDestroyPermission = mainPermission + ".nodestroy";
+    private transient String noDestroyPermission;
 
     /**
      * If the access item should be allowed to be moved within the inventory, and to other inventories.
      */
     private boolean allowMove = false;
-    private transient String movePermission = mainPermission + ".move";
+    private transient String movePermission;
 
     private transient Set<Permission> permissions;
 
@@ -170,6 +170,11 @@ public class AccessItem {
     }
 
     public void generatePermissions(AccessItemRegistry registry) {
+        mainPermission = permissionBase + identifier;
+        dropPermission = mainPermission + ".drop";
+        noDestroyPermission = mainPermission + ".nodestroy";
+        movePermission = mainPermission + ".move";
+
         permissions = ImmutableSet.of(
                 new Permission(
                         mainPermission,

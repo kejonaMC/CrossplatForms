@@ -3,6 +3,10 @@ name: ${project.name}
 version: ${project.version}
 api-version: 1.14
 description: Unifies inventory menus with Bedrock Edition forms.
+prefix: CForms
+authors:
+  - Konicai
+  - Jens
 softdepend:
   - Geyser-Spigot
   - floodgate

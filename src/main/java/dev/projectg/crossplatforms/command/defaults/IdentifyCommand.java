@@ -3,26 +3,29 @@ package dev.projectg.crossplatforms.command.defaults;
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
+import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class IdentifyCommand implements FormsCommand {
+public class IdentifyCommand extends FormsCommand {
 
     private static final String NAME = "identify";
-    private static final String PERMISSION = "crossplatforms.identify";
-    private static final String PERMISSION_OTHER = "crossplatforms.identify.other";
+    private static final String PERMISSION = "crossplatforms.command." + NAME;
+    private static final String PERMISSION_OTHER = PERMISSION + ".others";
 
-    private final ServerHandler serverHandler;
-    private final BedrockHandler bedrockHandler;
+    public IdentifyCommand(CrossplatForms crossplatForms) {
+        super(crossplatForms);
+    }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
+        BedrockHandler bedrockHandler = crossplatForms.getBedrockHandler();
+        ServerHandler serverHandler = crossplatForms.getServerHandler();
+
         manager.command(defaultBuilder
                 .literal(NAME)
                 .permission(sender -> sender.hasPermission(PERMISSION) && sender.isPlayer())

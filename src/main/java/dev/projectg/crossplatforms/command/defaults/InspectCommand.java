@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.command.defaults;
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
+import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
@@ -12,20 +13,22 @@ import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenu;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class InspectCommand implements FormsCommand {
+public class InspectCommand extends FormsCommand {
 
     private static final String NAME = "inspect";
-    private static final String PERMISSION = "crossplatforms.inspect";
+    private static final String PERMISSION = "crossplatforms.command." + NAME;
 
-    private final BedrockFormRegistry bedrockRegistry;
-    private final JavaMenuRegistry javaRegistry;
-    private final AccessItemRegistry accessItemRegistry;
+    public InspectCommand(CrossplatForms crossplatForms) {
+        super(crossplatForms);
+    }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
+        BedrockFormRegistry bedrockRegistry = crossplatForms.getBedrockFormRegistry();
+        JavaMenuRegistry javaRegistry = crossplatForms.getJavaMenuRegistry();
+        AccessItemRegistry accessItemRegistry = crossplatForms.getAccessItemRegistry();
+
         Command.Builder<CommandOrigin> base = defaultBuilder
                 .literal(NAME)
                 .permission(PERMISSION);

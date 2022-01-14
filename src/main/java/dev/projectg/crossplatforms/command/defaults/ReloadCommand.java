@@ -7,15 +7,15 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class ReloadCommand implements FormsCommand {
+public class ReloadCommand extends FormsCommand {
 
     private static final String NAME = "reload";
-    private static final String PERMISSION = "crossplatforms.reload";
+    private static final String PERMISSION = "crossplatforms.command" + NAME;
 
-    private final CrossplatForms crossplatForms; // will be used once reload manager is cleaned up
+    public ReloadCommand(CrossplatForms crossplatForms) {
+        super(crossplatForms);
+    }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {

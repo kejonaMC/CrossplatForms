@@ -54,7 +54,7 @@ public class AccessItemRegistry implements Reloadable {
                 items.put(identifier, item);
 
                 // Register permissions with the server
-                item.generatePermissions(crossplatForms.getAccessItemRegistry());
+                item.generatePermissions(this);
                 for (Permission entry : item.getPermissions()) {
                     crossplatForms.getServerHandler().registerPermission(entry.key(), entry.description(), entry.defaultPermission());
                 }

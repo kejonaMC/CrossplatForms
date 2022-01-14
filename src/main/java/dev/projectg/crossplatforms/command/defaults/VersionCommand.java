@@ -6,15 +6,15 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class VersionCommand implements FormsCommand {
+public class VersionCommand extends FormsCommand {
 
     private static final String NAME = "version";
-    private static final String PERMISSION = "crossplatforms.version";
+    private static final String PERMISSION = "crossplatforms.command" + NAME;
 
-    private final CrossplatForms crossplatForms;
+    public VersionCommand(CrossplatForms crossplatForms) {
+        super(crossplatForms);
+    }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {

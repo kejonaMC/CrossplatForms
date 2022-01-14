@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.command.defaults;
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
+import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
@@ -10,25 +11,26 @@ import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
-@RequiredArgsConstructor
-public class OpenCommand implements FormsCommand {
+public class OpenCommand extends FormsCommand {
 
     private static final String NAME = "open";
-    private static final String PERMISSION = "crossplatforms.open";
-    private static final String PERMISSION_OTHER = "crossplatforms.open.other";
+    private static final String PERMISSION = "crossplatforms.command." + NAME;
+    private static final String PERMISSION_OTHER = PERMISSION + ".others";
 
-    private final ServerHandler serverHandler;
-    private final BedrockFormRegistry bedrockRegistry;
-    private final JavaMenuRegistry javaRegistry;
+    public OpenCommand(CrossplatForms crossplatForms) {
+        super(crossplatForms);
+    }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
+        BedrockFormRegistry bedrockRegistry = crossplatForms.getBedrockFormRegistry();
+        JavaMenuRegistry javaRegistry = crossplatForms.getJavaMenuRegistry();
+
         manager.command(defaultBuilder
                 .literal(NAME)
                 .argument(StringArgument.of("form"))

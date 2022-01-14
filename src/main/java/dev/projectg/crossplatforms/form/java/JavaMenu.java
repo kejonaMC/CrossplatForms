@@ -31,7 +31,7 @@ public class JavaMenu {
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
-    public static final NamespacedKey BUTTON_KEY = new NamespacedKey(CrossplatForms.getInstance(), "geyserHubButton");
+    public static final NamespacedKey BUTTON_KEY = new NamespacedKey(CrossplatForms.getInstance(), "crossplatFormsButton");
     public static final PersistentDataType<String, String> BUTTON_KEY_TYPE = PersistentDataType.STRING;
 
     /**
