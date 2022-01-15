@@ -67,7 +67,7 @@ public interface CommandOrigin {
             Logger.getLogger().log(level, message);
         } else {
             // todo: abstract chat colour
-            sendRaw("[CrossplatForms] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
+            sendRaw("[CForms] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }
     }
 }

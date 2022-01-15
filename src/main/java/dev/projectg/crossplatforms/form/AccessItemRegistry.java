@@ -2,8 +2,8 @@ package dev.projectg.crossplatforms.form;
 
 
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.permission.DefaultPermission;
 import dev.projectg.crossplatforms.permission.Permission;
+import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class AccessItemRegistry implements Reloadable {
     private boolean setHeldSlot;
 
     @Getter
-    private DefaultPermission globalDefaultPermission;
+    private Map<AccessItem.Limit, PermissionDefault> globalPermissionDefaults = Collections.emptyMap();
 
     @Getter
     private final Map<String, AccessItem> items = new HashMap<>();
@@ -47,7 +47,7 @@ public class AccessItemRegistry implements Reloadable {
         items.clear();
         if (enabled = config.isEnable()) {
             setHeldSlot = config.isSetHeldSlot();
-            globalDefaultPermission = config.getGlobalDefaultPermission();
+            globalPermissionDefaults = config.getGlobalPermissionDefaults();
 
             for (String identifier : config.getItems().keySet()) {
                 AccessItem item = config.getItems().get(identifier);
@@ -55,8 +55,8 @@ public class AccessItemRegistry implements Reloadable {
 
                 // Register permissions with the server
                 item.generatePermissions(this);
-                for (Permission entry : item.getPermissions()) {
-                    crossplatForms.getServerHandler().registerPermission(entry.key(), entry.description(), entry.defaultPermission());
+                for (Permission entry : item.getPermissions().values()) {
+                    crossplatForms.getServerHandler().registerPermission(entry);
                 }
             }
         }
@@ -66,7 +66,7 @@ public class AccessItemRegistry implements Reloadable {
     public boolean reload() {
         if (enabled) {
             for (AccessItem accessItem : items.values()) {
-                for (Permission permission : accessItem.getPermissions()) {
+                for (Permission permission : accessItem.getPermissions().values()) {
                     crossplatForms.getServerHandler().unregisterPermission(permission.key());
                 }
             }

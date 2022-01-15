@@ -14,54 +14,30 @@ import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 @ToString
 @Getter
 @ConfigSerializable
+@SuppressWarnings("FieldMayBeFinal")
 public class ClickAction {
 
-    @Nullable
-    private List<String> commands;
+    @Nonnull
+    private List<String> commands = Collections.emptyList();
 
     @Nullable
     private String server;
-
-    /**
-     * Resolve placeholders in all applicable components of the ClickActions
-     * @param resolver The placeholder resolver.
-     * @return A new instance of the click action with any placeholders resolved
-     */
-    public ClickAction withPlaceholders(Function<String, String> resolver) {
-        ClickAction action = new ClickAction();
-        if (this.commands != null) {
-            action.commands = new ArrayList<>();
-            for (String command : this.commands) {
-                action.commands.add(resolver.apply(command));
-            }
-        }
-
-        if (this.server != null) {
-            action.server = resolver.apply(this.server);
-        }
-
-        return action;
-    }
 
     public void affectPlayer(@Nonnull Player player) {
         affectPlayer(player, Collections.emptyMap());
     }
 
     public void affectPlayer(@Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
-        if (commands != null && !commands.isEmpty()) {
-            // Get the commands from the list of commands and replace any playerName placeholders
-            for (String command : commands) {
-                InterfaceUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders), player);
-            }
+        // Get the commands from the list of commands and replace any playerName placeholders
+        for (String command : commands) {
+            InterfaceUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders), player);
         }
 
         if (server != null && !server.isEmpty()) {

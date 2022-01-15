@@ -6,14 +6,14 @@ commands:
   servers:
     # The form/menu to open
     target: servers
-    # The permission required for the command. If the permission is not listed here, it will default to "crossplatforms.shortcut.<command name>"
-    permission: crossplatforms.shortcut.*
-
-permissions:
-  # Define default values for permissions. "true" for given by default. "false" for not given by default. "op" for only ops by default.
-  crossplatforms.shortcut.*: true
+    # The permission required for the command. The following block is not necessary, and if listed, defaults will be used.
+    permission:
+      key: crossplatforms.shortcut.servers
+      description: "Open the servers list"
+      default: true
 
 # Toggle debug logging
 enable-debug: false
+
 # Don't touch this
 config-version: 1

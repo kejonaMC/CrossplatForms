@@ -1,13 +1,15 @@
 package dev.projectg.crossplatforms.form;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
-import dev.projectg.crossplatforms.permission.DefaultPermission;
 import dev.projectg.crossplatforms.permission.Permission;
+import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -20,11 +22,10 @@ import org.spongepowered.configurate.objectmapping.meta.NodeKey;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 @ToString
 @Getter
@@ -41,99 +42,35 @@ public class AccessItem {
 
     private static final String permissionBase = "crossplatforms.item.";
 
-    /**
-     * The ID of the Access Item.
-     */
     @NodeKey
     @Required
-    private String identifier = "";
+    private String identifier = null;
 
-    /**
-     * The material of the item. Currently must be a string representation of Bukkit's Material enum.
-     */
     @Required
-    private String material = "";
+    private String form = null;
 
-    /**
-     * The display name of the item that the user sees
-     */
     @Required
-    private String displayName = "";
+    private String material = null;
 
-    /**
-     * Lore to be applied to the item stack.
-     */
+    @Required
+    private String displayName = null;
     private List<String> lore = Collections.emptyList();
-
-    /**
-     * The inventory slot (ideally hotbar) for the item to be in, by default.
-     * Should be placed elsewhere in the hotbar if not possible.
-     * Should not be given if the hotbar is full.
-     */
-    @Required
     private int slot = 0;
 
-    /**
-     * The form or menu to open
-     */
-    @Required
-    private String form = "";
-
-    /**
-     * Which platform(s) the Access Item should be given to.
-     */
-    private Platform platform = Platform.ALL;
-    // todo: example
-
-    /**
-     * If the access item should be given/removed on join
-     */
     private boolean onJoin = false;
-
-    /**
-     * If the access items should be given/removed on respawn
-     */
     private boolean onRespawn = false;
-
-    /**
-     * If the access item should be given/removed on world change
-     */
     private boolean onWorldChange = false;
-    // todo: example
 
-    private transient String mainPermission;
+    private Platform platform = Platform.ALL;
+    private Map<Limit, PermissionDefault> permissionDefaults = Collections.emptyMap();
 
-    /**
-     * True if the player can retrieve the access item through commands
-     */
-    @Nullable
-    private DefaultPermission defaultPermission = null; // intentionally set null to let the registry provide default
-
-    /**
-     * If the player should be allowed to drop the item.
-     */
-    private boolean allowDrop = false;
-    private transient String dropPermission;
-
-    /**
-     * If the item should be destroyed when it is dropped.
-     */
-    private boolean destroyDropped = true;
-    private transient String noDestroyPermission;
-
-    /**
-     * If the access item should be allowed to be moved within the inventory, and to other inventories.
-     */
-    private boolean allowMove = false;
-    private transient String movePermission;
-
-    private transient Set<Permission> permissions;
-
-    /**
-     * If the access item should be persisted on player leave (stay in the players inventory)
-     */
     private boolean persist = false;
-    // todo: example
+
+    // Stuff that is generated after deserialization, once the identifier has been loaded
+    private transient Map<Limit, Permission> permissions;
+
+    @Getter(AccessLevel.NONE)
+    private transient String mainPermission;
 
     private static ItemStack createItemStack(@Nonnull String identifier, @Nonnull String displayName, @Nonnull String materialId, @Nonnull List<String> lore) {
         Material material = Material.getMaterial(materialId);
@@ -153,13 +90,6 @@ public class AccessItem {
     }
 
     /**
-     * @return The ItemStack of the access item, with no placeholders set.
-     */
-    public ItemStack createItemStack() {
-        return createItemStack(identifier, displayName, material, lore);
-    }
-
-    /**
      * @param player The player to apply to placeholders
      * @return The ItemStack of the access item, with placeholders in the display name and lore set according to the given player
      */
@@ -170,36 +100,56 @@ public class AccessItem {
     }
 
     public void generatePermissions(AccessItemRegistry registry) {
-        mainPermission = permissionBase + identifier;
-        dropPermission = mainPermission + ".drop";
-        noDestroyPermission = mainPermission + ".nodestroy";
-        movePermission = mainPermission + ".move";
+        if (permissions != null) {
+            Logger.getLogger().severe("Permissions in Access Item " + identifier + " have already been generated!");
+            Thread.dumpStack();
+        }
 
-        permissions = ImmutableSet.of(
-                new Permission(
-                        mainPermission,
-                        "Ability to retrieve the access item through commands",
-                        getEffectiveDefaultPermission(registry)),
-                new Permission(
-                        dropPermission,
-                        "Permission to drop the access item",
-                        DefaultPermission.from(allowDrop)),
-                new Permission(
-                        noDestroyPermission,
-                        "Permission to prevent the access item from being destroyed when dropped",
-                        DefaultPermission.from(!destroyDropped)),
-                new Permission(
-                        movePermission,
-                        "Permission to move the access item within the player inventory and to different inventories.",
-                        DefaultPermission.from(allowMove))
-        );
+        mainPermission = permissionBase + identifier;
+
+        ImmutableMap.Builder<Limit, Permission> builder = ImmutableMap.builder();
+        for (Limit limit : Limit.values()) {
+            // Alright this is a bit janky. 1st, attempt to retrieve the permission default from this specific config.
+            // If it is not specified for this item, then we check the global permission defaults.
+            // If the user has not specified anything in the globals, then we use fallback values
+            PermissionDefault permissionDefault = permissionDefaults.getOrDefault(limit, registry.getGlobalPermissionDefaults().getOrDefault(limit, limit.fallbackDefault));
+            builder.put(limit, new Permission(mainPermission + limit.permissionSuffix, limit.description, permissionDefault));
+        }
+
+        permissions = builder.build();
     }
 
-    public DefaultPermission getEffectiveDefaultPermission(AccessItemRegistry registry) {
-        if (defaultPermission == null) {
-            return registry.getGlobalDefaultPermission();
-        } else {
-            return defaultPermission;
+    public String getPermission(Limit limit) {
+        return permissions.get(limit).key();
+    }
+
+    /**
+     * Permissions that limit the usage of the Access Item.
+     */
+    @RequiredArgsConstructor
+    public enum Limit {
+        POSSESS(".possess", "Possess the Access Item", PermissionDefault.TRUE),
+        EVENT(".event", "Get the Access Item from its defined events", PermissionDefault.TRUE),
+        COMMAND(".command", "Ability to get the Access Item through /forms give <access item>", PermissionDefault.OP),
+        DROP(".drop", "Ability to remove the Access Item from your inventory", PermissionDefault.FALSE),
+        PRESERVE(".preserve", "Stop the Access Item from being destroyed when it is dropped", PermissionDefault.FALSE),
+        MOVE(".move", "Ability to move the Access Item around and to inventories", PermissionDefault.FALSE);
+
+        /**
+         * Map of {@link PermissionDefault} to fallback to if the user does not define their own.
+         */
+        public static final Map<Limit, PermissionDefault> FALLBACK_DEFAULTS;
+
+        static {
+            ImmutableMap.Builder<Limit, PermissionDefault> builder = ImmutableMap.builder();
+            for (Limit limit : Limit.values()) {
+                builder.put(limit, limit.fallbackDefault);
+            }
+            FALLBACK_DEFAULTS = builder.build();
         }
+
+        public final String permissionSuffix;
+        public final String description;
+        public final PermissionDefault fallbackDefault;
     }
 }

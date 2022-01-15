@@ -5,5 +5,5 @@ import javax.annotation.Nullable;
 
 public record Permission(@Nonnull String key,
                          @Nullable String description,
-                         @Nonnull DefaultPermission defaultPermission) {
+                         @Nonnull PermissionDefault defaultPermission) {
 }

@@ -4,7 +4,9 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
-import dev.projectg.crossplatforms.command.*;
+import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.command.FormsCommand;
+import dev.projectg.crossplatforms.command.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
@@ -85,20 +87,26 @@ public class CrossplatForms extends JavaPlugin {
             logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
         }
 
+        long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(getDataFolder(), logger);
         if (!configManager.loadAllConfigs()) {
             logger.severe("Disabling due to configuration error.");
             return;
         }
         logger.setDebug(configManager.getConfig(GeneralConfig.class).isEnableDebug());
+        logger.debug("Took " + (System.currentTimeMillis() - configTime) + "ms to load config files.");
 
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // Load forms
+        long registryTime = System.currentTimeMillis();
         accessItemRegistry = new AccessItemRegistry(this);
         bedrockFormRegistry = new BedrockFormRegistry();
         javaMenuRegistry = new JavaMenuRegistry();
+        logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
+
+        long commandTime = System.currentTimeMillis();
 
         CommandManager<CommandOrigin> commandManager;
         try {
@@ -138,6 +146,8 @@ public class CrossplatForms extends JavaPlugin {
         for (FormsCommand command : new DefaultCommands(this).getCommands()) {
             command.register(commandManager, defaultBuilder);
         }
+
+        logger.debug("Took " + (System.currentTimeMillis() - commandTime) + "ms to setup commands.");
 
         // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(

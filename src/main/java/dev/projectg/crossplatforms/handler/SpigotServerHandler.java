@@ -1,6 +1,5 @@
 package dev.projectg.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.permission.DefaultPermission;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Server;
 import org.bukkit.permissions.Permission;
@@ -30,7 +29,7 @@ public class SpigotServerHandler implements ServerHandler {
     }
 
     @Override
-    public void registerPermission(String key, @Nullable String description, DefaultPermission def) {
+    public void registerPermission(String key, @Nullable String description, dev.projectg.crossplatforms.permission.PermissionDefault def) {
         PermissionDefault perm = switch (def) {
             case TRUE -> PermissionDefault.TRUE;
             case FALSE -> PermissionDefault.FALSE;

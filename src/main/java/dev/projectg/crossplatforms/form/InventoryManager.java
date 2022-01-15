@@ -60,9 +60,9 @@ public class InventoryManager implements Listener {
         // todo: don't allow duplication for creative players
         ItemStack item = event.getCurrentItem();
         if (item != null) {
-            AccessItem accessItem = accessItemRegistry.getItem(item);
-            if (accessItem != null) {
-                event.setCancelled(!event.getWhoClicked().hasPermission(accessItem.getMovePermission()));
+            AccessItem access = accessItemRegistry.getItem(item);
+            if (access != null) {
+                event.setCancelled(!event.getWhoClicked().hasPermission(access.getPermission(AccessItem.Limit.MOVE)));
             }
         }
     }
@@ -74,11 +74,11 @@ public class InventoryManager implements Listener {
         }
 
         ItemStack item = event.getItemDrop().getItemStack();
-        AccessItem accessItem = accessItemRegistry.getItem(item);
-        if (accessItem != null) {
+        AccessItem access = accessItemRegistry.getItem(item);
+        if (access != null) {
             Player player = event.getPlayer();
-            if (player.hasPermission(accessItem.getDropPermission())) {
-                if (!player.hasPermission(accessItem.getNoDestroyPermission())) {
+            if (player.hasPermission(access.getPermission(AccessItem.Limit.DROP))) {
+                if (!player.hasPermission(access.getPermission(AccessItem.Limit.PRESERVE))) {
                     event.getItemDrop().remove();
                 }
             } else {
@@ -96,8 +96,8 @@ public class InventoryManager implements Listener {
         Player player = event.getEntity();
         List<ItemStack> items = event.getDrops();
         for (ItemStack item : items) {
-            AccessItem accessItem = accessItemRegistry.getItem(item);
-            if (accessItem != null && !player.hasPermission(accessItem.getNoDestroyPermission())) {
+            AccessItem access = accessItemRegistry.getItem(item);
+            if (access != null && !player.hasPermission(access.getPermission(AccessItem.Limit.PRESERVE))) {
                 event.getDrops().remove(item);
             }
         }
@@ -145,7 +145,7 @@ public class InventoryManager implements Listener {
             if (item != null) {
                 AccessItem access = accessItemRegistry.getItem(item);
                 if (access != null) {
-                    if (player.hasPermission(access.getMainPermission())) {
+                    if (player.hasPermission(access.getPermission(AccessItem.Limit.POSSESS))) {
                         contained.add(access.getIdentifier());
                         logger.debug("%s is keeping access item %s".formatted(player.getName(), access.getIdentifier()));
                     } else {
@@ -159,7 +159,7 @@ public class InventoryManager implements Listener {
         // Give any access items that should be given
         boolean changedHand = false; // If we have changed the item the player is holding
         for (AccessItem access : accessItemRegistry.getItems().values()) {
-            if (give.test(access) && Platform.matches(player.getUniqueId(), access.getPlatform(), bedrockHandler)) {
+            if (give.test(access) && Platform.matches(player.getUniqueId(), access.getPlatform(), bedrockHandler) && player.hasPermission(access.getPermission(AccessItem.Limit.EVENT))) {
                 if (!contained.contains(access.getIdentifier())) {
                     if (accessItemRegistry.setHeldSlot() && !changedHand) {
                         giveAccessItem(player, access, true);

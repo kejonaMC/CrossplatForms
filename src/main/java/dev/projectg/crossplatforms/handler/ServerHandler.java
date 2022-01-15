@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.permission.DefaultPermission;
+import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -26,7 +26,7 @@ public interface ServerHandler {
      */
     boolean isPluginEnabled(String id);
 
-    void registerPermission(String key, @Nullable String description, DefaultPermission def);
+    void registerPermission(String key, @Nullable String description, PermissionDefault def);
 
     default void registerPermission(Permission permission) {
         registerPermission(permission.key(), permission.description(), permission.defaultPermission());

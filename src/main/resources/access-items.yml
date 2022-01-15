@@ -1,32 +1,42 @@
 # Configuration of access items, items in hotbars that are shortcuts.
 
 enable: true
+set-held-slot: false
+
+# global permission defaults can be defined here, which will be used if not listed explicitly in an individual entry
+global-permission-defaults:
+  # Default value for crossplatforms.item.<name>.possess , permission to simply have it
+  possess: true
+  # Default value for crossplatforms.item.<name>.event, regulates who the events gives the access item to
+  event: true
+  # Default value for crossplatforms.give.<name>.commmand, Regulates if the access item can be used for /forms give <access item>
+  command: op
+  # Stop the player from dropping the item
+  drop: false
+  # Destroy the item if the player drops it
+  preserve: false
+  # Stop the player from moving the compass in their inventory
+  move: false
 
 items:
   servers:
+    # The form/menu to open
+    form: servers
     material: COMPASS
     display-name: "§6Server Selector"
     lore:
       - "Right click me!"
     # First hotbar slot is 0
     slot: 4
-    # The form/menu to open
-    form: servers
     # Which platform the access item should be available to. JAVA for Java Edition only, BEDROCK for Bedrock Edition only, ALL for both.
     platform: ALL
     # Give the access item on server join
     on-join: true
     # Give the access item on player respawn
     on-respawn: true
-    default-permission:
     # Give the access item on world change
     on-world-change: false
-    # Stop the player from dropping the item
-    allow-drop: false
-    # Destroy the compass if the player drops it
-    destroy-dropped: true
-    # Stop the player from moving the compass in their inventory
-    allow-move: false
+
   minigames:
     material: CARROT_ON_A_STICK
     display-name: "§6Minigames"
@@ -34,8 +44,5 @@ items:
     form: minigames
     on-join: true
     on-respawn: true
-    allow-drop: true
-    destroy-dropped: true
-    allow-move: false
 
 config-version: 1

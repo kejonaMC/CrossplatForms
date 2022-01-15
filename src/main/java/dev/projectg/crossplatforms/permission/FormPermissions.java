@@ -11,9 +11,9 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @Accessors(fluent = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class AccessPermissions {
-
-    public static final AccessPermissions DEFAULT = new AccessPermissions();
+public class FormPermissions {
+    // todo: use this
+    public static final FormPermissions DEFAULT = new FormPermissions();
 
     /**
      * True if the Player has permission to open the form/menu
