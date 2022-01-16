@@ -16,6 +16,10 @@ public class PlaceholderUtils {
     static {
         Logger.getLogger().debug("Initializing PlaceholderUtils");
         usePAPI = Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI");
+
+        if (usePAPI && !PlaceholderAPI.isRegistered("player")) {
+            Logger.getLogger().warn("PlaceholderAPI is installed but the Player extension is not installed! %player_name% and %player_uuid% will NOT be resolved. Please install the Player extension.");
+        }
     }
 
     private PlaceholderUtils() {

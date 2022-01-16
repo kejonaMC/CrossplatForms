@@ -68,6 +68,21 @@ public class InventoryManager implements Listener {
     }
 
     @EventHandler
+    public void PlayerSwapHandItemsEvent(PlayerSwapHandItemsEvent event) {
+        if (!accessItemRegistry.isEnabled()) {
+            return;
+        }
+
+        ItemStack item = event.getOffHandItem();
+        if (item != null) {
+            AccessItem access = accessItemRegistry.getItem(item);
+            if (access != null) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) { // restricting dropping
         if (!accessItemRegistry.isEnabled()) {
             return;
