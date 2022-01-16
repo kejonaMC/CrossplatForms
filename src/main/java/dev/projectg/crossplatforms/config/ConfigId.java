@@ -1,8 +1,8 @@
 package dev.projectg.crossplatforms.config;
 
-import dev.projectg.crossplatforms.form.AccessItems;
-import dev.projectg.crossplatforms.form.bedrock.FormConfig;
-import dev.projectg.crossplatforms.form.java.MenuConfig;
+import dev.projectg.crossplatforms.item.AccessItemConfig;
+import dev.projectg.crossplatforms.interfacing.bedrock.FormConfig;
+import dev.projectg.crossplatforms.interfacing.java.MenuConfig;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ConfigId {
     GENERAL("config.yml", GeneralConfig.class),
-    ACCESS_ITEMS("access-items.yml", AccessItems.class),
+    ACCESS_ITEMS("access-items.yml", AccessItemConfig.class),
     BEDROCK_FORMS("bedrock-forms.yml", FormConfig.class),
     JAVA_MENUS("java-menus.yml", MenuConfig.class);
 

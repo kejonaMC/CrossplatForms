@@ -7,12 +7,12 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.form.AccessItem;
-import dev.projectg.crossplatforms.form.AccessItemRegistry;
-import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.form.java.JavaMenu;
-import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.item.AccessItem;
+import dev.projectg.crossplatforms.item.AccessItemRegistry;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 public class InspectCommand extends FormsCommand {
 

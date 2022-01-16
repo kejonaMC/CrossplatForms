@@ -12,16 +12,17 @@ import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
-import dev.projectg.crossplatforms.form.AccessItemRegistry;
-import dev.projectg.crossplatforms.form.InventoryManager;
-import dev.projectg.crossplatforms.form.java.JavaMenuListeners;
-import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.item.AccessItemRegistry;
+import dev.projectg.crossplatforms.item.InventoryManager;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.handler.SpigotServerHandler;
+import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -53,6 +54,7 @@ public class CrossplatForms extends JavaPlugin {
     public void onEnable() {
         long start = System.currentTimeMillis();
         instance = this;
+        ReloadableRegistry.clear();
         Logger logger = Logger.getLogger();
 
         serverHandler = new SpigotServerHandler(Bukkit.getServer());

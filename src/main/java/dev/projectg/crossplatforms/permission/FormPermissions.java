@@ -23,5 +23,5 @@ public class FormPermissions {
     /**
      * True if the player has permission to obtain the open the form/menu through a command they run themselves
      */
-    private boolean command = true;
+    private boolean command = false;
 }

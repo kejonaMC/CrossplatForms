@@ -7,9 +7,8 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.handler.ServerHandler;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,6 +21,8 @@ public class OpenCommand extends FormsCommand {
     private static final String PERMISSION = "crossplatforms.command." + NAME;
     private static final String PERMISSION_OTHER = PERMISSION + ".others";
 
+    private static final String ARGUMENT = "form|menu";
+
     public OpenCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);
     }
@@ -33,19 +34,19 @@ public class OpenCommand extends FormsCommand {
 
         manager.command(defaultBuilder
                 .literal(NAME)
-                .argument(StringArgument.of("form"))
+                .argument(StringArgument.of(ARGUMENT))
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
-                    Player player = Bukkit.getPlayer(context.getSender().getUUID().get());
+                    Player player = Bukkit.getPlayer(context.getSender().getUUID().orElseThrow());
                     Objects.requireNonNull(player);
-                    InterfaceUtils.sendInterface(player, bedrockRegistry, javaRegistry, context.get("form"));
+                    InterfaceUtils.sendInterface(player, bedrockRegistry, javaRegistry, context.get(ARGUMENT));
                 })
                 .build()
         );
 
         manager.command(defaultBuilder
                 .literal(NAME)
-                .argument(StringArgument.of("form"))
+                .argument(StringArgument.of(ARGUMENT))
                 .argument(StringArgument.of("player", StringArgument.StringMode.SINGLE))
                 .permission(PERMISSION_OTHER)
                 .handler(context -> {
@@ -55,7 +56,7 @@ public class OpenCommand extends FormsCommand {
                     if (player == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That player doesn't exist!");
                     } else {
-                        InterfaceUtils.sendInterface(player, bedrockRegistry, javaRegistry, context.get("form"));
+                        InterfaceUtils.sendInterface(player, bedrockRegistry, javaRegistry, context.get(ARGUMENT));
                     }
                 })
                 .build()

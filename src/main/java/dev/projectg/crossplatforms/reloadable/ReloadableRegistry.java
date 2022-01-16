@@ -16,6 +16,10 @@ public class ReloadableRegistry {
      */
     private static final Set<Reloadable> reloadables = new HashSet<>();
 
+    public static void clear() {
+        reloadables.clear();
+    }
+
     /**
      * Register a reloadable
      * @param reloadable the reloadable

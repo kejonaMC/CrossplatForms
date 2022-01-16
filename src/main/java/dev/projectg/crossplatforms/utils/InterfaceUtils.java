@@ -2,11 +2,10 @@ package dev.projectg.crossplatforms.utils;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.form.ClickAction;
-import dev.projectg.crossplatforms.form.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.form.java.JavaMenu;
-import dev.projectg.crossplatforms.form.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.form.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -14,10 +13,6 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 public class InterfaceUtils {
@@ -39,23 +34,23 @@ public class InterfaceUtils {
             if (bedrockRegistry.isEnabled()) {
                 BedrockForm form = bedrockRegistry.getForm(formName);
                 if (form == null) {
-                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
                     form.sendForm(player.getUniqueId());
                 }
             } else {
-                player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
+                player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
             }
         } else {
             if (javaMenuRegistry.isEnabled()) {
                 JavaMenu menu = javaMenuRegistry.getMenu(formName);
                 if (menu == null) {
-                    player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
                     menu.sendMenu(player);
                 }
             } else {
-                player.sendMessage("[GeyserHub] " + ChatColor.RED + "Sorry, Java menus are disabled!");
+                player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, Java menus are disabled!");
             }
         }
 

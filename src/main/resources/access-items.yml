@@ -6,17 +6,17 @@ set-held-slot: false
 # global permission defaults can be defined here, which will be used if not listed explicitly in an individual entry
 global-permission-defaults:
   # Default value for crossplatforms.item.<name>.possess , permission to simply have it
-  possess: true
+  POSSES: TRUE
   # Default value for crossplatforms.item.<name>.event, regulates who the events gives the access item to
-  event: true
+  EVENT: TRUE
   # Default value for crossplatforms.give.<name>.commmand, Regulates if the access item can be used for /forms give <access item>
-  command: op
+  COMMAND: OP
   # Stop the player from dropping the item
-  drop: false
+  DROP: FALSE
   # Destroy the item if the player drops it
-  preserve: false
+  PRESERVE: FALSE
   # Stop the player from moving the compass in their inventory
-  move: false
+  MOVE: FALSE
 
 items:
   servers:
