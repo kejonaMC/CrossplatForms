@@ -116,7 +116,7 @@ public class CrossplatForms extends JavaPlugin {
                     this,
                     CommandExecutionCoordinator.simpleCoordinator(),
                     (SpigotCommandOrigin::new),
-                    commandProxy -> (CommandSender) commandProxy.getHandle());
+                    origin -> (CommandSender) origin.getHandle());
         } catch (Exception e) {
             logger.severe("Failed to create CommandManager, stopping");
             e.printStackTrace();

@@ -21,9 +21,9 @@ public class VersionCommand extends FormsCommand {
         manager.command(defaultBuilder.literal(NAME)
                 .permission(PERMISSION)
                 .handler(context -> {
-                    CommandOrigin proxy = context.getSender();
-                    proxy.sendMessage(Logger.Level.INFO, "CrossplatForms version:");
-                    proxy.sendMessage(Logger.Level.INFO, "Branch: " + crossplatForms.getBranch() + ", Commit: " + crossplatForms.getCommit());
+                    CommandOrigin origin = context.getSender();
+                    origin.sendMessage(Logger.Level.INFO, "CrossplatForms version:");
+                    origin.sendMessage(Logger.Level.INFO, "Branch: " + crossplatForms.getBranch() + ", Commit: " + crossplatForms.getCommit());
                 })
                 .build());
     }
