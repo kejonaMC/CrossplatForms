@@ -13,30 +13,30 @@ softdepend:
   - PlaceholderAPI
 
 permissions:
-  crossplatforms.base:
+  crossplatforms.command.base:
     description: Access to the base command /forms
     default: true
-  crossplatforms.help:
+  crossplatforms.command.help:
     description: Access to /forms help
     default: true
-  crossplatforms.list:
+  crossplatforms.command.list:
     description: Access to /forms list
     default: true
-  crossplatforms.open:
+  crossplatforms.command.open:
     description: Access to /forms open <form>
     default: true
-  crossplatforms.open.other:
+  crossplatforms.command.open.other:
     description: Access to /forms open <form> <playername>
     default: op
-  crossplatforms.inspect:
+  crossplatforms.command.inspect:
     description: Access to /forms inspect <form|menu|item> <name>
     default: op
-  crossplatforms.identify:
+  crossplatforms.command.identify:
     description: Access to /forms identify <player>
     default: op
-  crossplatforms.version:
+  crossplatforms.command.version:
     description: Access to /forms version
     default: op
-  crossplatforms.reload:
+  crossplatforms.command.reload:
     description: Access to /forms reload
     default: op
