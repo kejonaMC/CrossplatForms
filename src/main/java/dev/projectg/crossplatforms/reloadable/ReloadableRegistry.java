@@ -31,17 +31,19 @@ public class ReloadableRegistry {
     public static boolean reloadAll() {
         Logger logger = Logger.getLogger();
 
+        boolean success = true;
+
         ConfigManager configManager = CrossplatForms.getInstance().getConfigManager();
         if (!configManager.loadAllConfigs()) {
-            return false;
+            logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
+            success = false;
         }
-        logger.setDebug(configManager.getConfig(GeneralConfig.class).isEnableDebug());
+        logger.setDebug(configManager.getConfig(GeneralConfig.class).map(GeneralConfig::isEnableDebug).orElse(false));
         logger.info("Reloaded the configuration, reloading modules...");
 
-        boolean success = true;
         for (Reloadable reloadable : reloadables) {
             if (!reloadable.reload()) {
-                logger.severe("Failed to reload class: " + reloadable.getClass().toString());
+                logger.severe("Failed to reload instance of: " + reloadable.getClass().toString());
                 success = false;
             }
         }
@@ -49,7 +51,7 @@ public class ReloadableRegistry {
         if (success) {
             logger.info("Successfully reloaded");
         } else {
-            logger.severe("There was an error reloading!");
+            logger.severe("There was one or more errors reloading!");
         }
 
         return success;

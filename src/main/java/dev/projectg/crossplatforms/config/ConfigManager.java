@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ConfigManager {
 
@@ -81,7 +82,7 @@ public class ConfigManager {
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Configuration> T getConfig(Class<T> clazz) {
-        return (T) configurations.get(clazz);
+    public <T extends Configuration> Optional<T> getConfig(Class<T> clazz) {
+        return Optional.ofNullable((T) configurations.get(clazz));
     }
 }

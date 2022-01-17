@@ -92,10 +92,9 @@ public class CrossplatForms extends JavaPlugin {
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(getDataFolder(), logger);
         if (!configManager.loadAllConfigs()) {
-            logger.severe("Disabling due to configuration error.");
-            return;
+            logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }
-        logger.setDebug(configManager.getConfig(GeneralConfig.class).isEnableDebug());
+        logger.setDebug(configManager.getConfig(GeneralConfig.class).map(GeneralConfig::isEnableDebug).orElse(false));
         logger.debug("Took " + (System.currentTimeMillis() - configTime) + "ms to load config files.");
 
         // Bungee channel for selector
@@ -103,9 +102,9 @@ public class CrossplatForms extends JavaPlugin {
 
         // Load forms
         long registryTime = System.currentTimeMillis();
-        accessItemRegistry = new AccessItemRegistry(this);
-        bedrockFormRegistry = new BedrockFormRegistry();
-        javaMenuRegistry = new JavaMenuRegistry();
+        accessItemRegistry = new AccessItemRegistry(configManager, serverHandler);
+        bedrockFormRegistry = new BedrockFormRegistry(configManager, serverHandler);
+        javaMenuRegistry = new JavaMenuRegistry(configManager, serverHandler);
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
         long commandTime = System.currentTimeMillis();

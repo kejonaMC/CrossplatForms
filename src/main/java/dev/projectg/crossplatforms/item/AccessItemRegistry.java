@@ -1,7 +1,8 @@
 package dev.projectg.crossplatforms.item;
 
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
@@ -13,11 +14,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AccessItemRegistry implements Reloadable {
 
-    private final CrossplatForms crossplatForms;
+    private final ConfigManager configManager;
+    private final ServerHandler serverHandler;
 
     @Getter
     private boolean enabled = false;
@@ -32,8 +36,9 @@ public class AccessItemRegistry implements Reloadable {
     @Getter
     private final Map<String, AccessItem> items = new HashMap<>();
 
-    public AccessItemRegistry(CrossplatForms crossplatForms) {
-        this.crossplatForms = crossplatForms;
+    public AccessItemRegistry(ConfigManager configManager, ServerHandler serverHandler) {
+        this.configManager = configManager;
+        this.serverHandler = serverHandler;
         ReloadableRegistry.registerReloadable(this);
         load();
     }
@@ -43,7 +48,12 @@ public class AccessItemRegistry implements Reloadable {
      * Does not clear existing items.
      */
     private void load() {
-        AccessItemConfig config = crossplatForms.getConfigManager().getConfig(AccessItemConfig.class);
+        if (configManager.getConfig(AccessItemConfig.class).isEmpty()) {
+            enabled = false;
+            return;
+        }
+
+        AccessItemConfig config = configManager.getConfig(AccessItemConfig.class).get();
         items.clear();
         if (enabled = config.isEnable()) {
             setHeldSlot = config.isSetHeldSlot();
@@ -56,7 +66,7 @@ public class AccessItemRegistry implements Reloadable {
                 // Register permissions with the server
                 item.generatePermissions(this);
                 for (Permission entry : item.getPermissions().values()) {
-                    crossplatForms.getServerHandler().registerPermission(entry);
+                    serverHandler.registerPermission(entry);
                 }
             }
         }
@@ -68,7 +78,7 @@ public class AccessItemRegistry implements Reloadable {
         if (enabled) {
             for (AccessItem accessItem : items.values()) {
                 for (Permission permission : accessItem.getPermissions().values()) {
-                    crossplatForms.getServerHandler().unregisterPermission(permission.key());
+                    serverHandler.unregisterPermission(permission.key());
                 }
             }
         }

@@ -1,6 +1,8 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
@@ -24,14 +26,23 @@ public class JavaMenuRegistry implements Reloadable {
     private boolean enabled;
     private final Map<String, JavaMenu> menus = new HashMap<>();
 
-    public JavaMenuRegistry() {
+    private final ConfigManager configManager;
+    private final ServerHandler serverHandler;
+
+    public JavaMenuRegistry(ConfigManager configManager, ServerHandler serverHandler) {
+        this.configManager = configManager;
+        this.serverHandler = serverHandler;
         ReloadableRegistry.registerReloadable(this);
         load();
     }
 
     private void load() {
-        CrossplatForms plugin = CrossplatForms.getInstance();
-        MenuConfig config = plugin.getConfigManager().getConfig(MenuConfig.class);
+        if (configManager.getConfig(MenuConfig.class).isEmpty()) {
+            enabled = false;
+            return;
+        }
+
+        MenuConfig config = configManager.getConfig(MenuConfig.class).get();
         menus.clear();
         if (enabled = config.isEnable()) {
             for (String identifier : config.getMenus().keySet()) {
@@ -40,7 +51,7 @@ public class JavaMenuRegistry implements Reloadable {
 
                 menu.generatePermissions(config);
                 for (Permission entry : menu.getPermissions().values()) {
-                    plugin.getServerHandler().registerPermission(entry);
+                    serverHandler.registerPermission(entry);
                 }
             }
         }
