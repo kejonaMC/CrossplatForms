@@ -12,16 +12,17 @@ import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.EmptyBedrockHandler;
+import dev.projectg.crossplatforms.handler.FloodgateHandler;
+import dev.projectg.crossplatforms.handler.GeyserHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
+import dev.projectg.crossplatforms.handler.SpigotServerHandler;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
 import dev.projectg.crossplatforms.item.InventoryManager;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FloodgateHandler;
-import dev.projectg.crossplatforms.handler.GeyserHandler;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.handler.SpigotServerHandler;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import lombok.Getter;
@@ -81,8 +82,8 @@ public class CrossplatForms extends JavaPlugin {
             bedrockHandler = new GeyserHandler();
             logger.warn("Floodgate is recommended and more stable!");
         } else {
-            logger.severe("Geyser or Floodgate is required! Disabling.");
-            return;
+            bedrockHandler = new EmptyBedrockHandler();
+            logger.warn("Geyser nor Floodgate are installed! All players will be treated as Java Edition players.");
         }
 
         if (!serverHandler.isPluginEnabled("PlaceholderAPI")) {

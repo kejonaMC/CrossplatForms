@@ -6,7 +6,7 @@ set-held-slot: false
 # global permission defaults can be defined here, which will be used if not listed explicitly in an individual entry
 global-permission-defaults:
   # Default value for crossplatforms.item.<name>.possess , permission to simply have it
-  POSSES: TRUE
+  POSSESS: TRUE
   # Default value for crossplatforms.item.<name>.event, regulates who the events gives the access item to
   EVENT: TRUE
   # Default value for crossplatforms.give.<name>.commmand, Regulates if the access item can be used for /forms give <access item>

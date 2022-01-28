@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.Logger;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Server;
 import org.bukkit.permissions.Permission;
@@ -36,11 +37,13 @@ public class SpigotServerHandler implements ServerHandler {
             case OP -> PermissionDefault.OP;
         };
 
+        Logger.getLogger().debug("Registering permission " + key + " with default " + def);
         server.getPluginManager().addPermission(new Permission(key, description, perm));
     }
 
     @Override
     public void unregisterPermission(String key) {
+        Logger.getLogger().debug("Unregistering permission " + key);
         server.getPluginManager().removePermission(new Permission(key));
     }
 }

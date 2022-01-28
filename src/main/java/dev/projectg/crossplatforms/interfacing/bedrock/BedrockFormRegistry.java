@@ -1,6 +1,5 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
-import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
@@ -30,22 +29,24 @@ public class BedrockFormRegistry implements Reloadable {
     public BedrockFormRegistry(ConfigManager configManager, ServerHandler serverHandler) {
         this.configManager = configManager;
         this.serverHandler = serverHandler;
-        ReloadableRegistry.registerReloadable(this);
+        ReloadableRegistry.register(this);
         load();
     }
 
     private void load() {
+        forms.clear();
+
         if (configManager.getConfig(FormConfig.class).isEmpty()) {
             enabled = false;
             return;
         }
 
         FormConfig config = configManager.getConfig(FormConfig.class).get();
-        forms.clear();
         enabled = config.isEnable();
         if (enabled) {
             for (String identifier : config.getForms().keySet()) {
                 BedrockForm form = config.getForms().get(identifier);
+                forms.put(identifier, form);
 
                 form.generatePermissions(config);
                 for (Permission entry : form.getPermissions().values()) {
@@ -73,7 +74,7 @@ public class BedrockFormRegistry implements Reloadable {
         if (enabled) {
             for (Interface form : forms.values()) {
                 for (Permission permission : form.getPermissions().values()) {
-                    CrossplatForms.getInstance().getServerHandler().unregisterPermission(permission.key());
+                    serverHandler.unregisterPermission(permission.key());
                 }
             }
         }

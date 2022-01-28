@@ -32,19 +32,21 @@ public class JavaMenuRegistry implements Reloadable {
     public JavaMenuRegistry(ConfigManager configManager, ServerHandler serverHandler) {
         this.configManager = configManager;
         this.serverHandler = serverHandler;
-        ReloadableRegistry.registerReloadable(this);
+        ReloadableRegistry.register(this);
         load();
     }
 
     private void load() {
+        menus.clear();
+
         if (configManager.getConfig(MenuConfig.class).isEmpty()) {
             enabled = false;
             return;
         }
 
         MenuConfig config = configManager.getConfig(MenuConfig.class).get();
-        menus.clear();
-        if (enabled = config.isEnable()) {
+        enabled = config.isEnable();
+        if (enabled) {
             for (String identifier : config.getMenus().keySet()) {
                 JavaMenu menu = config.getMenus().get(identifier);
                 menus.put(identifier, menu);
@@ -64,7 +66,7 @@ public class JavaMenuRegistry implements Reloadable {
         if (enabled) {
             for (Interface menu : menus.values()) {
                 for (Permission permission : menu.getPermissions().values()) {
-                    CrossplatForms.getInstance().getServerHandler().unregisterPermission(permission.key());
+                    serverHandler.unregisterPermission(permission.key());
                 }
             }
         }

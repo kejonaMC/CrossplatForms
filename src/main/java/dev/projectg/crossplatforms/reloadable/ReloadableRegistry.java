@@ -24,7 +24,7 @@ public class ReloadableRegistry {
      * Register a reloadable
      * @param reloadable the reloadable
      */
-    public static void registerReloadable(@Nonnull Reloadable reloadable) {
+    public static void register(@Nonnull Reloadable reloadable) {
         reloadables.add(reloadable);
     }
 
@@ -42,8 +42,9 @@ public class ReloadableRegistry {
         logger.info("Reloaded the configuration, reloading modules...");
 
         for (Reloadable reloadable : reloadables) {
+            logger.debug("Reloading " + reloadable.getClass().getSimpleName());
             if (!reloadable.reload()) {
-                logger.severe("Failed to reload instance of: " + reloadable.getClass().toString());
+                logger.severe("Failed to reload instance of: " + reloadable.getClass().getSimpleName());
                 success = false;
             }
         }

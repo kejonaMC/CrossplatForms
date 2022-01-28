@@ -39,7 +39,7 @@ public class AccessItemRegistry implements Reloadable {
     public AccessItemRegistry(ConfigManager configManager, ServerHandler serverHandler) {
         this.configManager = configManager;
         this.serverHandler = serverHandler;
-        ReloadableRegistry.registerReloadable(this);
+        ReloadableRegistry.register(this);
         load();
     }
 
@@ -48,14 +48,16 @@ public class AccessItemRegistry implements Reloadable {
      * Does not clear existing items.
      */
     private void load() {
+        items.clear();
+
         if (configManager.getConfig(AccessItemConfig.class).isEmpty()) {
             enabled = false;
             return;
         }
 
         AccessItemConfig config = configManager.getConfig(AccessItemConfig.class).get();
-        items.clear();
-        if (enabled = config.isEnable()) {
+        enabled = config.isEnable();
+        if (enabled) {
             setHeldSlot = config.isSetHeldSlot();
             globalPermissionDefaults = config.getGlobalPermissionDefaults();
 

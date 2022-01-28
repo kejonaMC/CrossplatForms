@@ -34,7 +34,7 @@ public class InterfaceUtils {
             if (bedrockRegistry.isEnabled()) {
                 BedrockForm form = bedrockRegistry.getForm(formName);
                 if (form == null) {
-                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the form " + formName + " doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
                     form.sendForm(player.getUniqueId());
                 }
@@ -45,7 +45,7 @@ public class InterfaceUtils {
             if (javaMenuRegistry.isEnabled()) {
                 JavaMenu menu = javaMenuRegistry.getMenu(formName);
                 if (menu == null) {
-                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, that form doesn't exist! Specify a form with '/ghub form <form>'");
+                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the menu " + formName + " doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
                     menu.sendMenu(player);
                 }
