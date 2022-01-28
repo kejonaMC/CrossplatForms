@@ -20,6 +20,9 @@ public class InterfaceUtils {
     public static final String PLAYER_PREFIX = "player;";
     public static final String CONSOLE_PREFIX = "console;";
 
+    private InterfaceUtils() {
+    }
+
     /**
      * Sends a given form, identified by its name, to a BE or JE player.
      * If the form does not exist for their platform, they will be sent a message.

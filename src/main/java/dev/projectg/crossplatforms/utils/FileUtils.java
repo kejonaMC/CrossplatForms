@@ -8,6 +8,9 @@ import java.io.InputStream;
 
 public class FileUtils {
 
+    private FileUtils () {
+    }
+
     @Nullable
     public static InputStream getResource(String resource) {
         return FileUtils.class.getClassLoader().getResourceAsStream(resource);
