@@ -25,6 +25,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.utils.FileUtils;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -47,9 +48,8 @@ public class CrossplatForms extends JavaPlugin {
     private ServerHandler serverHandler;
     private BedrockHandler bedrockHandler;
 
+    private InterfaceManager interfaceManager;
     private AccessItemRegistry accessItemRegistry;
-    private BedrockFormRegistry bedrockFormRegistry;
-    private JavaMenuRegistry javaMenuRegistry;
 
     @Override
     public void onEnable() {
@@ -58,7 +58,7 @@ public class CrossplatForms extends JavaPlugin {
         ReloadableRegistry.clear();
         Logger logger = Logger.getLogger();
 
-        serverHandler = new SpigotServerHandler(Bukkit.getServer());
+        serverHandler = new SpigotServerHandler(Bukkit.getServer(), this);
 
         try {
             Properties gitProperties = new Properties();
@@ -104,8 +104,12 @@ public class CrossplatForms extends JavaPlugin {
         // Load forms
         long registryTime = System.currentTimeMillis();
         accessItemRegistry = new AccessItemRegistry(configManager, serverHandler);
-        bedrockFormRegistry = new BedrockFormRegistry(configManager, serverHandler);
-        javaMenuRegistry = new JavaMenuRegistry(configManager, serverHandler);
+        interfaceManager = new InterfaceManager(
+                serverHandler,
+                bedrockHandler,
+                new BedrockFormRegistry(configManager, serverHandler),
+                new JavaMenuRegistry(configManager, serverHandler)
+        );
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
         long commandTime = System.currentTimeMillis();
@@ -154,13 +158,12 @@ public class CrossplatForms extends JavaPlugin {
         // Listeners for the Bedrock and Java menus
         Bukkit.getServer().getPluginManager().registerEvents(
                 new InventoryManager(
+                        interfaceManager,
                         accessItemRegistry,
-                        bedrockFormRegistry,
-                        javaMenuRegistry,
                         bedrockHandler),
                 this);
 
-        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(javaMenuRegistry), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(interfaceManager), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

@@ -2,10 +2,8 @@ package dev.projectg.crossplatforms.item;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.utils.InterfaceUtils;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -16,7 +14,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -27,9 +31,8 @@ import java.util.function.Predicate;
 public class InventoryManager implements Listener {
 
     private final Logger logger = Logger.getLogger();
+    private final InterfaceManager interfaceManager;
     private final AccessItemRegistry accessItemRegistry;
-    private final BedrockFormRegistry bedrockFormRegistry;
-    private final JavaMenuRegistry javaMenuRegistry;
     private final BedrockHandler bedrockHandler;
 
     @EventHandler
@@ -47,7 +50,7 @@ public class InventoryManager implements Listener {
 
                     Player player = event.getPlayer();
                     String formName = accessItem.getForm();
-                    InterfaceUtils.sendInterface(player, bedrockFormRegistry, javaMenuRegistry, formName);
+                    interfaceManager.sendInterface(player, formName);
                 }
             }
         }

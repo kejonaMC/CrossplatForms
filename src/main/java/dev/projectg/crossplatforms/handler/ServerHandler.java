@@ -33,4 +33,17 @@ public interface ServerHandler {
     }
 
     void unregisterPermission(String key);
+
+    /**
+     * Execute a command as the server console
+     * @param command The command string to execute
+     */
+    void dispatchCommand(String command);
+
+    /**
+     * Execute a command as the given player.
+     * @param player The player to run the command as
+     * @param command The command string to execute
+     */
+    void dispatchCommand(UUID player, String command);
 }

@@ -1,10 +1,11 @@
 package dev.projectg.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.Logger;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
 public class SpigotServerHandler implements ServerHandler {
 
     private final Server server;
+    private final JavaPlugin plugin;
 
     @Override
     public Player getPlayer(UUID uuid) {
@@ -37,13 +39,33 @@ public class SpigotServerHandler implements ServerHandler {
             case OP -> PermissionDefault.OP;
         };
 
-        Logger.getLogger().debug("Registering permission " + key + " with default " + def);
         server.getPluginManager().addPermission(new Permission(key, description, perm));
     }
 
     @Override
     public void unregisterPermission(String key) {
-        Logger.getLogger().debug("Unregistering permission " + key);
         server.getPluginManager().removePermission(new Permission(key));
+    }
+
+    @Override
+    public void dispatchCommand(String command) {
+        dispatchCommand(server.getConsoleSender(), command);
+    }
+
+    @Override
+    public void dispatchCommand(UUID player, String command) {
+        CommandSender sender = server.getPlayer(player);
+        if (sender == null) {
+            throw new IllegalArgumentException("A player with UUID " + player + " was not found to dispatch a command as");
+        } else {
+            dispatchCommand(sender, command);
+        }
+    }
+
+    /**
+     * Executes a command synchronously, as required by the Spigot API.
+     */
+    private void dispatchCommand(CommandSender commandSender, String command) {
+        server.getScheduler().runTask(plugin, () -> server.dispatchCommand(commandSender, command));
     }
 }

@@ -20,4 +20,6 @@ public interface Player {
      * @return True if the player has the permission
      */
     boolean hasPermission(String permission);
+
+    void sendMessage(String message);
 }

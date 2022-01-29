@@ -25,8 +25,8 @@ public class InspectCommand extends FormsCommand {
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
-        BedrockFormRegistry bedrockRegistry = crossplatForms.getBedrockFormRegistry();
-        JavaMenuRegistry javaRegistry = crossplatForms.getJavaMenuRegistry();
+        BedrockFormRegistry bedrockRegistry = crossplatForms.getInterfaceManager().getBedrockRegistry();
+        JavaMenuRegistry javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
         AccessItemRegistry accessItemRegistry = crossplatForms.getAccessItemRegistry();
 
         Command.Builder<CommandOrigin> base = defaultBuilder

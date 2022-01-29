@@ -2,7 +2,6 @@ package dev.projectg.crossplatforms.interfacing;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.utils.InterfaceUtils;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -31,15 +30,17 @@ public class BasicClickAction implements ClickAction {
     private String server = null;
 
     @Override
-    public void affectPlayer(@Nonnull Player player) {
-        affectPlayer(player, Collections.emptyMap());
+    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player) {
+        affectPlayer(interfaceManager, player, Collections.emptyMap());
     }
 
     @Override
-    public void affectPlayer(@Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
+    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
         // Get the commands from the list of commands and replace any playerName placeholders
         for (String command : commands) {
-            InterfaceUtils.runCommand(PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders), player);
+            interfaceManager.runCommand(
+                    PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
+                    player.getUniqueId());
         }
 
         if (server != null && !server.isEmpty()) {

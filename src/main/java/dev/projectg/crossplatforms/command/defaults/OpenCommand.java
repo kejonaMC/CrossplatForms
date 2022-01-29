@@ -7,9 +7,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.utils.InterfaceUtils;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,8 +27,7 @@ public class OpenCommand extends FormsCommand {
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
-        BedrockFormRegistry bedrockRegistry = crossplatForms.getBedrockFormRegistry();
-        JavaMenuRegistry javaRegistry = crossplatForms.getJavaMenuRegistry();
+        InterfaceManager interfaceManager = crossplatForms.getInterfaceManager();
 
         manager.command(defaultBuilder
                 .literal(NAME)
@@ -39,7 +36,7 @@ public class OpenCommand extends FormsCommand {
                 .handler(context -> {
                     Player player = Bukkit.getPlayer(context.getSender().getUUID().orElseThrow());
                     Objects.requireNonNull(player);
-                    InterfaceUtils.sendInterface(player, bedrockRegistry, javaRegistry, context.get(ARGUMENT));
+                    interfaceManager.sendInterface(player, context.get(ARGUMENT));
                 })
                 .build()
         );
@@ -56,7 +53,7 @@ public class OpenCommand extends FormsCommand {
                     if (player == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That player doesn't exist!");
                     } else {
-                        InterfaceUtils.sendInterface(player, bedrockRegistry, javaRegistry, context.get(ARGUMENT));
+                        interfaceManager.sendInterface(player, context.get(ARGUMENT));
                     }
                 })
                 .build()

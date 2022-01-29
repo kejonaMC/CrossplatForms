@@ -23,4 +23,9 @@ public class SpigotPlayer implements Player {
     public boolean hasPermission(String permission) {
         return handle.hasPermission(permission);
     }
+
+    @Override
+    public void sendMessage(String message) {
+        handle.sendMessage(message);
+    }
 }

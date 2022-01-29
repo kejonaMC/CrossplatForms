@@ -24,8 +24,8 @@ public final class DefaultCommands {
 
     public DefaultCommands(CrossplatForms forms) {
 
-        BedrockFormRegistry formRegistry = forms.getBedrockFormRegistry();
-        JavaMenuRegistry menuRegistry = forms.getJavaMenuRegistry();
+        BedrockFormRegistry formRegistry = forms.getInterfaceManager().getBedrockRegistry();
+        JavaMenuRegistry menuRegistry = forms.getInterfaceManager().getJavaRegistry();
 
         // todo: move this code into a suggestion provider in a custom command argument for interfaces
         BiFunction<CommandContext<CommandOrigin>, String, List<String>> suggestionProvider = (context, string) -> {

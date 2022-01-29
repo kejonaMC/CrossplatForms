@@ -4,6 +4,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ public class SimpleForm extends BedrockForm {
     private String content = "";
     private List<SimpleButton> buttons = Collections.emptyList();
 
-    public void sendForm(@Nonnull UUID bedrockPlayer) {
+    public void sendForm(@Nonnull UUID bedrockPlayer, @Nonnull InterfaceManager interfaceManager) {
         Logger logger = Logger.getLogger();
 
         Player player = Bukkit.getServer().getPlayer(bedrockPlayer);
@@ -67,7 +68,7 @@ public class SimpleForm extends BedrockForm {
             SimpleButton button = formattedButtons.get(response.getClickedButtonId());
 
             // Handle effects of pressing the button
-            button.affectPlayer(player);
+            button.affectPlayer(interfaceManager, player);
         });
 
         // Send the form to the floodgate player
