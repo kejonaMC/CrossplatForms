@@ -27,9 +27,10 @@
     </pluginRepositories>
 
     <repositories>
-        <repository> <!-- for development builds -->
-            <id>sonatype-oss-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        <!-- Hosts brigadier, used by commodore-->
+        <repository>
+            <id>minecraft-repo</id>
+            <url>https://libraries.minecraft.net/</url>
         </repository>
         <repository>
             <id>spigot-repo</id>
@@ -42,6 +43,11 @@
         <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <!-- Hosts adventure platform adapters-->
+        <repository>
+            <id>sonatype-oss-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 
@@ -156,13 +162,17 @@
                                     <shadedPattern>dev.projectg.crossplatforms.shaded.commodore</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <!-- Used by cloud and configurate -->
-                                    <pattern>io.leangen.geantyref</pattern>
-                                    <shadedPattern>dev.projectg.crossplatforms.shaded.typetoken</shadedPattern>
+                                    <pattern>net.kyori</pattern>
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.kyori</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.spongepowered.configurate</pattern>
                                     <shadedPattern>dev.projectg.crossplatforms.shaded.configurate</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <!-- Used by cloud and configurate -->
+                                    <pattern>io.leangen.geantyref</pattern>
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.typetoken</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>

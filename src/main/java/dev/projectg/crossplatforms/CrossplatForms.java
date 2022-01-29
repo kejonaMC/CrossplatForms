@@ -148,7 +148,7 @@ public class CrossplatForms extends JavaPlugin {
             // Do async command completions if possible
             commandManager.registerAsynchronousCompletions();
         }
-        // todo: fix shading for brigadier and adventure
+
         adventure = BukkitAudiences.create(this);
 
         // Makes the info messages for invalid syntax, sender, etc exceptions nicer
