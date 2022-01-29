@@ -48,6 +48,7 @@ public class BasicClickAction implements ClickAction {
 
             // This should never be out of bounds considering its size is the number of valid buttons
             try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
+                Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + server);
                 out.writeUTF("Connect");
                 out.writeUTF(resolved);
                 player.sendPluginMessage(CrossplatForms.getInstance(), "BungeeCord", stream.toByteArray());
