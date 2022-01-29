@@ -1,9 +1,12 @@
 package dev.projectg.crossplatforms;
 
 import cloud.commandframework.Command;
-import cloud.commandframework.CommandManager;
 import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
+import cloud.commandframework.minecraft.extras.MinecraftHelp;
+import cloud.commandframework.paper.PaperCommandManager;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.SpigotCommandOrigin;
@@ -13,13 +16,12 @@ import dev.projectg.crossplatforms.command.defaults.ListCommand;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.EmptyBedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.handler.SpigotServerHandler;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
-import dev.projectg.crossplatforms.item.InventoryManager;
+import dev.projectg.crossplatforms.item.AccessItemListeners;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
@@ -27,6 +29,7 @@ import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +53,8 @@ public class CrossplatForms extends JavaPlugin {
 
     private InterfaceManager interfaceManager;
     private AccessItemRegistry accessItemRegistry;
+
+    private BukkitAudiences adventure;
 
     @Override
     public void onEnable() {
@@ -82,8 +87,10 @@ public class CrossplatForms extends JavaPlugin {
             bedrockHandler = new GeyserHandler();
             logger.warn("Floodgate is recommended and more stable!");
         } else {
-            bedrockHandler = new EmptyBedrockHandler();
-            logger.warn("Geyser nor Floodgate are installed! All players will be treated as Java Edition players.");
+            //bedrockHandler = new EmptyBedrockHandler();
+            logger.severe("Geyser nor Floodgate are installed! Disabling...");
+            // todo: make this feasible
+            return;
         }
 
         if (!serverHandler.isPluginEnabled("PlaceholderAPI")) {
@@ -114,23 +121,53 @@ public class CrossplatForms extends JavaPlugin {
 
         long commandTime = System.currentTimeMillis();
 
-        CommandManager<CommandOrigin> commandManager;
+        // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
+        PaperCommandManager<CommandOrigin> commandManager;
         try {
-            commandManager = new BukkitCommandManager<>(
+            commandManager = new PaperCommandManager<>(
                     this,
                     CommandExecutionCoordinator.simpleCoordinator(),
                     (SpigotCommandOrigin::new),
-                    origin -> (CommandSender) origin.getHandle());
+                    origin -> (CommandSender) origin.getHandle()
+            );
         } catch (Exception e) {
             logger.severe("Failed to create CommandManager, stopping");
             e.printStackTrace();
             return;
         }
 
+        try {
+            // Brigadier is ideal if possible. Allows for much more readable command options, especially on BE.
+            commandManager.registerBrigadier();
+        } catch (BukkitCommandManager.BrigadierFailureException e) {
+            logger.warn("Failed to initialize Brigadier support");
+            e.printStackTrace();
+        }
+
+        if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+            // Do async command completions if possible
+            commandManager.registerAsynchronousCompletions();
+        }
+        // todo: fix shading for brigadier and adventure
+        adventure = BukkitAudiences.create(this);
+
+        // Makes the info messages for invalid syntax, sender, etc exceptions nicer
+        new MinecraftExceptionHandler<CommandOrigin>()
+                .withDefaultHandlers()
+                .apply(commandManager, (origin -> adventure.sender((CommandSender) origin.getHandle())));
+
+        MinecraftHelp<CommandOrigin> minecraftHelp = new MinecraftHelp<>(
+                "/forms help",
+                (origin -> adventure.sender((CommandSender) origin.getHandle())),
+                commandManager
+        );
+
+        // The top of our command tree
         Command.Builder<CommandOrigin> defaultBuilder = commandManager.commandBuilder("forms");
 
+        // The handler for the root /forms command
         commandManager.command(defaultBuilder
-                .permission("crossplatforms.base")
+                .permission("crossplatforms.command.base")
                 .handler((context -> {
                     CommandOrigin origin = context.getSender();
                     try {
@@ -138,10 +175,9 @@ public class CrossplatForms extends JavaPlugin {
                             logger.debug("Executing /forms list from /forms");
                             commandManager.executeCommand(origin, "forms list").get();
                         } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
-                            logger.debug("Executing /forms help from /forms");
-                            commandManager.executeCommand(origin, "forms help").get();
+                            minecraftHelp.queryCommands("", context.getSender());
                         } else {
-                            origin.sendMessage(Logger.Level.INFO, "Please specify sub command");
+                            origin.sendMessage(Logger.Level.INFO, "Please specify a sub command");
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -149,22 +185,32 @@ public class CrossplatForms extends JavaPlugin {
                 }))
                 .build());
 
-        for (FormsCommand command : new DefaultCommands(this).getCommands()) {
+        for (FormsCommand command : new DefaultCommands(this, minecraftHelp).getCommands()) {
+            // Registering sub commands
             command.register(commandManager, defaultBuilder);
         }
 
         logger.debug("Took " + (System.currentTimeMillis() - commandTime) + "ms to setup commands.");
 
-        // Listeners for the Bedrock and Java menus
+        // Registering events required to manage access items
         Bukkit.getServer().getPluginManager().registerEvents(
-                new InventoryManager(
+                new AccessItemListeners(
                         interfaceManager,
                         accessItemRegistry,
                         bedrockHandler),
                 this);
 
+        // events regarding inventory GUI menus
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(interfaceManager), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
+    }
+
+    @Override
+    public void onDisable() {
+
+        if (adventure != null) {
+            adventure.close();
+        }
     }
 }

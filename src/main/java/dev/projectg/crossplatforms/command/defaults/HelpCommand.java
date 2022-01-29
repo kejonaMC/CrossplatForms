@@ -2,8 +2,9 @@ package dev.projectg.crossplatforms.command.defaults;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
+import cloud.commandframework.arguments.standard.StringArgument;
+import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 
@@ -12,18 +13,20 @@ public class HelpCommand extends FormsCommand {
     public static final String NAME = "help";
     public static final String PERMISSION = "crossplatforms.command." + NAME;
 
-    public HelpCommand(CrossplatForms crossplatForms) {
+    private final MinecraftHelp<CommandOrigin> minecraftHelp;
+
+    public HelpCommand(CrossplatForms crossplatForms, MinecraftHelp<CommandOrigin> minecraftHelp) {
         super(crossplatForms);
+        this.minecraftHelp = minecraftHelp;
     }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
         manager.command(defaultBuilder.literal(NAME)
-                .permission(PERMISSION)
+                .argument(StringArgument.optional("query", StringArgument.StringMode.GREEDY))
                 .handler(context -> {
-                    context.getSender().sendMessage(Logger.Level.INFO, "This is suppose to be command help information");
-                    // todo
+                    minecraftHelp.queryCommands(context.getOrDefault("query", ""), context.getSender());
                 })
-                .build());
+        );
     }
 }

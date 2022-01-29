@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @AllArgsConstructor
-public class InventoryManager implements Listener {
+public class AccessItemListeners implements Listener {
 
     private final Logger logger = Logger.getLogger();
     private final InterfaceManager interfaceManager;

@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.command.defaults;
 
 import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import com.google.common.collect.ImmutableList;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.command.CommandOrigin;
@@ -22,7 +23,7 @@ public final class DefaultCommands {
     @Getter
     private final List<FormsCommand> commands;
 
-    public DefaultCommands(CrossplatForms forms) {
+    public DefaultCommands(CrossplatForms forms, MinecraftHelp<CommandOrigin> minecraftHelp) {
 
         BedrockFormRegistry formRegistry = forms.getInterfaceManager().getBedrockRegistry();
         JavaMenuRegistry menuRegistry = forms.getInterfaceManager().getJavaRegistry();
@@ -48,7 +49,7 @@ public final class DefaultCommands {
         };
 
         commands = ImmutableList.of(
-                new HelpCommand(forms),
+                new HelpCommand(forms, minecraftHelp),
                 new ListCommand(forms),
                 new OpenCommand(forms),
                 new InspectCommand(forms),

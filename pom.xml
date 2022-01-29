@@ -27,6 +27,10 @@
     </pluginRepositories>
 
     <repositories>
+        <repository> <!-- for development builds -->
+            <id>sonatype-oss-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -62,18 +66,30 @@
             <version>2.1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.geysermc.cumulus</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- Command framework -->
         <dependency>
             <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-bukkit</artifactId>
+            <artifactId>cloud-paper</artifactId>
             <version>1.6.1</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cloud.commandframework</groupId>
+            <artifactId>cloud-minecraft-extras</artifactId>
+            <version>1.6.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.lucko</groupId>
+            <artifactId>commodore</artifactId>
+            <version>1.9</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Fancy text, currently only to be used by Cloud. -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-platform-bukkit</artifactId>
+            <version>4.0.1</version>
         </dependency>
         <!-- Configuration -->
         <dependency>
@@ -134,6 +150,10 @@
                                 <relocation>
                                     <pattern>cloud.commandframework</pattern>
                                     <shadedPattern>dev.projectg.crossplatforms.shaded.cloud</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>me.lucko.commodore</pattern>
+                                    <shadedPattern>dev.projectg.crossplatforms.shaded.commodore</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <!-- Used by cloud and configurate -->
