@@ -18,4 +18,9 @@ public class EmptyBedrockHandler implements BedrockHandler {
     public void sendForm(UUID uuid, Form form) {
         throw new AssertionError("Attempted to send a form with EmptyBedrockHandler");
     }
+
+    @Override
+    public int getPlayerCount() {
+        return 0;
+    }
 }
