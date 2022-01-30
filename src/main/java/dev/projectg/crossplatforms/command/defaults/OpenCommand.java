@@ -63,7 +63,9 @@ public class OpenCommand extends FormsCommand {
                     interfaces.addAll(javaRegistry.getMenus().values());
                 }
             } else {
-                interfaces.addAll(bedrockRegistry.getForms().values());
+                if (bedrockHandler.getPlayerCount() > 0) {
+                    interfaces.addAll(bedrockRegistry.getForms().values());
+                }
                 interfaces.addAll(javaRegistry.getMenus().values());
             }
 

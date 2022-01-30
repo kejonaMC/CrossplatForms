@@ -8,18 +8,29 @@ import java.util.UUID;
 
 public class GeyserHandler implements BedrockHandler {
 
+    private final GeyserImpl geyser;
+
+    public GeyserHandler() {
+        geyser = GeyserImpl.getInstance();
+    }
+
     @Override
     public boolean isBedrockPlayer(UUID uuid) {
-        return GeyserImpl.getInstance().connectionByUuid(uuid) != null;
+        return geyser.connectionByUuid(uuid) != null;
     }
 
     @Override
     public void sendForm(UUID uuid, Form form) {
-        GeyserSession session = GeyserImpl.getInstance().connectionByUuid(uuid);
+        GeyserSession session = geyser.connectionByUuid(uuid);
         if (session == null) {
             throw new NullPointerException("Failed to get GeyserSession for UUID " + uuid);
         } else {
             session.getFormCache().showForm(form);
         }
+    }
+
+    @Override
+    public int getPlayerCount() {
+        return geyser.getSessionManager().getAllSessions().size();
     }
 }

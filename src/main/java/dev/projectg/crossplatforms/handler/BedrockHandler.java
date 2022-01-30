@@ -9,4 +9,6 @@ public interface BedrockHandler {
     boolean isBedrockPlayer(UUID uuid);
 
     void sendForm(UUID uuid, Form form);
+
+    int getPlayerCount();
 }

@@ -7,13 +7,24 @@ import java.util.UUID;
 
 public class FloodgateHandler implements BedrockHandler {
 
+    private final FloodgateApi api;
+
+    public FloodgateHandler() {
+        api = FloodgateApi.getInstance();
+    }
+
     @Override
     public boolean isBedrockPlayer(UUID uuid) {
-        return FloodgateApi.getInstance().isFloodgatePlayer(uuid);
+        return api.isFloodgatePlayer(uuid);
     }
 
     @Override
     public void sendForm(UUID uuid, Form form) {
-        FloodgateApi.getInstance().sendForm(uuid, form);
+        api.sendForm(uuid, form);
+    }
+
+    @Override
+    public int getPlayerCount() {
+        return api.getPlayerCount();
     }
 }
