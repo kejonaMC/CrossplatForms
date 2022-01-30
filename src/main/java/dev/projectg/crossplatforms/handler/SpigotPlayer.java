@@ -10,7 +10,7 @@ public class SpigotPlayer implements Player {
     private final org.bukkit.entity.Player handle;
 
     @Override
-    public UUID getUUID() {
+    public UUID getUuid() {
         return handle.getUniqueId();
     }
 
@@ -27,5 +27,10 @@ public class SpigotPlayer implements Player {
     @Override
     public void sendMessage(String message) {
         handle.sendMessage(message);
+    }
+
+    @Override
+    public Object getHandle() {
+        return handle;
     }
 }

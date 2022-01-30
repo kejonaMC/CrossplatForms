@@ -6,8 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -24,6 +26,15 @@ public class SpigotServerHandler implements ServerHandler {
     @Override
     public Player getPlayer(String name) {
         return new SpigotPlayer(server.getPlayer(name));
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        List<Player> players = new ArrayList<>();
+        for (org.bukkit.entity.Player player : server.getOnlinePlayers()) {
+            players.add(new SpigotPlayer(player));
+        }
+        return players;
     }
 
     @Override

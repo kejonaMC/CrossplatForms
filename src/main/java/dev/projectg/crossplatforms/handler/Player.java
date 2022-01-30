@@ -7,7 +7,7 @@ public interface Player {
     /**
      * @return The player's UUID
      */
-    UUID getUUID();
+    UUID getUuid();
 
     /**
      * @return The player's name
@@ -22,4 +22,6 @@ public interface Player {
     boolean hasPermission(String permission);
 
     void sendMessage(String message);
+
+    Object getHandle();
 }

@@ -2,8 +2,9 @@ package dev.projectg.crossplatforms.handler;
 
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -20,6 +21,8 @@ public interface ServerHandler {
      * Get a player by the name
      */
     Player getPlayer(String name);
+
+    List<Player> getPlayers();
 
     /**
      * @return True if the plugin identified by the given ID is enabled

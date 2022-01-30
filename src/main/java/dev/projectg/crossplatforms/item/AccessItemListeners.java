@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.item;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
@@ -41,16 +42,25 @@ public class AccessItemListeners implements Listener {
             return;
         }
 
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        Action action = event.getAction();
+        if (action == Action.RIGHT_CLICK_AIR
+                || action == Action.RIGHT_CLICK_BLOCK
+                || action == Action.LEFT_CLICK_AIR
+                || action == Action.LEFT_CLICK_BLOCK) {
+
             ItemStack item = event.getItem();
             if (item != null) {
                 AccessItem accessItem = accessItemRegistry.getItem(item);
                 if (accessItem != null) {
-                    event.setCancelled(true); // todo: what happens if we don't cancel this? does the chest open before or after ours?
+                    // Don't allow using the item to break blocks
+                    // If it was a right click, using the access item should be the only behaviour
+                    event.setCancelled(true);
 
-                    Player player = event.getPlayer();
-                    String formName = accessItem.getForm();
-                    interfaceManager.sendInterface(player, formName);
+                    if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                        Player player = event.getPlayer();
+                        String formName = accessItem.getForm();
+                        interfaceManager.sendInterface(new SpigotPlayer(player), formName);
+                    }
                 }
             }
         }
@@ -124,7 +134,7 @@ public class AccessItemListeners implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDeath(PlayerDeathEvent event) { // restricting dropping
         if (!accessItemRegistry.isEnabled()) {
             return;
         }
@@ -141,19 +151,16 @@ public class AccessItemListeners implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
-        logger.debug("Player join event");
         regive(event.getPlayer(), AccessItem::isOnJoin);
     }
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access item when the player respawns
-        logger.debug("Player respawn event");
         regive(event.getPlayer(), AccessItem::isOnRespawn);
     }
 
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-        logger.debug("Player change world event");
         regive(event.getPlayer(), AccessItem::isOnWorldChange);
     }
 

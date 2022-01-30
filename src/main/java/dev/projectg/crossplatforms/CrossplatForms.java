@@ -140,20 +140,24 @@ public class CrossplatForms extends JavaPlugin {
             // Brigadier is ideal if possible. Allows for much more readable command options, especially on BE.
             commandManager.registerBrigadier();
         } catch (BukkitCommandManager.BrigadierFailureException e) {
-            logger.warn("Failed to initialize Brigadier support");
-            e.printStackTrace();
+            logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
         }
 
         if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
             // Do async command completions if possible
             commandManager.registerAsynchronousCompletions();
+            logger.debug("Using asynchronous command completions");
         }
 
         adventure = BukkitAudiences.create(this);
 
         // Makes the info messages for invalid syntax, sender, etc exceptions nicer
         new MinecraftExceptionHandler<CommandOrigin>()
-                .withDefaultHandlers()
+                .withArgumentParsingHandler()
+                .withInvalidSenderHandler()
+                .withInvalidSyntaxHandler()
+                .withNoPermissionHandler()
+                .withCommandExecutionHandler()
                 .apply(commandManager, (origin -> adventure.sender((CommandSender) origin.getHandle())));
 
         MinecraftHelp<CommandOrigin> minecraftHelp = new MinecraftHelp<>(

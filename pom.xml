@@ -192,8 +192,11 @@
                 <configuration>
                     <artifactSet>
                         <excludes>
+                            <!-- Available on Spigot -->
                             <exclude>com.google.*:*</exclude>
                             <exclude>org.yaml:*</exclude>
+                            <!-- Brigadier is on the server 1.13+ -->>
+                            <exclude>com.mojang:brigadier</exclude>
                         </excludes>
                     </artifactSet>
                 </configuration>

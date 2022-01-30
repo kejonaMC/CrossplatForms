@@ -31,7 +31,7 @@ public class IdentifyCommand extends FormsCommand {
                 .permission(sender -> sender.hasPermission(PERMISSION) && sender.isPlayer())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    String message = bedrockHandler.isBedrockPlayer(origin.getUUID().get()) ? "You are a bedrock player" : "You are not a bedrock player";
+                    String message = bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow()) ? "You are a bedrock player" : "You are not a bedrock player";
                     origin.sendMessage(Logger.Level.INFO, message);
                 }).build());
 
@@ -46,7 +46,7 @@ public class IdentifyCommand extends FormsCommand {
                     if (target == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That player doesn't exist");
                     } else {
-                        String message = targetName + (bedrockHandler.isBedrockPlayer(target.getUUID()) ? " is a Bedrock player" : " is not a Bedrock player");
+                        String message = targetName + (bedrockHandler.isBedrockPlayer(target.getUuid()) ? " is a Bedrock player" : " is not a Bedrock player");
                         origin.sendMessage(Logger.Level.INFO, message);
                     }
                 })

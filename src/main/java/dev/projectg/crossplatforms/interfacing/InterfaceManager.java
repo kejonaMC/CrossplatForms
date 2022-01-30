@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.interfacing;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
@@ -10,7 +11,6 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -40,13 +40,13 @@ public class InterfaceManager {
      * @param formName The name of the form to open
      */
     public void sendInterface(@Nonnull Player player, @Nonnull String formName) {
-        if (bedrockHandler.isBedrockPlayer(player.getUniqueId())) {
+        if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
             if (bedrockRegistry.isEnabled()) {
                 BedrockForm form = bedrockRegistry.getForm(formName);
                 if (form == null) {
                     player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the form " + formName + " doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
-                    form.sendForm(player.getUniqueId(), this);
+                    form.sendForm(player.getUuid(), this);
                 }
             } else {
                 player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
@@ -57,7 +57,7 @@ public class InterfaceManager {
                 if (menu == null) {
                     player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the menu " + formName + " doesn't exist! Specify a form with '/ghub form <form>'");
                 } else {
-                    menu.sendMenu(player);
+                    menu.sendMenu((org.bukkit.entity.Player) player.getHandle());
                 }
             } else {
                 player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, Java menus are disabled!");
