@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class FormsCommand {
 
+    protected static final String PERMISSION_BASE = "crossplatforms.command.";
+
     protected final CrossplatForms crossplatForms;
 
     /**

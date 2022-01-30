@@ -143,12 +143,6 @@ public class CrossplatForms extends JavaPlugin {
             logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
         }
 
-        if (commandManager.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-            // Do async command completions if possible
-            commandManager.registerAsynchronousCompletions();
-            logger.debug("Using asynchronous command completions");
-        }
-
         adventure = BukkitAudiences.create(this);
 
         // Makes the info messages for invalid syntax, sender, etc exceptions nicer

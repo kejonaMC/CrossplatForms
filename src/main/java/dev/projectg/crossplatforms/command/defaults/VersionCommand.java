@@ -10,7 +10,7 @@ import dev.projectg.crossplatforms.command.FormsCommand;
 public class VersionCommand extends FormsCommand {
 
     private static final String NAME = "version";
-    private static final String PERMISSION = "crossplatforms.command" + NAME;
+    private static final String PERMISSION = PERMISSION_BASE + NAME;
 
     public VersionCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);

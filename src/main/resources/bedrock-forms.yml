@@ -2,6 +2,10 @@
 
 enable: true
 
+global-permission-defaults:
+  USE: TRUE
+  COMMAND: TRUE
+
 forms:
   servers:
     type: SIMPLE_FORM
@@ -30,7 +34,6 @@ forms:
   minigames:
     type: SIMPLE_FORM
     command: minigames
-    permission: crossplatforms.command.basic
     title: "Minigames"
     content: "Click on a minigame of choice."
     buttons:
@@ -54,6 +57,9 @@ forms:
 
   broadcast:
     type: CUSTOM_FORM
+    permission-defaults:
+      USE: FALSE
+      COMMAND: FALSE
     title: "Choose something to broadcast"
     components:
       - type: INPUT

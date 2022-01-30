@@ -10,7 +10,7 @@ import dev.projectg.crossplatforms.command.FormsCommand;
 public class ListCommand extends FormsCommand {
 
     public static final String NAME = "list";
-    public static final String PERMISSION = "crossplatforms.command" + NAME;
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
 
     public ListCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);

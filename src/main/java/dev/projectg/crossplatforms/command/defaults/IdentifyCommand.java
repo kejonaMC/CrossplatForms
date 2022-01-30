@@ -14,7 +14,7 @@ import dev.projectg.crossplatforms.handler.ServerHandler;
 public class IdentifyCommand extends FormsCommand {
 
     private static final String NAME = "identify";
-    private static final String PERMISSION = "crossplatforms.command." + NAME;
+    private static final String PERMISSION = PERMISSION_BASE + NAME;
     private static final String PERMISSION_OTHER = PERMISSION + ".others";
 
     public IdentifyCommand(CrossplatForms crossplatForms) {

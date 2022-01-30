@@ -17,7 +17,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 public class InspectCommand extends FormsCommand {
 
     private static final String NAME = "inspect";
-    private static final String PERMISSION = "crossplatforms.command." + NAME;
+    private static final String PERMISSION = PERMISSION_BASE + NAME;
 
     public InspectCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);

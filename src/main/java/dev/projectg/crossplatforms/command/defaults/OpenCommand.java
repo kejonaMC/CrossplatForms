@@ -19,14 +19,13 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 public class OpenCommand extends FormsCommand {
 
     private static final String NAME = "open";
-    private static final String PERMISSION = "crossplatforms.command." + NAME;
+    private static final String PERMISSION = PERMISSION_BASE + NAME;
     private static final String PERMISSION_OTHER = PERMISSION + ".others";
 
     private static final String ARGUMENT = "form|menu";
@@ -71,6 +70,7 @@ public class OpenCommand extends FormsCommand {
             return interfaces.stream()
                     .filter(ui -> origin.hasPermission(ui.permission(Interface.Limit.COMMAND)))
                     .map(Interface::getIdentifier)
+                    .distinct()
                     .collect(Collectors.toList());
         };
 
@@ -82,7 +82,6 @@ public class OpenCommand extends FormsCommand {
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
                     Player player = serverHandler.getPlayer(context.getSender().getUUID().orElseThrow());
-                    Objects.requireNonNull(player);
                     interfaceManager.sendInterface(player, context.get(ARGUMENT));
                 })
                 .build()
@@ -93,10 +92,23 @@ public class OpenCommand extends FormsCommand {
                 .argument(formArgument.copy()) // Command Arguments are assigned to specific commands and must be copied for other commands
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
                         .single()
-                        .withSuggestionsProvider((context, string) -> new ArrayList<>(serverHandler.getPlayers())
-                                .stream()
-                                .map(Player::getName)
-                                .collect(Collectors.toList()))
+                        .withSuggestionsProvider((context, string) -> {
+                            String form = context.get(ARGUMENT);
+                            boolean isBedrock = bedrockRegistry.getForms().containsKey(form);
+                            boolean isJava = javaRegistry.getMenus().containsKey(form);
+                            return new ArrayList<>(serverHandler.getPlayers())
+                                    .stream()
+                                    .filter(player -> {
+                                        // Only show players that can receive the inputted form/menu
+                                        if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
+                                            return isBedrock;
+                                        } else {
+                                            return isJava;
+                                        }
+                                    })
+                                    .map(Player::getName)
+                                    .collect(Collectors.toList());
+                        })
                         .build())
                 .permission(PERMISSION_OTHER)
                 .handler(context -> {

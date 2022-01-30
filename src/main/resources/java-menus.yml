@@ -2,6 +2,10 @@
 
 enable: true
 
+global-permission-defaults:
+  USE: TRUE
+  COMMAND: TRUE
+
 menus:
   servers:
     # The title of the inventory that the player sees

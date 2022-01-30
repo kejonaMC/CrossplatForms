@@ -10,7 +10,7 @@ import dev.projectg.crossplatforms.command.FormsCommand;
 public class HelpCommand extends FormsCommand {
 
     public static final String NAME = "help";
-    public static final String PERMISSION = "crossplatforms.command." + NAME;
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
 
     private final MinecraftHelp<CommandOrigin> minecraftHelp;
 
