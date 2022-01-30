@@ -76,22 +76,23 @@ public class OpenCommand extends FormsCommand {
 
         CommandArgument<CommandOrigin, String> formArgument = StringArgument.<CommandOrigin>newBuilder(ARGUMENT).asRequired().withSuggestionsProvider(suggestions).build();
 
-        manager.command(defaultBuilder
+        Command.Builder<CommandOrigin> firstArg = defaultBuilder
                 .literal(NAME)
-                .argument(formArgument)
+                .argument(formArgument);
+
+        // Base open command
+        manager.command(firstArg
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
                     Player player = serverHandler.getPlayer(context.getSender().getUUID().orElseThrow());
                     interfaceManager.sendInterface(player, context.get(ARGUMENT));
-                })
-                .build()
-        );
+                }));
 
-        manager.command(defaultBuilder
-                .literal(NAME)
-                .argument(formArgument.copy()) // Command Arguments are assigned to specific commands and must be copied for other commands
+        // Additional command to make other players open a form or menu
+        manager.command(firstArg
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
                         .single()
+                        .asRequired()
                         .withSuggestionsProvider((context, string) -> {
                             String form = context.get(ARGUMENT);
                             boolean isBedrock = bedrockRegistry.getForms().containsKey(form);

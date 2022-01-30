@@ -40,11 +40,13 @@ public class InterfaceManager {
      * @param formName The name of the form to open
      */
     public void sendInterface(@Nonnull Player player, @Nonnull String formName) {
+        // todo: allow bedrock players to open JE menus
+        // todo: if java players requests an ID that is only a bedrock form, explain that
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
             if (bedrockRegistry.isEnabled()) {
                 BedrockForm form = bedrockRegistry.getForm(formName);
                 if (form == null) {
-                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the form " + formName + " doesn't exist! Specify a form with '/ghub form <form>'");
+                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the form " + formName + " doesn't exist! Specify a form with '/forms open <form>'");
                 } else {
                     form.sendForm(player.getUuid(), this);
                 }
@@ -55,7 +57,7 @@ public class InterfaceManager {
             if (javaRegistry.isEnabled()) {
                 JavaMenu menu = javaRegistry.getMenu(formName);
                 if (menu == null) {
-                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the menu " + formName + " doesn't exist! Specify a form with '/ghub form <form>'");
+                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the menu " + formName + " doesn't exist! Specify a form with '/forms open <menu>'");
                 } else {
                     menu.sendMenu((org.bukkit.entity.Player) player.getHandle());
                 }
