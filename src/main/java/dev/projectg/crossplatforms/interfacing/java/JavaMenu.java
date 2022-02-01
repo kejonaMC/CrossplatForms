@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.interfacing.java;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.interfacing.ClickAction;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -41,15 +41,6 @@ public class JavaMenu extends Interface {
 
     private int size = 5; // Hopper size
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
-
-    @Override
-    public boolean isAllowed(boolean bedrock) {
-        if (bedrock) {
-            return allowBedrock;
-        } else {
-            return true;
-        }
-    }
 
     @Override
     public void send(@Nonnull dev.projectg.crossplatforms.handler.Player recipient) {
@@ -106,24 +97,24 @@ public class JavaMenu extends Interface {
      * @param rightClick True if it was a right click, false if a left click.
      * @param player the Player who clicked on the button.
      */
-    public void process(int slot, boolean rightClick, @Nonnull Player player, @Nonnull InterfaceRegistry interfaceRegistry) {
+    public void process(int slot, boolean rightClick, @Nonnull Player player, @Nonnull InterfaceManager interfaceManager) {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
 
             ClickAction any;
             if ((any = button.getAnyClick()) != null) {
-                any.affectPlayer(interfaceRegistry, player);
+                any.affectPlayer(interfaceManager, player);
             }
 
             if (rightClick) {
                 ClickAction right;
                 if ((right = button.getRightClick()) != null) {
-                    right.affectPlayer(interfaceRegistry, player);
+                    right.affectPlayer(interfaceManager, player);
                 }
             } else {
                 ClickAction left;
                 if ((left = button.getLeftClick()) != null) {
-                    left.affectPlayer(interfaceRegistry, player);
+                    left.affectPlayer(interfaceManager, player);
                 }
             }
         }

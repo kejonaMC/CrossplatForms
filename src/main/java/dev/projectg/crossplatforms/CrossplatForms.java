@@ -19,7 +19,7 @@ import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.handler.SpigotServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
@@ -50,7 +50,7 @@ public class CrossplatForms extends JavaPlugin {
     private ServerHandler serverHandler;
     private BedrockHandler bedrockHandler;
 
-    private InterfaceRegistry interfaceRegistry;
+    private InterfaceManager interfaceManager;
     private AccessItemRegistry accessItemRegistry;
 
     private BukkitAudiences adventure;
@@ -110,7 +110,7 @@ public class CrossplatForms extends JavaPlugin {
         // Load forms
         long registryTime = System.currentTimeMillis();
         accessItemRegistry = new AccessItemRegistry(configManager, serverHandler);
-        interfaceRegistry = new InterfaceRegistry(
+        interfaceManager = new InterfaceManager(
                 serverHandler,
                 bedrockHandler,
                 new BedrockFormRegistry(configManager, serverHandler),
@@ -192,13 +192,13 @@ public class CrossplatForms extends JavaPlugin {
         // Registering events required to manage access items
         Bukkit.getServer().getPluginManager().registerEvents(
                 new AccessItemListeners(
-                        interfaceRegistry,
+                        interfaceManager,
                         accessItemRegistry,
                         bedrockHandler),
                 this);
 
         // events regarding inventory GUI menus
-        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(interfaceRegistry), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(interfaceManager), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

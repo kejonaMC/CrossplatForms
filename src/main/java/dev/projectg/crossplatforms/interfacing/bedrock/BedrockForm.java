@@ -17,9 +17,4 @@ public abstract class BedrockForm extends Interface {
 
     @Required
     private FormType type;
-
-    @Override
-    public boolean isAllowed(boolean bedrock) {
-        return bedrock;
-    }
 }

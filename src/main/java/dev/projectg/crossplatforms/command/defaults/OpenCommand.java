@@ -12,7 +12,7 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
@@ -32,7 +32,7 @@ public class OpenCommand extends FormsCommand {
 
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
-    private final InterfaceRegistry interfaceRegistry;
+    private final InterfaceManager interfaceManager;
     private final BedrockFormRegistry bedrockRegistry;
     private final JavaMenuRegistry javaRegistry;
 
@@ -41,9 +41,9 @@ public class OpenCommand extends FormsCommand {
 
         this.serverHandler = crossplatForms.getServerHandler();
         this.bedrockHandler = crossplatForms.getBedrockHandler();
-        this.interfaceRegistry = crossplatForms.getInterfaceRegistry();
-        this.bedrockRegistry = crossplatForms.getInterfaceRegistry().getBedrockRegistry();
-        this.javaRegistry = crossplatForms.getInterfaceRegistry().getJavaRegistry();
+        this.interfaceManager = crossplatForms.getInterfaceManager();
+        this.bedrockRegistry = crossplatForms.getInterfaceManager().getBedrockRegistry();
+        this.javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class OpenCommand extends FormsCommand {
                     UUID uuid = origin.getUUID().orElseThrow();
                     Player player = serverHandler.getPlayer(uuid);
                     String identifier = context.get(ARGUMENT);
-                    Interface ui = interfaceRegistry.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
+                    Interface ui = interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
                     if (ui == null) {
                         origin.sendMessage("'" + identifier + "' doesn't exist.");
@@ -97,7 +97,7 @@ public class OpenCommand extends FormsCommand {
                         return;
                     }
                     String identifier = context.get(ARGUMENT);
-                    Interface ui = this.interfaceRegistry.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
+                    Interface ui = this.interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
                     if (ui == null) {
                         origin.sendMessage("'" + identifier + "' doesn't exist.");
                         return;
@@ -142,8 +142,8 @@ public class OpenCommand extends FormsCommand {
             return Collections.emptyList(); // BE players don't get argument suggestions
         }
         String id = context.get(ARGUMENT);
-        Interface bedrock = interfaceRegistry.getInterface(id, true);
-        Interface java = interfaceRegistry.getInterface(id, false);
+        Interface bedrock = interfaceManager.getInterface(id, true);
+        Interface java = interfaceManager.getInterface(id, false);
 
         // Don't suggest players if the form specified is not permissible
         if (bedrock != null && !origin.hasPermission(bedrock.permission(Interface.Limit.COMMAND))) {

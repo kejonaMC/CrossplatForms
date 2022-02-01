@@ -5,7 +5,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.interfacing.BasicClickAction;
-import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public class CustomForm extends BedrockForm {
 
     @Override
     public void send(@NotNull dev.projectg.crossplatforms.handler.Player recipient) {
-        InterfaceRegistry registry = CrossplatForms.getInstance().getInterfaceRegistry();
+        InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
         Logger logger = Logger.getLogger();
         UUID uuid = recipient.getUuid();
         Player player = (Player) recipient;
