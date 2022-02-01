@@ -34,6 +34,12 @@ public interface CommandOrigin {
     void sendRaw(String message);
 
     /**
+     * Send a message with the plugin name prefix
+     * @param message The message to send
+     */
+    void sendMessage(String message);
+
+    /**
      * @return True if the command origin represents a player
      */
     boolean isPlayer();
@@ -67,7 +73,7 @@ public interface CommandOrigin {
             Logger.getLogger().log(level, message);
         } else {
             // todo: abstract chat colour
-            sendRaw("[CForms] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
+            sendMessage(LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }
     }
 }
