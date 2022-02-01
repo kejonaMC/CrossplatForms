@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class InterfaceManager {
+public class IntefaceRegistry {
 
     public static final String PLAYER_PREFIX = "player;";
     public static final String CONSOLE_PREFIX = "console;";

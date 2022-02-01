@@ -36,7 +36,7 @@ public abstract class Interface {
      */
     protected abstract String getPermissionBase();
 
-    public void generatePermissions(InterfaceRegistry registry) {
+    public void generatePermissions(InterfaceConfig registry) {
         if (permissions != null) {
             Logger.getLogger().severe("Permissions in menu or form " + identifier + " have already been generated!");
             Thread.dumpStack();

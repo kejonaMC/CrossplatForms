@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.interfacing.java;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.interfacing.ClickAction;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -93,24 +93,24 @@ public class JavaMenu extends Interface {
      * @param rightClick True if it was a right click, false if a left click.
      * @param player the Player who clicked on the button.
      */
-    public void process(int slot, boolean rightClick, @Nonnull Player player, @Nonnull InterfaceManager interfaceManager) {
+    public void process(int slot, boolean rightClick, @Nonnull Player player, @Nonnull IntefaceRegistry intefaceRegistry) {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
 
             ClickAction any;
             if ((any = button.getAnyClick()) != null) {
-                any.affectPlayer(interfaceManager, player);
+                any.affectPlayer(intefaceRegistry, player);
             }
 
             if (rightClick) {
                 ClickAction right;
                 if ((right = button.getRightClick()) != null) {
-                    right.affectPlayer(interfaceManager, player);
+                    right.affectPlayer(intefaceRegistry, player);
                 }
             } else {
                 ClickAction left;
                 if ((left = button.getLeftClick()) != null) {
-                    left.affectPlayer(interfaceManager, player);
+                    left.affectPlayer(intefaceRegistry, player);
                 }
             }
         }

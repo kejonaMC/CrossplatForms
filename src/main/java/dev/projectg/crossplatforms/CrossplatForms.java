@@ -2,7 +2,6 @@ package dev.projectg.crossplatforms;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.bukkit.BukkitCommandManager;
-import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
@@ -27,7 +26,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.utils.FileUtils;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -51,7 +50,7 @@ public class CrossplatForms extends JavaPlugin {
     private ServerHandler serverHandler;
     private BedrockHandler bedrockHandler;
 
-    private InterfaceManager interfaceManager;
+    private IntefaceRegistry intefaceRegistry;
     private AccessItemRegistry accessItemRegistry;
 
     private BukkitAudiences adventure;
@@ -111,7 +110,7 @@ public class CrossplatForms extends JavaPlugin {
         // Load forms
         long registryTime = System.currentTimeMillis();
         accessItemRegistry = new AccessItemRegistry(configManager, serverHandler);
-        interfaceManager = new InterfaceManager(
+        intefaceRegistry = new IntefaceRegistry(
                 serverHandler,
                 bedrockHandler,
                 new BedrockFormRegistry(configManager, serverHandler),
@@ -193,13 +192,13 @@ public class CrossplatForms extends JavaPlugin {
         // Registering events required to manage access items
         Bukkit.getServer().getPluginManager().registerEvents(
                 new AccessItemListeners(
-                        interfaceManager,
+                        intefaceRegistry,
                         accessItemRegistry,
                         bedrockHandler),
                 this);
 
         // events regarding inventory GUI menus
-        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(interfaceManager), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(intefaceRegistry), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

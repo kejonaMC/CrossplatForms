@@ -30,15 +30,15 @@ public class BasicClickAction implements ClickAction {
     private String server = null;
 
     @Override
-    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player) {
-        affectPlayer(interfaceManager, player, Collections.emptyMap());
+    public void affectPlayer(@Nonnull IntefaceRegistry intefaceRegistry, @Nonnull Player player) {
+        affectPlayer(intefaceRegistry, player, Collections.emptyMap());
     }
 
     @Override
-    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
+    public void affectPlayer(@Nonnull IntefaceRegistry intefaceRegistry, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
         // Get the commands from the list of commands and replace any playerName placeholders
         for (String command : commands) {
-            interfaceManager.runCommand(
+            intefaceRegistry.runCommand(
                     PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
                     player.getUniqueId());
         }

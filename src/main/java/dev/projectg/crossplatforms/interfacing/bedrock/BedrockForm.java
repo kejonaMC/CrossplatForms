@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.util.FormType;
@@ -22,5 +22,5 @@ public abstract class BedrockForm extends Interface {
     @Required
     private FormType type;
 
-    public abstract void sendForm(@Nonnull UUID bedrockPlayer, @Nonnull InterfaceManager interfaceManager);
+    public abstract void sendForm(@Nonnull UUID bedrockPlayer, @Nonnull IntefaceRegistry intefaceRegistry);
 }

@@ -5,7 +5,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.interfacing.ClickAction;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -32,7 +32,7 @@ public class ModalForm extends BedrockForm {
     private ModalButton button2;
 
     @Override
-    public void sendForm(@NotNull UUID bedrockPlayer, @Nonnull InterfaceManager interfaceManager) {
+    public void sendForm(@NotNull UUID bedrockPlayer, @Nonnull IntefaceRegistry intefaceRegistry) {
         Logger logger = Logger.getLogger();
 
         Player player = Bukkit.getServer().getPlayer(bedrockPlayer);
@@ -70,7 +70,7 @@ public class ModalForm extends BedrockForm {
             };
 
             // Handle effects of pressing the button
-            action.affectPlayer(interfaceManager, player);
+            action.affectPlayer(intefaceRegistry, player);
         });
 
         // Send the form to the floodgate player

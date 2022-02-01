@@ -4,7 +4,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.SpigotPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
 public class AccessItemListeners implements Listener {
 
     private final Logger logger = Logger.getLogger();
-    private final InterfaceManager interfaceManager;
+    private final IntefaceRegistry intefaceRegistry;
     private final AccessItemRegistry accessItemRegistry;
     private final BedrockHandler bedrockHandler;
 
@@ -59,7 +59,7 @@ public class AccessItemListeners implements Listener {
                     if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
                         Player player = event.getPlayer();
                         String formName = accessItem.getForm();
-                        interfaceManager.sendInterface(new SpigotPlayer(player), formName);
+                        intefaceRegistry.sendInterface(new SpigotPlayer(player), formName);
                     }
                 }
             }

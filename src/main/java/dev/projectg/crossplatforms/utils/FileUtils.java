@@ -27,8 +27,12 @@ public class FileUtils {
             throw new AssertionError("Resource " + name + " does not exist.");
         }
 
-        file.getParentFile().mkdirs();
-        file.createNewFile();
+        if (!file.getParentFile().mkdirs()) {
+            throw new IOException("Failed to make parent directories for file: " + file.getCanonicalPath());
+        }
+        if (!file.createNewFile()) {
+            throw new IllegalStateException("Resource already exists at: " + file.getCanonicalPath());
+        }
         FileOutputStream output = new FileOutputStream(file);
         input.transferTo(output);
         output.close();

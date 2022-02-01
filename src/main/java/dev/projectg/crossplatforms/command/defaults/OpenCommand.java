@@ -13,7 +13,7 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
@@ -43,13 +43,13 @@ public class OpenCommand extends FormsCommand {
 
         this.serverHandler = crossplatForms.getServerHandler();
         this.bedrockHandler = crossplatForms.getBedrockHandler();
-        this.bedrockRegistry = crossplatForms.getInterfaceManager().getBedrockRegistry();
-        this.javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
+        this.bedrockRegistry = crossplatForms.getIntefaceRegistry().getBedrockRegistry();
+        this.javaRegistry = crossplatForms.getIntefaceRegistry().getJavaRegistry();
     }
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
-        InterfaceManager interfaceManager = crossplatForms.getInterfaceManager();
+        IntefaceRegistry intefaceRegistry = crossplatForms.getIntefaceRegistry();
 
         CommandArgument<CommandOrigin, String> formArgument = StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
                 .asRequired()
@@ -67,7 +67,7 @@ public class OpenCommand extends FormsCommand {
                 .handler(context -> {
                     Player player = serverHandler.getPlayer(context.getSender().getUUID().orElseThrow());
                     // todo: check for command permission for this specific interface
-                    interfaceManager.sendInterface(player, context.get(ARGUMENT));
+                    intefaceRegistry.sendInterface(player, context.get(ARGUMENT));
                 }));
 
         // Additional command to make other players open a form or menu
@@ -88,7 +88,7 @@ public class OpenCommand extends FormsCommand {
                     if (player == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist!");
                     } else {
-                        interfaceManager.sendInterface(player, context.get(ARGUMENT));
+                        intefaceRegistry.sendInterface(player, context.get(ARGUMENT));
                     }
                 })
                 .build()
