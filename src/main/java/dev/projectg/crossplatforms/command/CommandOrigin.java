@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
@@ -75,5 +76,14 @@ public interface CommandOrigin {
             // todo: abstract chat colour
             sendMessage(LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }
+    }
+
+    /**
+     * Checks if this CommandOrigin is a bedrock player through the given {@link BedrockHandler}
+     * @param handler the BedrockHandler to perform the lookup with
+     * @return True if the command origin is a bedrock player. false if it is anything else, such as a java player or console command sender.
+     */
+    default boolean isBedrockPlayer(BedrockHandler handler) {
+        return isPlayer() && handler.isBedrockPlayer(getUUID().orElseThrow());
     }
 }

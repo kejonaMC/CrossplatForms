@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
-import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
+import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,12 +9,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class JavaMenuListeners implements Listener {
 
-    private final IntefaceRegistry intefaceRegistry;
+    private final InterfaceRegistry interfaceRegistry;
     private final JavaMenuRegistry javaMenuRegistry;
 
-    public JavaMenuListeners(IntefaceRegistry intefaceRegistry) {
-        this.intefaceRegistry = intefaceRegistry;
-        this.javaMenuRegistry = intefaceRegistry.getJavaRegistry();
+    public JavaMenuListeners(InterfaceRegistry interfaceRegistry) {
+        this.interfaceRegistry = interfaceRegistry;
+        this.javaMenuRegistry = interfaceRegistry.getJavaRegistry();
     }
 
     @EventHandler
@@ -29,7 +29,7 @@ public class JavaMenuListeners implements Listener {
                     JavaMenu menu = javaMenuRegistry.getMenu(item);
                     if (menu != null) {
                         event.setCancelled(true);
-                        menu.process(event.getSlot(), event.isRightClick(), player, intefaceRegistry);
+                        menu.process(event.getSlot(), event.isRightClick(), player, interfaceRegistry);
                     }
                 }
             }

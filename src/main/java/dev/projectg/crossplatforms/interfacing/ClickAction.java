@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface ClickAction {
 
-    void affectPlayer(@Nonnull IntefaceRegistry intefaceRegistry, @Nonnull Player player);
+    void affectPlayer(@Nonnull InterfaceRegistry interfaceRegistry, @Nonnull Player player);
 
-    void affectPlayer(@Nonnull IntefaceRegistry intefaceRegistry, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders);
+    void affectPlayer(@Nonnull InterfaceRegistry interfaceRegistry, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders);
 }

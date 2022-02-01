@@ -19,14 +19,14 @@ import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.handler.SpigotServerHandler;
-import dev.projectg.crossplatforms.item.AccessItemRegistry;
-import dev.projectg.crossplatforms.item.AccessItemListeners;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
+import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.item.AccessItemListeners;
+import dev.projectg.crossplatforms.item.AccessItemRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.utils.FileUtils;
-import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
 import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -50,7 +50,7 @@ public class CrossplatForms extends JavaPlugin {
     private ServerHandler serverHandler;
     private BedrockHandler bedrockHandler;
 
-    private IntefaceRegistry intefaceRegistry;
+    private InterfaceRegistry interfaceRegistry;
     private AccessItemRegistry accessItemRegistry;
 
     private BukkitAudiences adventure;
@@ -110,7 +110,7 @@ public class CrossplatForms extends JavaPlugin {
         // Load forms
         long registryTime = System.currentTimeMillis();
         accessItemRegistry = new AccessItemRegistry(configManager, serverHandler);
-        intefaceRegistry = new IntefaceRegistry(
+        interfaceRegistry = new InterfaceRegistry(
                 serverHandler,
                 bedrockHandler,
                 new BedrockFormRegistry(configManager, serverHandler),
@@ -192,13 +192,13 @@ public class CrossplatForms extends JavaPlugin {
         // Registering events required to manage access items
         Bukkit.getServer().getPluginManager().registerEvents(
                 new AccessItemListeners(
-                        intefaceRegistry,
+                        interfaceRegistry,
                         accessItemRegistry,
                         bedrockHandler),
                 this);
 
         // events regarding inventory GUI menus
-        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(intefaceRegistry), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(interfaceRegistry), this);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

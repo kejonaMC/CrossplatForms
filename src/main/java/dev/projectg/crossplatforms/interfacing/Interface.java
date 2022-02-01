@@ -2,6 +2,9 @@ package dev.projectg.crossplatforms.interfacing;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
@@ -11,8 +14,10 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.NodeKey;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 @ToString
 @Getter
@@ -31,10 +36,48 @@ public abstract class Interface {
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Interface.Limit, Permission> permissions;
 
+    public abstract void send(@Nonnull Player recipient);
+
     /**
      * e.g. "crossplatforms.form"
      */
     protected abstract String getPermissionBase();
+
+    /**
+     * Doesn't check permissions, only if the type of player is allowed to open this interface.
+     * true for bedrock, false for java.
+     */
+    public abstract boolean isAllowed(boolean bedrock);
+
+    /**
+     * Doesn't check permissions, only if the type of player is allowed to open this interface.
+     */
+    public boolean isAllowed(UUID uuid, BedrockHandler handler) {
+        return isAllowed(handler.isBedrockPlayer(uuid));
+    }
+
+    /**
+     * Doesn't check permissions, only if the type of player is allowed to open this interface.
+     */
+    public boolean isAllowed(Player player, BedrockHandler handler) {
+        return isAllowed(player.getUuid(), handler);
+    }
+
+    /**
+     * Doesn't check permissions, only if the type of player is allowed to open this interface.
+     * Returns false if the command origin is not a player.
+     */
+    public boolean isAllowed(CommandOrigin origin, BedrockHandler handler) {
+        if (origin.isPlayer()) {
+            return isAllowed(origin.getUUID().orElseThrow(), handler);
+        } else {
+            return false;
+        }
+    }
+
+    public String permission(Interface.Limit limit) {
+        return permissions.get(limit).key();
+    }
 
     public void generatePermissions(InterfaceConfig registry) {
         if (permissions != null) {
@@ -54,10 +97,6 @@ public abstract class Interface {
         }
 
         permissions = builder.build();
-    }
-
-    public String permission(Interface.Limit limit) {
-        return permissions.get(limit).key();
     }
 
     @RequiredArgsConstructor

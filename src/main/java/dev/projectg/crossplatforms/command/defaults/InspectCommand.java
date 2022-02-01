@@ -7,12 +7,12 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.item.AccessItem;
-import dev.projectg.crossplatforms.item.AccessItemRegistry;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.item.AccessItem;
+import dev.projectg.crossplatforms.item.AccessItemRegistry;
 
 public class InspectCommand extends FormsCommand {
 
@@ -25,8 +25,8 @@ public class InspectCommand extends FormsCommand {
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
-        BedrockFormRegistry bedrockRegistry = crossplatForms.getIntefaceRegistry().getBedrockRegistry();
-        JavaMenuRegistry javaRegistry = crossplatForms.getIntefaceRegistry().getJavaRegistry();
+        BedrockFormRegistry bedrockRegistry = crossplatForms.getInterfaceRegistry().getBedrockRegistry();
+        JavaMenuRegistry javaRegistry = crossplatForms.getInterfaceRegistry().getJavaRegistry();
         AccessItemRegistry accessItemRegistry = crossplatForms.getAccessItemRegistry();
 
         Command.Builder<CommandOrigin> base = defaultBuilder

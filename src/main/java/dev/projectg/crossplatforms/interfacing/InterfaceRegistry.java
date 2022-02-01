@@ -5,18 +5,19 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class IntefaceRegistry {
+public class InterfaceRegistry {
 
     public static final String PLAYER_PREFIX = "player;";
     public static final String CONSOLE_PREFIX = "console;";
@@ -30,7 +31,32 @@ public class IntefaceRegistry {
     @Getter
     private final JavaMenuRegistry javaRegistry;
 
-    // todo: method to get an interface by name
+    /**
+     * Get an interface to fetch
+     * @param name The named identifier of the interface
+     * @param bedrock true if the interface is for a bedrock player
+     * @return Always returns null or a {@link JavaMenu} if bedrock is false. May return null or a {@link BedrockForm if
+     * bedrock is true, as well as {@link JavaMenu}} if the JavaMenu allows bedrock players. Prioritizes BedrockForms over
+     * JavaMenus.
+     */
+    @Nullable
+    public Interface getInterface(String name, boolean bedrock) {
+        if (bedrock) {
+            BedrockForm form = bedrockRegistry.getForm(name);
+            if (form == null) {
+                JavaMenu menu = javaRegistry.getMenu(name);
+                if (menu != null && menu.isAllowBedrock()) {
+                    return menu;
+                } else {
+                    return null;
+                }
+            } else {
+                return form;
+            }
+        } else {
+            return javaRegistry.getMenu(name);
+        }
+    }
 
     /**
      * Sends a given form, identified by its name, to a BE or JE player.
@@ -50,34 +76,34 @@ public class IntefaceRegistry {
             if (form != null) {
                 // form exists
                 if (player.hasPermission(form.permission(Interface.Limit.USE))) {
-                    form.sendForm(uuid, this);
+                    form.send(player);
                 } else {
-                    player.sendMessage("You don't have permission to use that form.");
+                    player.sendMessage("You don't have permission to use: " + id);
                 }
             } else if (menu != null) {
                 if (menu.isAllowBedrock()) {
                     // menu exists and BE is allowed
                     if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
-                        menu.sendMenu((org.bukkit.entity.Player) player.getHandle());
+                        menu.send(player);
                     } else {
-                        player.sendMessage("You don't have permission to use that menu.");
+                        player.sendMessage("You don't have permission to use: " + id);
                     }
                 } else {
                     // menu exists and BE is not allowed
                     player.sendMessage("That menu is only available to Java Edition players.");
                 }
             } else {
-                player.sendMessage("The form or menu '" + id + "' doesn't exist.");
+                player.sendMessage("'" + id + "' doesn't exist.");
             }
         } else {
             if (menu != null) {
                 if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
-                    menu.sendMenu((org.bukkit.entity.Player) player.getHandle());
+                    menu.send(player);
                 } else {
-                    player.sendMessage("You don't have permission to use that menu.");
+                    player.sendMessage("You don't have permission to use: " + id);
                 }
             } else {
-                player.sendMessage("The menu '" + id + "' doesn't exist.");
+                player.sendMessage("'" + id + "' doesn't exist.");
             }
         }
     }

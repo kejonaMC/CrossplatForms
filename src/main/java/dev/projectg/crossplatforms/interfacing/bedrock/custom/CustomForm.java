@@ -3,12 +3,11 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.interfacing.BasicClickAction;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.interfacing.IntefaceRegistry;
+import dev.projectg.crossplatforms.interfacing.BasicClickAction;
+import dev.projectg.crossplatforms.interfacing.InterfaceRegistry;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,18 +33,15 @@ public class CustomForm extends BedrockForm {
     private BasicClickAction action = null;
 
     @Override
-    public void sendForm(@NotNull UUID bedrockPlayer, @Nonnull IntefaceRegistry intefaceRegistry) {
+    public void send(@NotNull dev.projectg.crossplatforms.handler.Player recipient) {
+        InterfaceRegistry registry = CrossplatForms.getInstance().getInterfaceRegistry();
         Logger logger = Logger.getLogger();
-
-        Player player = Bukkit.getServer().getPlayer(bedrockPlayer);
-        if (player == null) {
-            logger.severe("Unable to find a Bukkit Player for the given UUID: " + bedrockPlayer);
-            return;
-        }
+        UUID uuid = recipient.getUuid();
+        Player player = (Player) recipient;
 
         BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
-        if (!bedrockHandler.isBedrockPlayer(bedrockPlayer)) {
-            logger.severe("Player with UUID " + bedrockPlayer + " is not a Bedrock Player!");
+        if (!bedrockHandler.isBedrockPlayer(uuid)) {
+            logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
             return;
         }
 
@@ -93,10 +88,10 @@ public class CustomForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            action.affectPlayer(intefaceRegistry, player, resultPlaceholders);
+            action.affectPlayer(registry, player, resultPlaceholders);
         });
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(bedrockPlayer, customForm);
+        bedrockHandler.sendForm(uuid, customForm);
     }
 }
