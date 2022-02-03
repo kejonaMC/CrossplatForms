@@ -6,6 +6,6 @@
 
 # CrossplatForms
 
-A plugin aimed at providing fast, easy, and dynamic creation of Bedrock Edition forms through configurations. Also allows for creation of inventory menus for Java Edition.
+CrossplatForms, or CForms, is a Minecraft Java Edition plugin aimed at providing fast, easy, and dynamic creation of Bedrock Edition forms through configurations. Also allows for creation of inventory menus for Java Edition.
 
 Currently runs on Spigot servers (1.14 and higher) that have Geyser (Floodgate is optional).
