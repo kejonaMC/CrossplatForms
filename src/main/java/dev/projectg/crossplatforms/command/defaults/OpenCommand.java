@@ -13,26 +13,25 @@ import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class OpenCommand extends FormsCommand {
 
-    public static final String NAME = "open";
-    public static final String PERMISSION = PERMISSION_BASE + NAME;
-    public static final String PERMISSION_OTHER = PERMISSION + ".others";
+    public static final String OPEN_NAME = "open";
+    public static final String SEND_NAME = "send";
+    public static final String PERMISSION = PERMISSION_BASE + OPEN_NAME;
+    public static final String PERMISSION_OTHER = PERMISSION_BASE + SEND_NAME;
     private static final String ARGUMENT = "form|menu";
 
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
     private final InterfaceManager interfaceManager;
-    private final BedrockFormRegistry bedrockRegistry;
     private final JavaMenuRegistry javaRegistry;
 
     public OpenCommand(CrossplatForms crossplatForms) {
@@ -41,7 +40,6 @@ public class OpenCommand extends FormsCommand {
         this.serverHandler = crossplatForms.getServerHandler();
         this.bedrockHandler = crossplatForms.getBedrockHandler();
         this.interfaceManager = crossplatForms.getInterfaceManager();
-        this.bedrockRegistry = crossplatForms.getInterfaceManager().getBedrockRegistry();
         this.javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
     }
 
@@ -50,15 +48,15 @@ public class OpenCommand extends FormsCommand {
 
         // Base open command
         manager.command(defaultBuilder
-                .literal(NAME)
-                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
-                        .withSuggestionsProvider((context, s) -> interfaceSuggestions(context))
-                        .build())
+                .literal(OPEN_NAME)
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
+                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
+                        .withSuggestionsProvider((context, s) -> openSuggestions(context))
+                        .build())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     UUID uuid = origin.getUUID().orElseThrow();
-                    Player player = serverHandler.getPlayer(uuid);
+                    Player player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
                     String identifier = context.get(ARGUMENT);
                     Interface ui = interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
@@ -77,16 +75,19 @@ public class OpenCommand extends FormsCommand {
                     }
                 }));
 
-        // Additional command to make other players open a form or menu
+        // Send command to make other players open a form or menu
         manager.command(defaultBuilder
-                .literal(NAME)
-                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
-                        .withSuggestionsProvider((context, s) -> interfaceSuggestions(context))
-                        .build())
-                .argument(StringArgument.<CommandOrigin>newBuilder("player")
-                        .withSuggestionsProvider(((context, s) -> playerSuggestions(context)))
-                        .build())
+                .literal(SEND_NAME)
                 .permission(PERMISSION_OTHER)
+                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
+                                .stream()
+                                .map(Player::getName)
+                                .collect(Collectors.toList()))
+                        .build())
+                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
+                        .withSuggestionsProvider((context, s) -> sendSuggestions(context))
+                        .build())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String target = context.get("player");
@@ -115,58 +116,35 @@ public class OpenCommand extends FormsCommand {
         );
     }
 
-    private List<String> interfaceSuggestions(CommandContext<CommandOrigin> context) {
+    private List<String> openSuggestions(CommandContext<CommandOrigin> context) {
         CommandOrigin origin = context.getSender();
         if (origin.isBedrockPlayer(bedrockHandler)) {
             return Collections.emptyList(); // BE players don't get argument suggestions
         }
-        List<Interface> interfaces = new ArrayList<>();
 
-        if (origin.hasPermission(PERMISSION_OTHER) && bedrockHandler.getPlayerCount() > 0) {
-            // Permission to send to other players
-            interfaces.addAll(bedrockRegistry.getForms().values());
-        }
-        interfaces.addAll(javaRegistry.getMenus().values());
-
-        return interfaces.stream()
-                .filter(ui -> origin.hasPermission(ui.permission(Interface.Limit.COMMAND)))
+        return javaRegistry.getMenus().values().stream()
+                .filter(menu -> origin.hasPermission(menu.permission(Interface.Limit.COMMAND)))
                 .map(Interface::getIdentifier)
-                .distinct() // Remove duplicates - forms and menus with the same identifier
                 .collect(Collectors.toList());
     }
 
-    private List<String> playerSuggestions(CommandContext<CommandOrigin> context) {
+    private List<String> sendSuggestions(CommandContext<CommandOrigin> context) {
         CommandOrigin origin = context.getSender();
         if (origin.isBedrockPlayer(bedrockHandler)) {
-            return Collections.emptyList(); // BE players don't get argument suggestions
-        }
-        String id = context.get(ARGUMENT);
-        Interface bedrock = interfaceManager.getInterface(id, true);
-        Interface java = interfaceManager.getInterface(id, false);
-
-        // Don't suggest players if the form specified is not permissible
-        if (bedrock != null && !origin.hasPermission(bedrock.permission(Interface.Limit.COMMAND))) {
-            bedrock = null;
-        }
-        if (java != null && !origin.hasPermission(java.permission(Interface.Limit.COMMAND))) {
-            java = null;
-        }
-        if (bedrock == null && java == null) {
-            return Collections.emptyList(); // The form/menu specified doesnt exist or is not permissible
+            return Collections.emptyList();
         }
 
-        Interface bedrockInterface = bedrock; // must be effectively final for lambda
-        Interface javaInterface = java;
-        return serverHandler.getPlayers()
+        String recipient = context.get("player");
+        Player target = serverHandler.getPlayer(recipient);
+        if (target == null) {
+            return Collections.emptyList();
+        }
+
+        return interfaceManager.getInterfaces(bedrockHandler.isBedrockPlayer(target.getUuid()))
                 .stream()
-                .filter(player -> {
-                    if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-                        return bedrockInterface != null && player.hasPermission(bedrockInterface.permission(Interface.Limit.USE));
-                    } else {
-                        return javaInterface != null && player.hasPermission(javaInterface.permission(Interface.Limit.USE));
-                    }
-                })
-                .map(Player::getName)
+                .filter(ui -> origin.hasPermission(ui.permission(Interface.Limit.COMMAND)) && target.hasPermission(ui.permission(Interface.Limit.USE)))
+                .map(Interface::getIdentifier)
+                .distinct() // Remove duplicates - forms and menus with the same identifier
                 .collect(Collectors.toList());
     }
 }

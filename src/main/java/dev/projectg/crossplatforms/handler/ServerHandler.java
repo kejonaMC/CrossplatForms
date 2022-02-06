@@ -15,11 +15,13 @@ public interface ServerHandler {
     /**
      * Get a player by their UUID
      */
+    @Nullable
     Player getPlayer(UUID uuid);
 
     /**
      * Get a player by the name
      */
+    @Nullable
     Player getPlayer(String name);
 
     List<Player> getPlayers();

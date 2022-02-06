@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -56,6 +58,26 @@ public class InterfaceManager {
         } else {
             return javaRegistry.getMenu(name);
         }
+    }
+
+    /**
+     * @return A list of all forms and menus registered. This list is not backed.
+     */
+    @Nonnull
+    public List<Interface> getInterfaces(boolean bedrock) {
+        List<Interface> list = new ArrayList<>();
+        if (bedrock) {
+            list.addAll(bedrockRegistry.getForms().values());
+            for (JavaMenu menu : javaRegistry.getMenus().values()) {
+                if (menu.isAllowBedrock()) {
+                    list.add(menu);
+                }
+            }
+        } else {
+            list.addAll(javaRegistry.getMenus().values());
+        }
+
+        return list;
     }
 
     /**
