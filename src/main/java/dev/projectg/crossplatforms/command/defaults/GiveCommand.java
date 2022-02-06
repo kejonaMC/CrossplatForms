@@ -25,8 +25,7 @@ public class GiveCommand extends FormsCommand {
     public static final String NAME = "give";
     public static final String PERMISSION = PERMISSION_BASE + NAME;
     public static final String PERMISSION_OTHER = PERMISSION + ".others";
-
-    public static final String ARGUMENT = "accessitem";
+    private static final String ARGUMENT = "accessitem";
 
     private final BedrockHandler bedrockHandler;
     private final ServerHandler serverHandler;

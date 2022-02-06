@@ -24,10 +24,9 @@ import java.util.stream.Collectors;
 
 public class OpenCommand extends FormsCommand {
 
-    private static final String NAME = "open";
-    private static final String PERMISSION = PERMISSION_BASE + NAME;
-    private static final String PERMISSION_OTHER = PERMISSION + ".others";
-
+    public static final String NAME = "open";
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
+    public static final String PERMISSION_OTHER = PERMISSION + ".others";
     private static final String ARGUMENT = "form|menu";
 
     private final ServerHandler serverHandler;
@@ -53,7 +52,7 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(NAME)
                 .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
-                        .withSuggestionsProvider((context, s) -> interfaceSuggestions(context, bedrockHandler, bedrockRegistry, javaRegistry))
+                        .withSuggestionsProvider((context, s) -> interfaceSuggestions(context))
                         .build())
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
@@ -82,7 +81,7 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(NAME)
                 .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
-                        .withSuggestionsProvider((context, s) -> interfaceSuggestions(context, bedrockHandler, bedrockRegistry, javaRegistry))
+                        .withSuggestionsProvider((context, s) -> interfaceSuggestions(context))
                         .build())
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
                         .withSuggestionsProvider(((context, s) -> playerSuggestions(context)))
@@ -116,10 +115,7 @@ public class OpenCommand extends FormsCommand {
         );
     }
 
-    public static List<String> interfaceSuggestions(CommandContext<CommandOrigin> context,
-                                                    BedrockHandler bedrockHandler,
-                                                    BedrockFormRegistry bedrockRegistry,
-                                                    JavaMenuRegistry javaRegistry) {
+    private List<String> interfaceSuggestions(CommandContext<CommandOrigin> context) {
         CommandOrigin origin = context.getSender();
         if (origin.isBedrockPlayer(bedrockHandler)) {
             return Collections.emptyList(); // BE players don't get argument suggestions

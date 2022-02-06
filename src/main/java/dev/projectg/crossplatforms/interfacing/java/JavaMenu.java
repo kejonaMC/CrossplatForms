@@ -45,7 +45,7 @@ public class JavaMenu extends Interface {
     @Override
     public void send(@Nonnull dev.projectg.crossplatforms.handler.Player recipient) {
         Logger logger = CrossplatForms.getInstance().getLogger();
-        if (!(recipient instanceof Player player)) {
+        if (!(recipient.getHandle() instanceof Player player)) {
             throw new AssertionError();
         }
 

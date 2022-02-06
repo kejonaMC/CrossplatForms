@@ -3,7 +3,9 @@
 enable: true
 
 global-permission-defaults:
+  # Permission to use the form
   USE: TRUE
+  # Permission to open the form through commands. USE is required for this to actually work.
   COMMAND: TRUE
 
 forms:

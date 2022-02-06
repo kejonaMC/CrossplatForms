@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class IdentifyCommand extends FormsCommand {
 
-    private static final String NAME = "identify";
-    private static final String PERMISSION = PERMISSION_BASE + NAME;
-    private static final String PERMISSION_OTHER = PERMISSION + ".others";
+    public static final String NAME = "identify";
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
+    public static final String PERMISSION_OTHER = PERMISSION + ".others";
 
     public IdentifyCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);

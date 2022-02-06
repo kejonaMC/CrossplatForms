@@ -1,6 +1,7 @@
-# Configuration of access items, items in hotbars that are shortcuts.
+# Configuration of access items, items in hotbars that are shortcuts for forms and menus.
 
 enable: true
+# If players should switch their selected item to the access item that they were just given to them through events.
 set-held-slot: false
 
 # global permission defaults can be defined here, which will be used if not listed explicitly in an individual entry
@@ -9,7 +10,7 @@ global-permission-defaults:
   POSSESS: TRUE
   # Default value for crossplatforms.item.<name>.event, regulates who the events gives the access item to
   EVENT: TRUE
-  # Default value for crossplatforms.give.<name>.commmand, Regulates if the access item can be used for /forms give <access item>
+  # Default value for crossplatforms.give.<name>.command, Regulates if the access item can be used for /forms give <access item>
   COMMAND: OP
   # Stop the player from dropping the item
   DROP: FALSE

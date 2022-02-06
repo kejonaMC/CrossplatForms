@@ -34,7 +34,7 @@ public class ModalForm extends BedrockForm {
         InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
         Logger logger = Logger.getLogger();
         UUID uuid = recipient.getUuid();
-        Player player = (Player) recipient;
+        Player player = (Player) recipient.getHandle();
 
         BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
         if (!bedrockHandler.isBedrockPlayer(uuid)) {
