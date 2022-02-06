@@ -7,12 +7,15 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
+import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.item.AccessItem;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
+
+import java.util.stream.Collectors;
 
 public class InspectCommand extends FormsCommand {
 
@@ -35,7 +38,11 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("form")
-                .argument(StringArgument.of("form"))
+                .argument(StringArgument.<CommandOrigin>newBuilder("form")
+                        .withSuggestionsProvider(((context, s) -> bedrockRegistry.getForms().values()
+                                .stream()
+                                .map(Interface::getIdentifier)
+                                .collect(Collectors.toList()))))
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String name = context.get("form");
@@ -51,7 +58,11 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("menu")
-                .argument(StringArgument.of("menu"))
+                .argument(StringArgument.<CommandOrigin>newBuilder("menu")
+                        .withSuggestionsProvider(((context, s) -> javaRegistry.getMenus().values()
+                                .stream()
+                                .map(Interface::getIdentifier)
+                                .collect(Collectors.toList()))))
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String name = context.get("menu");
@@ -67,7 +78,11 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("item")
-                .argument(StringArgument.of("item"))
+                .argument(StringArgument.<CommandOrigin>newBuilder("item")
+                        .withSuggestionsProvider(((context, s) -> accessItemRegistry.getItems().values()
+                                .stream()
+                                .map(AccessItem::getIdentifier)
+                                .collect(Collectors.toList()))))
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String name = context.get("item");

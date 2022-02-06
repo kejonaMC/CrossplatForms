@@ -93,7 +93,6 @@ public class InterfaceManager {
         BedrockForm form = bedrockRegistry.getForm(id);
         JavaMenu menu = javaRegistry.getMenu(id);
 
-        // todo: fml... interface class needs an abstract send(Player) method
         if (bedrockHandler.isBedrockPlayer(uuid)) {
             if (form != null) {
                 // form exists
