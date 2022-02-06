@@ -27,9 +27,7 @@ public class FileUtils {
             throw new AssertionError("Resource " + name + " does not exist.");
         }
 
-        if (!file.getParentFile().mkdirs()) {
-            throw new IOException("Failed to make parent directories for file: " + file.getCanonicalPath());
-        }
+        file.getParentFile().mkdirs();
         if (!file.createNewFile()) {
             throw new IllegalStateException("Resource already exists at: " + file.getCanonicalPath());
         }
