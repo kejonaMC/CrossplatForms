@@ -29,6 +29,8 @@ public interface ServerHandler {
      */
     boolean isPluginEnabled(String id);
 
+    boolean isPermissionRegistered(String key);
+
     void registerPermission(String key, @Nullable String description, PermissionDefault def);
 
     default void registerPermission(Permission permission) {

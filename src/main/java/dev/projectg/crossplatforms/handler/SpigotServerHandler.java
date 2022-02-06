@@ -43,6 +43,11 @@ public class SpigotServerHandler implements ServerHandler {
     }
 
     @Override
+    public boolean isPermissionRegistered(String key) {
+        return server.getPluginManager().getPermission(key) != null;
+    }
+
+    @Override
     public void registerPermission(String key, @Nullable String description, dev.projectg.crossplatforms.permission.PermissionDefault def) {
         PermissionDefault perm = switch (def) {
             case TRUE -> PermissionDefault.TRUE;

@@ -71,8 +71,7 @@ public class CrossplatForms extends JavaPlugin {
             commit = gitProperties.getProperty("git.commit.id.abbrev", "unknown");
             logger.info("Branch: " + branch + ", Commit: " + commit);
         } catch (Exception e) {
-            logger.warn("Unable to load resource: git.properties");
-            e.printStackTrace();
+            logger.warn("Unable to load git.properties: " + e.getMessage());
         }
 
         if (serverHandler.isPluginEnabled("floodgate")) {
@@ -86,7 +85,6 @@ public class CrossplatForms extends JavaPlugin {
             bedrockHandler = new GeyserHandler();
             logger.warn("Floodgate is recommended and more stable!");
         } else {
-            //bedrockHandler = new EmptyBedrockHandler();
             logger.severe("Geyser nor Floodgate are installed! Disabling...");
             // todo: make this feasible
             return;

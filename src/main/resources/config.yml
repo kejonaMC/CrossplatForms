@@ -4,9 +4,11 @@
 commands:
   # The command name
   servers:
-    # The form/menu to open
-    target: servers
-    # The permission required for the command. The following block is not necessary, and if listed, defaults will be used.
+    method: register
+    # Target both bedrock and java players
+    all:
+      open: servers
+
     permission:
       key: crossplatforms.shortcut.servers
       description: "Open the servers list"

@@ -35,8 +35,8 @@ public class InterfaceManager {
      * Get an interface to fetch
      * @param name The named identifier of the interface
      * @param bedrock true if the interface is for a bedrock player
-     * @return Always returns null or a {@link JavaMenu} if bedrock is false. May return null or a {@link BedrockForm if
-     * bedrock is true, as well as {@link JavaMenu}} if the JavaMenu allows bedrock players. Prioritizes BedrockForms over
+     * @return Always returns null or a {@link JavaMenu} if bedrock is false. May return null or a {@link BedrockForm} if
+     * bedrock is true, as well as {@link JavaMenu} if the JavaMenu allows bedrock players. Prioritizes BedrockForms over
      * JavaMenus.
      */
     @Nullable

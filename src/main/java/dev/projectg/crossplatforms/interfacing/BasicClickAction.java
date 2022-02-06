@@ -2,11 +2,14 @@ package dev.projectg.crossplatforms.interfacing;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,13 +32,12 @@ public class BasicClickAction implements ClickAction {
     @Nullable
     private String server = null;
 
-    @Override
-    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player) {
-        affectPlayer(interfaceManager, player, Collections.emptyMap());
-    }
+    @Nullable
+    @Setting("open")
+    private String form = null;
 
     @Override
-    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
+    public void affectPlayer(@Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         // Get the commands from the list of commands and replace any playerName placeholders
         for (String command : commands) {
             interfaceManager.runCommand(
@@ -43,7 +45,20 @@ public class BasicClickAction implements ClickAction {
                     player.getUniqueId());
         }
 
-        if (server != null && !server.isEmpty()) {
+        if (form != null && !form.isBlank()) {
+            Interface ui = interfaceManager.getInterface(form, bedrockHandler.isBedrockPlayer(player.getUniqueId()));
+            if (ui == null) {
+                Logger logger = Logger.getLogger();
+                logger.severe("Attempted to make a player open a form or menu '" + form + "', but it does not exist.");
+                if (logger.isDebug()) {
+                    Thread.dumpStack();
+                }
+            } else {
+                ui.send(new SpigotPlayer(player));
+            }
+        }
+
+        if (server != null && !server.isBlank()) {
             String resolved = PlaceholderUtils.setPlaceholders(player, server, additionalPlaceholders);
 
             // This should never be out of bounds considering its size is the number of valid buttons

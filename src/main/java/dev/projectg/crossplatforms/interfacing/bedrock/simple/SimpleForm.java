@@ -65,7 +65,7 @@ public class SimpleForm extends BedrockForm {
             SimpleButton button = formattedButtons.get(response.getClickedButtonId());
 
             // Handle effects of pressing the button
-            button.affectPlayer(registry, player);
+            button.affectPlayer(player, registry, bedrockHandler);
         });
 
         // Send the form to the floodgate player
