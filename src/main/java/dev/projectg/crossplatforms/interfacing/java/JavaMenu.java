@@ -37,11 +37,17 @@ public class JavaMenu extends Interface {
 
     protected transient final String permissionBase = "crossplatforms.menu";
 
+    private boolean allowBedrock = false;
+
     private int size = 5; // Hopper size
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
-    public void sendMenu(@Nonnull Player player) {
+    @Override
+    public void send(@Nonnull dev.projectg.crossplatforms.handler.Player recipient) {
         Logger logger = CrossplatForms.getInstance().getLogger();
+        if (!(recipient.getHandle() instanceof Player player)) {
+            throw new AssertionError();
+        }
 
         Inventory selectorGUI;
         if (size == HOPPER_SIZE) {

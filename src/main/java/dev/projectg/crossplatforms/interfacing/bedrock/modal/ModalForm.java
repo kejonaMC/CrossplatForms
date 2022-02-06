@@ -2,20 +2,18 @@ package dev.projectg.crossplatforms.interfacing.bedrock.modal;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.interfacing.ClickAction;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.interfacing.ClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.response.ModalFormResponse;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
-import javax.annotation.Nonnull;
 import java.util.UUID;
 
 @ToString
@@ -32,18 +30,15 @@ public class ModalForm extends BedrockForm {
     private ModalButton button2;
 
     @Override
-    public void sendForm(@NotNull UUID bedrockPlayer, @Nonnull InterfaceManager interfaceManager) {
+    public void send(@NotNull dev.projectg.crossplatforms.handler.Player recipient) {
+        InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
         Logger logger = Logger.getLogger();
-
-        Player player = Bukkit.getServer().getPlayer(bedrockPlayer);
-        if (player == null) {
-            logger.severe("Unable to find a Bukkit Player for the given UUID: " + bedrockPlayer);
-            return;
-        }
+        UUID uuid = recipient.getUuid();
+        Player player = (Player) recipient.getHandle();
 
         BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
-        if (!bedrockHandler.isBedrockPlayer(bedrockPlayer)) {
-            logger.severe("Player with UUID " + bedrockPlayer + " is not a Bedrock Player!");
+        if (!bedrockHandler.isBedrockPlayer(uuid)) {
+            logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
             return;
         }
 
@@ -70,10 +65,10 @@ public class ModalForm extends BedrockForm {
             };
 
             // Handle effects of pressing the button
-            action.affectPlayer(interfaceManager, player);
+            action.affectPlayer(registry, player);
         });
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(bedrockPlayer, form);
+        bedrockHandler.sendForm(uuid, form);
     }
 }

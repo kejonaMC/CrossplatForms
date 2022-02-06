@@ -14,16 +14,17 @@ public final class DefaultCommands {
     @Getter
     private final List<FormsCommand> commands;
 
-    public DefaultCommands(CrossplatForms forms, MinecraftHelp<CommandOrigin> minecraftHelp) {
+    public DefaultCommands(CrossplatForms instance, MinecraftHelp<CommandOrigin> minecraftHelp) {
 
         commands = ImmutableList.of(
-                new HelpCommand(forms, minecraftHelp),
-                new ListCommand(forms),
-                new OpenCommand(forms),
-                new InspectCommand(forms),
-                new IdentifyCommand(forms),
-                new VersionCommand(forms),
-                new ReloadCommand(forms)
+                new HelpCommand(instance, minecraftHelp),
+                new ListCommand(instance),
+                new OpenCommand(instance),
+                new GiveCommand(instance),
+                new InspectCommand(instance),
+                new IdentifyCommand(instance),
+                new VersionCommand(instance),
+                new ReloadCommand(instance)
         );
     }
 }

@@ -28,7 +28,9 @@ public class FileUtils {
         }
 
         file.getParentFile().mkdirs();
-        file.createNewFile();
+        if (!file.createNewFile()) {
+            throw new IllegalStateException("Resource already exists at: " + file.getCanonicalPath());
+        }
         FileOutputStream output = new FileOutputStream(file);
         input.transferTo(output);
         output.close();

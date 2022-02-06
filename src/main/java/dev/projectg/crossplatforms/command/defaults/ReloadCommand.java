@@ -10,8 +10,8 @@ import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
 public class ReloadCommand extends FormsCommand {
 
-    private static final String NAME = "reload";
-    private static final String PERMISSION = PERMISSION_BASE + NAME;
+    public static final String NAME = "reload";
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
 
     public ReloadCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);

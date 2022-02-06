@@ -5,14 +5,14 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,41 +31,81 @@ public class InterfaceManager {
     @Getter
     private final JavaMenuRegistry javaRegistry;
 
+    /**
+     * Get an interface to fetch
+     * @param name The named identifier of the interface
+     * @param bedrock true if the interface is for a bedrock player
+     * @return Always returns null or a {@link JavaMenu} if bedrock is false. May return null or a {@link BedrockForm if
+     * bedrock is true, as well as {@link JavaMenu}} if the JavaMenu allows bedrock players. Prioritizes BedrockForms over
+     * JavaMenus.
+     */
+    @Nullable
+    public Interface getInterface(String name, boolean bedrock) {
+        if (bedrock) {
+            BedrockForm form = bedrockRegistry.getForm(name);
+            if (form == null) {
+                JavaMenu menu = javaRegistry.getMenu(name);
+                if (menu != null && menu.isAllowBedrock()) {
+                    return menu;
+                } else {
+                    return null;
+                }
+            } else {
+                return form;
+            }
+        } else {
+            return javaRegistry.getMenu(name);
+        }
+    }
 
     /**
      * Sends a given form, identified by its name, to a BE or JE player.
      * If the form does not exist for their platform, they will be sent a message.
      * If forms are disabled on their platform, they will be sent a message.
      * @param player The {@link Player} to send the form to
-     * @param formName The name of the form to open
+     * @param id The name of the form or menu to open
      */
-    public void sendInterface(@Nonnull Player player, @Nonnull String formName) {
-        // todo: allow bedrock players to open JE menus
-        // todo: if java players requests an ID that is only a bedrock form, explain that
-        if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            if (bedrockRegistry.isEnabled()) {
-                BedrockForm form = bedrockRegistry.getForm(formName);
-                if (form == null) {
-                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the form " + formName + " doesn't exist! Specify a form with '/forms open <form>'");
+    public void sendInterface(@Nonnull Player player, @Nonnull String id) {
+        UUID uuid = player.getUuid();
+
+        BedrockForm form = bedrockRegistry.getForm(id);
+        JavaMenu menu = javaRegistry.getMenu(id);
+
+        // todo: fml... interface class needs an abstract send(Player) method
+        if (bedrockHandler.isBedrockPlayer(uuid)) {
+            if (form != null) {
+                // form exists
+                if (player.hasPermission(form.permission(Interface.Limit.USE))) {
+                    form.send(player);
                 } else {
-                    form.sendForm(player.getUuid(), this);
+                    player.sendMessage("You don't have permission to use: " + id);
+                }
+            } else if (menu != null) {
+                if (menu.isAllowBedrock()) {
+                    // menu exists and BE is allowed
+                    if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
+                        menu.send(player);
+                    } else {
+                        player.sendMessage("You don't have permission to use: " + id);
+                    }
+                } else {
+                    // menu exists and BE is not allowed
+                    player.sendMessage("That menu is only available to Java Edition players.");
                 }
             } else {
-                player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, Bedrock forms are disabled!");
+                player.sendMessage("'" + id + "' doesn't exist.");
             }
         } else {
-            if (javaRegistry.isEnabled()) {
-                JavaMenu menu = javaRegistry.getMenu(formName);
-                if (menu == null) {
-                    player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, the menu " + formName + " doesn't exist! Specify a form with '/forms open <menu>'");
+            if (menu != null) {
+                if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
+                    menu.send(player);
                 } else {
-                    menu.sendMenu((org.bukkit.entity.Player) player.getHandle());
+                    player.sendMessage("You don't have permission to use: " + id);
                 }
             } else {
-                player.sendMessage("[CForms] " + ChatColor.RED + "Sorry, Java menus are disabled!");
+                player.sendMessage("'" + id + "' doesn't exist.");
             }
         }
-
     }
 
     /**

@@ -11,11 +11,13 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 
+import java.util.stream.Collectors;
+
 public class IdentifyCommand extends FormsCommand {
 
-    private static final String NAME = "identify";
-    private static final String PERMISSION = PERMISSION_BASE + NAME;
-    private static final String PERMISSION_OTHER = PERMISSION + ".others";
+    public static final String NAME = "identify";
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
+    public static final String PERMISSION_OTHER = PERMISSION + ".others";
 
     public IdentifyCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);
@@ -37,7 +39,9 @@ public class IdentifyCommand extends FormsCommand {
 
         manager.command(defaultBuilder
                 .literal(NAME)
-                .argument(StringArgument.of("player", StringArgument.StringMode.SINGLE)) // todo: argument parser for player list
+                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers().stream().map(Player::getName).collect(Collectors.toList()))
+                        .build())
                 .permission(PERMISSION_OTHER)
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();

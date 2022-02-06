@@ -2,12 +2,11 @@ package dev.projectg.crossplatforms.interfacing.bedrock.simple;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.SimpleFormResponse;
@@ -27,18 +26,16 @@ public class SimpleForm extends BedrockForm {
     private String content = "";
     private List<SimpleButton> buttons = Collections.emptyList();
 
-    public void sendForm(@Nonnull UUID bedrockPlayer, @Nonnull InterfaceManager interfaceManager) {
+    @Override
+    public void send(@Nonnull dev.projectg.crossplatforms.handler.Player recipient) {
+        InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
         Logger logger = Logger.getLogger();
-
-        Player player = Bukkit.getServer().getPlayer(bedrockPlayer);
-        if (player == null) {
-            logger.severe("Unable to find a Bukkit Player for the given UUID: " + bedrockPlayer);
-            return;
-        }
+        UUID uuid = recipient.getUuid();
+        Player player = (Player) recipient.getHandle();
 
         BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
-        if (!bedrockHandler.isBedrockPlayer(bedrockPlayer)) {
-            logger.severe("Player with UUID " + bedrockPlayer + " is not a Bedrock Player!");
+        if (!bedrockHandler.isBedrockPlayer(uuid)) {
+            logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
             return;
         }
 
@@ -68,10 +65,10 @@ public class SimpleForm extends BedrockForm {
             SimpleButton button = formattedButtons.get(response.getClickedButtonId());
 
             // Handle effects of pressing the button
-            button.affectPlayer(interfaceManager, player);
+            button.affectPlayer(registry, player);
         });
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(bedrockPlayer, form);
+        bedrockHandler.sendForm(uuid, form);
     }
 }

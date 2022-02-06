@@ -78,6 +78,7 @@ public class AccessItemListeners implements Listener {
             AccessItem access = accessItemRegistry.getItem(item);
             if (access != null) {
                 HumanEntity human = event.getWhoClicked();
+                // todo: remove the access item if they don't have possess permission ???
                 if (!human.hasPermission(access.permission(AccessItem.Limit.POSSESS)) || !human.hasPermission(access.permission(AccessItem.Limit.MOVE))) {
                     event.setCancelled(true);
                 }
@@ -225,9 +226,9 @@ public class AccessItemListeners implements Listener {
      * @param player The player to give the access item to
      * @param accessItem The access item to give
      * @param setHeldSlot True if the player's selected item should be forced to the access item
-     * @return True if the access item was successfully given
+     * @return True if the access item was successfully given. False if the inventory was too full.
      */
-    private static boolean giveAccessItem(Player player, AccessItem accessItem, boolean setHeldSlot) {
+    public static boolean giveAccessItem(Player player, AccessItem accessItem, boolean setHeldSlot) {
         ItemStack accessItemStack = accessItem.createItemStack(player); // todo update placeholders after the fact. but when?
 
         int desiredSlot = accessItem.getSlot();

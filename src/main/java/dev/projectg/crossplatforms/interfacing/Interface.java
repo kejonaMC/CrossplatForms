@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.interfacing;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.NodeKey;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 
@@ -31,12 +33,18 @@ public abstract class Interface {
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Interface.Limit, Permission> permissions;
 
+    public abstract void send(@Nonnull Player recipient);
+
     /**
      * e.g. "crossplatforms.form"
      */
     protected abstract String getPermissionBase();
 
-    public void generatePermissions(InterfaceRegistry registry) {
+    public String permission(Interface.Limit limit) {
+        return permissions.get(limit).key();
+    }
+
+    public void generatePermissions(InterfaceConfig registry) {
         if (permissions != null) {
             Logger.getLogger().severe("Permissions in menu or form " + identifier + " have already been generated!");
             Thread.dumpStack();
@@ -54,10 +62,6 @@ public abstract class Interface {
         }
 
         permissions = builder.build();
-    }
-
-    public String permission(Interface.Limit limit) {
-        return permissions.get(limit).key();
     }
 
     @RequiredArgsConstructor

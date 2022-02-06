@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import org.bukkit.ChatColor;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,12 @@ public interface CommandOrigin {
      * @param message The message to send
      */
     void sendRaw(String message);
+
+    /**
+     * Send a message with the plugin name prefix
+     * @param message The message to send
+     */
+    void sendMessage(String message);
 
     /**
      * @return True if the command origin represents a player
@@ -67,7 +74,16 @@ public interface CommandOrigin {
             Logger.getLogger().log(level, message);
         } else {
             // todo: abstract chat colour
-            sendRaw("[CForms] " + LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
+            sendMessage(LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
         }
+    }
+
+    /**
+     * Checks if this CommandOrigin is a bedrock player through the given {@link BedrockHandler}
+     * @param handler the BedrockHandler to perform the lookup with
+     * @return True if the command origin is a bedrock player. false if it is anything else, such as a java player or console command sender.
+     */
+    default boolean isBedrockPlayer(BedrockHandler handler) {
+        return isPlayer() && handler.isBedrockPlayer(getUUID().orElseThrow());
     }
 }

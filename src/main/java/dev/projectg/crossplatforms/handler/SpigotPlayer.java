@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.Constants;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class SpigotPlayer implements Player {
 
     @Override
     public void sendMessage(String message) {
-        handle.sendMessage(message);
+        handle.sendMessage(Constants.MESSAGE_PREFIX + message);
     }
 
     @Override

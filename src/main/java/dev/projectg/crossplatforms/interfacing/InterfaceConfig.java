@@ -12,7 +12,7 @@ import java.util.Map;
 @ToString
 @Getter
 @ConfigSerializable
-public abstract class InterfaceRegistry extends Configuration {
+public abstract class InterfaceConfig extends Configuration {
 
     protected boolean enable = true;
 
