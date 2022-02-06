@@ -1,17 +1,5 @@
 # General config
 
-# Commands can be dynamically defined here, to open specific forms.
-commands:
-  # The command name
-  servers:
-    # The form/menu to open
-    target: servers
-    # The permission required for the command. The following block is not necessary, and if listed, defaults will be used.
-    permission:
-      key: crossplatforms.shortcut.servers
-      description: "Open the servers list"
-      default: true
-
 # Toggle debug logging
 enable-debug: false
 
