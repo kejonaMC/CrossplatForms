@@ -25,8 +25,8 @@ permissions:
   crossplatforms.command.open:
     description: Access to /forms open <form>
     default: true
-  crossplatforms.command.open.others:
-    description: Access to /forms open <form> <playername>
+  crossplatforms.command.send:
+    description: Access to /forms send <player> <form>
     default: op
   crossplatforms.command.give:
     description: Access to /forms give <accessitem>

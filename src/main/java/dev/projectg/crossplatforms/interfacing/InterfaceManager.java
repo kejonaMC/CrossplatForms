@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -59,6 +61,26 @@ public class InterfaceManager {
     }
 
     /**
+     * @return A list of all forms and menus registered. This list is not backed.
+     */
+    @Nonnull
+    public List<Interface> getInterfaces(boolean bedrock) {
+        List<Interface> list = new ArrayList<>();
+        if (bedrock) {
+            list.addAll(bedrockRegistry.getForms().values());
+            for (JavaMenu menu : javaRegistry.getMenus().values()) {
+                if (menu.isAllowBedrock()) {
+                    list.add(menu);
+                }
+            }
+        } else {
+            list.addAll(javaRegistry.getMenus().values());
+        }
+
+        return list;
+    }
+
+    /**
      * Sends a given form, identified by its name, to a BE or JE player.
      * If the form does not exist for their platform, they will be sent a message.
      * If forms are disabled on their platform, they will be sent a message.
@@ -71,7 +93,6 @@ public class InterfaceManager {
         BedrockForm form = bedrockRegistry.getForm(id);
         JavaMenu menu = javaRegistry.getMenu(id);
 
-        // todo: fml... interface class needs an abstract send(Player) method
         if (bedrockHandler.isBedrockPlayer(uuid)) {
             if (form != null) {
                 // form exists
