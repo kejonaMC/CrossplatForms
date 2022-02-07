@@ -50,7 +50,7 @@ public class InspectCommand extends FormsCommand {
                     if (form == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That form doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of form" + name);
+                        origin.sendMessage(Logger.Level.INFO, "Inspection of form: " + name);
                         origin.sendMessage(Logger.Level.INFO, form.toString());
                     }
                 })
@@ -70,7 +70,7 @@ public class InspectCommand extends FormsCommand {
                     if (menu == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That menu doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of menu" + name);
+                        origin.sendMessage(Logger.Level.INFO, "Inspection of menu: " + name);
                         origin.sendMessage(Logger.Level.INFO, menu.toString());
                     }
                 })
@@ -90,7 +90,7 @@ public class InspectCommand extends FormsCommand {
                     if (item == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That Access Item doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item" + name);
+                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item: " + name);
                         origin.sendMessage(Logger.Level.INFO, item.toString());
                     }
                 })
