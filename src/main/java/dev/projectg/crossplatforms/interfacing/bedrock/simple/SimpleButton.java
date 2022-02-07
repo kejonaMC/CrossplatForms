@@ -10,6 +10,7 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nullable;
 
+@ToString
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

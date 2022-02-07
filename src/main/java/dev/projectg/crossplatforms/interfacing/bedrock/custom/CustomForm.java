@@ -8,6 +8,7 @@ import dev.projectg.crossplatforms.interfacing.BasicClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@ToString
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class CustomForm extends BedrockForm {
@@ -59,7 +61,6 @@ public class CustomForm extends BedrockForm {
 
         // Set the response handler
         form.setResponseHandler((responseData) -> {
-            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             CustomFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -70,7 +71,7 @@ public class CustomForm extends BedrockForm {
                 }
                 return;
             }
-
+            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < components.size(); i++) {
 

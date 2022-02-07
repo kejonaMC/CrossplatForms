@@ -50,7 +50,6 @@ public class ModalForm extends BedrockForm {
 
         // Set the response handler
         form.setResponseHandler((responseData) -> {
-            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             ModalFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -61,7 +60,7 @@ public class ModalForm extends BedrockForm {
                 }
                 return;
             }
-
+            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             int id = response.getClickedButtonId();
             ClickAction action = switch (id) {
                 case 0 -> button1;

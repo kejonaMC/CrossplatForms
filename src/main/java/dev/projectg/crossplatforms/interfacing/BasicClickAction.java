@@ -37,15 +37,23 @@ public class BasicClickAction implements ClickAction {
     @Override
     public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
         // Get the commands from the list of commands and replace any playerName placeholders
-        for (String command : commands) {
-            interfaceManager.runCommand(
-                    PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
-                    player.getUniqueId());
+        Logger logger = Logger.getLogger();
+        if (!commands.isEmpty()) {
+            for (String command : commands) {
+                interfaceManager.runCommand(
+                        PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
+                        player.getUniqueId());
+            }
+        } else {
+            logger.debug("No commands");
         }
 
-        if (server != null && !server.isEmpty()) {
+        if (server == null) {
+            logger.debug("No server");
+        } else if (server.isBlank()) {
+            logger.debug("server is empty");
+        } else {
             String resolved = PlaceholderUtils.setPlaceholders(player, server, additionalPlaceholders);
-
             // This should never be out of bounds considering its size is the number of valid buttons
             try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
                 Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + server);
