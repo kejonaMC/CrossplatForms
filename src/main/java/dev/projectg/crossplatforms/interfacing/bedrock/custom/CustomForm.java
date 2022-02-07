@@ -51,18 +51,23 @@ public class CustomForm extends BedrockForm {
         }
 
         @SuppressWarnings("unchecked")
-        org.geysermc.cumulus.CustomForm customForm = org.geysermc.cumulus.CustomForm.of(
+        org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
                 PlaceholderUtils.setPlaceholders(player, super.getTitle()),
                 image,
                 (List<org.geysermc.cumulus.component.Component>)(List<?>) components // sad noises
         );
 
         // Set the response handler
-        customForm.setResponseHandler((responseData) -> {
-            CustomFormResponse response = customForm.parseResponse(responseData);
-            if (!response.isCorrect()) {
-                // isCorrect() = !isClosed() && !isInvalid()
-                // player closed the form or returned invalid info (see FormResponse)
+        form.setResponseHandler((responseData) -> {
+            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
+            CustomFormResponse response = form.parseResponse(responseData);
+            if (response.isClosed()) {
+                return;
+            } else if (response.isInvalid()) {
+                if (logger.isDebug()) {
+                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player " + player.getName());
+                    logger.warn(form.getJsonData());
+                }
                 return;
             }
 
@@ -92,6 +97,6 @@ public class CustomForm extends BedrockForm {
         });
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(uuid, customForm);
+        bedrockHandler.sendForm(uuid, form);
     }
 }

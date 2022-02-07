@@ -12,6 +12,7 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -68,16 +69,32 @@ public class ConfigManager {
         Configuration mapped = loader.load().get(config.clazz);
 
         // todo: config translation for different config-versions
+        boolean fail = false;
 
         if (mapped == null) {
             logger.severe("Failed to deserialize " + config.fileName + " to " + config.clazz + ": Mapped object returned null.");
-            return false;
-        }
-        if (mapped.getVersion() != mapped.getDefaultVersion()) {
+            fail = true;
+        } else if (mapped.getVersion() != mapped.getDefaultVersion()) {
             logger.severe(config.fileName + " is outdated. Please back it up and regenerate a new config");
-            return false;
+            fail = true;
         }
-        configurations.put(config.clazz, mapped);
+
+        if (fail) {
+            try {
+                // Get the default values so that the plugin can be reloaded at a later time
+                configurations.put(config.clazz, config.clazz.getConstructor().newInstance());
+                logger.warn("Falling back to minimal defaults for configuration: " + config.fileName);
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                logger.severe("Failed to fallback to defaults for configuration " + config.fileName + ": " + e.getLocalizedMessage());
+                if (logger.isDebug()) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        } else {
+            configurations.put(config.clazz, mapped);
+        }
+
         return true;
     }
 

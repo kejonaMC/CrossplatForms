@@ -205,9 +205,10 @@ public class CrossplatForms extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
         if (adventure != null) {
             adventure.close();
         }
+
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
     }
 }

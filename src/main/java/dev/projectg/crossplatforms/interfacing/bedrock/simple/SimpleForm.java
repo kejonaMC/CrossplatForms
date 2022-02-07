@@ -55,10 +55,15 @@ public class SimpleForm extends BedrockForm {
 
         // Set the response handler
         form.setResponseHandler((responseData) -> {
+            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             SimpleFormResponse response = form.parseResponse(responseData);
-            if (!response.isCorrect()) {
-                // isCorrect() = !isClosed() && !isInvalid()
-                // player closed the form or returned invalid info (see FormResponse)
+            if (response.isClosed()) {
+                return;
+            } else if (response.isInvalid()) {
+                if (logger.isDebug()) {
+                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player " + player.getName());
+                    logger.warn(form.getJsonData());
+                }
                 return;
             }
 
