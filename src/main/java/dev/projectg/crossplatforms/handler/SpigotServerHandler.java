@@ -21,12 +21,22 @@ public class SpigotServerHandler implements ServerHandler {
 
     @Override
     public Player getPlayer(UUID uuid) {
-        return new SpigotPlayer(server.getPlayer(uuid));
+        org.bukkit.entity.Player player = server.getPlayer(uuid);
+        if (player == null) {
+            return null;
+        } else {
+            return new SpigotPlayer(player);
+        }
     }
 
     @Override
     public Player getPlayer(String name) {
-        return new SpigotPlayer(server.getPlayer(name));
+        org.bukkit.entity.Player player = server.getPlayer(name);
+        if (player == null) {
+            return null;
+        } else {
+            return new SpigotPlayer(player);
+        }
     }
 
     @Override

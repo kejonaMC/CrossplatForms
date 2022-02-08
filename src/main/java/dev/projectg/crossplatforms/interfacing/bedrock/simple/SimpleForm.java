@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @ToString
 @ConfigSerializable
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings("FieldMayBeFinal")
 public class SimpleForm extends BedrockForm {
 
     private String content = "";
@@ -55,7 +55,6 @@ public class SimpleForm extends BedrockForm {
 
         // Set the response handler
         form.setResponseHandler((responseData) -> {
-            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             SimpleFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -66,7 +65,7 @@ public class SimpleForm extends BedrockForm {
                 }
                 return;
             }
-
+            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             SimpleButton button = formattedButtons.get(response.getClickedButtonId());
 
             // Handle effects of pressing the button
