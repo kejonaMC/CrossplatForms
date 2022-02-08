@@ -53,12 +53,17 @@ public class AccessItemListeners implements Listener {
                     event.setCancelled(true);
 
                     if (registry.isEnabled() && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
-                        AccessItem accessItem = registry.getItem(id);
+                        AccessItem access = registry.getItem(id);
                         Player player = event.getPlayer();
-
-                        @SuppressWarnings("ConstantConditions") // if id is not null then it exists
-                        String formName = accessItem.getForm();
-                        interfaceManager.sendInterface(new SpigotPlayer(player), formName);
+                        if (access == null) {
+                            // item is no longer registered
+                            player.getInventory().remove(item);
+                        } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                            interfaceManager.sendInterface(new SpigotPlayer(player), access.getTarget());
+                        } else {
+                            player.sendMessage("You don't have permission to have that.");
+                            player.getInventory().remove(item);
+                        }
                     }
                 }
             }
@@ -72,16 +77,20 @@ public class AccessItemListeners implements Listener {
         if (item != null) {
             String id = AccessItemRegistry.getItemId(item);
             if (id != null) {
-                // todo: remove the access item if they don't have possess permission ???
                 if (registry.isEnabled()) {
                     HumanEntity human = event.getWhoClicked();
                     AccessItem access = registry.getItem(id);
-                    if (!human.hasPermission(access.permission(AccessItem.Limit.POSSESS)) || !human.hasPermission(access.permission(AccessItem.Limit.MOVE))) {
+                    if (access == null) {
+                        human.getInventory().remove(item);
+                    } else if (human.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+
                         event.setCancelled(true);
+                    } else {
+                        human.sendMessage("You don't have permission to have that.");
+                        human.getInventory().remove(item);
                     }
-                } else {
-                    event.setCancelled(true);
                 }
+                event.setCancelled(true);
             }
         }
     }
@@ -266,4 +275,6 @@ public class AccessItemListeners implements Listener {
             return false;
         }
     }
+
+    private boolean shouldRemove(Player)
 }

@@ -46,7 +46,7 @@ public class AccessItem {
     private String identifier = null;
 
     @Required
-    private String form = null;
+    private String target = null;
 
     @Required
     private String material = null;

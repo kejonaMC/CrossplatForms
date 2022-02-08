@@ -22,7 +22,7 @@ global-permission-defaults:
 items:
   servers:
     # The form/menu to open
-    form: servers
+    target: servers
     material: COMPASS
     display-name: "§6Server Selector"
     lore:
@@ -42,7 +42,7 @@ items:
     material: CARROT_ON_A_STICK
     display-name: "§6Minigames"
     slot: 5
-    form: minigames
+    target: minigames
     on-join: true
     on-respawn: true
 
