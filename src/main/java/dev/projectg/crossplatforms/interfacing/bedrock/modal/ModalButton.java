@@ -6,7 +6,7 @@ import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @ConfigSerializable
 public class ModalButton extends BasicClickAction {

@@ -17,7 +17,7 @@ public class AccessItemConfig extends Configuration {
 
     private transient final int defaultVersion = 1;
 
-    private boolean enable = true;
+    private boolean enable = false;
 
     private boolean setHeldSlot = false;
 

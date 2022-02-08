@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.Logger;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -20,12 +21,22 @@ public class SpigotServerHandler implements ServerHandler {
 
     @Override
     public Player getPlayer(UUID uuid) {
-        return new SpigotPlayer(server.getPlayer(uuid));
+        org.bukkit.entity.Player player = server.getPlayer(uuid);
+        if (player == null) {
+            return null;
+        } else {
+            return new SpigotPlayer(player);
+        }
     }
 
     @Override
     public Player getPlayer(String name) {
-        return new SpigotPlayer(server.getPlayer(name));
+        org.bukkit.entity.Player player = server.getPlayer(name);
+        if (player == null) {
+            return null;
+        } else {
+            return new SpigotPlayer(player);
+        }
     }
 
     @Override
@@ -82,6 +93,7 @@ public class SpigotServerHandler implements ServerHandler {
      * Executes a command synchronously, as required by the Spigot API.
      */
     private void dispatchCommand(CommandSender commandSender, String command) {
+        Logger.getLogger().debug("Executing [" + command + "] as " + commandSender.getName());
         server.getScheduler().runTask(plugin, () -> server.dispatchCommand(commandSender, command));
     }
 }

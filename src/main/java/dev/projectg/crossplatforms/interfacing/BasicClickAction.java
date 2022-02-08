@@ -5,11 +5,9 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
-import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,19 +19,17 @@ import java.util.List;
 import java.util.Map;
 
 @ToString
-@Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class BasicClickAction implements ClickAction {
 
     @Nonnull
-    private List<String> commands = Collections.emptyList();
+    protected List<String> commands = Collections.emptyList();
 
     @Nullable
-    private String server = null;
+    protected String server = null;
 
     @Nullable
-    @Setting("open")
     private String form = null;
 
     @Override
@@ -58,7 +54,7 @@ public class BasicClickAction implements ClickAction {
             }
         }
 
-        if (server != null && !server.isBlank()) {
+        if (server != null && !server.isEmpty()) {
             String resolved = PlaceholderUtils.setPlaceholders(player, server, additionalPlaceholders);
 
             // This should never be out of bounds considering its size is the number of valid buttons
