@@ -60,7 +60,7 @@ public class SimpleForm extends BedrockForm {
                 return;
             } else if (response.isInvalid()) {
                 if (logger.isDebug()) {
-                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player " + player.getName());
+                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player: " + player.getName());
                     logger.warn(form.getJsonData());
                 }
                 return;

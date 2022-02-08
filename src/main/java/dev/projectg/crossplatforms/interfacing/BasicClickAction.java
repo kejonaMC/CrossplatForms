@@ -3,7 +3,6 @@ package dev.projectg.crossplatforms.interfacing;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
-import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -18,16 +17,15 @@ import java.util.List;
 import java.util.Map;
 
 @ToString
-@Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class BasicClickAction implements ClickAction {
 
     @Nonnull
-    private List<String> commands = Collections.emptyList();
+    protected List<String> commands = Collections.emptyList();
 
     @Nullable
-    private String server = null;
+    protected String server = null;
 
     @Override
     public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player) {
