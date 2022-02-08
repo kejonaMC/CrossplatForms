@@ -45,7 +45,8 @@ public class BasicClickAction implements ClickAction {
             Interface ui = interfaceManager.getInterface(form, bedrockHandler.isBedrockPlayer(player.getUniqueId()));
             if (ui == null) {
                 Logger logger = Logger.getLogger();
-                logger.severe("Attempted to make a player open a form or menu '" + form + "', but it does not exist.");
+                logger.severe("Attempted to make a player open a form or menu '" + form + "', but it does not exist. This is a configuration error!");
+                // todo: remove interface from the registry
                 if (logger.isDebug()) {
                     Thread.dumpStack();
                 }
@@ -54,7 +55,7 @@ public class BasicClickAction implements ClickAction {
             }
         }
 
-        if (server != null && !server.isEmpty()) {
+        if (server != null && !server.isBlank()) {
             String resolved = PlaceholderUtils.setPlaceholders(player, server, additionalPlaceholders);
 
             // This should never be out of bounds considering its size is the number of valid buttons
