@@ -37,6 +37,15 @@ items:
     on-respawn: true
     # Give the access item on world change
     on-world-change: false
+    # Remove on player leave
+    persist: false
+    # This can be removed since it used the exact same values as the global-permission-defaults.
+    permission-defaults:
+      POSSESS: TRUE
+      EVENT: TRUE
+      COMMAND: OP
+      PRESERVE: FALSE
+      MOVE: FALSE
 
   minigames:
     material: CARROT_ON_A_STICK
