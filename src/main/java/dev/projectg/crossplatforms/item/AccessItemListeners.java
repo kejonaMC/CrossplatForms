@@ -142,15 +142,16 @@ public class AccessItemListeners implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) { // restricting dropping
+        if (!registry.isEnabled()) {
+            return;
+        }
+
         Player player = event.getEntity();
         for (ItemStack item : event.getDrops()) {
-            String id = AccessItemRegistry.getItemId(item);
-            if (id != null) {
-                AccessItem access = registry.getItem(id);
-                if (access != null) {
-                    if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                        event.getDrops().remove(item);
-                    }
+            AccessItem access = registry.getItem(item);
+            if (access != null) {
+                if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                    event.getDrops().remove(item);
                 }
             }
         }
