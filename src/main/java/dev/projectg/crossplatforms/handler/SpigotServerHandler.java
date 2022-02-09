@@ -66,6 +66,7 @@ public class SpigotServerHandler implements ServerHandler {
             case OP -> PermissionDefault.OP;
         };
 
+        Logger.getLogger().debug("Registering permission " + key + " : " + perm);
         server.getPluginManager().addPermission(new Permission(key, description, perm));
     }
 
