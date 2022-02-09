@@ -39,11 +39,7 @@ public class AccessItemListeners implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // opening menus through access items
         Action action = event.getAction();
-        if (action == Action.RIGHT_CLICK_AIR
-                || action == Action.RIGHT_CLICK_BLOCK
-                || action == Action.LEFT_CLICK_AIR
-                || action == Action.LEFT_CLICK_BLOCK) {
-
+        if (action != Action.PHYSICAL) {
             ItemStack item = event.getItem();
             if (item != null) {
                 String id = AccessItemRegistry.getItemId(item);
@@ -52,14 +48,16 @@ public class AccessItemListeners implements Listener {
                     // If it was a right click, using the access item should be the only behaviour
                     event.setCancelled(true);
 
-                    if (registry.isEnabled() && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
+                    if (registry.isEnabled()) {
                         AccessItem access = registry.getItem(id);
                         Player player = event.getPlayer();
                         if (access == null) {
                             // item is no longer registered
                             player.getInventory().remove(item);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
-                            interfaceManager.sendInterface(new SpigotPlayer(player), access.getTarget());
+                            if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                                access.trigger(player, interfaceManager);
+                            }
                         } else {
                             player.sendMessage("You don't have permission to have that.");
                             player.getInventory().remove(item);
@@ -81,80 +79,79 @@ public class AccessItemListeners implements Listener {
                     HumanEntity human = event.getWhoClicked();
                     AccessItem access = registry.getItem(id);
                     if (access == null) {
-                        human.getInventory().remove(item);
-                    } else if (human.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
-
+                        // restrict items that no longer exist
                         event.setCancelled(true);
-                    } else {
+                    } else if (!human.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                         human.sendMessage("You don't have permission to have that.");
                         human.getInventory().remove(item);
+                    } else if (!human.hasPermission(access.permission(AccessItem.Limit.MOVE))) {
+                        event.setCancelled(true);
                     }
+                } else {
+                    // restrict items even if the registry is disabled
+                    event.setCancelled(true);
                 }
-                event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
     public void PlayerSwapHandItemsEvent(PlayerSwapHandItemsEvent event) { // Don't allow putting it in the offhand
-        if (!registry.isEnabled()) {
-            return;
-        }
-
         ItemStack item = event.getOffHandItem();
-        if (item != null) {
-            AccessItem access = registry.getItem(item);
-            if (access != null) {
-                event.setCancelled(true);
-            }
+        if (item != null && AccessItemRegistry.getItemId(item) != null) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event) { // Stop players without possession permission to pickup items
-        if (!registry.isEnabled() || !(event.getEntity() instanceof Player player)) {
-            return;
-        }
-
-        ItemStack item = event.getItem().getItemStack();
-        AccessItem access = registry.getItem(item);
-        if (access != null) {
-            event.setCancelled(!player.hasPermission(access.permission(AccessItem.Limit.POSSESS)));
+        if (event.getEntity() instanceof Player player) {
+            ItemStack item = event.getItem().getItemStack();
+            String id = AccessItemRegistry.getItemId(item);
+            if (id != null) {
+                AccessItem access = registry.getItem(id);
+                if (access == null) {
+                    event.setCancelled(true);
+                } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) { // restricting dropping
-        if (!registry.isEnabled()) {
-            return;
-        }
-
         ItemStack item = event.getItemDrop().getItemStack();
-        AccessItem access = registry.getItem(item);
-        if (access != null) {
-            Player player = event.getPlayer();
-            if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
-                if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                    event.getItemDrop().remove();
-                }
-            } else {
+        String id = AccessItemRegistry.getItemId(item);
+        if (id != null) {
+            AccessItem access = registry.getItem(item);
+            if (access == null) {
                 event.setCancelled(true);
+            } else {
+                Player player = event.getPlayer();
+                if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
+                    if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                        event.getItemDrop().remove();
+                    }
+                } else {
+                    event.setCancelled(true);
+                }
             }
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) { // restricting dropping
-        if (!registry.isEnabled()) {
-            return;
-        }
-
         Player player = event.getEntity();
-        List<ItemStack> items = event.getDrops();
-        for (ItemStack item : items) {
-            AccessItem access = registry.getItem(item);
-            if (access != null && !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                event.getDrops().remove(item);
+        for (ItemStack item : event.getDrops()) {
+            String id = AccessItemRegistry.getItemId(item);
+            if (id != null) {
+                AccessItem access = registry.getItem(id);
+                if (access != null) {
+                    if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                        event.getDrops().remove(item);
+                    }
+                }
             }
         }
     }
@@ -181,8 +178,6 @@ public class AccessItemListeners implements Listener {
             if (item != null) {
                 AccessItem access = registry.getItem(item);
                 if (access != null && !access.isPersist()) {
-                    // Even if this specific item/access item is no longer registered
-                    // The fact it has the ID inside of it means it once was or still is
                     player.getInventory().remove(item);
                     logger.debug("Removing access item %s from %s".formatted(access.getIdentifier(), player.getName()));
                 }
@@ -275,6 +270,4 @@ public class AccessItemListeners implements Listener {
             return false;
         }
     }
-
-    private boolean shouldRemove(Player)
 }
