@@ -30,7 +30,7 @@ public class BasicClickAction implements ClickAction {
     protected String server = null;
 
     @Nullable
-    private String form = null;
+    protected String form = null;
 
     @Override
     public void affectPlayer(@Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {

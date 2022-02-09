@@ -34,6 +34,7 @@ public class ConfigManager {
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         })));
+        loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false));
     }
 
     /**

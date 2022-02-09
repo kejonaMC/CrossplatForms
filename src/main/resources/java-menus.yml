@@ -10,6 +10,7 @@ menus:
   servers:
     # The title of the inventory that the player sees
     title: "§0server Selector"
+    allow-bedrock: false
     # The size of the inventory. Must be greater by at least one than the highest button number. Must be 5, or a multiple of 9 (54 or lower).
     size: 9
     buttons:
@@ -52,6 +53,7 @@ menus:
           server: "survival"
   minigames:
     title: "§0Minigames"
+    allow-bedrock: false
     size: 5
     buttons:
       1:

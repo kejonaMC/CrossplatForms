@@ -51,15 +51,14 @@ public class AccessItem {
     @Required
     private String identifier = null;
 
-    @Required
-    private String target = null;
+    private BasicClickAction action = null;
+
+    private BasicClickAction bedrockAction = null;
+
+    private BasicClickAction javaAction = null;
 
     @Required
     private String material = null;
-
-    private BasicClickAction action = null;
-    private BasicClickAction bedrockAction = null;
-    private BasicClickAction javaAction = null;
 
     /**
      * Display name of the itemstack
