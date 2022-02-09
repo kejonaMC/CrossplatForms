@@ -39,8 +39,7 @@ menus:
           - "§fSpleef"
           - "§fHide § Seek"
         any-click:
-          commands:
-            - "player; forms open minigames"
+          form: minigames
       6:
         display-name: "§6Survival"
         material: EMERALD

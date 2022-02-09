@@ -26,8 +26,7 @@ forms:
 
       - text: "Minigames"
         image: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
-        commands:
-          - "player; forms open minigames"
+        form: minigames
 
       - text: "Spawn"
         commands:
