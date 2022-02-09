@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.interfacing.BasicClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.permission.Permission;
@@ -103,15 +104,18 @@ public class AccessItem {
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Limit, Permission> permissions;
 
-    public void trigger(Player player, InterfaceManager interfaceManager) {
+    public void trigger(Player player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
         if (action != null) {
-            action.affectPlayer(interfaceManager, player);
+            action.affectPlayer(player, interfaceManager, bedrockHandler);
         }
-        if (bedrockAction != null) {
-            bedrockAction.affectPlayer(interfaceManager, player);
-        } // todo: actual platform
-        if (javaAction != null) {
-            javaAction.affectPlayer(interfaceManager, player);
+        if (bedrockHandler.isBedrockPlayer(player.getUniqueId())) {
+            if (bedrockAction != null) {
+                bedrockAction.affectPlayer(player, interfaceManager, bedrockHandler);
+            }
+        } else {
+            if (javaAction != null) {
+                javaAction.affectPlayer(player, interfaceManager, BedrockHandler.empty());
+            }
         }
     }
 

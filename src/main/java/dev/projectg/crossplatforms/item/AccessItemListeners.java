@@ -3,7 +3,6 @@ package dev.projectg.crossplatforms.item;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
@@ -56,7 +55,7 @@ public class AccessItemListeners implements Listener {
                             player.getInventory().remove(item);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                                access.trigger(player, interfaceManager);
+                                access.trigger(player, interfaceManager, bedrockHandler);
                             }
                         } else {
                             player.sendMessage("You don't have permission to have that.");
