@@ -149,10 +149,8 @@ public class AccessItemListeners implements Listener {
         Player player = event.getEntity();
         for (ItemStack item : event.getDrops()) {
             AccessItem access = registry.getItem(item);
-            if (access != null) {
-                if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                    event.getDrops().remove(item);
-                }
+            if (access != null && !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                event.getDrops().remove(item);
             }
         }
     }
