@@ -60,4 +60,4 @@ items:
     on-join: true
     on-respawn: true
 
-config-version: 1
+config-version: 2

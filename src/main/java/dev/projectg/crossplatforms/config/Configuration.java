@@ -9,8 +9,10 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 @ConfigSerializable
 public abstract class Configuration {
 
+    public static final String VERSION_KEY = "config-version";
+
     @Required
-    @Setting("config-version")
+    @Setting(VERSION_KEY)
     private int version;
 
     public abstract int getDefaultVersion();
