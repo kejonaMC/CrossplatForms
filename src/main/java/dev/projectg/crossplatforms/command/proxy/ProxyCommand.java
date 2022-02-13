@@ -25,29 +25,29 @@ public class ProxyCommand {
     private CommandType method;
 
     @Nullable
-    private BasicClickAction all = null;
+    private BasicClickAction action = null;
 
     @Nullable
-    private BasicClickAction bedrock = null;
+    private BasicClickAction bedrockAction = null;
 
     @Nullable
-    private BasicClickAction java = null;
+    private BasicClickAction javaAction = null;
 
     @Setter
     private String permission;
 
     public void run(Player player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
         org.bukkit.entity.Player bukkitPlayer = (org.bukkit.entity.Player) player.getHandle();
-        if (all != null) {
-            all.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
+        if (action != null) {
+            action.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
         }
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            if (bedrock != null) {
-                bedrock.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
+            if (bedrockAction != null) {
+                bedrockAction.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
             }
         } else {
-            if (java != null) {
-                java.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
+            if (javaAction != null) {
+                javaAction.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
             }
         }
     }
