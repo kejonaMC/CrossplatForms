@@ -4,15 +4,19 @@
 commands:
   # The command name
   servers:
-    method: register
+    method: REGISTER
     # Target both bedrock and java players
     all:
-      open: servers
+      # Open the form or menu called "servers"
+      form: servers
 
-    permission:
-      key: crossplatforms.shortcut.servers
-      description: "Open the servers list"
-      default: true
+    # The permission key to use. This will not register the permission or give it a default, so existing permissions can be used.
+    # This uses the permission for the "/forms open" command.
+    permission: crossplatforms.command.open
+
+# Allows commands to be registered with the REGISTER method after server startup.
+# Even with this disabled, the actions and permission of existing commands can still be changed and reloaded.
+unsafe-command-registration: false
 
 # Toggle debug logging
 enable-debug: false

@@ -1,23 +1,41 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.Constants;
+import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import lombok.RequiredArgsConstructor;
+import dev.projectg.crossplatforms.command.CommandType;
+import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
-@RequiredArgsConstructor
-public class SpigotServerHandler implements ServerHandler {
+public class SpigotServerHandler implements ServerHandler, Listener {
+
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("\s");
+    private static final String PERMISSION_MESSAGE = Constants.MESSAGE_PREFIX + "You don't have permission to run that.";
 
     private final Server server;
-    private final JavaPlugin plugin;
+    private final CrossplatForms plugin;
+
+    private final Map<String, ProxyCommand> proxyCommands = new HashMap<>();
+
+    public SpigotServerHandler(CrossplatForms plugin) {
+        this.server = plugin.getServer();
+        this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
 
     @Override
     public Player getPlayer(UUID uuid) {
@@ -96,5 +114,38 @@ public class SpigotServerHandler implements ServerHandler {
     private void dispatchCommand(CommandSender commandSender, String command) {
         Logger.getLogger().debug("Executing [" + command + "] as " + commandSender.getName());
         server.getScheduler().runTask(plugin, () -> server.dispatchCommand(commandSender, command));
+    }
+
+    @Override
+    public void registerProxyCommand(ProxyCommand proxyCommand) {
+        proxyCommands.put(proxyCommand.getName(), proxyCommand);
+    }
+
+    @Override
+    public void clearProxyCommands() {
+        proxyCommands.clear();
+    }
+
+    @EventHandler
+    public void onPreProcessCommand(PlayerCommandPreprocessEvent event) {
+        String name = COMMAND_PATTERN.split(event.getMessage().substring(1))[0]; // remove command slash and get first command
+        Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + name + "]");
+        ProxyCommand command = proxyCommands.get(name);
+        if (command != null) {
+            org.bukkit.entity.Player player = event.getPlayer();
+            if (player.hasPermission(command.getPermission())) {
+                command.run(
+                        new SpigotPlayer(player),
+                        CrossplatForms.getInstance().getInterfaceManager(),
+                        CrossplatForms.getInstance().getBedrockHandler()
+                );
+            } else {
+                player.sendMessage(PERMISSION_MESSAGE);
+            }
+
+            if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

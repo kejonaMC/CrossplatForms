@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
@@ -41,6 +41,7 @@ public class JavaMenuRegistry implements Reloadable {
 
         if (configManager.getConfig(MenuConfig.class).isEmpty()) {
             enabled = false;
+            Logger.getLogger().warn("Menu config is not present, not enabling menus.");
             return;
         }
 

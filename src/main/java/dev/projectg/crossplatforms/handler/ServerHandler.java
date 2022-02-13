@@ -1,5 +1,7 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.command.CommandType;
+import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
 
@@ -53,4 +55,12 @@ public interface ServerHandler {
      * @param command The command string to execute
      */
     void dispatchCommand(UUID player, String command);
+
+    /**
+     * Register a {@link ProxyCommand}
+     * @param proxyCommand The ProxyCommand to register. It's {@link CommandType} must be only {@link CommandType#INTERCEPT_CANCEL} or {@link CommandType#INTERCEPT_PASS}.
+     */
+    void registerProxyCommand(ProxyCommand proxyCommand);
+
+    void clearProxyCommands();
 }
