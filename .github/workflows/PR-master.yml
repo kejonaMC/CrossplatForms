@@ -20,7 +20,7 @@ jobs:
           java-version: '16'
           distribution: 'adopt'
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew clean build
       
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.2.3
