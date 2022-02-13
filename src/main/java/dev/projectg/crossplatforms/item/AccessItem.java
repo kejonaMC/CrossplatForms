@@ -4,6 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.interfacing.BasicClickAction;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
@@ -41,32 +44,79 @@ public class AccessItem {
 
     private static final String permissionBase = "crossplatforms.item";
 
+    /**
+     * The reliable identifier of the access item
+     */
     @NodeKey
     @Required
     private String identifier = null;
 
-    @Required
-    private String form = null;
+    private BasicClickAction action = null;
+
+    private BasicClickAction bedrockAction = null;
+
+    private BasicClickAction javaAction = null;
 
     @Required
     private String material = null;
 
+    /**
+     * Display name of the itemstack
+     */
     @Required
     private String displayName = null;
+
+    /**
+     * Itemstack lore
+     */
     private List<String> lore = Collections.emptyList();
+
+    /**
+     * The inventory slot to be placed in
+     */
     private int slot = 0;
 
+
+    /**
+     * If there should be an attempt to give access items on join events.
+     */
     private boolean onJoin = false;
+
+    /**
+     * If there should be an attempt to give access items on respawn events.
+     */
     private boolean onRespawn = false;
+
+    /**
+     * If there should be an attempt to give access items on world change events,
+     */
     private boolean onWorldChange = false;
 
     private Platform platform = Platform.ALL;
     private Map<Limit, PermissionDefault> permissionDefaults = Collections.emptyMap();
 
+    /**
+     * If persist is disable, access items will be removed from player inventories on death.
+     */
     private boolean persist = false;
 
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Limit, Permission> permissions;
+
+    public void trigger(Player player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
+        if (action != null) {
+            action.affectPlayer(player, interfaceManager, bedrockHandler);
+        }
+        if (bedrockHandler.isBedrockPlayer(player.getUniqueId())) {
+            if (bedrockAction != null) {
+                bedrockAction.affectPlayer(player, interfaceManager, bedrockHandler);
+            }
+        } else {
+            if (javaAction != null) {
+                javaAction.affectPlayer(player, interfaceManager, BedrockHandler.empty());
+            }
+        }
+    }
 
     private static ItemStack createItemStack(@Nonnull String identifier, @Nonnull String displayName, @Nonnull String materialId, @Nonnull List<String> lore) {
         Material material = Material.getMaterial(materialId);
@@ -131,7 +181,7 @@ public class AccessItem {
 
         // Permissions regarding having the access item in the inventory
         DROP(".drop", "Ability to remove the Access Item from your inventory", PermissionDefault.FALSE),
-        PRESERVE(".preserve", "Stop the Access Item from being destroyed when it is dropped", PermissionDefault.FALSE),
+        PRESERVE(".preserve", "Stop the Access Item from being destroyed when it is dropped. This includes death, regardless of drop permission.", PermissionDefault.FALSE),
         MOVE(".move", "Ability to move the Access Item around and to inventories", PermissionDefault.FALSE);
 
         /**

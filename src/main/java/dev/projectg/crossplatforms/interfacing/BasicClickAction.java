@@ -2,6 +2,8 @@ package dev.projectg.crossplatforms.interfacing;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
 import org.bukkit.entity.Player;
@@ -27,31 +29,35 @@ public class BasicClickAction implements ClickAction {
     @Nullable
     protected String server = null;
 
-    @Override
-    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player) {
-        affectPlayer(interfaceManager, player, Collections.emptyMap());
-    }
+    @Nullable
+    protected String form = null;
 
     @Override
-    public void affectPlayer(@Nonnull InterfaceManager interfaceManager, @Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders) {
+    public void affectPlayer(@Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         // Get the commands from the list of commands and replace any playerName placeholders
-        Logger logger = Logger.getLogger();
-        if (!commands.isEmpty()) {
-            for (String command : commands) {
-                interfaceManager.runCommand(
-                        PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
-                        player.getUniqueId());
-            }
-        } else {
-            logger.debug("No commands");
+        for (String command : commands) {
+            interfaceManager.runCommand(
+                    PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
+                    player.getUniqueId());
         }
 
-        if (server == null) {
-            logger.debug("No server");
-        } else if (server.isBlank()) {
-            logger.debug("server is empty");
-        } else {
+        if (form != null && !form.isBlank()) {
+            Interface ui = interfaceManager.getInterface(form, bedrockHandler.isBedrockPlayer(player.getUniqueId()));
+            if (ui == null) {
+                Logger logger = Logger.getLogger();
+                logger.severe("Attempted to make a player open a form or menu '" + form + "', but it does not exist. This is a configuration error!");
+                // todo: remove interface from the registry
+                if (logger.isDebug()) {
+                    Thread.dumpStack();
+                }
+            } else {
+                ui.send(new SpigotPlayer(player));
+            }
+        }
+
+        if (server != null && !server.isBlank()) {
             String resolved = PlaceholderUtils.setPlaceholders(player, server, additionalPlaceholders);
+
             // This should never be out of bounds considering its size is the number of valid buttons
             try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
                 Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + server);

@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
@@ -38,6 +39,7 @@ public class BedrockFormRegistry implements Reloadable {
 
         if (configManager.getConfig(FormConfig.class).isEmpty()) {
             enabled = false;
+            Logger.getLogger().warn("Form config is not present, not enabling forms.");
             return;
         }
 

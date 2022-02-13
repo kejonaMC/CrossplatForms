@@ -26,6 +26,9 @@ public class AccessItemRegistry implements Reloadable {
     @Getter
     private boolean enabled = false;
 
+    /**
+     * Set the held slot to the access item when given through events
+     */
     @Getter
     @Accessors(fluent = true)
     private boolean setHeldSlot;
@@ -102,6 +105,16 @@ public class AccessItemRegistry implements Reloadable {
         } else {
             return items.get(identifier);
         }
+    }
+
+    /**
+     * Attempt to retrieve the Access Item from its identifier
+     * @param id The identifier to check.
+     * @return The Access Item that has the given identifier, if it exists.
+     */
+    @Nullable
+    public AccessItem getItem(@Nonnull String id) {
+        return items.get(id);
     }
 
     /**

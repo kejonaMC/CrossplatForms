@@ -94,7 +94,7 @@ public class CustomForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            action.affectPlayer(registry, player, resultPlaceholders);
+            action.affectPlayer(player, resultPlaceholders, registry, bedrockHandler);
         });
 
         // Send the form to the floodgate player

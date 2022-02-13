@@ -39,6 +39,7 @@ public class SimpleButton extends BasicClickAction implements ButtonComponent {
         button.image = this.image; // form image is immutable
         button.commands = new ArrayList<>(this.commands);
         button.server = this.server;
+        button.form = this.form;
         return button;
     }
 }

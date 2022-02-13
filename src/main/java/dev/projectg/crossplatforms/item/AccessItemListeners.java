@@ -3,7 +3,6 @@ package dev.projectg.crossplatforms.item;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
@@ -33,33 +32,35 @@ public class AccessItemListeners implements Listener {
 
     private final Logger logger = Logger.getLogger();
     private final InterfaceManager interfaceManager;
-    private final AccessItemRegistry accessItemRegistry;
+    private final AccessItemRegistry registry;
     private final BedrockHandler bedrockHandler;
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // opening menus through access items
-        if (!accessItemRegistry.isEnabled()) {
-            return;
-        }
-
         Action action = event.getAction();
-        if (action == Action.RIGHT_CLICK_AIR
-                || action == Action.RIGHT_CLICK_BLOCK
-                || action == Action.LEFT_CLICK_AIR
-                || action == Action.LEFT_CLICK_BLOCK) {
-
+        if (action != Action.PHYSICAL) {
             ItemStack item = event.getItem();
             if (item != null) {
-                AccessItem accessItem = accessItemRegistry.getItem(item);
-                if (accessItem != null) {
+                String id = AccessItemRegistry.getItemId(item);
+                if (id != null) {
                     // Don't allow using the item to break blocks
                     // If it was a right click, using the access item should be the only behaviour
                     event.setCancelled(true);
 
-                    if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                    if (registry.isEnabled()) {
+                        AccessItem access = registry.getItem(id);
                         Player player = event.getPlayer();
-                        String formName = accessItem.getForm();
-                        interfaceManager.sendInterface(new SpigotPlayer(player), formName);
+                        if (access == null) {
+                            // item is no longer registered
+                            player.getInventory().remove(item);
+                        } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                            if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                                access.trigger(player, interfaceManager, bedrockHandler);
+                            }
+                        } else {
+                            player.sendMessage("You don't have permission to have that.");
+                            player.getInventory().remove(item);
+                        }
                     }
                 }
             }
@@ -68,18 +69,25 @@ public class AccessItemListeners implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) { // keep the access items in place
-        if (!accessItemRegistry.isEnabled()) {
-            return;
-        }
-
         // todo: don't allow duplication for creative players
         ItemStack item = event.getCurrentItem();
         if (item != null) {
-            AccessItem access = accessItemRegistry.getItem(item);
-            if (access != null) {
-                HumanEntity human = event.getWhoClicked();
-                // todo: remove the access item if they don't have possess permission ???
-                if (!human.hasPermission(access.permission(AccessItem.Limit.POSSESS)) || !human.hasPermission(access.permission(AccessItem.Limit.MOVE))) {
+            String id = AccessItemRegistry.getItemId(item);
+            if (id != null) {
+                if (registry.isEnabled()) {
+                    HumanEntity human = event.getWhoClicked();
+                    AccessItem access = registry.getItem(id);
+                    if (access == null) {
+                        // restrict items that no longer exist
+                        event.setCancelled(true);
+                    } else if (!human.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                        human.sendMessage("You don't have permission to have that.");
+                        human.getInventory().remove(item);
+                    } else if (!human.hasPermission(access.permission(AccessItem.Limit.MOVE))) {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    // restrict items even if the registry is disabled
                     event.setCancelled(true);
                 }
             }
@@ -88,62 +96,58 @@ public class AccessItemListeners implements Listener {
 
     @EventHandler
     public void PlayerSwapHandItemsEvent(PlayerSwapHandItemsEvent event) { // Don't allow putting it in the offhand
-        if (!accessItemRegistry.isEnabled()) {
-            return;
-        }
-
         ItemStack item = event.getOffHandItem();
-        if (item != null) {
-            AccessItem access = accessItemRegistry.getItem(item);
-            if (access != null) {
-                event.setCancelled(true);
-            }
+        if (item != null && AccessItemRegistry.getItemId(item) != null) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event) { // Stop players without possession permission to pickup items
-        if (!accessItemRegistry.isEnabled() || !(event.getEntity() instanceof Player player)) {
-            return;
-        }
-
-        ItemStack item = event.getItem().getItemStack();
-        AccessItem access = accessItemRegistry.getItem(item);
-        if (access != null) {
-            event.setCancelled(!player.hasPermission(access.permission(AccessItem.Limit.POSSESS)));
+        if (event.getEntity() instanceof Player player) {
+            ItemStack item = event.getItem().getItemStack();
+            String id = AccessItemRegistry.getItemId(item);
+            if (id != null) {
+                AccessItem access = registry.getItem(id);
+                if (access == null) {
+                    event.setCancelled(true);
+                } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) { // restricting dropping
-        if (!accessItemRegistry.isEnabled()) {
-            return;
-        }
-
         ItemStack item = event.getItemDrop().getItemStack();
-        AccessItem access = accessItemRegistry.getItem(item);
-        if (access != null) {
-            Player player = event.getPlayer();
-            if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
-                if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                    event.getItemDrop().remove();
-                }
-            } else {
+        String id = AccessItemRegistry.getItemId(item);
+        if (id != null) {
+            AccessItem access = registry.getItem(item);
+            if (access == null) {
                 event.setCancelled(true);
+            } else {
+                Player player = event.getPlayer();
+                if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
+                    if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                        event.getItemDrop().remove();
+                    }
+                } else {
+                    event.setCancelled(true);
+                }
             }
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) { // restricting dropping
-        if (!accessItemRegistry.isEnabled()) {
+        if (!registry.isEnabled()) {
             return;
         }
 
         Player player = event.getEntity();
-        List<ItemStack> items = event.getDrops();
-        for (ItemStack item : items) {
-            AccessItem access = accessItemRegistry.getItem(item);
+        for (ItemStack item : event.getDrops()) {
+            AccessItem access = registry.getItem(item);
             if (access != null && !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
                 event.getDrops().remove(item);
             }
@@ -170,10 +174,8 @@ public class AccessItemListeners implements Listener {
         Player player = event.getPlayer();
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
-                AccessItem access = accessItemRegistry.getItem(item);
+                AccessItem access = registry.getItem(item);
                 if (access != null && !access.isPersist()) {
-                    // Even if this specific item/access item is no longer registered
-                    // The fact it has the ID inside of it means it once was or still is
                     player.getInventory().remove(item);
                     logger.debug("Removing access item %s from %s".formatted(access.getIdentifier(), player.getName()));
                 }
@@ -187,7 +189,7 @@ public class AccessItemListeners implements Listener {
         // Remove any access items that are now longer allowed
         for (ItemStack item : player.getInventory()) {
             if (item != null) {
-                AccessItem access = accessItemRegistry.getItem(item);
+                AccessItem access = registry.getItem(item);
                 if (access != null) {
                     if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                         contained.add(access.getIdentifier());
@@ -202,10 +204,10 @@ public class AccessItemListeners implements Listener {
 
         // Give any access items that should be given
         boolean changedHand = false; // If we have changed the item the player is holding
-        for (AccessItem access : accessItemRegistry.getItems().values()) {
+        for (AccessItem access : registry.getItems().values()) {
             if (give.test(access) && Platform.matches(player.getUniqueId(), access.getPlatform(), bedrockHandler) && player.hasPermission(access.permission(AccessItem.Limit.EVENT))) {
                 if (!contained.contains(access.getIdentifier())) {
-                    if (accessItemRegistry.setHeldSlot() && !changedHand) {
+                    if (registry.setHeldSlot() && !changedHand) {
                         giveAccessItem(player, access, true);
                         changedHand = true;
                         logger.debug("Set held slot to " + access.getSlot());
