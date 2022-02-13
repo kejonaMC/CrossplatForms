@@ -27,7 +27,6 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.item.AccessItemListeners;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
-import dev.projectg.crossplatforms.utils.FileUtils;
 import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -36,16 +35,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
 
-import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 @Getter
 public class CrossplatForms extends JavaPlugin {
     @Getter
     private static CrossplatForms instance;
-
-    private String branch = "unknown";
-    private String commit = "unknown";
 
     private ConfigManager configManager;
     private ServerHandler serverHandler;
@@ -62,19 +57,9 @@ public class CrossplatForms extends JavaPlugin {
         instance = this;
         ReloadableRegistry.clear();
         Logger logger = Logger.getLogger();
+        logger.info("Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
 
         serverHandler = new SpigotServerHandler(this);
-
-        try {
-            Properties gitProperties = new Properties();
-            gitProperties.load(FileUtils.getResource("git.properties"));
-            branch = gitProperties.getProperty("git.branch", "unknown");
-            commit = gitProperties.getProperty("git.commit.id.abbrev", "unknown");
-            logger.info("Branch: " + branch + ", Commit: " + commit);
-        } catch (Exception e) {
-            logger.warn("Unable to load git.properties: " + e.getMessage());
-        }
-
         if (serverHandler.isPluginEnabled("floodgate")) {
             if (serverHandler.isPluginEnabled("Geyser-Spigot") && GeyserImpl.getInstance().getConfig().getRemote().getAuthType() != AuthType.FLOODGATE ) {
                 logger.warn("Floodgate is installed but auth-type in Geyser's config is not set to Floodgate! Ignoring Floodgate.");
