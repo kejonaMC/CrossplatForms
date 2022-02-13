@@ -53,8 +53,9 @@ public interface ServerHandler {
      * Execute a command as the given player.
      * @param player The player to run the command as
      * @param command The command string to execute
+     * @param op whether or not the temporarily op the player while running the command
      */
-    void dispatchCommand(UUID player, String command);
+    void dispatchCommand(UUID player, String command, boolean op);
 
     /**
      * Register a {@link ProxyCommand}

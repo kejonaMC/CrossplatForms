@@ -99,12 +99,23 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     }
 
     @Override
-    public void dispatchCommand(UUID player, String command) {
-        CommandSender sender = server.getPlayer(player);
-        if (sender == null) {
-            throw new IllegalArgumentException("A player with UUID " + player + " was not found to dispatch a command as");
+    public void dispatchCommand(UUID playerId, String command, boolean op) {
+        org.bukkit.entity.Player player = server.getPlayer(playerId);
+        if (player == null) {
+            throw new IllegalArgumentException("A player with UUID " + playerId + " was not found to dispatch a command as");
+        } else if (op) {
+            server.getScheduler().runTask(plugin, () -> {
+                Logger.getLogger().debug("Executing [" + command + "] as " + player.getName() + " with op");
+                if (player.isOp()) {
+                    server.getScheduler().runTask(plugin, () -> server.dispatchCommand(player, command));
+                } else {
+                    player.setOp(true);
+                    server.getScheduler().runTask(plugin, () -> server.dispatchCommand(player, command));
+                    player.setOp(false);
+                }
+            });
         } else {
-            dispatchCommand(sender, command);
+            dispatchCommand(player, command);
         }
     }
 

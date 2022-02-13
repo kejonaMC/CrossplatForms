@@ -22,6 +22,7 @@ import java.util.UUID;
 public class InterfaceManager {
 
     public static final String PLAYER_PREFIX = "player;";
+    public static final String OP_PREFIX = "op;";
     public static final String CONSOLE_PREFIX = "console;";
 
     private final ServerHandler serverHandler;
@@ -141,7 +142,7 @@ public class InterfaceManager {
         Objects.requireNonNull(command);
 
         String executableCommand;
-        if (command.startsWith(PLAYER_PREFIX) || command.startsWith(CONSOLE_PREFIX)) {
+        if (command.startsWith(PLAYER_PREFIX) || command.startsWith(CONSOLE_PREFIX) || command.startsWith(OP_PREFIX)) {
             // Split the input into two strings between ";" and get the second string
             executableCommand = command.split(";", 2)[1].trim();
         } else {
@@ -149,10 +150,10 @@ public class InterfaceManager {
         }
 
         if (command.startsWith(PLAYER_PREFIX)) {
-            Logger.getLogger().debug("Running command: [" + executableCommand + "] as " + player);
-            serverHandler.dispatchCommand(player, executableCommand);
+            serverHandler.dispatchCommand(player, executableCommand, false);
+        } else if (command.startsWith(OP_PREFIX)) {
+            serverHandler.dispatchCommand(player, executableCommand, true);
         } else {
-            Logger.getLogger().debug("Running command: [" + executableCommand + "] as console");
             serverHandler.dispatchCommand(executableCommand);
         }
     }
