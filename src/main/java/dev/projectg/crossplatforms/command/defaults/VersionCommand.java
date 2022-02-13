@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.command.defaults;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
@@ -23,7 +24,7 @@ public class VersionCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     origin.sendMessage(Logger.Level.INFO, "CrossplatForms version:");
-                    origin.sendMessage(Logger.Level.INFO, "Branch: " + crossplatForms.getBranch() + ", Commit: " + crossplatForms.getCommit());
+                    origin.sendMessage(Logger.Level.INFO, "Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
                 })
                 .build());
     }
