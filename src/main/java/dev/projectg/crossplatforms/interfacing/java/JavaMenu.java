@@ -103,18 +103,18 @@ public class JavaMenu extends Interface {
 
             ClickAction any;
             if ((any = button.getAnyClick()) != null) {
-                any.affectPlayer(interfaceManager, player);
+                any.affectPlayer(player, interfaceManager);
             }
 
             if (rightClick) {
                 ClickAction right;
                 if ((right = button.getRightClick()) != null) {
-                    right.affectPlayer(interfaceManager, player);
+                    right.affectPlayer(player, interfaceManager);
                 }
             } else {
                 ClickAction left;
                 if ((left = button.getLeftClick()) != null) {
-                    left.affectPlayer(interfaceManager, player);
+                    left.affectPlayer(player, interfaceManager);
                 }
             }
         }

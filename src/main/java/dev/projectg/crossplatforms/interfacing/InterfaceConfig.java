@@ -14,7 +14,7 @@ import java.util.Map;
 @ConfigSerializable
 public abstract class InterfaceConfig extends Configuration {
 
-    protected boolean enable = true;
+    protected boolean enable = false;
 
     protected final Map<Interface.Limit, PermissionDefault> globalPermissionDefaults = Collections.emptyMap();
 }

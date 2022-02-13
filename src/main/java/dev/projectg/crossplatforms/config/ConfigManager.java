@@ -8,10 +8,14 @@ import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerialize
 import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import org.geysermc.cumulus.util.FormImage;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.transformation.ConfigurationTransformation;
+import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,13 +30,17 @@ public class ConfigManager {
     public ConfigManager(File directory, Logger logger) {
         this.directory = directory;
         this.logger = logger;
-
+        // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         })));
+        // don't initialize default values for object values
+        // default parameters provided to ConfigurationNode getter methods should not be set to the node
+        loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false).shouldCopyDefaults(false));
+        loaderBuilder.nodeStyle(NodeStyle.BLOCK); // don't inline lists, maps, etc
     }
 
     /**
@@ -65,19 +73,67 @@ public class ConfigManager {
     private boolean loadConfig(ConfigId config) throws IOException {
         File file = FileUtils.fileOrCopiedFromResource(new File(directory, config.fileName));
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();
-        Configuration mapped = loader.load().get(config.clazz);
+        ConfigurationNode nodes = loader.load();
 
-        // todo: config translation for different config-versions
+        boolean correctVersion = true;
+        if (nodes.hasChild(Configuration.VERSION_KEY)) { // ensure version is correct
+            int currentVersion = nodes.node(Configuration.VERSION_KEY).getInt();
+            if (currentVersion != config.version) {
+                if (config.updater == null) {
+                    logger.severe(config.fileName + " must have a version of " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
+                    correctVersion = false;
+                } else if (currentVersion < config.minimumVersion || currentVersion > config.version) {
+                    logger.severe(config.fileName + " must have a version between " + config.minimumVersion + " and " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
+                    correctVersion = false;
+                } else {
+                    ConfigurationNode copy = nodes.copy(); // keep an old copy to save to file if an update happens
+                    ConfigurationTransformation.Versioned updater = config.updater.get(); // transformer for performing updates
+                    int startVersion = updater.version(nodes);
+                    updater.apply(nodes); // update if necessary
+                    int endVersion = updater.version(nodes);
+                    if (startVersion != endVersion) {
+                        loaderBuilder.file(new File(directory, "old_" + config.fileName)).build().save(copy); // save the old copy
+                        loader.save(nodes); // save the updated version
+                    }
+                    if (endVersion == config.version) {
+                        logger.info("Updated " + config.fileName + " from version " + startVersion + " to " + endVersion);
+                    } else {
+                        logger.severe("Failed to update " + config.fileName + " from version " + startVersion + " to " + endVersion);
+                        correctVersion = false;
+                    }
+                }
+            }
+        } else {
+            logger.severe(config.fileName + " must defined a config-version. Please back it up and regenerate a new config.");
+            correctVersion = false;
+        }
+
+        Configuration mapped;
+        if (correctVersion) {
+            mapped = nodes.get(config.clazz); // Map it to the object
+            if (mapped == null) {
+                logger.severe("Failed to deserialize " + config.fileName + " to " + config.clazz + ": Mapped object returned null.");
+            }
+        } else {
+            mapped = null;
+        }
 
         if (mapped == null) {
-            logger.severe("Failed to deserialize " + config.fileName + " to " + config.clazz + ": Mapped object returned null.");
-            return false;
+            try {
+                // Get the default values so that the plugin can be reloaded at a later time
+                configurations.put(config.clazz, config.clazz.getConstructor().newInstance());
+                logger.warn("Falling back to MINIMAL DEFAULTS for configuration: " + config.fileName);
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                logger.severe("Failed to fallback to defaults for configuration " + config.fileName + ": " + e.getLocalizedMessage());
+                if (logger.isDebug()) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        } else {
+            configurations.put(config.clazz, mapped);
         }
-        if (mapped.getVersion() != mapped.getDefaultVersion()) {
-            logger.severe(config.fileName + " is outdated. Please back it up and regenerate a new config");
-            return false;
-        }
-        configurations.put(config.clazz, mapped);
+
         return true;
     }
 

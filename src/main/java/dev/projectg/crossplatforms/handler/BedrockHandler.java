@@ -11,4 +11,8 @@ public interface BedrockHandler {
     void sendForm(UUID uuid, Form form);
 
     int getPlayerCount();
+
+    static BedrockHandler empty() {
+        return EmptyBedrockHandler.INSTANCE;
+    }
 }

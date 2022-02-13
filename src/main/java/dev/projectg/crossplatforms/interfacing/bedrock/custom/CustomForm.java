@@ -8,6 +8,7 @@ import dev.projectg.crossplatforms.interfacing.BasicClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@ToString
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class CustomForm extends BedrockForm {
@@ -51,21 +53,25 @@ public class CustomForm extends BedrockForm {
         }
 
         @SuppressWarnings("unchecked")
-        org.geysermc.cumulus.CustomForm customForm = org.geysermc.cumulus.CustomForm.of(
+        org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
                 PlaceholderUtils.setPlaceholders(player, super.getTitle()),
                 image,
                 (List<org.geysermc.cumulus.component.Component>)(List<?>) components // sad noises
         );
 
         // Set the response handler
-        customForm.setResponseHandler((responseData) -> {
-            CustomFormResponse response = customForm.parseResponse(responseData);
-            if (!response.isCorrect()) {
-                // isCorrect() = !isClosed() && !isInvalid()
-                // player closed the form or returned invalid info (see FormResponse)
+        form.setResponseHandler((responseData) -> {
+            CustomFormResponse response = form.parseResponse(responseData);
+            if (response.isClosed()) {
+                return;
+            } else if (response.isInvalid()) {
+                if (logger.isDebug()) {
+                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player " + player.getName());
+                    logger.warn(form.getJsonData());
+                }
                 return;
             }
-
+            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < components.size(); i++) {
 
@@ -88,10 +94,10 @@ public class CustomForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            action.affectPlayer(registry, player, resultPlaceholders);
+            action.affectPlayer(player, resultPlaceholders, registry, bedrockHandler);
         });
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(uuid, customForm);
+        bedrockHandler.sendForm(uuid, form);
     }
 }

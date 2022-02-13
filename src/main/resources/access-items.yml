@@ -21,8 +21,12 @@ global-permission-defaults:
 
 items:
   servers:
-    # The form/menu to open
-    form: servers
+    # "action", "bedrock-action", and "java-action" are all allowed. These should be condensed into a single "action" since they are the same.
+    bedrock-action:
+      # The form/menu to open
+      form: servers
+    java-action:
+      form: servers
     material: COMPASS
     display-name: "§6Server Selector"
     lore:
@@ -37,13 +41,23 @@ items:
     on-respawn: true
     # Give the access item on world change
     on-world-change: false
+    # Remove on player leave
+    persist: false
+    # This can be removed since it used the exact same values as the global-permission-defaults.
+    permission-defaults:
+      POSSESS: TRUE
+      EVENT: TRUE
+      COMMAND: OP
+      PRESERVE: FALSE
+      MOVE: FALSE
 
   minigames:
     material: CARROT_ON_A_STICK
     display-name: "§6Minigames"
     slot: 5
-    form: minigames
+    action:
+      form: minigames
     on-join: true
     on-respawn: true
 
-config-version: 1
+config-version: 2

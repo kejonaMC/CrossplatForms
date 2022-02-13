@@ -7,6 +7,8 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
+import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
@@ -15,6 +17,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.item.AccessItem;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InspectCommand extends FormsCommand {
@@ -28,6 +31,7 @@ public class InspectCommand extends FormsCommand {
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
+        ServerHandler serverHandler = crossplatForms.getServerHandler();
         BedrockFormRegistry bedrockRegistry = crossplatForms.getInterfaceManager().getBedrockRegistry();
         JavaMenuRegistry javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
         AccessItemRegistry accessItemRegistry = crossplatForms.getAccessItemRegistry();
@@ -50,7 +54,7 @@ public class InspectCommand extends FormsCommand {
                     if (form == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That form doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of form" + name);
+                        origin.sendMessage(Logger.Level.INFO, "Inspection of form: " + name);
                         origin.sendMessage(Logger.Level.INFO, form.toString());
                     }
                 })
@@ -70,7 +74,7 @@ public class InspectCommand extends FormsCommand {
                     if (menu == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That menu doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of menu" + name);
+                        origin.sendMessage(Logger.Level.INFO, "Inspection of menu: " + name);
                         origin.sendMessage(Logger.Level.INFO, menu.toString());
                     }
                 })
@@ -90,8 +94,31 @@ public class InspectCommand extends FormsCommand {
                     if (item == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That Access Item doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item" + name);
+                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item: " + name);
                         origin.sendMessage(Logger.Level.INFO, item.toString());
+                    }
+                })
+        );
+
+        manager.command(base
+                .literal("player")
+                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
+                                .stream()
+                                .map(Player::getName)
+                                .collect(Collectors.toList()))
+                        .build())
+                .handler(context -> {
+                    CommandOrigin origin = context.getSender();
+                    String target = context.get("player");
+                    Player player = serverHandler.getPlayer(target);
+                    if (player == null) {
+                        origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
+                        return;
+                    }
+                    origin.sendMessage("The player " + player.getName() + " has the following permissions:");
+                    for (Map.Entry<String, Boolean> permission : player.getPermissions().entrySet()) {
+                        origin.sendMessage(permission.getKey() + " : " + permission.getValue());
                     }
                 })
         );

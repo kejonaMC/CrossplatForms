@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
+import java.util.Map;
 import java.util.UUID;
 
 public interface Player {
@@ -20,6 +21,12 @@ public interface Player {
      * @return True if the player has the permission
      */
     boolean hasPermission(String permission);
+
+    /**
+     * @return A Map of registered permission key -> boolean value of this player, only for permissions
+     * from CrossplatForms.
+     */
+    Map<String, Boolean> getPermissions();
 
     void sendMessage(String message);
 

@@ -37,8 +37,8 @@ public class InterfaceManager {
      * Get an interface to fetch
      * @param name The named identifier of the interface
      * @param bedrock true if the interface is for a bedrock player
-     * @return Always returns null or a {@link JavaMenu} if bedrock is false. May return null or a {@link BedrockForm if
-     * bedrock is true, as well as {@link JavaMenu}} if the JavaMenu allows bedrock players. Prioritizes BedrockForms over
+     * @return Always returns null or a {@link JavaMenu} if bedrock is false. May return null or a {@link BedrockForm} if
+     * bedrock is true, as well as {@link JavaMenu} if the JavaMenu allows bedrock players. Prioritizes BedrockForms over
      * JavaMenus.
      */
     @Nullable
@@ -82,8 +82,8 @@ public class InterfaceManager {
 
     /**
      * Sends a given form, identified by its name, to a BE or JE player.
-     * If the form does not exist for their platform, they will be sent a message.
-     * If forms are disabled on their platform, they will be sent a message.
+     * If the form/menu doesn't exist or they don't have have the {@link Interface.Limit#USE} permission,
+     * they will be told so,
      * @param player The {@link Player} to send the form to
      * @param id The name of the form or menu to open
      */

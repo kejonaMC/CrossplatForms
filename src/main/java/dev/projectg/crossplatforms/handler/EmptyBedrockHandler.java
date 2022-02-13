@@ -9,6 +9,8 @@ import java.util.UUID;
  */
 public class EmptyBedrockHandler implements BedrockHandler {
 
+    public static BedrockHandler INSTANCE = new EmptyBedrockHandler();
+
     @Override
     public boolean isBedrockPlayer(UUID uuid) {
         return false;

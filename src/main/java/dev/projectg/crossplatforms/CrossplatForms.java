@@ -12,6 +12,7 @@ import dev.projectg.crossplatforms.command.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
+import dev.projectg.crossplatforms.command.proxy.ProxyCommandManager;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -62,7 +63,7 @@ public class CrossplatForms extends JavaPlugin {
         ReloadableRegistry.clear();
         Logger logger = Logger.getLogger();
 
-        serverHandler = new SpigotServerHandler(Bukkit.getServer(), this);
+        serverHandler = new SpigotServerHandler(this);
 
         try {
             Properties gitProperties = new Properties();
@@ -71,8 +72,7 @@ public class CrossplatForms extends JavaPlugin {
             commit = gitProperties.getProperty("git.commit.id.abbrev", "unknown");
             logger.info("Branch: " + branch + ", Commit: " + commit);
         } catch (Exception e) {
-            logger.warn("Unable to load resource: git.properties");
-            e.printStackTrace();
+            logger.warn("Unable to load git.properties: " + e.getMessage());
         }
 
         if (serverHandler.isPluginEnabled("floodgate")) {
@@ -86,7 +86,6 @@ public class CrossplatForms extends JavaPlugin {
             bedrockHandler = new GeyserHandler();
             logger.warn("Floodgate is recommended and more stable!");
         } else {
-            //bedrockHandler = new EmptyBedrockHandler();
             logger.severe("Geyser nor Floodgate are installed! Disabling...");
             // todo: make this feasible
             return;
@@ -154,13 +153,13 @@ public class CrossplatForms extends JavaPlugin {
                 .apply(commandManager, (origin -> adventure.sender((CommandSender) origin.getHandle())));
 
         MinecraftHelp<CommandOrigin> minecraftHelp = new MinecraftHelp<>(
-                "/forms help",
+                "/" + FormsCommand.NAME + " help",
                 (origin -> adventure.sender((CommandSender) origin.getHandle())),
                 commandManager
         );
 
         // The top of our command tree
-        Command.Builder<CommandOrigin> defaultBuilder = commandManager.commandBuilder("forms");
+        Command.Builder<CommandOrigin> defaultBuilder = commandManager.commandBuilder(FormsCommand.NAME);
 
         // The handler for the root /forms command
         commandManager.command(defaultBuilder
@@ -170,7 +169,7 @@ public class CrossplatForms extends JavaPlugin {
                     try {
                         if (origin.hasPermission(ListCommand.PERMISSION)) {
                             logger.debug("Executing /forms list from /forms");
-                            commandManager.executeCommand(origin, "forms list").get();
+                            commandManager.executeCommand(origin, FormsCommand.NAME + " list").get();
                         } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
                             minecraftHelp.queryCommands("", context.getSender());
                         } else {
@@ -186,6 +185,9 @@ public class CrossplatForms extends JavaPlugin {
             // Registering sub commands
             command.register(commandManager, defaultBuilder);
         }
+
+        // register shortcut commands
+        new ProxyCommandManager(this, commandManager);
 
         logger.debug("Took " + (System.currentTimeMillis() - commandTime) + "ms to setup commands.");
 
@@ -205,9 +207,10 @@ public class CrossplatForms extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
         if (adventure != null) {
             adventure.close();
         }
+
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
     }
 }
