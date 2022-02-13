@@ -14,6 +14,4 @@ public abstract class Configuration {
     @Required
     @Setting(VERSION_KEY)
     private int version;
-
-    public abstract int getDefaultVersion();
 }

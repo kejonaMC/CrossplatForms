@@ -17,7 +17,8 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class AccessItemConfig extends Configuration {
 
-    private transient final int defaultVersion = 1;
+    public static final int VERSION = 2;
+    public static final int MINIMUM_VERSION = 1;
 
     private boolean enable = false;
 
@@ -29,7 +30,7 @@ public class AccessItemConfig extends Configuration {
 
     public static ConfigurationTransformation.Versioned updater() {
         return ConfigurationTransformation.versionedBuilder()
-                .versionKey(VERSION_KEY)
+                .versionKey(Configuration.VERSION_KEY)
                 .addVersion(2, update1_2())
                 .build();
     }

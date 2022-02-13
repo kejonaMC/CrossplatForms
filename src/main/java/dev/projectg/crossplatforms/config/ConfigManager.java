@@ -74,26 +74,34 @@ public class ConfigManager {
         File file = FileUtils.fileOrCopiedFromResource(new File(directory, config.fileName));
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();
         ConfigurationNode nodes = loader.load();
-        if (config.updater != null) {
-            ConfigurationNode copy = nodes.copy(); // keep an old copy to save to file if an update happens
-
-            ConfigurationTransformation.Versioned updater = config.updater.get(); // transformer for performing updates
-            int startVersion = updater.version(nodes);
-            updater.apply(nodes); // update if necessary
-            int endVersion = updater.version(nodes);
-            if (startVersion != endVersion) {
-                logger.info("Updated " + config.fileName + " from version " + startVersion + " to " + endVersion);
-                loaderBuilder.file(new File(directory, "old_" + config.fileName)).build().save(copy); // save the old copy
-                loader.save(nodes); // save the updated version
-            }
-        }
 
         boolean correctVersion = true;
         if (nodes.hasChild(Configuration.VERSION_KEY)) { // ensure version is correct
             int currentVersion = nodes.node(Configuration.VERSION_KEY).getInt();
             if (currentVersion != config.version) {
-                logger.severe(config.fileName + " must have a version of " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
-                correctVersion = false;
+                if (config.updater == null) {
+                    logger.severe(config.fileName + " must have a version of " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
+                    correctVersion = false;
+                } else if (currentVersion < config.minimumVersion || currentVersion > config.version) {
+                    logger.severe(config.fileName + " must have a version between " + config.minimumVersion + " and " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
+                    correctVersion = false;
+                } else {
+                    ConfigurationNode copy = nodes.copy(); // keep an old copy to save to file if an update happens
+                    ConfigurationTransformation.Versioned updater = config.updater.get(); // transformer for performing updates
+                    int startVersion = updater.version(nodes);
+                    updater.apply(nodes); // update if necessary
+                    int endVersion = updater.version(nodes);
+                    if (startVersion != endVersion) {
+                        loaderBuilder.file(new File(directory, "old_" + config.fileName)).build().save(copy); // save the old copy
+                        loader.save(nodes); // save the updated version
+                    }
+                    if (endVersion == config.version) {
+                        logger.info("Updated " + config.fileName + " from version " + startVersion + " to " + endVersion);
+                    } else {
+                        logger.severe("Failed to update " + config.fileName + " from version " + startVersion + " to " + endVersion);
+                        correctVersion = false;
+                    }
+                }
             }
         } else {
             logger.severe(config.fileName + " must defined a config-version. Please back it up and regenerate a new config.");
