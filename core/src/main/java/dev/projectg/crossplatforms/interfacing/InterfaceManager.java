@@ -1,6 +1,5 @@
 package dev.projectg.crossplatforms.interfacing;
 
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.Player;
 import dev.projectg.crossplatforms.handler.ServerHandler;
