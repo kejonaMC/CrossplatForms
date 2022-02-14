@@ -1,6 +1,6 @@
 [![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
 [![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/ProjectG-Plugins/GeyserUpdater/blob/master/LICENSE)
-![Jenkins](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.projectg.dev%2Fjob%2FCrossplatForms%2Fjob%2Fmain%2F)
+[![Build Status](https://ci.projectg.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.projectg.dev/job/CrossplatForms/job/main/)
 [![Version](https://img.shields.io/badge/version-0.2.0-blue)](https://github.com/ProjectG-Plugins/CrossplatForms/actions/workflows/push-master.yml)
 
 
