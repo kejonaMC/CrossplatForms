@@ -8,3 +8,6 @@ pluginManagement {
         id("com.github.johnrengelman.shadow") version "7.1.0" // shadowing dependencies
     }
 }
+
+include(":core")
+include(":spigot")
