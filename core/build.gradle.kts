@@ -20,8 +20,6 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.22")
-    compileOnly("org.projectlombok:lombok:1.18.22")
     compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
     compileOnly("org.geysermc:core:2.0.1-SNAPSHOT")
     compileOnly("org.geysermc.floodgate:api:2.1.0-SNAPSHOT")
@@ -32,3 +30,5 @@ dependencies {
     api("net.kyori:adventure-platform-bukkit:4.0.1")
     api("org.spongepowered:configurate-yaml:4.1.2")
 }
+
+description = "core"

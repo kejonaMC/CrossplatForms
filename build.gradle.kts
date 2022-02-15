@@ -20,15 +20,17 @@ allprojects{
     }
 }
 
-repositories {
+subprojects {
     apply(plugin = "maven-publish")
 
-    mavenCentral()
-}
+    repositories {
+        mavenCentral()
+    }
 
-dependencies {
-    annotationProcessor("org.projectlombok:lombok:1.18.22")
-    compileOnly("org.projectlombok:lombok:1.18.22")
+    dependencies {
+        annotationProcessor("org.projectlombok:lombok:1.18.22")
+        compileOnly("org.projectlombok:lombok:1.18.22")
+    }
 }
 
 tasks.named("build") {
