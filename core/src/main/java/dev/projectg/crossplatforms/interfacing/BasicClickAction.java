@@ -3,7 +3,6 @@ package dev.projectg.crossplatforms.interfacing;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.SpigotPlayer;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
 import org.bukkit.entity.Player;
@@ -22,6 +21,8 @@ import java.util.Map;
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class BasicClickAction implements ClickAction {
+
+    // todo: usage of this should be turned into a map of click actions. key of the click action defines the click actions implementation. different platforms can defined extra click actions.
 
     @Nonnull
     protected List<String> commands = Collections.emptyList();

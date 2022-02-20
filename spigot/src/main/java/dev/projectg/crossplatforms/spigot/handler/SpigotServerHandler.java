@@ -1,10 +1,15 @@
-package dev.projectg.crossplatforms.handler;
+package dev.projectg.crossplatforms.spigot.handler;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
+import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.ServerHandler;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
@@ -12,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -27,13 +34,15 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     private static final String PERMISSION_MESSAGE = Constants.MESSAGE_PREFIX + "You don't have permission to run that.";
 
     private final Server server;
-    private final CrossplatForms plugin;
+    private final JavaPlugin plugin;
+    private final BukkitAudiences audiences;
 
     private final Map<String, ProxyCommand> proxyCommands = new HashMap<>();
 
-    public SpigotServerHandler(CrossplatForms plugin) {
+    public SpigotServerHandler(JavaPlugin plugin, BukkitAudiences audiences) {
         this.server = plugin.getServer();
         this.plugin = plugin;
+        this.audiences = audiences;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -66,14 +75,25 @@ public class SpigotServerHandler implements ServerHandler, Listener {
         return players;
     }
 
+    @NotNull
     @Override
-    public boolean isPluginEnabled(String id) {
-        return server.getPluginManager().isPluginEnabled(id);
+    public Audience asAudience(CommandOrigin origin) {
+        return audiences.sender((CommandSender) origin.getHandle());
     }
 
     @Override
     public boolean isPermissionRegistered(String key) {
         return server.getPluginManager().getPermission(key) != null;
+    }
+
+    @Override
+    public boolean isGeyserEnabled() {
+        return server.getPluginManager().isPluginEnabled("Geyser-Spigot");
+    }
+
+    @Override
+    public boolean isFloodgateEnabled() {
+        return server.getPluginManager().isPluginEnabled("floodgate");
     }
 
     @Override

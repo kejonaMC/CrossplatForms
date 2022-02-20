@@ -20,7 +20,6 @@ public final class DefaultCommands {
                 new HelpCommand(instance, minecraftHelp),
                 new ListCommand(instance),
                 new OpenCommand(instance),
-                new GiveCommand(instance),
                 new InspectCommand(instance),
                 new IdentifyCommand(instance),
                 new VersionCommand(instance),

@@ -1,15 +1,10 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    java
-    `java-library`
     id("com.github.johnrengelman.shadow")
-
 }
 
 repositories {
-    mavenCentral()
-
     maven("https://libraries.minecraft.net/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
@@ -49,3 +44,5 @@ tasks.withType<ShadowJar> {
     archiveFileName.set("CrossplatForms-Spigot.jar")
     println(archiveFileName.get())
 }
+
+description = "spigot"

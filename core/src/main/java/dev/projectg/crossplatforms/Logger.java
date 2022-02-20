@@ -1,26 +1,15 @@
 package dev.projectg.crossplatforms;
 
-import lombok.Getter;
-import lombok.Setter;
+public abstract class Logger {
 
-public class Logger {
+    private static Logger INSTANCE;
 
-    // todo abstract or interface logger
-
-    private static final Logger LOGGER = new Logger(CrossplatForms.getInstance());
-
-    private final java.util.logging.Logger handle;
-
-    @Getter
-    @Setter
-    private boolean debug;
-
-    public static Logger getLogger() {
-        return LOGGER;
+    public Logger() {
+        INSTANCE = this;
     }
 
-    private Logger(CrossplatForms plugin) {
-        this.handle = plugin.getLogger();
+    public static Logger getLogger() {
+        return INSTANCE;
     }
 
     public void log(Level level, String message) {
@@ -31,20 +20,15 @@ public class Logger {
             case DEBUG -> debug(message);
         }
     }
-    public void info(String message) {
-        handle.info(message);
-    }
-    public void warn(String message) {
-        handle.warning(message);
-    }
-    public void severe(String message) {
-        handle.severe(message);
-    }
-    public void debug(String message) {
-        if (debug) {
-            handle.info(message);
-        }
-    }
+
+    public abstract void info(String message);
+    public abstract void warn(String message);
+    public abstract void severe(String message);
+    public abstract void debug(String message);
+
+    public abstract boolean isDebug();
+    public abstract void setDebug(boolean debug);
+
     public enum Level {
         INFO,
         WARN,

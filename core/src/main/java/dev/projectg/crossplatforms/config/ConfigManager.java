@@ -16,6 +16,7 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,8 +28,8 @@ public class ConfigManager {
     private final File directory;
     private final Logger logger;
 
-    public ConfigManager(File directory, Logger logger) {
-        this.directory = directory;
+    public ConfigManager(Path directory, Logger logger) {
+        this.directory = directory.toFile();
         this.logger = logger;
         // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();

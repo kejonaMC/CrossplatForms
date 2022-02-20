@@ -14,16 +14,14 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.item.AccessItem;
-import dev.projectg.crossplatforms.item.AccessItemRegistry;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InspectCommand extends FormsCommand {
 
-    private static final String NAME = "inspect";
-    private static final String PERMISSION = PERMISSION_BASE + NAME;
+    public static final String NAME = "inspect";
+    public static final String PERMISSION = PERMISSION_BASE + NAME;
 
     public InspectCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);
@@ -34,7 +32,6 @@ public class InspectCommand extends FormsCommand {
         ServerHandler serverHandler = crossplatForms.getServerHandler();
         BedrockFormRegistry bedrockRegistry = crossplatForms.getInterfaceManager().getBedrockRegistry();
         JavaMenuRegistry javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
-        AccessItemRegistry accessItemRegistry = crossplatForms.getAccessItemRegistry();
 
         Command.Builder<CommandOrigin> base = defaultBuilder
                 .literal(NAME)
@@ -76,26 +73,6 @@ public class InspectCommand extends FormsCommand {
                     } else {
                         origin.sendMessage(Logger.Level.INFO, "Inspection of menu: " + name);
                         origin.sendMessage(Logger.Level.INFO, menu.toString());
-                    }
-                })
-        );
-
-        manager.command(base
-                .literal("item")
-                .argument(StringArgument.<CommandOrigin>newBuilder("item")
-                        .withSuggestionsProvider(((context, s) -> accessItemRegistry.getItems().values()
-                                .stream()
-                                .map(AccessItem::getIdentifier)
-                                .collect(Collectors.toList()))))
-                .handler(context -> {
-                    CommandOrigin origin = context.getSender();
-                    String name = context.get("item");
-                    AccessItem item = accessItemRegistry.getItems().get(name);
-                    if (item == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "That Access Item doesn't exist!");
-                    } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item: " + name);
-                        origin.sendMessage(Logger.Level.INFO, item.toString());
                     }
                 })
         );

@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.command.defaults;
+package dev.projectg.crossplatforms.spigot;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;

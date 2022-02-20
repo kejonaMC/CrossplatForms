@@ -1,6 +1,7 @@
-package dev.projectg.crossplatforms.handler;
+package dev.projectg.crossplatforms.spigot.handler;
 
 import dev.projectg.crossplatforms.Constants;
+import dev.projectg.crossplatforms.handler.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import javax.annotation.Nonnull;

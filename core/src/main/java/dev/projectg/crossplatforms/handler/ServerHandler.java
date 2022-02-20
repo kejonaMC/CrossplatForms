@@ -1,9 +1,12 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
+import net.kyori.adventure.audience.Audience;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,10 +31,11 @@ public interface ServerHandler {
 
     List<Player> getPlayers();
 
-    /**
-     * @return True if the plugin identified by the given ID is enabled
-     */
-    boolean isPluginEnabled(String id);
+    @NotNull
+    Audience asAudience(CommandOrigin origin);
+
+    boolean isGeyserEnabled();
+    boolean isFloodgateEnabled();
 
     boolean isPermissionRegistered(String key);
 
