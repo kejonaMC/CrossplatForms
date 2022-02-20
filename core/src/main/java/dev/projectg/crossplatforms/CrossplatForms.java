@@ -20,6 +20,7 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.projectg.crossplatforms.utils.PlaceholderHandler;
 import lombok.Getter;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
@@ -32,7 +33,7 @@ public class CrossplatForms {
     private static CrossplatForms INSTANCE;
 
     private ConfigManager configManager;
-    private ServerHandler serverHandler;
+    private final ServerHandler serverHandler;
     private BedrockHandler bedrockHandler;
 
     private InterfaceManager interfaceManager;
@@ -40,16 +41,20 @@ public class CrossplatForms {
     private final CommandManager<CommandOrigin> commandManager;
     private Command.Builder<CommandOrigin> commandBuilder;
 
+    private final PlaceholderHandler placeholders;
+
     private boolean success = true;
 
     public CrossplatForms(Logger logger,
                           Path dataFolder,
                           ServerHandler serverHandler,
-                          CommandManager<CommandOrigin> commandManager) {
+                          CommandManager<CommandOrigin> commandManager,
+                          PlaceholderHandler placeholders) {
         long start = System.currentTimeMillis();
         INSTANCE = this;
         this.serverHandler = serverHandler;
         this.commandManager = commandManager;
+        this.placeholders = placeholders;
         ReloadableRegistry.clear();
         logger.info("Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
 

@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.interfacing;
 
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import org.bukkit.entity.Player;
+import dev.projectg.crossplatforms.handler.Player;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

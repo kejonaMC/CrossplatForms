@@ -4,6 +4,7 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
+import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
@@ -16,6 +17,8 @@ import dev.projectg.crossplatforms.item.AccessItem;
 import dev.projectg.crossplatforms.item.AccessItemListeners;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
 import dev.projectg.crossplatforms.spigot.handler.SpigotServerHandler;
+import dev.projectg.crossplatforms.spigot.handler.PlaceholderAPIHandler;
+import dev.projectg.crossplatforms.utils.PlaceholderHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -30,7 +33,7 @@ public class CrossplatFormsSpigot extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Logger logger = new JavaUtilLogger();
+        Logger logger = new JavaUtilLogger(Bukkit.getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
@@ -66,11 +69,19 @@ public class CrossplatFormsSpigot extends JavaPlugin {
         // Bungee channel for selector
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
+        PlaceholderHandler placeholders;
+        if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            placeholders = new PlaceholderAPIHandler();
+        } else {
+            placeholders = new BasicPlaceholders();
+        }
+
         crossplatForms = new CrossplatForms(
                 logger,
                 getDataFolder().toPath(),
                 serverHandler,
-                commandManager);
+                commandManager,
+                placeholders);
 
         if (!crossplatForms.isSuccess()) {
             return;

@@ -1,15 +1,12 @@
 package dev.projectg.crossplatforms;
 
-import org.bukkit.Bukkit;
-
 public class JavaUtilLogger extends Logger {
 
     private final java.util.logging.Logger handle;
     private boolean debug = false;
 
-    public JavaUtilLogger() {
-        handle = Bukkit.getLogger();
-
+    public JavaUtilLogger(java.util.logging.Logger logger) {
+        handle = logger;
     }
 
     @Override

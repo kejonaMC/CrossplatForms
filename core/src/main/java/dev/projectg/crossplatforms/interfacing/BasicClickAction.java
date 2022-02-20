@@ -3,9 +3,9 @@ package dev.projectg.crossplatforms.interfacing;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.utils.PlaceholderHandler;
 import lombok.ToString;
-import org.bukkit.entity.Player;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -35,11 +35,13 @@ public class BasicClickAction implements ClickAction {
 
     @Override
     public void affectPlayer(@Nonnull Player player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
+        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+
         // Get the commands from the list of commands and replace any playerName placeholders
         for (String command : commands) {
             interfaceManager.runCommand(
-                    PlaceholderUtils.setPlaceholders(player, command, additionalPlaceholders),
-                    player.getUniqueId());
+                    placeholders.setPlaceholders(player, command, additionalPlaceholders),
+                    player.getUuid());
         }
 
         if (form != null && !form.isBlank()) {
@@ -52,12 +54,12 @@ public class BasicClickAction implements ClickAction {
                     Thread.dumpStack();
                 }
             } else {
-                ui.send(new SpigotPlayer(player));
+                ui.send(player);
             }
         }
 
         if (server != null && !server.isBlank()) {
-            String resolved = PlaceholderUtils.setPlaceholders(player, server, additionalPlaceholders);
+            String resolved = placeholders.setPlaceholders(player, server, additionalPlaceholders);
 
             // This should never be out of bounds considering its size is the number of valid buttons
             try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {

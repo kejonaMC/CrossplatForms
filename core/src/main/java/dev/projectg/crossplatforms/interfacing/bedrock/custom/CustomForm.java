@@ -7,9 +7,8 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.interfacing.BasicClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.utils.PlaceholderHandler;
 import lombok.ToString;
-import org.bukkit.entity.Player;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
 import org.jetbrains.annotations.NotNull;
@@ -35,11 +34,11 @@ public class CustomForm extends BedrockForm {
     private BasicClickAction action = null;
 
     @Override
-    public void send(@NotNull dev.projectg.crossplatforms.handler.Player recipient) {
+    public void send(@NotNull dev.projectg.crossplatforms.handler.Player player) {
         InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
+        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
-        UUID uuid = recipient.getUuid();
-        Player player = (Player) recipient.getHandle();
+        UUID uuid = player.getUuid();
 
         BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
         if (!bedrockHandler.isBedrockPlayer(uuid)) {
@@ -49,12 +48,12 @@ public class CustomForm extends BedrockForm {
 
         List<CustomComponent> components = new ArrayList<>();
         for (CustomComponent component : this.components) {
-            components.add(component.withPlaceholders((text) -> PlaceholderUtils.setPlaceholders(player, text)));
+            components.add(component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text)));
         }
 
         @SuppressWarnings("unchecked")
         org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
-                PlaceholderUtils.setPlaceholders(player, super.getTitle()),
+                placeholders.setPlaceholders(player, super.getTitle()),
                 image,
                 (List<org.geysermc.cumulus.component.Component>)(List<?>) components // sad noises
         );

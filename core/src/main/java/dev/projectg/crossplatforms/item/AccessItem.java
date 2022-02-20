@@ -9,7 +9,7 @@ import dev.projectg.crossplatforms.interfacing.BasicClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
-import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.utils.PlaceholderHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -140,8 +140,9 @@ public class AccessItem {
      * @return The ItemStack of the access item, with placeholders in the display name and lore set according to the given player
      */
     public ItemStack createItemStack(@Nonnull Player player) {
-        String displayName = PlaceholderUtils.setPlaceholders(player, this.displayName);
-        List<String> lore = PlaceholderUtils.setPlaceholders(player, this.lore);
+        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+        String displayName = placeholders.setPlaceholders(player, this.displayName);
+        List<String> lore = placeholders.setPlaceholders(player, this.lore);
         return createItemStack(identifier, displayName, material, lore);
     }
 

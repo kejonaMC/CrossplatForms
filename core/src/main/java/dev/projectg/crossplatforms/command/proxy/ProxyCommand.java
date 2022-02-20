@@ -19,10 +19,10 @@ import javax.annotation.Nullable;
 public class ProxyCommand {
 
     @NodeKey
-    private String name;
+    private String name = null;
 
     @Required
-    private CommandType method;
+    private CommandType method = null;
 
     @Nullable
     private BasicClickAction action = null;
@@ -37,17 +37,16 @@ public class ProxyCommand {
     private String permission;
 
     public void run(Player player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        org.bukkit.entity.Player bukkitPlayer = (org.bukkit.entity.Player) player.getHandle();
         if (action != null) {
-            action.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
+            action.affectPlayer(player, interfaceManager, bedrockHandler);
         }
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
             if (bedrockAction != null) {
-                bedrockAction.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
+                bedrockAction.affectPlayer(player, interfaceManager, bedrockHandler);
             }
         } else {
             if (javaAction != null) {
-                javaAction.affectPlayer(bukkitPlayer, interfaceManager, bedrockHandler);
+                javaAction.affectPlayer(player, interfaceManager, bedrockHandler);
             }
         }
     }

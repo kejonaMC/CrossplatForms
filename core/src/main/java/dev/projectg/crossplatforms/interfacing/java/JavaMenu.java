@@ -1,10 +1,11 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.interfacing.ClickAction;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.utils.PlaceholderUtils;
+import dev.projectg.crossplatforms.utils.PlaceholderHandler;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -21,7 +22,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @ToString
 @Getter
@@ -44,16 +44,17 @@ public class JavaMenu extends Interface {
 
     @Override
     public void send(@Nonnull dev.projectg.crossplatforms.handler.Player recipient) {
-        Logger logger = CrossplatForms.getInstance().getLogger();
+        Logger logger = Logger.getLogger();
+        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         if (!(recipient.getHandle() instanceof Player player)) {
             throw new AssertionError();
         }
 
         Inventory selectorGUI;
         if (size == HOPPER_SIZE) {
-            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, PlaceholderUtils.setPlaceholders(player, title));
+            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, placeholders.setPlaceholders(recipient, title));
         } else {
-            selectorGUI = Bukkit.createInventory(player, size, PlaceholderUtils.setPlaceholders(player, title));
+            selectorGUI = Bukkit.createInventory(player, size, placeholders.setPlaceholders(recipient, title));
         }
 
         for (Integer slot : buttons.keySet()) {
@@ -72,8 +73,8 @@ public class JavaMenu extends Interface {
             if (meta == null) {
                 logger.severe("Java Button: " + identifier + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
             } else {
-                meta.setDisplayName(PlaceholderUtils.setPlaceholders(player, button.getDisplayName()));
-                meta.setLore(PlaceholderUtils.setPlaceholders(player, button.getLore()));
+                meta.setDisplayName(placeholders.setPlaceholders(recipient, button.getDisplayName()));
+                meta.setLore(placeholders.setPlaceholders(recipient, button.getLore()));
                 meta.getPersistentDataContainer().set(BUTTON_KEY, PersistentDataType.STRING, identifier);
                 item.setItemMeta(meta);
                 selectorGUI.setItem(slot, item);
@@ -97,7 +98,7 @@ public class JavaMenu extends Interface {
      * @param rightClick True if it was a right click, false if a left click.
      * @param player the Player who clicked on the button.
      */
-    public void process(int slot, boolean rightClick, @Nonnull Player player, @Nonnull InterfaceManager interfaceManager) {
+    public void process(int slot, boolean rightClick, @Nonnull dev.projectg.crossplatforms.handler.Player player, @Nonnull InterfaceManager interfaceManager) {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
 
