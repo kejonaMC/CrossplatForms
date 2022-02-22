@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.handler;
 
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
@@ -21,15 +22,15 @@ public interface ServerHandler {
      * Get a player by their UUID
      */
     @Nullable
-    Player getPlayer(UUID uuid);
+    FormPlayer getPlayer(UUID uuid);
 
     /**
      * Get a player by the name
      */
     @Nullable
-    Player getPlayer(String name);
+    FormPlayer getPlayer(String name);
 
-    List<Player> getPlayers();
+    List<FormPlayer> getPlayers();
 
     @NotNull
     Audience asAudience(CommandOrigin origin);
@@ -51,15 +52,19 @@ public interface ServerHandler {
      * Execute a command as the server console
      * @param command The command string to execute
      */
-    void dispatchCommand(String command);
+    void dispatchCommand(DispatchableCommand command);
+
+    void dispatchCommands(List<DispatchableCommand> commands);
 
     /**
      * Execute a command as the given player.
      * @param player The player to run the command as
      * @param command The command string to execute
-     * @param op whether or not the temporarily op the player while running the command
      */
-    void dispatchCommand(UUID player, String command, boolean op);
+    void dispatchCommand(UUID player, DispatchableCommand command);
+
+    void dispatchCommands(UUID player, List<DispatchableCommand> commands);
+
 
     /**
      * Register a {@link ProxyCommand}

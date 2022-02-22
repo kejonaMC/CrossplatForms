@@ -1,12 +1,16 @@
 package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
+import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
+import io.leangen.geantyref.TypeToken;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
@@ -28,7 +32,7 @@ public class ConfigManager {
     private final File directory;
     private final Logger logger;
 
-    public ConfigManager(Path directory, Logger logger) {
+    public ConfigManager(Path directory, Logger logger, ActionSerializer actionSerializer) {
         this.directory = directory.toFile();
         this.logger = logger;
         // type serializers for abstract classes and external library classes
@@ -37,6 +41,8 @@ public class ConfigManager {
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
+            builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
+            builder.registerExact(new TypeToken<>() {}, actionSerializer);
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node

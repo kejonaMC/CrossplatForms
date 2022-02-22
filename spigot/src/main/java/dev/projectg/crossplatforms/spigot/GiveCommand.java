@@ -9,11 +9,13 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.item.AccessItem;
 import dev.projectg.crossplatforms.item.AccessItemListeners;
 import dev.projectg.crossplatforms.item.AccessItemRegistry;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +54,7 @@ public class GiveCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     UUID uuid = origin.getUUID().orElseThrow();
-                    Player player = serverHandler.getPlayer(uuid);
+                    Player player = Bukkit.getPlayer(uuid);
                     String identifier = context.get(ARGUMENT);
                     AccessItem item = itemRegistry.getItems().get(identifier);
 
@@ -62,7 +64,7 @@ public class GiveCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(item.permission(AccessItem.Limit.COMMAND))) {
                         if (origin.hasPermission(item.permission(AccessItem.Limit.POSSESS))) {
-                            if (!AccessItemListeners.giveAccessItem((org.bukkit.entity.Player) player.getHandle(), item, false)) {
+                            if (!AccessItemListeners.giveAccessItem(player, item, false)) {
                                 origin.sendMessage("Your inventory is too full!");
                             }
                         } else {
@@ -86,7 +88,7 @@ public class GiveCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String target = context.get("player");
-                    Player targetPlayer = serverHandler.getPlayer(target);
+                    FormPlayer targetPlayer = serverHandler.getPlayer(target);
                     if (targetPlayer == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
                         return;
@@ -99,8 +101,8 @@ public class GiveCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(item.permission(AccessItem.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(item.permission(AccessItem.Limit.POSSESS))) {
-                            if (!AccessItemListeners.giveAccessItem((org.bukkit.entity.Player) targetPlayer.getHandle(), item, false)) {
-                                origin.sendMessage("%s's inventory is too full!".formatted(targetPlayer.getName()));
+                            if (!AccessItemListeners.giveAccessItem((Player) targetPlayer.getHandle(), item, false)) {
+                                origin.sendMessage(String.format("%s's inventory is too full!", targetPlayer.getName()));
                             }
                         } else {
                             origin.sendMessage(target + " doesn't have permission to have: " + identifier);
@@ -139,7 +141,7 @@ public class GiveCommand extends FormsCommand {
         return serverHandler.getPlayers()
                 .stream()
                 .filter(player -> player.hasPermission(item.permission(AccessItem.Limit.POSSESS)))
-                .map(Player::getName)
+                .map(FormPlayer::getName)
                 .collect(Collectors.toList());
     }
 }

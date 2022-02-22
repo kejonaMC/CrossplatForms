@@ -2,10 +2,11 @@ package dev.projectg.crossplatforms.interfacing.java;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.interfacing.ClickAction;
+import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @ToString
@@ -43,7 +45,7 @@ public class JavaMenu extends Interface {
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
     @Override
-    public void send(@Nonnull dev.projectg.crossplatforms.handler.Player recipient) {
+    public void send(@Nonnull FormPlayer recipient) {
         Logger logger = Logger.getLogger();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         if (!(recipient.getHandle() instanceof Player player)) {
@@ -98,24 +100,29 @@ public class JavaMenu extends Interface {
      * @param rightClick True if it was a right click, false if a left click.
      * @param player the Player who clicked on the button.
      */
-    public void process(int slot, boolean rightClick, @Nonnull dev.projectg.crossplatforms.handler.Player player, @Nonnull InterfaceManager interfaceManager) {
+    public void process(int slot, boolean rightClick, @Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
+            List<Action> any = button.getAnyClick();
 
-            ClickAction any;
-            if ((any = button.getAnyClick()) != null) {
-                any.affectPlayer(player, interfaceManager);
+            if (any != null) {
+                for (Action action : any) {
+                    action.affectPlayer(player, interfaceManager);
+                }
             }
-
             if (rightClick) {
-                ClickAction right;
-                if ((right = button.getRightClick()) != null) {
-                    right.affectPlayer(player, interfaceManager);
+                List<Action> right = button.getRightClick();
+                if (right != null) {
+                    for (Action action : right) {
+                        action.affectPlayer(player, interfaceManager);
+                    }
                 }
             } else {
-                ClickAction left;
-                if ((left = button.getLeftClick()) != null) {
-                    left.affectPlayer(player, interfaceManager);
+                List<Action> left = button.getLeftClick();
+                if (left != null) {
+                    for (Action action : left) {
+                        action.affectPlayer(player, interfaceManager);
+                    }
                 }
             }
         }

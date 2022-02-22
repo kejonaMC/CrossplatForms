@@ -1,9 +1,9 @@
 package dev.projectg.crossplatforms.command.proxy;
 
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
-import dev.projectg.crossplatforms.interfacing.BasicClickAction;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.NodeKey;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
-import javax.annotation.Nullable;
+import java.util.List;
 
 @Getter
 @ConfigSerializable
@@ -24,29 +24,30 @@ public class ProxyCommand {
     @Required
     private CommandType method = null;
 
-    @Nullable
-    private BasicClickAction action = null;
-
-    @Nullable
-    private BasicClickAction bedrockAction = null;
-
-    @Nullable
-    private BasicClickAction javaAction = null;
+    private List<Action> actions = null;
+    private List<Action> bedrockActions = null;
+    private List<Action> javaActions = null;
 
     @Setter
     private String permission;
 
-    public void run(Player player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        if (action != null) {
-            action.affectPlayer(player, interfaceManager, bedrockHandler);
+    public void run(FormPlayer player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
+        if (actions != null) {
+            for (Action action : actions) {
+                action.affectPlayer(player, interfaceManager, bedrockHandler);
+            }
         }
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            if (bedrockAction != null) {
-                bedrockAction.affectPlayer(player, interfaceManager, bedrockHandler);
+            if (bedrockActions != null) {
+                for (Action action : bedrockActions) {
+                    action.affectPlayer(player, interfaceManager, bedrockHandler);
+                }
             }
         } else {
-            if (javaAction != null) {
-                javaAction.affectPlayer(player, interfaceManager, bedrockHandler);
+            if (javaActions != null) {
+                for (Action action : javaActions) {
+                    action.affectPlayer(player, interfaceManager, bedrockHandler);
+                }
             }
         }
     }

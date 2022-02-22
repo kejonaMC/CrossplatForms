@@ -1,7 +1,8 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import javax.annotation.Nonnull;
@@ -12,11 +13,11 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SpigotPlayer implements Player {
+public class SpigotPlayer implements FormPlayer {
 
-    private final org.bukkit.entity.Player handle;
+    private final Player handle;
 
-    public SpigotPlayer(@Nonnull org.bukkit.entity.Player handle) {
+    public SpigotPlayer(@Nonnull Player handle) {
         this.handle = Objects.requireNonNull(handle);
     }
 

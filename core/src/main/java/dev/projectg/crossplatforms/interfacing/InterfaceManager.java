@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.interfacing;
 
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
@@ -14,7 +14,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -84,10 +83,10 @@ public class InterfaceManager {
      * Sends a given form, identified by its name, to a BE or JE player.
      * If the form/menu doesn't exist or they don't have have the {@link Interface.Limit#USE} permission,
      * they will be told so,
-     * @param player The {@link Player} to send the form to
+     * @param player The {@link FormPlayer} to send the form to
      * @param id The name of the form or menu to open
      */
-    public void sendInterface(@Nonnull Player player, @Nonnull String id) {
+    public void sendInterface(@Nonnull FormPlayer player, @Nonnull String id) {
         UUID uuid = player.getUuid();
 
         BedrockForm form = bedrockRegistry.getForm(id);
@@ -126,34 +125,6 @@ public class InterfaceManager {
             } else {
                 player.sendMessage("'" + id + "' doesn't exist.");
             }
-        }
-    }
-
-    /**
-     * Process a command and run it.
-     * If the command is prefixed with "player;" the command will be run as the player given, which CANNOT be null.
-     * If the command is prefixed with "console;" the command will be run as the console.
-     *
-     * @param command The command to run
-     * @param player the Player to run the command as, if prefixed with "player;"
-     */
-    public void runCommand(@Nonnull String command, @Nonnull UUID player) {
-        Objects.requireNonNull(command);
-
-        String executableCommand;
-        if (command.startsWith(PLAYER_PREFIX) || command.startsWith(CONSOLE_PREFIX) || command.startsWith(OP_PREFIX)) {
-            // Split the input into two strings between ";" and get the second string
-            executableCommand = command.split(";", 2)[1].trim();
-        } else {
-            executableCommand = command;
-        }
-
-        if (command.startsWith(PLAYER_PREFIX)) {
-            serverHandler.dispatchCommand(player, executableCommand, false);
-        } else if (command.startsWith(OP_PREFIX)) {
-            serverHandler.dispatchCommand(player, executableCommand, true);
-        } else {
-            serverHandler.dispatchCommand(executableCommand);
         }
     }
 }

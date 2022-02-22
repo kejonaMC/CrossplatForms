@@ -2,11 +2,12 @@ package dev.projectg.crossplatforms.interfacing.bedrock.simple;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.SimpleFormResponse;
@@ -27,7 +28,7 @@ public class SimpleForm extends BedrockForm {
     private List<SimpleButton> buttons = Collections.emptyList();
 
     @Override
-    public void send(@Nonnull Player player) {
+    public void send(@Nonnull FormPlayer player) {
         InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
@@ -66,10 +67,11 @@ public class SimpleForm extends BedrockForm {
                 return;
             }
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
-            SimpleButton button = formattedButtons.get(response.getClickedButtonId());
-
             // Handle effects of pressing the button
-            button.affectPlayer(player, registry, bedrockHandler);
+            List<Action> actions = formattedButtons.get(response.getClickedButtonId()).getActions();
+            for (Action action : actions) {
+                action.affectPlayer(player, registry, bedrockHandler);
+            }
         });
 
         // Send the form to the floodgate player

@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.interfacing;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public abstract class Interface {
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Interface.Limit, Permission> permissions;
 
-    public abstract void send(@Nonnull Player recipient);
+    public abstract void send(@Nonnull FormPlayer recipient);
 
     /**
      * e.g. "crossplatforms.form"

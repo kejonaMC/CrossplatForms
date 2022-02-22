@@ -8,7 +8,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 
 import java.util.stream.Collectors;
@@ -40,13 +40,13 @@ public class IdentifyCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(NAME)
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
-                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers().stream().map(Player::getName).collect(Collectors.toList()))
+                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers().stream().map(FormPlayer::getName).collect(Collectors.toList()))
                         .build())
                 .permission(PERMISSION_OTHER)
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String targetName = context.get("player");
-                    Player target = serverHandler.getPlayer(targetName);
+                    FormPlayer target = serverHandler.getPlayer(targetName);
                     if (target == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "That player doesn't exist");
                     } else {

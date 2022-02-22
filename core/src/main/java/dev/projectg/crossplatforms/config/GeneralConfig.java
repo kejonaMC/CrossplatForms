@@ -13,8 +13,8 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class GeneralConfig extends Configuration {
 
-    public static final int VERSION = 1;
-    public static final int MINIMUM_VERSION = 1;
+    public static final int VERSION = 2;
+    public static final int MINIMUM_VERSION = 2; // todo: add support for 1 -> 2 (make minimum version 1)
 
     @Setting("enable-debug")
     private boolean enableDebug = false;

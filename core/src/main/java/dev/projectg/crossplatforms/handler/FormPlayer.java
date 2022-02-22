@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.handler;
 import java.util.Map;
 import java.util.UUID;
 
-public interface Player {
+public interface FormPlayer {
 
     /**
      * @return The player's UUID

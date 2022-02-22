@@ -3,11 +3,12 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.interfacing.BasicClickAction;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
@@ -31,10 +32,10 @@ public class CustomForm extends BedrockForm {
     private List<CustomComponent> components = Collections.emptyList();
 
     @Required
-    private BasicClickAction action = null;
+    private List<Action> actions = null;
 
     @Override
-    public void send(@NotNull dev.projectg.crossplatforms.handler.Player player) {
+    public void send(@NotNull FormPlayer player) {
         InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
@@ -93,7 +94,9 @@ public class CustomForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            action.affectPlayer(player, resultPlaceholders, registry, bedrockHandler);
+            for (Action action : actions) {
+                action.affectPlayer(player, resultPlaceholders, registry, bedrockHandler);
+            }
         });
 
         // Send the form to the floodgate player

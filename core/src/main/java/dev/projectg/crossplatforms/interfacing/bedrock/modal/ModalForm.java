@@ -3,17 +3,18 @@ package dev.projectg.crossplatforms.interfacing.bedrock.modal;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
-import dev.projectg.crossplatforms.interfacing.ClickAction;
+import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.response.ModalFormResponse;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import java.util.List;
 import java.util.UUID;
 
 @ToString
@@ -30,8 +31,8 @@ public class ModalForm extends BedrockForm {
     private ModalButton button2 = null;
 
     @Override
-    public void send(@NotNull Player player) {
-        InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
+    public void send(@NotNull FormPlayer player) {
+        InterfaceManager interfaceManager = CrossplatForms.getInstance().getInterfaceManager();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();
@@ -62,14 +63,16 @@ public class ModalForm extends BedrockForm {
             }
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             int id = response.getClickedButtonId();
-            ClickAction action = switch (id) {
-                case 0 -> button1;
-                case 1 -> button2;
+            List<Action> actions = switch (id) {
+                case 0 -> button1.getActions();
+                case 1 -> button2.getActions();
                 default -> throw new AssertionError();
             };
 
             // Handle effects of pressing the button
-            action.affectPlayer(player, registry, bedrockHandler);
+            for (Action action : actions) {
+                action.affectPlayer(player, interfaceManager, bedrockHandler);
+            }
         });
 
         // Send the form to the floodgate player

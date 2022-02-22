@@ -12,8 +12,8 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class FormConfig extends InterfaceConfig {
 
-    public static final int VERSION = 1;
-    public static final int MINIMUM_VERSION = 1;
+    public static final int VERSION = 2;
+    public static final int MINIMUM_VERSION = 2; //todo
 
     private Map<String, BedrockForm> forms = Collections.emptyMap();
 }

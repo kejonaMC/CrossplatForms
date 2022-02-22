@@ -1,6 +1,7 @@
-package dev.projectg.crossplatforms.command;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.Constants;
+import dev.projectg.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.command.CommandSender;

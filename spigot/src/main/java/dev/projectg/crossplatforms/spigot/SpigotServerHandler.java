@@ -1,17 +1,19 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -47,8 +49,8 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     }
 
     @Override
-    public Player getPlayer(UUID uuid) {
-        org.bukkit.entity.Player player = server.getPlayer(uuid);
+    public FormPlayer getPlayer(UUID uuid) {
+        Player player = server.getPlayer(uuid);
         if (player == null) {
             return null;
         } else {
@@ -57,8 +59,8 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     }
 
     @Override
-    public Player getPlayer(String name) {
-        org.bukkit.entity.Player player = server.getPlayer(name);
+    public FormPlayer getPlayer(String name) {
+        Player player = server.getPlayer(name);
         if (player == null) {
             return null;
         } else {
@@ -67,9 +69,9 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     }
 
     @Override
-    public List<Player> getPlayers() {
-        List<Player> players = new ArrayList<>();
-        for (org.bukkit.entity.Player player : server.getOnlinePlayers()) {
+    public List<FormPlayer> getPlayers() {
+        List<FormPlayer> players = new ArrayList<>();
+        for (Player player : server.getOnlinePlayers()) {
             players.add(new SpigotPlayer(player));
         }
         return players;
@@ -114,37 +116,54 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     }
 
     @Override
-    public void dispatchCommand(String command) {
-        dispatchCommand(server.getConsoleSender(), command);
+    public void dispatchCommand(DispatchableCommand command) {
+        Logger.getLogger().debug("Executing [" + command + "] as console");
+        server.getScheduler().runTask(plugin, () -> server.dispatchCommand(server.getConsoleSender(), command.command()));
     }
 
     @Override
-    public void dispatchCommand(UUID playerId, String command, boolean op) {
-        org.bukkit.entity.Player player = server.getPlayer(playerId);
-        if (player == null) {
-            throw new IllegalArgumentException("A player with UUID " + playerId + " was not found to dispatch a command as");
-        } else if (op) {
-            server.getScheduler().runTask(plugin, () -> {
-                Logger.getLogger().debug("Executing [" + command + "] as " + player.getName() + " with op");
-                if (player.isOp()) {
-                    server.getScheduler().runTask(plugin, () -> server.dispatchCommand(player, command));
-                } else {
-                    player.setOp(true);
-                    server.getScheduler().runTask(plugin, () -> server.dispatchCommand(player, command));
-                    player.setOp(false);
-                }
-            });
-        } else {
-            dispatchCommand(player, command);
-        }
+    public void dispatchCommands(List<DispatchableCommand> commands) {
+        CommandSender console = server.getConsoleSender();
+        server.getScheduler().runTask(plugin, () -> {
+            for (DispatchableCommand command : commands) {
+                Logger.getLogger().debug("Executing [" + command + "] as console");
+                server.dispatchCommand(console, command.command());
+            }
+        });
+    }
+
+    @Override
+    public void dispatchCommand(UUID playerId, DispatchableCommand command) {
+        Player player = server.getPlayer(playerId);
+        server.getScheduler().runTask(plugin, () -> dispatchCommand(player, command));
+    }
+
+    @Override
+    public void dispatchCommands(UUID playerId, List<DispatchableCommand> commands) {
+        Player player = server.getPlayer(playerId);
+        server.getScheduler().runTask(plugin, () -> {
+            for (DispatchableCommand command : commands) {
+                dispatchCommand(player, command);
+            }
+        });
     }
 
     /**
-     * Executes a command synchronously, as required by the Spigot API.
+     * Handles execution logic of how to run the command. Executes the command on the same thread
+     * this method is called on. (Does not create a new Runnable).
      */
-    private void dispatchCommand(CommandSender commandSender, String command) {
-        Logger.getLogger().debug("Executing [" + command + "] as " + commandSender.getName());
-        server.getScheduler().runTask(plugin, () -> server.dispatchCommand(commandSender, command));
+    private void dispatchCommand(Player player, DispatchableCommand command) {
+        if (command.player()) {
+            if (command.op()) {
+                player.setOp(true);
+                server.dispatchCommand(player, command.command());
+                player.setOp(false);
+            } else {
+                server.dispatchCommand(player, command.command());
+            }
+        } else {
+            server.dispatchCommand(server.getConsoleSender(), command.command());
+        }
     }
 
     @Override
@@ -163,7 +182,7 @@ public class SpigotServerHandler implements ServerHandler, Listener {
         Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + name + "]");
         ProxyCommand command = proxyCommands.get(name);
         if (command != null) {
-            org.bukkit.entity.Player player = event.getPlayer();
+            Player player = event.getPlayer();
             if (player.hasPermission(command.getPermission())) {
                 command.run(
                         new SpigotPlayer(player),

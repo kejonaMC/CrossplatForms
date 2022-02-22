@@ -9,7 +9,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
@@ -56,7 +56,7 @@ public class OpenCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     UUID uuid = origin.getUUID().orElseThrow();
-                    Player player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
+                    FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
                     String identifier = context.get(ARGUMENT);
                     Interface ui = interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
@@ -82,7 +82,7 @@ public class OpenCommand extends FormsCommand {
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
                         .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
                                 .stream()
-                                .map(Player::getName)
+                                .map(FormPlayer::getName)
                                 .collect(Collectors.toList()))
                         .build())
                 .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
@@ -91,7 +91,7 @@ public class OpenCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String target = context.get("player");
-                    Player targetPlayer = serverHandler.getPlayer(target);
+                    FormPlayer targetPlayer = serverHandler.getPlayer(target);
                     if (targetPlayer == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
                         return;
@@ -135,7 +135,7 @@ public class OpenCommand extends FormsCommand {
         }
 
         String recipient = context.get("player");
-        Player target = serverHandler.getPlayer(recipient);
+        FormPlayer target = serverHandler.getPlayer(recipient);
         if (target == null) {
             return Collections.emptyList();
         }

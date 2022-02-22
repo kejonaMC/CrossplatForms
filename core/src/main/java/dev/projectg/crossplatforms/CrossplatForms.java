@@ -4,6 +4,10 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
+import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.action.CommandsAction;
+import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
@@ -20,12 +24,13 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.Getter;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
 
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Getter
@@ -49,7 +54,8 @@ public class CrossplatForms {
                           Path dataFolder,
                           ServerHandler serverHandler,
                           CommandManager<CommandOrigin> commandManager,
-                          PlaceholderHandler placeholders) {
+                          PlaceholderHandler placeholders,
+                          Map<String, Class<? extends Action>> extraActions) {
         long start = System.currentTimeMillis();
         INSTANCE = this;
         this.serverHandler = serverHandler;
@@ -76,7 +82,13 @@ public class CrossplatForms {
         }
 
         long configTime = System.currentTimeMillis();
-        configManager = new ConfigManager(dataFolder, logger);
+        ActionSerializer actionSerializer = new ActionSerializer();
+        actionSerializer.register("form", InterfaceAction.class);
+        actionSerializer.register("commands", CommandsAction.class);
+        for (Map.Entry<String, Class<? extends Action>> entry : extraActions.entrySet()) {
+            actionSerializer.register(entry.getKey(), entry.getValue());
+        }
+        configManager = new ConfigManager(dataFolder, logger, actionSerializer);
         if (!configManager.loadAllConfigs()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }

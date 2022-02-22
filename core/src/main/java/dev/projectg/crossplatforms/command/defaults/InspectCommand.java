@@ -7,7 +7,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -82,13 +82,13 @@ public class InspectCommand extends FormsCommand {
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
                         .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
                                 .stream()
-                                .map(Player::getName)
+                                .map(FormPlayer::getName)
                                 .collect(Collectors.toList()))
                         .build())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String target = context.get("player");
-                    Player player = serverHandler.getPlayer(target);
+                    FormPlayer player = serverHandler.getPlayer(target);
                     if (player == null) {
                         origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
                         return;

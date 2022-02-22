@@ -4,12 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.interfacing.BasicClickAction;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -51,11 +51,11 @@ public class AccessItem {
     @Required
     private String identifier = null;
 
-    private BasicClickAction action = null;
+    private List<Action> actions = null;
 
-    private BasicClickAction bedrockAction = null;
+    private List<Action> bedrockActions = null;
 
-    private BasicClickAction javaAction = null;
+    private List<Action> javaActions = null;
 
     @Required
     private String material = null;
@@ -104,16 +104,22 @@ public class AccessItem {
     private transient Map<Limit, Permission> permissions;
 
     public void trigger(Player player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        if (action != null) {
-            action.affectPlayer(player, interfaceManager, bedrockHandler);
+        if (actions != null) {
+            for (Action action : actions) {
+                action.affectPlayer(player, interfaceManager, bedrockHandler);
+            }
         }
         if (bedrockHandler.isBedrockPlayer(player.getUniqueId())) {
-            if (bedrockAction != null) {
-                bedrockAction.affectPlayer(player, interfaceManager, bedrockHandler);
+            if (bedrockActions != null) {
+                for (Action action : bedrockActions) {
+                    action.affectPlayer(player, interfaceManager, bedrockHandler);
+                }
             }
         } else {
-            if (javaAction != null) {
-                javaAction.affectPlayer(player, interfaceManager, BedrockHandler.empty());
+            if (javaActions != null) {
+                for (Action action : javaActions) {
+                    action.affectPlayer(player, interfaceManager, BedrockHandler.empty());
+                }
             }
         }
     }
@@ -141,6 +147,7 @@ public class AccessItem {
      */
     public ItemStack createItemStack(@Nonnull Player player) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+        //FormPlayer formPlayer = new SpigotPlayer(player);
         String displayName = placeholders.setPlaceholders(player, this.displayName);
         List<String> lore = placeholders.setPlaceholders(player, this.lore);
         return createItemStack(identifier, displayName, material, lore);

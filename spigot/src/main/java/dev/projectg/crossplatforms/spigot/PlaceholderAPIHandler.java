@@ -1,9 +1,10 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.Player;
-import dev.projectg.crossplatforms.utils.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 
@@ -21,11 +22,11 @@ public class PlaceholderAPIHandler implements PlaceholderHandler {
      * @param text The text
      * @return the formatted text.
      */
-    public String setPlaceholders(@Nonnull Player player, @Nonnull String text) {
+    public String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text) {
         if (text.isBlank()) {
             return text;
         }
 
-        return PlaceholderAPI.setPlaceholders((org.bukkit.entity.Player) player, text);
+        return PlaceholderAPI.setPlaceholders((Player) player, text);
     }
 }

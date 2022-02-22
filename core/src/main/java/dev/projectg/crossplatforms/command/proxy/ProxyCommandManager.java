@@ -8,7 +8,7 @@ import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Player;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
@@ -74,7 +74,7 @@ public class ProxyCommandManager implements Reloadable {
                                     }
                                 })
                                 .handler((context) -> {
-                                    Player player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow()));
+                                    FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow()));
                                     registeredCommands.get(name).run(player, interfaceManager, bedrockHandler);
                                 })
                         );

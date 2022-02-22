@@ -1,6 +1,4 @@
-package dev.projectg.crossplatforms.utils;
-
-import dev.projectg.crossplatforms.handler.Player;
+package dev.projectg.crossplatforms.handler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -9,14 +7,14 @@ import java.util.Map;
 
 public interface PlaceholderHandler {
 
-    String setPlaceholders(@Nonnull Player player, @Nonnull String text);
+    String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text);
     /**
      * Returns the inputted text with placeholders set, if PlaceholderAPI is loaded. If not, it returns the same text.
      * @param player The player
      * @param text The text
      * @return the formatted text.
      */
-    default List<String> setPlaceholders(@Nonnull Player player, @Nonnull List<String> text) {
+    default List<String> setPlaceholders(@Nonnull FormPlayer player, @Nonnull List<String> text) {
         List<String> processedText = new ArrayList<>();
         if (text.isEmpty()) {
             return processedText;
@@ -35,7 +33,7 @@ public interface PlaceholderHandler {
      * @param additional Additional placeholders to apply
      * @return the formatted text.
      */
-    default String setPlaceholders(@Nonnull Player player, @Nonnull String text, @Nonnull Map<String, String> additional) {
+    default String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text, @Nonnull Map<String, String> additional) {
         if (text.isBlank()) {
             return text;
         }
@@ -59,7 +57,7 @@ public interface PlaceholderHandler {
      * @param additional Additional placeholders to apply
      * @return the formatted text.
      */
-    default List<String> setPlaceholders(@Nonnull Player player, @Nonnull List<String> text, Map<String, String> additional) {
+    default List<String> setPlaceholders(@Nonnull FormPlayer player, @Nonnull List<String> text, Map<String, String> additional) {
         List<String> processedText = new ArrayList<>();
         if (text.isEmpty()) {
             return processedText;

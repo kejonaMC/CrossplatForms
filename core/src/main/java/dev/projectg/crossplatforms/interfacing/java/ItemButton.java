@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
 
-import dev.projectg.crossplatforms.interfacing.BasicClickAction;
+import dev.projectg.crossplatforms.action.Action;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -25,9 +25,9 @@ public class ItemButton {
     private List<String> lore = Collections.emptyList();
 
     @Nullable
-    private BasicClickAction anyClick;
+    private List<Action> anyClick;
     @Nullable
-    private BasicClickAction leftClick;
+    private List<Action> leftClick;
     @Nullable
-    private BasicClickAction rightClick;
+    private List<Action> rightClick;
 }
