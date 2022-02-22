@@ -9,14 +9,13 @@ import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.accessitem.AccessItem;
+import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.defaults.InspectCommand;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
-import dev.projectg.crossplatforms.item.AccessItem;
-import dev.projectg.crossplatforms.item.AccessItemListeners;
-import dev.projectg.crossplatforms.item.AccessItemRegistry;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
@@ -94,6 +93,14 @@ public class CrossplatFormsSpigot extends JavaPlugin {
         }
 
         AccessItemRegistry accessItemRegistry = new AccessItemRegistry(crossplatForms.getConfigManager(), serverHandler);
+        AccessItemListeners accessItemListeners = new AccessItemListeners(
+                crossplatForms.getInterfaceManager(),
+                accessItemRegistry,
+                crossplatForms.getBedrockHandler(),
+                placeholders);
+
+        // Registering events required to manage access items
+        Bukkit.getServer().getPluginManager().registerEvents(accessItemListeners, this);
 
         // addon to the inspect command
         commandManager.command(crossplatForms.getCommandBuilder()
@@ -118,13 +125,7 @@ public class CrossplatFormsSpigot extends JavaPlugin {
                 })
         );
 
-        // Registering events required to manage access items
-        Bukkit.getServer().getPluginManager().registerEvents(
-                new AccessItemListeners(
-                        crossplatForms.getInterfaceManager(),
-                        accessItemRegistry,
-                        crossplatForms.getBedrockHandler()),
-                this);
+        new GiveCommand(crossplatForms, accessItemRegistry, accessItemListeners).register(commandManager, crossplatForms.getCommandBuilder());
 
         // events regarding inventory GUI menus
         Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(crossplatForms.getInterfaceManager()), this);

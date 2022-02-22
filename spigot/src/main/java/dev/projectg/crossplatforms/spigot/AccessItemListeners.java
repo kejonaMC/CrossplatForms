@@ -1,11 +1,16 @@
-package dev.projectg.crossplatforms.item;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
+import dev.projectg.crossplatforms.accessitem.AccessItem;
+import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,18 +27,83 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 @AllArgsConstructor
 public class AccessItemListeners implements Listener {
 
+    public static final NamespacedKey ACCESS_ITEM_KEY = new NamespacedKey(CrossplatFormsSpigot.getInstance(), AccessItem.STATIC_IDENTIFIER);
+    public static final PersistentDataType<String, String> ACCESS_ITEM_KEY_TYPE = PersistentDataType.STRING;
+
     private final Logger logger = Logger.getLogger();
     private final InterfaceManager interfaceManager;
     private final AccessItemRegistry registry;
     private final BedrockHandler bedrockHandler;
+    private final PlaceholderHandler placeholders;
+
+    /**
+     * Attempt to retrieve the Access Item ID that an ItemStack points to. The Access Item ID may or may not refer
+     * to an actual AccessItem
+     * @param itemStack The ItemStack to check
+     * @return The AccessItem ID if the ItemStack contained the name, null if not.
+     */
+    @Nullable
+    public static String getItemId(@Nonnull ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) {
+            return null;
+        } else {
+            return meta.getPersistentDataContainer().get(ACCESS_ITEM_KEY, ACCESS_ITEM_KEY_TYPE);
+        }
+    }
+
+    /**
+     * Attempt to retrieve the Access Item that an ItemStack points to
+     * @param itemStack The ItemStack to check. If it contains null ItemMeta, this will return null.
+     * @return The Access Item if the ItemStack contained the identifier of the Access Item, and the Access Item exists. Will return null if their conditions are false.
+     */
+    @Nullable
+    public AccessItem getItem(@Nonnull ItemStack itemStack) {
+        String identifier = getItemId(itemStack);
+        if (identifier == null) {
+            return null;
+        } else {
+            return registry.getItem(identifier);
+        }
+    }
+
+    public ItemStack createItemStack(AccessItem accessItem, Player player) {
+        FormPlayer formPlayer = new SpigotPlayer(player);
+        Material material = Material.getMaterial(accessItem.getMaterial());
+        if (material == null) {
+            logger.severe(String.format("Failed to get access item from '%s' for access item '%s'", accessItem.getMaterial(), accessItem.getIdentifier()));
+            material = Material.COMPASS;
+        }
+        if (!material.isItem()) {
+            logger.severe(String.format("Material %s for access item %s is not a valid item material!", material, accessItem.getIdentifier()));
+            material = Material.COMPASS;
+        }
+
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            logger.severe(String.format("Itemstack from material %s for access item %s has null item meta!", material, accessItem.getIdentifier()));
+            item = new ItemStack(Material.COMPASS);
+            meta = Objects.requireNonNull(item.getItemMeta());
+        }
+        meta.setDisplayName(placeholders.setPlaceholders(formPlayer, accessItem.getDisplayName()));
+        meta.setLore(placeholders.setPlaceholders(formPlayer, accessItem.getLore()));
+        meta.getPersistentDataContainer().set(ACCESS_ITEM_KEY, ACCESS_ITEM_KEY_TYPE, accessItem.getIdentifier());
+        return item;
+    }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) { // opening menus through access items
@@ -41,7 +111,7 @@ public class AccessItemListeners implements Listener {
         if (action != Action.PHYSICAL) {
             ItemStack item = event.getItem();
             if (item != null) {
-                String id = AccessItemRegistry.getItemId(item);
+                String id = getItemId(item);
                 if (id != null) {
                     // Don't allow using the item to break blocks
                     // If it was a right click, using the access item should be the only behaviour
@@ -55,7 +125,7 @@ public class AccessItemListeners implements Listener {
                             player.getInventory().remove(item);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                                access.trigger(player, interfaceManager, bedrockHandler);
+                                access.trigger(new SpigotPlayer(player), interfaceManager, bedrockHandler);
                             }
                         } else {
                             player.sendMessage("You don't have permission to have that.");
@@ -72,7 +142,7 @@ public class AccessItemListeners implements Listener {
         // todo: don't allow duplication for creative players
         ItemStack item = event.getCurrentItem();
         if (item != null) {
-            String id = AccessItemRegistry.getItemId(item);
+            String id = getItemId(item);
             if (id != null) {
                 if (registry.isEnabled()) {
                     HumanEntity human = event.getWhoClicked();
@@ -97,7 +167,7 @@ public class AccessItemListeners implements Listener {
     @EventHandler
     public void PlayerSwapHandItemsEvent(PlayerSwapHandItemsEvent event) { // Don't allow putting it in the offhand
         ItemStack item = event.getOffHandItem();
-        if (item != null && AccessItemRegistry.getItemId(item) != null) {
+        if (item != null && getItemId(item) != null) {
             event.setCancelled(true);
         }
     }
@@ -106,7 +176,7 @@ public class AccessItemListeners implements Listener {
     public void onEntityPickupItem(EntityPickupItemEvent event) { // Stop players without possession permission to pickup items
         if (event.getEntity() instanceof Player player) {
             ItemStack item = event.getItem().getItemStack();
-            String id = AccessItemRegistry.getItemId(item);
+            String id = getItemId(item);
             if (id != null) {
                 AccessItem access = registry.getItem(id);
                 if (access == null) {
@@ -121,9 +191,9 @@ public class AccessItemListeners implements Listener {
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) { // restricting dropping
         ItemStack item = event.getItemDrop().getItemStack();
-        String id = AccessItemRegistry.getItemId(item);
+        String id = getItemId(item);
         if (id != null) {
-            AccessItem access = registry.getItem(item);
+            AccessItem access = registry.getItem(id);
             if (access == null) {
                 event.setCancelled(true);
             } else {
@@ -147,7 +217,7 @@ public class AccessItemListeners implements Listener {
 
         Player player = event.getEntity();
         for (ItemStack item : event.getDrops()) {
-            AccessItem access = registry.getItem(item);
+            AccessItem access = getItem(item);
             if (access != null && !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
                 event.getDrops().remove(item);
             }
@@ -174,10 +244,10 @@ public class AccessItemListeners implements Listener {
         Player player = event.getPlayer();
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
-                AccessItem access = registry.getItem(item);
+                AccessItem access = getItem(item);
                 if (access != null && !access.isPersist()) {
                     player.getInventory().remove(item);
-                    logger.debug("Removing access item %s from %s".formatted(access.getIdentifier(), player.getName()));
+                    logger.debug(String.format("Removing access item %s from %s", access.getIdentifier(), player.getName()));
                 }
             }
         }
@@ -189,14 +259,14 @@ public class AccessItemListeners implements Listener {
         // Remove any access items that are now longer allowed
         for (ItemStack item : player.getInventory()) {
             if (item != null) {
-                AccessItem access = registry.getItem(item);
+                AccessItem access = getItem(item);
                 if (access != null) {
                     if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                         contained.add(access.getIdentifier());
-                        logger.debug("%s is keeping access item %s".formatted(player.getName(), access.getIdentifier()));
+                        logger.debug(String.format("%s is keeping access item %s", player.getName(), access.getIdentifier()));
                     } else {
                         player.getInventory().remove(item);
-                        logger.debug("Removed %s from %s because they don't have permission for it".formatted(access.getIdentifier(), player.getName()));
+                        logger.debug(String.format("Removed %s from %s because they don't have permission for it", access.getIdentifier(), player.getName()));
                     }
                 }
             }
@@ -215,9 +285,9 @@ public class AccessItemListeners implements Listener {
                         giveAccessItem(player, access, false);
                     }
 
-                    logger.debug("Gave access item %s to %s".formatted(access.getIdentifier(), player.getName()));
+                    logger.debug(String.format("Gave access item %s to %s", access.getIdentifier(), player.getName()));
                 } else {
-                    logger.debug("%s has permission for access item %s, but they already have it".formatted(player.getName(), access.getIdentifier()));
+                    logger.debug(String.format("%s has permission for access item %s, but they already have it", player.getName(), access.getIdentifier()));
                 }
             }
         }
@@ -230,8 +300,8 @@ public class AccessItemListeners implements Listener {
      * @param setHeldSlot True if the player's selected item should be forced to the access item
      * @return True if the access item was successfully given. False if the inventory was too full.
      */
-    public static boolean giveAccessItem(Player player, AccessItem accessItem, boolean setHeldSlot) {
-        ItemStack accessItemStack = accessItem.createItemStack(player); // todo update placeholders after the fact. but when?
+    public boolean giveAccessItem(Player player, AccessItem accessItem, boolean setHeldSlot) {
+        ItemStack accessItemStack = createItemStack(accessItem, player); // todo update placeholders after the fact. but when?
 
         int desiredSlot = accessItem.getSlot();
         ItemStack oldItem = player.getInventory().getItem(desiredSlot);

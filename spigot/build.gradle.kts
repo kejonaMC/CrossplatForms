@@ -15,6 +15,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     api(project(":core"))
+    api(project(":access-item"))
     api("cloud.commandframework:cloud-paper:1.6.1")
     api("cloud.commandframework:cloud-minecraft-extras:1.6.1")
     api("me.lucko:commodore:1.9")

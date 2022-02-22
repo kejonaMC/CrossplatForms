@@ -42,7 +42,7 @@ public class ConfigManager {
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.registerExact(new TypeToken<>() {}, actionSerializer);
+            builder.registerExact(new TypeToken<>() {}, actionSerializer); // List<Action>
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node

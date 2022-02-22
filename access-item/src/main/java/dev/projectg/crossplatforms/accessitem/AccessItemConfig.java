@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.item;
+package dev.projectg.crossplatforms.accessitem;
 
 import dev.projectg.crossplatforms.config.Configuration;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
