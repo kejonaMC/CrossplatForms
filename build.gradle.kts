@@ -34,6 +34,7 @@ repositories {
     maven("https://repo.opencollab.dev/maven-snapshots/")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
