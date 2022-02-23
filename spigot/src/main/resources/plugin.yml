@@ -1,6 +1,6 @@
 main: dev.projectg.crossplatforms.CrossplatForms
 name: CrossplatForms
-version: 0.2.0
+version: 0.3.0
 api-version: 1.14
 description: Unifies inventory menus with Bedrock Edition forms.
 prefix: CForms
