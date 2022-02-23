@@ -3,7 +3,9 @@ package dev.projectg.crossplatforms.command;
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -13,13 +15,15 @@ import java.util.UUID;
 
 public interface CommandOrigin {
 
+    LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
+
     /**
      * Mapping of Logger levels to Bukkit chat colours
      */
-    Map<Logger.Level, ChatColor> LOGGER_COLORS = ImmutableMap.of(
-            Logger.Level.INFO, ChatColor.RESET,
-            Logger.Level.WARN, ChatColor.GOLD,
-            Logger.Level.SEVERE, ChatColor.RED);
+    Map<Logger.Level, NamedTextColor> LOGGER_COLORS = ImmutableMap.of(
+            Logger.Level.INFO, NamedTextColor.WHITE,
+            Logger.Level.WARN, NamedTextColor.GOLD,
+            Logger.Level.SEVERE, NamedTextColor.RED);
 
     /**
      * Check the command origin has a permission
@@ -73,8 +77,8 @@ public interface CommandOrigin {
         if (isConsole()) {
             Logger.getLogger().log(level, message);
         } else {
-            // todo: abstract chat colour
-            sendMessage(LOGGER_COLORS.getOrDefault(level, ChatColor.RESET) + message);
+            // todo: fully use adventure
+            sendMessage(LEGACY_SERIALIZER.serialize(Component.text(message, LOGGER_COLORS.getOrDefault(level, NamedTextColor.WHITE))));
         }
     }
 
