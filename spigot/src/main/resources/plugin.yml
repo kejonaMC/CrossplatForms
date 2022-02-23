@@ -1,4 +1,4 @@
-main: dev.projectg.crossplatforms.CrossplatForms
+main: dev.projectg.crossplatforms.spigot.CrossplatFormsSpigot
 name: CrossplatForms
 version: 0.3.0
 api-version: 1.14
