@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,8 +32,7 @@ public class ModalForm extends BedrockForm {
     private ModalButton button2 = null;
 
     @Override
-    public void send(@NotNull FormPlayer player) {
-        InterfaceManager interfaceManager = CrossplatForms.getInstance().getInterfaceManager();
+    public void send(@NotNull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();

@@ -34,7 +34,7 @@ public class ReloadableRegistry {
         boolean success = true;
 
         ConfigManager configManager = CrossplatForms.getInstance().getConfigManager();
-        if (!configManager.loadAllConfigs()) {
+        if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
             success = false;
         }

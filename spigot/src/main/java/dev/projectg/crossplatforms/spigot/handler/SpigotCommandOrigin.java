@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.projectg.crossplatforms.spigot.handler;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.command.CommandOrigin;

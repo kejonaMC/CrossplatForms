@@ -31,7 +31,7 @@ public class InterfaceAction implements Action {
                 Thread.dumpStack();
             }
         } else {
-            ui.send(player);
+            ui.send(player, interfaceManager);
         }
     }
 }

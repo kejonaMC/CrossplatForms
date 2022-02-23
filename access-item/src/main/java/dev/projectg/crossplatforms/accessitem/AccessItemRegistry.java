@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.accessitem;
 
 
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
@@ -16,7 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccessItemRegistry implements Reloadable {
+public abstract class AccessItemRegistry implements Reloadable {
 
     private final ConfigManager configManager;
     private final ServerHandler serverHandler;
@@ -99,4 +100,6 @@ public class AccessItemRegistry implements Reloadable {
     public AccessItem getItem(@Nonnull String id) {
         return items.get(id);
     }
+
+    public abstract boolean giveAccessItem(FormPlayer player, AccessItem accessItem, boolean setHeldSlot);
 }

@@ -8,8 +8,6 @@ import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +60,6 @@ public class JavaMenuRegistry implements Reloadable {
 
     @Override
     public boolean reload() {
-
         // Unregister permissions
         if (enabled) {
             for (Interface menu : menus.values()) {
@@ -85,35 +82,5 @@ public class JavaMenuRegistry implements Reloadable {
     public JavaMenu getMenu(@Nonnull String menuName) {
         Objects.requireNonNull(menuName);
         return menus.get(menuName);
-    }
-
-    /**
-     * Attempt to retrieve the menu that an ItemStack points to
-     * @param itemStack The ItemStack to check. If it contains null ItemMeta, this will return null.
-     * @return The menu if the ItemStack contained the menu name and the menu exists. If no menu name was contained or the menu contained doesn't exist, this will return null.
-     */
-    @Nullable
-    public JavaMenu getMenu(@Nonnull ItemStack itemStack) {
-        String menuName = getMenuName(itemStack);
-        if (menuName == null) {
-            return null;
-        } else {
-            return getMenu(menuName);
-        }
-    }
-
-    /**
-     * Attempt to retrieve the menu name that an ItemStack is contained in
-     * @param itemStack The ItemStack to check
-     * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
-     */
-    @Nullable
-    public static String getMenuName(@Nonnull ItemStack itemStack) {
-        Objects.requireNonNull(itemStack);
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta != null) {
-            return meta.getPersistentDataContainer().get(JavaMenu.BUTTON_KEY, JavaMenu.BUTTON_KEY_TYPE);
-        }
-        return null;
     }
 }

@@ -4,6 +4,7 @@ import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
 import net.kyori.adventure.audience.Audience;
@@ -73,4 +74,6 @@ public interface ServerHandler {
     void registerProxyCommand(ProxyCommand proxyCommand);
 
     void clearProxyCommands();
+
+    void sendMenu(FormPlayer formPlayer, JavaMenu menu);
 }

@@ -14,6 +14,7 @@ import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommandManager;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -31,6 +32,7 @@ import org.geysermc.geyser.session.auth.AuthType;
 
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Getter
@@ -52,6 +54,7 @@ public class CrossplatForms {
 
     public CrossplatForms(Logger logger,
                           Path dataFolder,
+                          Set<ConfigId> configs,
                           ServerHandler serverHandler,
                           CommandManager<CommandOrigin> commandManager,
                           PlaceholderHandler placeholders,
@@ -88,8 +91,8 @@ public class CrossplatForms {
         for (Map.Entry<String, Class<? extends Action>> entry : extraActions.entrySet()) {
             actionSerializer.register(entry.getKey(), entry.getValue());
         }
-        configManager = new ConfigManager(dataFolder, logger, actionSerializer);
-        if (!configManager.loadAllConfigs()) {
+        configManager = new ConfigManager(dataFolder, logger, configs, actionSerializer);
+        if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }
         logger.setDebug(configManager.getConfig(GeneralConfig.class).map(GeneralConfig::isEnableDebug).orElse(false));

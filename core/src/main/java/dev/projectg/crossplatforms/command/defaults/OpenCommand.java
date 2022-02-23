@@ -66,7 +66,7 @@ public class OpenCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (origin.hasPermission(ui.permission(Interface.Limit.USE))) {
-                            ui.send(player);
+                            ui.send(player, interfaceManager);
                         } else {
                             origin.sendMessage("You don't have permission to use: " + identifier);
                         }
@@ -104,7 +104,7 @@ public class OpenCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(ui.permission(Interface.Limit.USE))) {
-                            ui.send(targetPlayer);
+                            ui.send(targetPlayer, interfaceManager);
                         } else {
                             origin.sendMessage(target + " doesn't have permission to use: " + identifier);
                         }

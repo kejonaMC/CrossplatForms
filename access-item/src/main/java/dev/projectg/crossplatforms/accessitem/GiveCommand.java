@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.projectg.crossplatforms.accessitem;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
@@ -6,19 +6,14 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.accessitem.AccessItem;
-import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class GiveCommand extends FormsCommand {
@@ -31,14 +26,12 @@ public class GiveCommand extends FormsCommand {
     private final BedrockHandler bedrockHandler;
     private final ServerHandler serverHandler;
     private final AccessItemRegistry itemRegistry;
-    private final AccessItemListeners itemListeners;
 
-    public GiveCommand(CrossplatForms crossplatForms, AccessItemRegistry itemRegistry, AccessItemListeners itemListeners) {
+    public GiveCommand(CrossplatForms crossplatForms, AccessItemRegistry itemRegistry) {
         super(crossplatForms);
         this.bedrockHandler = crossplatForms.getBedrockHandler();
         this.serverHandler = crossplatForms.getServerHandler();
         this.itemRegistry = itemRegistry;
-        this.itemListeners = itemListeners;
     }
 
     @Override
@@ -54,8 +47,7 @@ public class GiveCommand extends FormsCommand {
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    UUID uuid = origin.getUUID().orElseThrow();
-                    Player player = Bukkit.getPlayer(uuid);
+                    FormPlayer player = serverHandler.getPlayer(origin.getUUID().orElseThrow());
                     String identifier = context.get(ARGUMENT);
                     AccessItem item = itemRegistry.getItems().get(identifier);
 
@@ -65,7 +57,7 @@ public class GiveCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(item.permission(AccessItem.Limit.COMMAND))) {
                         if (origin.hasPermission(item.permission(AccessItem.Limit.POSSESS))) {
-                            if (!itemListeners.giveAccessItem(player, item, false)) {
+                            if (!itemRegistry.giveAccessItem(player, item, false)) {
                                 origin.sendMessage("Your inventory is too full!");
                             }
                         } else {
@@ -102,7 +94,7 @@ public class GiveCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(item.permission(AccessItem.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(item.permission(AccessItem.Limit.POSSESS))) {
-                            if (!itemListeners.giveAccessItem((Player) targetPlayer.getHandle(), item, false)) {
+                            if (!itemRegistry.giveAccessItem(targetPlayer, item, false)) {
                                 origin.sendMessage(String.format("%s's inventory is too full!", targetPlayer.getName()));
                             }
                         } else {

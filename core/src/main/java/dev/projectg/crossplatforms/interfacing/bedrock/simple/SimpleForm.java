@@ -28,8 +28,7 @@ public class SimpleForm extends BedrockForm {
     private List<SimpleButton> buttons = Collections.emptyList();
 
     @Override
-    public void send(@Nonnull FormPlayer player) {
-        InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
+    public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();
@@ -70,7 +69,7 @@ public class SimpleForm extends BedrockForm {
             // Handle effects of pressing the button
             List<Action> actions = formattedButtons.get(response.getClickedButtonId()).getActions();
             for (Action action : actions) {
-                action.affectPlayer(player, registry, bedrockHandler);
+                action.affectPlayer(player, interfaceManager, bedrockHandler);
             }
         });
 

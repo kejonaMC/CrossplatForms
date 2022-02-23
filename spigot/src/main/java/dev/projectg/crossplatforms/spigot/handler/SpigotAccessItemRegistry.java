@@ -1,14 +1,17 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.projectg.crossplatforms.spigot.handler;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.accessitem.AccessItem;
 import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
+import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import lombok.AllArgsConstructor;
+import dev.projectg.crossplatforms.spigot.CrossplatFormsSpigot;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
@@ -37,17 +40,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@AllArgsConstructor
-public class AccessItemListeners implements Listener {
+public class SpigotAccessItemRegistry extends AccessItemRegistry implements Listener {
 
     public static final NamespacedKey ACCESS_ITEM_KEY = new NamespacedKey(CrossplatFormsSpigot.getInstance(), AccessItem.STATIC_IDENTIFIER);
     public static final PersistentDataType<String, String> ACCESS_ITEM_KEY_TYPE = PersistentDataType.STRING;
 
     private final Logger logger = Logger.getLogger();
     private final InterfaceManager interfaceManager;
-    private final AccessItemRegistry registry;
     private final BedrockHandler bedrockHandler;
     private final PlaceholderHandler placeholders;
+
+    public SpigotAccessItemRegistry(ConfigManager configManager,
+                                    ServerHandler serverHandler,
+                                    InterfaceManager interfaceManager,
+                                    BedrockHandler bedrockHandler,
+                                    PlaceholderHandler placeholders) {
+        super(configManager, serverHandler);
+        this.interfaceManager = interfaceManager;
+        this.bedrockHandler = bedrockHandler;
+        this.placeholders = placeholders;
+    }
 
     /**
      * Attempt to retrieve the Access Item ID that an ItemStack points to. The Access Item ID may or may not refer
@@ -76,7 +88,7 @@ public class AccessItemListeners implements Listener {
         if (identifier == null) {
             return null;
         } else {
-            return registry.getItem(identifier);
+            return super.getItem(identifier);
         }
     }
 
@@ -117,8 +129,8 @@ public class AccessItemListeners implements Listener {
                     // If it was a right click, using the access item should be the only behaviour
                     event.setCancelled(true);
 
-                    if (registry.isEnabled()) {
-                        AccessItem access = registry.getItem(id);
+                    if (super.isEnabled()) {
+                        AccessItem access = super.getItem(id);
                         Player player = event.getPlayer();
                         if (access == null) {
                             // item is no longer registered
@@ -144,9 +156,9 @@ public class AccessItemListeners implements Listener {
         if (item != null) {
             String id = getItemId(item);
             if (id != null) {
-                if (registry.isEnabled()) {
+                if (super.isEnabled()) {
                     HumanEntity human = event.getWhoClicked();
-                    AccessItem access = registry.getItem(id);
+                    AccessItem access = super.getItem(id);
                     if (access == null) {
                         // restrict items that no longer exist
                         event.setCancelled(true);
@@ -178,7 +190,7 @@ public class AccessItemListeners implements Listener {
             ItemStack item = event.getItem().getItemStack();
             String id = getItemId(item);
             if (id != null) {
-                AccessItem access = registry.getItem(id);
+                AccessItem access = super.getItem(id);
                 if (access == null) {
                     event.setCancelled(true);
                 } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
@@ -193,7 +205,7 @@ public class AccessItemListeners implements Listener {
         ItemStack item = event.getItemDrop().getItemStack();
         String id = getItemId(item);
         if (id != null) {
-            AccessItem access = registry.getItem(id);
+            AccessItem access = super.getItem(id);
             if (access == null) {
                 event.setCancelled(true);
             } else {
@@ -211,7 +223,7 @@ public class AccessItemListeners implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) { // restricting dropping
-        if (!registry.isEnabled()) {
+        if (!super.isEnabled()) {
             return;
         }
 
@@ -274,15 +286,15 @@ public class AccessItemListeners implements Listener {
 
         // Give any access items that should be given
         boolean changedHand = false; // If we have changed the item the player is holding
-        for (AccessItem access : registry.getItems().values()) {
+        for (AccessItem access : super.getItems().values()) {
             if (give.test(access) && Platform.matches(player.getUniqueId(), access.getPlatform(), bedrockHandler) && player.hasPermission(access.permission(AccessItem.Limit.EVENT))) {
                 if (!contained.contains(access.getIdentifier())) {
-                    if (registry.setHeldSlot() && !changedHand) {
-                        giveAccessItem(player, access, true);
+                    if (super.setHeldSlot() && !changedHand) {
+                        giveAccessItem(new SpigotPlayer(player), access, true);
                         changedHand = true;
                         logger.debug("Set held slot to " + access.getSlot());
                     } else {
-                        giveAccessItem(player, access, false);
+                        giveAccessItem(new SpigotPlayer(player), access, false);
                     }
 
                     logger.debug(String.format("Gave access item %s to %s", access.getIdentifier(), player.getName()));
@@ -291,6 +303,11 @@ public class AccessItemListeners implements Listener {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean giveAccessItem(FormPlayer player, AccessItem accessItem, boolean setHeldSlot) {
+        return giveAccessItem(Bukkit.getPlayer(player.getUuid()), accessItem, setHeldSlot);
     }
 
     /**

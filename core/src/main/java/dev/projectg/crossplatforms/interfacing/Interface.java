@@ -33,7 +33,7 @@ public abstract class Interface {
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Interface.Limit, Permission> permissions;
 
-    public abstract void send(@Nonnull FormPlayer recipient);
+    public abstract void send(@Nonnull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager);
 
     /**
      * e.g. "crossplatforms.form"

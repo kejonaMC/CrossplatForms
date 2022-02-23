@@ -17,6 +17,8 @@ import java.util.List;
 @SuppressWarnings("FieldMayBeFinal")
 public class ItemButton {
 
+    public static final String STATIC_IDENTIFIER = "crossplatFormsButton";
+
     @Required
     private String displayName;
     @Required

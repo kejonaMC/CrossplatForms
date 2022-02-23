@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,8 +36,7 @@ public class CustomForm extends BedrockForm {
     private List<Action> actions = null;
 
     @Override
-    public void send(@NotNull FormPlayer player) {
-        InterfaceManager registry = CrossplatForms.getInstance().getInterfaceManager();
+    public void send(@NotNull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();
@@ -95,7 +95,7 @@ public class CustomForm extends BedrockForm {
 
             // Handle effects of pressing the button
             for (Action action : actions) {
-                action.affectPlayer(player, resultPlaceholders, registry, bedrockHandler);
+                action.affectPlayer(player, resultPlaceholders, interfaceManager, bedrockHandler);
             }
         });
 

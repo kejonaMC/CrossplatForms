@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 @RequiredArgsConstructor
 public class InterfaceManager {
 
@@ -25,11 +26,7 @@ public class InterfaceManager {
 
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
-
-    @Getter
     private final BedrockFormRegistry bedrockRegistry;
-
-    @Getter
     private final JavaMenuRegistry javaRegistry;
 
     /**
@@ -96,7 +93,7 @@ public class InterfaceManager {
             if (form != null) {
                 // form exists
                 if (player.hasPermission(form.permission(Interface.Limit.USE))) {
-                    form.send(player);
+                    form.send(player, this);
                 } else {
                     player.sendMessage("You don't have permission to use: " + id);
                 }
@@ -104,7 +101,7 @@ public class InterfaceManager {
                 if (menu.isAllowBedrock()) {
                     // menu exists and BE is allowed
                     if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
-                        menu.send(player);
+                        menu.send(player, this);
                     } else {
                         player.sendMessage("You don't have permission to use: " + id);
                     }
@@ -118,7 +115,7 @@ public class InterfaceManager {
         } else {
             if (menu != null) {
                 if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
-                    menu.send(player);
+                    menu.send(player, this);
                 } else {
                     player.sendMessage("You don't have permission to use: " + id);
                 }

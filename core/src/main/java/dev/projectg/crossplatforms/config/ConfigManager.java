@@ -22,19 +22,23 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class ConfigManager {
 
     private final YamlConfigurationLoader.Builder loaderBuilder;
+    private final Set<ConfigId> identifiers = new HashSet<>();
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
     private final File directory;
     private final Logger logger;
 
-    public ConfigManager(Path directory, Logger logger, ActionSerializer actionSerializer) {
+    public ConfigManager(Path directory, Logger logger, Set<ConfigId> configs, ActionSerializer actionSerializer) {
         this.directory = directory.toFile();
         this.logger = logger;
+        this.identifiers.addAll(configs);
         // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
@@ -56,8 +60,8 @@ public class ConfigManager {
      */
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean loadAllConfigs() {
-        for (ConfigId configId : ConfigId.VALUES) {
+    public boolean load() {
+        for (ConfigId configId : identifiers) {
             try {
                 if (!loadConfig(configId)) {
                     logger.severe("Configuration error in " + configId.fileName + " - Fix the issue or regenerate a new file.");

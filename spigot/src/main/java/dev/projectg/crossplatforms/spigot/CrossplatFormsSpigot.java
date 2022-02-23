@@ -9,21 +9,25 @@ import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.accessitem.AccessItem;
-import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
+import dev.projectg.crossplatforms.accessitem.AccessItemConfig;
+import dev.projectg.crossplatforms.accessitem.GiveCommand;
+import dev.projectg.crossplatforms.accessitem.InspectItemCommand;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.defaults.InspectCommand;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuListeners;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.spigot.handler.PlaceholderAPIHandler;
+import dev.projectg.crossplatforms.spigot.handler.SpigotAccessItemRegistry;
+import dev.projectg.crossplatforms.spigot.handler.SpigotCommandOrigin;
+import dev.projectg.crossplatforms.spigot.handler.SpigotServerHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class CrossplatFormsSpigot extends JavaPlugin {
 
@@ -41,10 +45,6 @@ public class CrossplatFormsSpigot extends JavaPlugin {
         }
         audiences = BukkitAudiences.create(this);
         ServerHandler serverHandler = new SpigotServerHandler(this, audiences);
-
-        if (!Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
-        }
 
         // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         PaperCommandManager<CommandOrigin> commandManager;
@@ -75,14 +75,21 @@ public class CrossplatFormsSpigot extends JavaPlugin {
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholders = new PlaceholderAPIHandler();
         } else {
+            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
             placeholders = new BasicPlaceholders();
         }
 
+        // additional actions to register
         Map<String, Class<? extends Action>> actions = ImmutableMap.of("server", ServerAction.class);
+
+        // configs to load
+        Set<ConfigId> configs = ConfigId.defaults();
+        configs.add(new ConfigId("access-items.yml", AccessItemConfig.VERSION, AccessItemConfig.MINIMUM_VERSION, AccessItemConfig.class, AccessItemConfig::updater));
 
         crossplatForms = new CrossplatForms(
                 logger,
                 getDataFolder().toPath(),
+                configs,
                 serverHandler,
                 commandManager,
                 placeholders,
@@ -92,43 +99,22 @@ public class CrossplatFormsSpigot extends JavaPlugin {
             return;
         }
 
-        AccessItemRegistry accessItemRegistry = new AccessItemRegistry(crossplatForms.getConfigManager(), serverHandler);
-        AccessItemListeners accessItemListeners = new AccessItemListeners(
+        SpigotAccessItemRegistry accessItemRegistry = new SpigotAccessItemRegistry(
+                crossplatForms.getConfigManager(),
+                serverHandler,
                 crossplatForms.getInterfaceManager(),
-                accessItemRegistry,
                 crossplatForms.getBedrockHandler(),
                 placeholders);
 
         // Registering events required to manage access items
-        Bukkit.getServer().getPluginManager().registerEvents(accessItemListeners, this);
+        Bukkit.getServer().getPluginManager().registerEvents(accessItemRegistry, this);
 
-        // addon to the inspect command
-        commandManager.command(crossplatForms.getCommandBuilder()
-                .literal(InspectCommand.NAME)
-                .permission(InspectCommand.PERMISSION)
-                .literal("item")
-                .argument(StringArgument.<CommandOrigin>newBuilder("item")
-                        .withSuggestionsProvider(((context, s) -> accessItemRegistry.getItems().values()
-                                .stream()
-                                .map(AccessItem::getIdentifier)
-                                .collect(Collectors.toList()))))
-                .handler(context -> {
-                    CommandOrigin origin = context.getSender();
-                    String name = context.get("item");
-                    AccessItem item = accessItemRegistry.getItems().get(name);
-                    if (item == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "That Access Item doesn't exist!");
-                    } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item: " + name);
-                        origin.sendMessage(Logger.Level.INFO, item.toString());
-                    }
-                })
-        );
-
-        new GiveCommand(crossplatForms, accessItemRegistry, accessItemListeners).register(commandManager, crossplatForms.getCommandBuilder());
+        // Commands added by access items
+        new GiveCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
+        new InspectItemCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
 
         // events regarding inventory GUI menus
-        Bukkit.getServer().getPluginManager().registerEvents(new JavaMenuListeners(crossplatForms.getInterfaceManager()), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new MenuHelper(crossplatForms.getInterfaceManager()), this);
     }
 
     @Override
