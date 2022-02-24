@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.geysermc.cumulus.component.InputComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 @ToString
@@ -17,7 +18,7 @@ public class Input extends CustomComponent implements InputComponent {
     private String defaultText = "";
 
     @Override
-    public CustomComponent withPlaceholders(Function<String, String> resolver) {
+    public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
         Input input = new Input();
         input.type = this.type;
         input.text = resolver.apply(this.text);

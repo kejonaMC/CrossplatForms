@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.geysermc.cumulus.component.SliderComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.function.Function;
 
 @ToString
@@ -19,7 +20,14 @@ public class Slider extends CustomComponent implements SliderComponent {
     private float defaultValue = 0;
 
     @Override
-    public CustomComponent withPlaceholders(Function<String, String> resolver) {
-        return this; // technically should be a new instance, but this is immutable currently
+    public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
+        Slider slider = new Slider();
+        slider.type = this.type;
+        slider.text = resolver.apply(this.text);
+        slider.min = this.min;
+        slider.max = this.max;
+        slider.step = this.step;
+        slider.defaultValue = this.defaultValue;
+        return slider;
     }
 }

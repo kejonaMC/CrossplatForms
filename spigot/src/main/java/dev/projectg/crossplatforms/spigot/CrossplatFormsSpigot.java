@@ -74,7 +74,7 @@ public class CrossplatFormsSpigot extends JavaPlugin {
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholders = new PlaceholderAPIHandler();
         } else {
-            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work in the GeyserHub config!");
+            logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work (typically).");
             placeholders = new BasicPlaceholders();
         }
 

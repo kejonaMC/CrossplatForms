@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.geysermc.cumulus.component.DropdownComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -19,7 +20,7 @@ public class Dropdown extends CustomComponent implements DropdownComponent {
     private int defaultOption = 0;
 
     @Override
-    public CustomComponent withPlaceholders(Function<String, String> resolver) {
+    public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
         Dropdown dropdown = new Dropdown();
         dropdown.type = this.type;
         dropdown.text = resolver.apply(this.text);
@@ -27,7 +28,6 @@ public class Dropdown extends CustomComponent implements DropdownComponent {
         for (String option : this.options) {
             dropdown.options.add(resolver.apply(option));
         }
-
         return dropdown;
     }
 }
