@@ -10,6 +10,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.utils.PlaceholderUtils;
 import lombok.ToString;
 import org.bukkit.entity.Player;
+import org.geysermc.cumulus.component.LabelComponent;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
 import org.jetbrains.annotations.NotNull;
@@ -74,6 +75,11 @@ public class CustomForm extends BedrockForm {
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < components.size(); i++) {
+                if (components.get(i) instanceof LabelComponent label) {
+                    // label components aren't included in the response
+                    resultPlaceholders.put(placeholder(i), label.getText());
+                    continue;
+                }
 
                 JsonPrimitive primitive = response.get(i);
                 if (primitive == null) {
@@ -83,7 +89,7 @@ public class CustomForm extends BedrockForm {
                     return;
                 }
 
-                resultPlaceholders.put("%result_" + i + "%", primitive.getAsString());
+                resultPlaceholders.put(placeholder(i), primitive.getAsString());
             }
 
             if (logger.isDebug()) {
@@ -99,5 +105,9 @@ public class CustomForm extends BedrockForm {
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);
+    }
+
+    private String placeholder(int i) {
+        return "%result_" + i + "%";
     }
 }
