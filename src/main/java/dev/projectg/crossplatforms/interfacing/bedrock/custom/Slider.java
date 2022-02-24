@@ -20,6 +20,13 @@ public class Slider extends CustomComponent implements SliderComponent {
 
     @Override
     public CustomComponent withPlaceholders(Function<String, String> resolver) {
-        return this; // technically should be a new instance, but this is immutable currently
+        Slider slider = new Slider();
+        slider.type = this.type;
+        slider.text = resolver.apply(this.text);
+        slider.min = this.min;
+        slider.max = this.max;
+        slider.step = this.step;
+        slider.defaultValue = this.defaultValue;
+        return slider;
     }
 }

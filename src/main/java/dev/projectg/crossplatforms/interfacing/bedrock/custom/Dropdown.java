@@ -5,7 +5,7 @@ import lombok.ToString;
 import org.geysermc.cumulus.component.DropdownComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -15,7 +15,7 @@ import java.util.function.Function;
 @SuppressWarnings("FieldMayBeFinal")
 public class Dropdown extends CustomComponent implements DropdownComponent {
 
-    private List<String> options = Collections.emptyList();
+    private List<String> options = new ArrayList<>();
     private int defaultOption = 0;
 
     @Override

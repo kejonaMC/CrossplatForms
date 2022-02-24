@@ -21,7 +21,6 @@ public class Toggle extends CustomComponent implements ToggleComponent {
         toggle.type = this.type;
         toggle.text = resolver.apply(this.text);
         toggle.defaultValue = this.defaultValue;
-
         return toggle;
     }
 }
