@@ -6,23 +6,26 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 @ToString
+@Getter
 @ConfigSerializable
-public class InterfaceAction implements Action {
+public class InterfaceAction extends SimpleAction<String> {
 
-    @Required
-    String form = null;
+    public InterfaceAction(@Nonnull String value, int i) {
+        super(value);
+    }
 
     @Override
     public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
-        String resolved = CrossplatForms.getInstance().getPlaceholders().setPlaceholders(player, form, additionalPlaceholders);
+        String resolved = CrossplatForms.getInstance().getPlaceholders().setPlaceholders(player, super.getValue(), additionalPlaceholders);
         Interface ui = interfaceManager.getInterface(resolved, bedrockHandler.isBedrockPlayer(player.getUuid()));
         if (ui == null) {
             Logger logger = Logger.getLogger();

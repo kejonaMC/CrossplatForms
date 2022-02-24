@@ -11,21 +11,23 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @ToString
 @ConfigSerializable
-public class CommandsAction implements Action {
+public class CommandsAction extends ArrayList<DispatchableCommand> implements Action {
 
-    @Required
-    List<DispatchableCommand> commands = null;
+    public CommandsAction(List<DispatchableCommand> commands) {
+        super(commands);
+    }
 
     @Override
     public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
-        List<DispatchableCommand> resolved = commands.stream()
+        List<DispatchableCommand> resolved = super.stream()
                 .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.command(), additionalPlaceholders)))
                 .collect(Collectors.toList());
 

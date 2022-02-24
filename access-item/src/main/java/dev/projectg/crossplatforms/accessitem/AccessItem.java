@@ -81,7 +81,7 @@ public class AccessItem {
     private Map<Limit, PermissionDefault> permissionDefaults = Collections.emptyMap();
 
     /**
-     * If persist is disable, access items will be removed from player inventories on death.
+     * If persist is disable, access items will be removed from player inventories on server leave
      */
     private boolean persist = false;
 

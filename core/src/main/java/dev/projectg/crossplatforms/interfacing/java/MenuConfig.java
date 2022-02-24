@@ -12,8 +12,8 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class MenuConfig extends InterfaceConfig {
 
-    public static final int VERSION = 2;
-    public static final int MINIMUM_VERSION = 2; //todo: update
+    public static final int VERSION = 1;
+    public static final int MINIMUM_VERSION = 1;
 
     private Map<String, JavaMenu> menus = Collections.emptyMap();
 }

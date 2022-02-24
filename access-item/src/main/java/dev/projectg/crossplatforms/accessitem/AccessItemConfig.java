@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
+import org.spongepowered.configurate.transformation.TransformAction;
 
 import java.util.Collections;
 import java.util.Map;
@@ -20,6 +21,8 @@ public class AccessItemConfig extends Configuration {
     public static final int VERSION = 2;
     public static final int MINIMUM_VERSION = 1;
 
+    private static final NodePath WILDCARD_ITEM = NodePath.path("items", ConfigurationTransformation.WILDCARD_OBJECT);
+
     private boolean enable = false;
 
     private boolean setHeldSlot = false;
@@ -32,17 +35,26 @@ public class AccessItemConfig extends Configuration {
         return ConfigurationTransformation.versionedBuilder()
                 .versionKey(Configuration.VERSION_KEY)
                 .addVersion(2, update1_2())
+                .addVersion(3, update2_3())
                 .build();
     }
 
     private static ConfigurationTransformation update1_2() {
         return ConfigurationTransformation.builder()
                 // move form value under action key (BasicClickAction)
-                .addAction(NodePath.path("items", ConfigurationTransformation.WILDCARD_OBJECT), (path, value) -> {
+                .addAction(WILDCARD_ITEM, (path, value) -> {
                     value.node("action", "form").set(value.node("form")); // under action
                     value.node("form").raw(null); // delete
                     return null; // don't move it since we did it manually
                 })
+                .build();
+    }
+
+    private static ConfigurationTransformation update2_3() {
+        return ConfigurationTransformation.builder()
+                .addAction(WILDCARD_ITEM.withAppendedChild("action"), TransformAction.rename("actions"))
+                .addAction(WILDCARD_ITEM.withAppendedChild("bedrock-action"), TransformAction.rename("bedrock-actions"))
+                .addAction(WILDCARD_ITEM.withAppendedChild("java-action"), TransformAction.rename("java-actions"))
                 .build();
     }
 }

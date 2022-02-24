@@ -16,21 +16,25 @@ forms:
     buttons:
       - text: "Server Lobby: %bungee_lobby% players"
         image: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
-        commands:
-          - "console; tell %player_name% Taking you to the lobby."
-        server: "lobby"
+        actions:
+          commands:
+            - "console; tell %player_name% Taking you to the lobby."
+          server: "lobby"
 
       - text: "Survival: %bungee_survival% players"
         image: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-        server: "survival"
+        actions:
+          server: "survival"
 
       - text: "Minigames"
         image: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
-        form: minigames
+        actions:
+          form: minigames
 
       - text: "Spawn"
-        commands:
-          - "console; tp %player_name% 0 80 0"
+        actions:
+          commands:
+            - "console; tp %player_name% 0 80 0"
 
   minigames:
     type: SIMPLE_FORM
@@ -40,10 +44,12 @@ forms:
     buttons:
       - text: "Spleef"
         image: "https://www.digminecraft.com/materials/images/snowball.png"
-        server: "spleef"
+        actions:
+          server: "spleef"
 
       - text: "Hide & Seek"
-        server: "hideseek"
+        actions:
+          server: "hideseek"
 
   leave:
     type: MODAL_FORM
@@ -51,8 +57,9 @@ forms:
     content: "This will result in you leaving the server. Are you sure?"
     button1:
       text: "Yes"
-      commands:
-        - "console; kick %player_name%"
+      actions:
+        commands:
+          - "console; kick %player_name%"
     button2:
       text: "No"
 
@@ -66,9 +73,9 @@ forms:
       - type: INPUT
         text: "Enter a broadcast"
 
-    action:
+    actions:
       commands:
         - "say %result_0%"
 
 # Don't touch this
-config-version: 1
+config-version: 2

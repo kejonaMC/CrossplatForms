@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.action.*;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -47,6 +47,8 @@ public class ConfigManager {
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(new TypeToken<>() {}, actionSerializer); // List<Action>
+            builder.registerExact(CommandsAction.class, new CommandsActionSerializer());
+            builder.registerExact(InterfaceAction.class, new InterfaceActionSerializer());
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node
@@ -69,8 +71,11 @@ public class ConfigManager {
                 }
             } catch (IOException e) {
                 logger.severe("Failed to load configuration " + configId.fileName);
-                e.printStackTrace();
-                return false;
+                if (logger.isDebug()) {
+                    e.printStackTrace();
+                } else {
+                    logger.severe(e.getMessage());
+                }
             }
         }
         return true;

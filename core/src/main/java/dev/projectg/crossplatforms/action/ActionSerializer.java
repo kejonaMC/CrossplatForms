@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Deserializes a map of action type -> action, into a list of actions. Deserializes each action based off its type,
+ * which must be registered.
+ */
 public class ActionSerializer implements TypeSerializer<List<Action>> {
 
     Map<String, Class<? extends Action>> typeRegistry = new HashMap<>();
@@ -33,6 +37,7 @@ public class ActionSerializer implements TypeSerializer<List<Action>> {
             if (actionType == null) {
                 throw new SerializationException("Unsupported action type: " + entry.getKey());
             }
+            // todo: check for simple action here?
             actions.add(entry.getValue().get(actionType));
         }
 
