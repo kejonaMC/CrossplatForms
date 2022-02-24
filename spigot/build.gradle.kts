@@ -17,10 +17,8 @@ dependencies {
     api(project(":core"))
     api(project(":access-item"))
     api("cloud.commandframework:cloud-paper:1.6.1")
-    api("cloud.commandframework:cloud-minecraft-extras:1.6.1")
     api("me.lucko:commodore:1.9")
     api("net.kyori:adventure-platform-bukkit:4.0.1")
-    api("org.spongepowered:configurate-yaml:4.1.2")
 }
 
 tasks.withType<ShadowJar> {
