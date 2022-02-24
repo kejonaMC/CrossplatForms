@@ -6,7 +6,7 @@ import org.geysermc.cumulus.component.StepSliderComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -16,7 +16,7 @@ import java.util.function.Function;
 @SuppressWarnings("FieldMayBeFinal")
 public class StepSlider extends CustomComponent implements StepSliderComponent {
 
-    private List<String> steps = Collections.emptyList();
+    private List<String> steps = new ArrayList<>();
     private int defaultStep = 0;
 
     @Override
