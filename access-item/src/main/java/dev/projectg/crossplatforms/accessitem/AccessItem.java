@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.accessitem;
 
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.action.Action;
@@ -26,8 +27,8 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class AccessItem {
 
-    public static final String STATIC_IDENTIFIER = "crossplatFormsAccessItem";
-    private static final String PERMISSION_BASE = "crossplatforms.item";
+    public static final String STATIC_IDENTIFIER = "crossplatFormsAccessItem"; // changing this will break existing setups
+    private static final String PERMISSION_BASE = Constants.ID + ".item";
 
     /**
      * The reliable identifier of the access item

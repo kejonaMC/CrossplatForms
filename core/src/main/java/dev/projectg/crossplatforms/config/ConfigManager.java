@@ -54,6 +54,7 @@ public class ConfigManager {
         // default parameters provided to ConfigurationNode getter methods should not be set to the node
         loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false).shouldCopyDefaults(false));
         loaderBuilder.nodeStyle(NodeStyle.BLOCK); // don't inline lists, maps, etc
+        loaderBuilder.indent(2);
     }
 
     public void register(ConfigId id) {

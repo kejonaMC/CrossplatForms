@@ -36,7 +36,7 @@ public abstract class Interface {
     public abstract void send(@Nonnull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager);
 
     /**
-     * e.g. "crossplatforms.form"
+     * e.g. "crossplatforms.form."
      */
     protected abstract String getPermissionBase();
 
@@ -50,7 +50,7 @@ public abstract class Interface {
             Thread.dumpStack();
         }
 
-        String mainPermission = getPermissionBase() + "." + identifier;
+        String mainPermission = getPermissionBase() + identifier;
 
         ImmutableMap.Builder<Interface.Limit, Permission> builder = ImmutableMap.builder();
         for (Interface.Limit limit : Interface.Limit.values()) {

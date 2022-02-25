@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.command;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +15,7 @@ public abstract class FormsCommand {
 
     public static final String NAME = "forms";
 
-    protected static final String PERMISSION_BASE = "crossplatforms.command.";
+    public static final String PERMISSION_BASE = Constants.ID + ".command.";
 
     protected final CrossplatForms crossplatForms;
 

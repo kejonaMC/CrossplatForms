@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
@@ -23,7 +24,7 @@ public class JavaMenu extends Interface {
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
-    protected transient final String permissionBase = "crossplatforms.menu";
+    protected transient final String permissionBase = Constants.ID + ".menu.";
 
     private boolean allowBedrock = false;
 

@@ -1,9 +1,7 @@
 package dev.projectg.crossplatforms.utils;
 
 import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 
 import java.util.Map;
 import java.util.function.Predicate;
@@ -28,6 +26,7 @@ public class ConfigurateUtils {
         for (Object obj : children.keySet()) {
             if (childMatcher.test(obj)) {
                 parent.node(destination).node(obj).set(children.get(obj));
+                parent.node(obj).raw(null);
             }
         }
     }

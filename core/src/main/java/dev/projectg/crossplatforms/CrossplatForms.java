@@ -124,7 +124,7 @@ public class CrossplatForms {
 
         // The handler for the root /forms command
         commandManager.command(commandBuilder
-                .permission("crossplatforms.command.base")
+                .permission(FormsCommand.PERMISSION_BASE + "base")
                 .handler((context -> {
                     CommandOrigin origin = context.getSender();
                     try {

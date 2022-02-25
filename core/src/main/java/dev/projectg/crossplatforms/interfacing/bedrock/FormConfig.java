@@ -37,19 +37,20 @@ public class FormConfig extends InterfaceConfig {
 
         // Simple forms
         builder.addAction(wildcardForm.withAppendedChild("buttons"), ((path, value) -> {
-            List<ConfigurationNode> buttons = value.getList(ConfigurationNode.class);
+            List<? extends ConfigurationNode> buttons = value.childrenList();
             if (buttons != null) {
                 for (ConfigurationNode button : buttons) {
-                    ConfigurationNode action = button.node("action");
-                    if (action != null) {
-                        button.node("actions").set(action);
-                        action.raw(null);
-                    }
+                    ConfigurateUtils.moveChildren(
+                            button,
+                            (o -> "server".equals(o) || "commands".equals(o) || "form".equals(o)),
+                            "actions"
+                            );
                 }
             }
             return null;
         }));
 
+        // Modal forms
         for (String button : new String[]{"button1", "button2"}) {
             builder.addAction(wildcardForm.withAppendedChild(button), ((path, value) -> {
                 ConfigurateUtils.moveChildren(

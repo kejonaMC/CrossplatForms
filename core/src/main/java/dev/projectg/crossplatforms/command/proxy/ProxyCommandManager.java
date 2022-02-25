@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.command.proxy;
 
 import cloud.commandframework.CommandManager;
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
@@ -54,7 +55,7 @@ public class ProxyCommandManager implements Reloadable {
         for (ProxyCommand command : config.getCommands().values()) {
             String name = command.getName();
             if (command.getPermission() == null || command.getPermission().isBlank()) {
-                command.setPermission("crossplatforms.shortcut." + name);
+                command.setPermission(Constants.ID + ".shortcut." + name);
             }
             CommandType type = command.getMethod();
             if (type == CommandType.REGISTER) {
