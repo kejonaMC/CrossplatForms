@@ -26,6 +26,6 @@ jobs:
         uses: actions/upload-artifact@v2.2.3
         if: success()
         with:
-          name: CrossplatForms.jar
-          path: build/libs/CrossplatForms.jar
+          name: CrossplatForms-Spigot.jar
+          path: spigot/build/libs/CrossplatForms-Spigot.jar
           retention-days: 15
