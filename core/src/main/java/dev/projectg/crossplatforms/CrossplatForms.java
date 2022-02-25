@@ -23,6 +23,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
@@ -83,8 +84,8 @@ public class CrossplatForms {
         configManager = new ConfigManager(dataFolder, logger);
         ConfigId.defaults().forEach(configManager::register);
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimple("form", InterfaceAction::new);
-        actionSerializer.registerSimple("commands", CommandsAction::new);
+        actionSerializer.registerSimple("form", String.class, InterfaceAction::new);
+        actionSerializer.registerSimple("commands", new TypeToken<>() {}, CommandsAction::new);
         preConfigLoad.accept(configManager);
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");

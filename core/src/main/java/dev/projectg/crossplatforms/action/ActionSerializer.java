@@ -26,20 +26,14 @@ public class ActionSerializer implements TypeSerializer<List<Action>> {
         actions.put(typeId, type);
     }
 
-    /**
-     * Register a new {@link SimpleAction} implementation.
-     * @param key The unique configuration key for the action
-     * @param creator To create new instances of the implementation.
-     * @param <T> The type of singleton value the {@link SimpleAction} consists of.
-     */
-    public <T> void registerSimple(String key, Function<T, SimpleAction<T>> creator) {
-        registerSimple(key, new TypeToken<>() {}, creator);
-    }
-
-    private <T> void registerSimple(String key, TypeToken<T> type, Function<T, SimpleAction<T>> creator) {
+    public <T> void registerSimple(String key, TypeToken<T> type, Function<T, SimpleAction<T>> creator) {
         // this hackery is used to get around a java compiler bug (apparently a bug) regarding type parameter inference.
         // copy the following line into the public registerSimple method to experience it.
         simpleActions.put(key, new SimpleAction.Registration<>(type, creator));
+    }
+
+    public <T> void registerSimple(String key, Class<T> type, Function<T, SimpleAction<T>> creator) {
+        registerSimple(key, TypeToken.get(type), creator);
     }
 
     @Override

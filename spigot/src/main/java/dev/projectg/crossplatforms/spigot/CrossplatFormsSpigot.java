@@ -114,7 +114,7 @@ public class CrossplatFormsSpigot extends JavaPlugin {
                 AccessItemConfig::updater));
 
         ActionSerializer actions = configManager.getActionSerializer();
-        actions.registerSimple("server", ServerAction::new);
+        actions.registerSimple("server", String.class, ServerAction::new);
     }
 
     @Override
