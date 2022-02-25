@@ -15,11 +15,10 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 @ToString
-@Getter
 @ConfigSerializable
 public class InterfaceAction extends SimpleAction<String> {
 
-    public InterfaceAction(@Nonnull String value, int i) {
+    public InterfaceAction(@Nonnull String value) {
         super(value);
     }
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Deserializes a map of action type -> action, into a list of actions. Deserializes each action based off its type,
@@ -18,10 +19,27 @@ import java.util.Map;
  */
 public class ActionSerializer implements TypeSerializer<List<Action>> {
 
-    Map<String, Class<? extends Action>> typeRegistry = new HashMap<>();
+    private final Map<String, Class<? extends Action>> actions = new HashMap<>();
+    private final Map<String, SimpleAction.Registration<?>> simpleActions = new HashMap<>();
 
     public void register(String typeId, Class<? extends Action> type) {
-        typeRegistry.put(typeId, type);
+        actions.put(typeId, type);
+    }
+
+    /**
+     * Register a new {@link SimpleAction} implementation.
+     * @param key The unique configuration key for the action
+     * @param creator To create new instances of the implementation.
+     * @param <T> The type of singleton value the {@link SimpleAction} consists of.
+     */
+    public <T> void registerSimple(String key, Function<T, SimpleAction<T>> creator) {
+        registerSimple(key, new TypeToken<>() {}, creator);
+    }
+
+    private <T> void registerSimple(String key, TypeToken<T> type, Function<T, SimpleAction<T>> creator) {
+        // this hackery is used to get around a java compiler bug (apparently a bug) regarding type parameter inference.
+        // copy the following line into the public registerSimple method to experience it.
+        simpleActions.put(key, new SimpleAction.Registration<>(type, creator));
     }
 
     @Override
@@ -33,12 +51,22 @@ public class ActionSerializer implements TypeSerializer<List<Action>> {
 
         List<Action> actions = new ArrayList<>();
         for (Map.Entry<String, ConfigurationNode> entry : childMap.entrySet()) {
-            Class<? extends Action> actionType = typeRegistry.get(entry.getKey());
+            String key = entry.getKey();
+            ConfigurationNode actionNode = entry.getValue();
+            Action action;
+
+            Class<? extends Action> actionType = this.actions.get(key);
             if (actionType == null) {
-                throw new SerializationException("Unsupported action type: " + entry.getKey());
+                SimpleAction.Registration<?> registration = simpleActions.get(key);
+                if (registration == null) {
+                    throw new SerializationException("Unsupported action type: " + key);
+                } else {
+                    action = registration.fromNode(actionNode);
+                }
+            } else {
+                action = actionNode.get(actionType);
             }
-            // todo: check for simple action here?
-            actions.add(entry.getValue().get(actionType));
+            actions.add(action);
         }
 
         return actions;

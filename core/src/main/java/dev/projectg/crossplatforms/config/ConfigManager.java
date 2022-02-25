@@ -11,8 +11,10 @@ import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerialize
 import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
+import lombok.Getter;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -21,24 +23,24 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class ConfigManager {
 
+    private final File directory;
+    private final Logger logger;
     private final YamlConfigurationLoader.Builder loaderBuilder;
     private final Set<ConfigId> identifiers = new HashSet<>();
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
-    private final File directory;
-    private final Logger logger;
 
-    public ConfigManager(Path directory, Logger logger, Set<ConfigId> configs, ActionSerializer actionSerializer) {
+    @Getter
+    private final ActionSerializer actionSerializer = new ActionSerializer();
+
+
+    public ConfigManager(Path directory, Logger logger) {
         this.directory = directory.toFile();
         this.logger = logger;
-        this.identifiers.addAll(configs);
         // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
@@ -46,14 +48,20 @@ public class ConfigManager {
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.registerExact(new TypeToken<>() {}, actionSerializer); // List<Action>
-            builder.registerExact(CommandsAction.class, new CommandsActionSerializer());
-            builder.registerExact(InterfaceAction.class, new InterfaceActionSerializer());
+            builder.register(new TypeToken<>() {}, actionSerializer); // List<Action>
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node
         loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false).shouldCopyDefaults(false));
         loaderBuilder.nodeStyle(NodeStyle.BLOCK); // don't inline lists, maps, etc
+    }
+
+    public void register(ConfigId id) {
+        identifiers.add(id);
+    }
+
+    public void serializers(Consumer<TypeSerializerCollection.Builder> builder) {
+        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder)));
     }
 
     /**

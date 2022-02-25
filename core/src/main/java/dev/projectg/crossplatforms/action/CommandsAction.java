@@ -9,16 +9,14 @@ import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @ToString
 @ConfigSerializable
-public class CommandsAction extends ArrayList<DispatchableCommand> implements Action {
+public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
     public CommandsAction(List<DispatchableCommand> commands) {
         super(commands);
@@ -27,7 +25,7 @@ public class CommandsAction extends ArrayList<DispatchableCommand> implements Ac
     @Override
     public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
-        List<DispatchableCommand> resolved = super.stream()
+        List<DispatchableCommand> resolved = super.getValue().stream()
                 .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.command(), additionalPlaceholders)))
                 .collect(Collectors.toList());
 

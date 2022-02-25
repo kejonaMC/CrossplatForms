@@ -4,10 +4,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.action.ActionSerializer;
-import dev.projectg.crossplatforms.action.CommandsAction;
-import dev.projectg.crossplatforms.action.InterfaceAction;
+import dev.projectg.crossplatforms.action.*;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
@@ -31,9 +28,8 @@ import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
 
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 @Getter
 public class CrossplatForms {
@@ -54,11 +50,10 @@ public class CrossplatForms {
 
     public CrossplatForms(Logger logger,
                           Path dataFolder,
-                          Set<ConfigId> configs,
                           ServerHandler serverHandler,
                           CommandManager<CommandOrigin> commandManager,
                           PlaceholderHandler placeholders,
-                          Map<String, Class<? extends Action>> extraActions) {
+                          Consumer<ConfigManager> preConfigLoad) {
         long start = System.currentTimeMillis();
         INSTANCE = this;
         this.serverHandler = serverHandler;
@@ -85,13 +80,12 @@ public class CrossplatForms {
         }
 
         long configTime = System.currentTimeMillis();
-        ActionSerializer actionSerializer = new ActionSerializer();
-        actionSerializer.register("form", InterfaceAction.class);
-        actionSerializer.register("commands", CommandsAction.class);
-        for (Map.Entry<String, Class<? extends Action>> entry : extraActions.entrySet()) {
-            actionSerializer.register(entry.getKey(), entry.getValue());
-        }
-        configManager = new ConfigManager(dataFolder, logger, configs, actionSerializer);
+        configManager = new ConfigManager(dataFolder, logger);
+        ConfigId.defaults().forEach(configManager::register);
+        ActionSerializer actionSerializer = configManager.getActionSerializer();
+        actionSerializer.registerSimple("form", InterfaceAction::new);
+        actionSerializer.registerSimple("commands", CommandsAction::new);
+        preConfigLoad.accept(configManager);
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }

@@ -3,7 +3,6 @@ package dev.projectg.crossplatforms.spigot;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
-import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.JavaUtilLogger;
@@ -11,9 +10,10 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.accessitem.AccessItemConfig;
 import dev.projectg.crossplatforms.accessitem.GiveCommand;
 import dev.projectg.crossplatforms.accessitem.InspectItemCommand;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
+import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.spigot.handler.PlaceholderAPIHandler;
@@ -24,9 +24,6 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Map;
-import java.util.Set;
 
 public class CrossplatFormsSpigot extends JavaPlugin {
 
@@ -78,21 +75,13 @@ public class CrossplatFormsSpigot extends JavaPlugin {
             placeholders = new BasicPlaceholders();
         }
 
-        // additional actions to register
-        Map<String, Class<? extends Action>> actions = ImmutableMap.of("server", ServerAction.class);
-
-        // configs to load
-        Set<ConfigId> configs = ConfigId.defaults();
-        configs.add(new ConfigId("access-items.yml", AccessItemConfig.VERSION, AccessItemConfig.MINIMUM_VERSION, AccessItemConfig.class, AccessItemConfig::updater));
-
         crossplatForms = new CrossplatForms(
                 logger,
                 getDataFolder().toPath(),
-                configs,
                 serverHandler,
                 commandManager,
                 placeholders,
-                actions);
+                this::preConfigLoad);
 
         if (!crossplatForms.isSuccess()) {
             return;
@@ -114,6 +103,18 @@ public class CrossplatFormsSpigot extends JavaPlugin {
 
         // events regarding inventory GUI menus
         Bukkit.getServer().getPluginManager().registerEvents(new MenuHelper(crossplatForms.getInterfaceManager()), this);
+    }
+
+    private void preConfigLoad(ConfigManager configManager) {
+        configManager.register(new ConfigId(
+                "access-items.yml",
+                AccessItemConfig.VERSION,
+                AccessItemConfig.MINIMUM_VERSION,
+                AccessItemConfig.class,
+                AccessItemConfig::updater));
+
+        ActionSerializer actions = configManager.getActionSerializer();
+        actions.registerSimple("server", ServerAction::new);
     }
 
     @Override
