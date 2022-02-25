@@ -27,6 +27,6 @@ public class PlaceholderAPIHandler implements PlaceholderHandler {
             return text;
         }
 
-        return PlaceholderAPI.setPlaceholders((Player) player, text);
+        return PlaceholderAPI.setPlaceholders((Player) player.getHandle(), text);
     }
 }

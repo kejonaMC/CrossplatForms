@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import lombok.ToString;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -16,7 +15,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-@ToString
 @ConfigSerializable
 public class ServerAction extends SimpleAction<String> {
 
@@ -38,5 +36,10 @@ public class ServerAction extends SimpleAction<String> {
             Logger.getLogger().severe("Failed to send a plugin message to BungeeCord!");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

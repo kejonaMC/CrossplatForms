@@ -114,6 +114,7 @@ public class SpigotAccessItemRegistry extends AccessItemRegistry implements List
         meta.setDisplayName(placeholders.setPlaceholders(formPlayer, accessItem.getDisplayName()));
         meta.setLore(placeholders.setPlaceholders(formPlayer, accessItem.getLore()));
         meta.getPersistentDataContainer().set(ACCESS_ITEM_KEY, ACCESS_ITEM_KEY_TYPE, accessItem.getIdentifier());
+        item.setItemMeta(meta);
         return item;
     }
 

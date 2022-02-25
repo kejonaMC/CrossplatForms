@@ -12,7 +12,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import javax.annotation.Nonnull;
 import java.util.function.Function;
 
-@ToString
+@ToString(includeFieldNames = false)
 @Getter
 @ConfigSerializable
 public abstract class SimpleAction<T> implements Action {

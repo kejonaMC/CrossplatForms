@@ -6,15 +6,12 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import lombok.Getter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-@ToString
 @ConfigSerializable
 public class InterfaceAction extends SimpleAction<String> {
 
@@ -35,5 +32,10 @@ public class InterfaceAction extends SimpleAction<String> {
         } else {
             ui.send(player, interfaceManager);
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

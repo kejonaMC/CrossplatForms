@@ -18,7 +18,7 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class AccessItemConfig extends Configuration {
 
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
     public static final int MINIMUM_VERSION = 1;
 
     private static final NodePath WILDCARD_ITEM = NodePath.path("items", ConfigurationTransformation.WILDCARD_OBJECT);

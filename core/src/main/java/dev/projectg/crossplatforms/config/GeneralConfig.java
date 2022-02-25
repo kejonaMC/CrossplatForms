@@ -16,10 +16,10 @@ public class GeneralConfig extends Configuration {
     public static final int VERSION = 1;
     public static final int MINIMUM_VERSION = 1;
 
-    @Setting("enable-debug")
-    private boolean enableDebug = false;
-
     private Map<String, ProxyCommand> commands = Collections.emptyMap();
 
     private boolean unsafeCommandRegistration = false;
+
+    @Setting("enable-debug")
+    private boolean enableDebug = false;
 }

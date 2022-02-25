@@ -9,4 +9,9 @@ import javax.annotation.Nullable;
 public record Permission(@Nonnull String key,
                          @Nullable String description,
                          @Nonnull PermissionDefault defaultPermission) {
+
+    @Override
+    public String toString() {
+        return "[" + key + ", " + description + ", " + defaultPermission + "]";
+    }
 }

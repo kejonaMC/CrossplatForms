@@ -6,7 +6,6 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ToString
 @ConfigSerializable
 public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
@@ -30,6 +28,11 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
                 .collect(Collectors.toList());
 
         CrossplatForms.getInstance().getServerHandler().dispatchCommands(player.getUuid(), resolved);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }
 
