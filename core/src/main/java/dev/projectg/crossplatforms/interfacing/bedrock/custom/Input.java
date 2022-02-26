@@ -10,7 +10,6 @@ import org.geysermc.cumulus.component.InputComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -89,7 +88,7 @@ public class Input extends CustomComponent implements InputComponent {
         private String placeholder = "";
         private String defaultText = "";
         private boolean blockPlaceholders = true;
-        private Map<String, String> replacements = Collections.emptyMap();
+        private Map<String, String> replacements = new HashMap<>();
 
         public Builder placeholder(String placeholder) {
             this.placeholder = placeholder;
