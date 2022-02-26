@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     api(project(":core"))
     api(project(":access-item"))
