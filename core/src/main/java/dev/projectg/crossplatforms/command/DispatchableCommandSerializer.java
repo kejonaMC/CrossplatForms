@@ -13,29 +13,32 @@ public class DispatchableCommandSerializer implements TypeSerializer<Dispatchabl
     private static final String OP_PREFIX = "op";
     private static final String CONSOLE_PREFIX = "console";
 
+    public static DispatchableCommand deserialize(String value) {
+        boolean player = value.startsWith(PLAYER_PREFIX);
+        boolean op = value.startsWith(OP_PREFIX);
+        boolean console = value.startsWith(CONSOLE_PREFIX);
+        if (player || op || console) {
+            // Split the input into two strings between ";" and get the second string
+            value = value.split(";", 2)[1].trim();
+            if (player) {
+                return new DispatchableCommand(true, value, false);
+            } else if (op) {
+                return new DispatchableCommand(true, value, true);
+            } else {
+                return new DispatchableCommand(false, value, true);
+            }
+        } else {
+            return new DispatchableCommand(false, value, true);
+        }
+    }
+
     @Override
     public DispatchableCommand deserialize(Type type, ConfigurationNode node) throws SerializationException {
         String raw = node.getString();
         if (raw == null || raw.isBlank()) {
             throw new SerializationException("Command at " + node.path() + " is empty!");
         }
-
-        boolean player = raw.startsWith(PLAYER_PREFIX);
-        boolean op = raw.startsWith(OP_PREFIX);
-        boolean console = raw.startsWith(CONSOLE_PREFIX);
-        if (player || op || console) {
-            // Split the input into two strings between ";" and get the second string
-            raw = raw.split(";", 2)[1].trim();
-            if (player) {
-                return new DispatchableCommand(true, raw, false);
-            } else if (op) {
-                return new DispatchableCommand(true, raw, true);
-            } else {
-                return new DispatchableCommand(false, raw, true);
-            }
-        } else {
-            return new DispatchableCommand(false, raw, true);
-        }
+        return deserialize(raw);
     }
 
     @Override

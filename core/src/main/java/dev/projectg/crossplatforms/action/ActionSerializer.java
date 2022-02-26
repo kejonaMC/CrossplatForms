@@ -55,7 +55,7 @@ public class ActionSerializer implements TypeSerializer<List<Action>> {
                 if (registration == null) {
                     throw new SerializationException("Unsupported action type: " + key);
                 } else {
-                    action = registration.fromNode(actionNode);
+                    action = registration.create(actionNode);
                 }
             } else {
                 action = actionNode.get(actionType);

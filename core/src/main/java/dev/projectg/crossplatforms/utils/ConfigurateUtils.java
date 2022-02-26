@@ -29,5 +29,6 @@ public class ConfigurateUtils {
                 parent.node(obj).raw(null);
             }
         }
+        // todo: unit tests
     }
 }

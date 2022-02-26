@@ -28,7 +28,7 @@ public abstract class SimpleAction<T> implements Action {
         private final TypeToken<T> type;
         private final Function<T, SimpleAction<T>> factory;
 
-        protected SimpleAction<T> fromNode(ConfigurationNode node) throws SerializationException {
+        protected SimpleAction<T> create(ConfigurationNode node) throws SerializationException {
             return factory.apply(node.get(type));
         }
     }
