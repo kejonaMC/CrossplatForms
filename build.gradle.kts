@@ -33,10 +33,10 @@ subprojects {
         compileOnly("org.projectlombok:lombok:1.18.22")
         compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
     }
-}
 
-tasks.named("build") {
-    dependsOn(tasks.named("shadowJar"))
+    tasks.named("build") {
+        dependsOn(tasks.named<Test>("test"))
+    }
 }
 
 // todo: process resources / token replacement

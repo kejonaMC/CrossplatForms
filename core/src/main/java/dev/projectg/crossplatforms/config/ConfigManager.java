@@ -37,7 +37,6 @@ public class ConfigManager {
     @Getter
     private final ActionSerializer actionSerializer = new ActionSerializer();
 
-
     public ConfigManager(Path directory, Logger logger) {
         this.directory = directory.toFile();
         this.logger = logger;
@@ -65,25 +64,34 @@ public class ConfigManager {
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder)));
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends Configuration> Optional<T> getConfig(Class<T> clazz) {
+        return Optional.ofNullable((T) configurations.get(clazz));
+    }
+
     /**
      * Load every config in {@link ConfigId}
      * @return false if there was a failure loading any of configurations
      */
-
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean load() {
         for (ConfigId configId : identifiers) {
             try {
                 if (!loadConfig(configId)) {
-                    logger.severe("Configuration error in " + configId.fileName + " - Fix the issue or regenerate a new file.");
                     return false;
                 }
             } catch (IOException e) {
                 logger.severe("Failed to load configuration " + configId.fileName);
-                if (logger.isDebug()) {
+                String message = e.getMessage();
+                if (logger.isDebug() || message.contains("Unknown error")) {
+                    // message is useless on its own if unknown
                     e.printStackTrace();
                 } else {
-                    logger.severe(e.getMessage());
+                    logger.severe("Enabled debug mode for further information.");
+                    logger.severe(message);
+                }
+                if (!useMinimalDefaults(configId)) {
+                    return false;
                 }
             }
         }
@@ -129,7 +137,7 @@ public class ConfigManager {
                 }
             }
         } else {
-            logger.severe(config.fileName + " must defined a config-version. Please back it up and regenerate a new config.");
+            logger.severe(config.fileName + " must defined a " + Configuration.VERSION_KEY + ". Please back it up and regenerate a new config.");
             correctVersion = false;
         }
 
@@ -144,26 +152,26 @@ public class ConfigManager {
         }
 
         if (mapped == null) {
-            try {
-                // Get the default values so that the plugin can be reloaded at a later time
-                configurations.put(config.clazz, config.clazz.getConstructor().newInstance());
-                logger.warn("Falling back to MINIMAL DEFAULTS for configuration: " + config.fileName);
-            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                logger.severe("Failed to fallback to defaults for configuration " + config.fileName + ": " + e.getLocalizedMessage());
-                if (logger.isDebug()) {
-                    e.printStackTrace();
-                }
-                return false;
-            }
+            return useMinimalDefaults(config);
         } else {
             configurations.put(config.clazz, mapped);
+            return true;
         }
-
-        return true;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Configuration> Optional<T> getConfig(Class<T> clazz) {
-        return Optional.ofNullable((T) configurations.get(clazz));
+
+    private boolean useMinimalDefaults(ConfigId config) {
+        try {
+            // Get the default values so that the plugin can be reloaded at a later time
+            configurations.put(config.clazz, config.clazz.getConstructor().newInstance());
+            logger.warn("Falling back to MINIMAL DEFAULTS for configuration: " + config.fileName);
+            return true;
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            logger.severe("Failed to fallback to defaults for configuration " + config.fileName + ": " + e.getLocalizedMessage());
+            if (logger.isDebug()) {
+                e.printStackTrace();
+            }
+            return false;
+        }
     }
 }

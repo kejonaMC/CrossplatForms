@@ -75,21 +75,22 @@ public class CustomForm extends BedrockForm {
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < components.size(); i++) {
-                if (components.get(i) instanceof LabelComponent label) {
+                CustomComponent component = components.get(i);
+                if (component instanceof LabelComponent label) {
                     // label components aren't included in the response
                     resultPlaceholders.put(placeholder(i), label.getText());
                     continue;
                 }
 
-                JsonPrimitive primitive = response.get(i);
-                if (primitive == null) {
+                JsonPrimitive result = response.get(i);
+                if (result == null) {
                     logger.severe("Failed to get response " + i + " from custom form " + super.getTitle());
                     logger.severe("Full response data:");
                     logger.severe(responseData);
                     return;
                 }
 
-                resultPlaceholders.put(placeholder(i), primitive.getAsString());
+                resultPlaceholders.put(placeholder(i), component.parse(result));
             }
 
             if (logger.isDebug()) {

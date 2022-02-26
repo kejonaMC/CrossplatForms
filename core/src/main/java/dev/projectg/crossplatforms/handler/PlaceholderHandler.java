@@ -8,6 +8,7 @@ import java.util.Map;
 public interface PlaceholderHandler {
 
     String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text);
+
     /**
      * Returns the inputted text with placeholders set, if PlaceholderAPI is loaded. If not, it returns the same text.
      * @param player The player

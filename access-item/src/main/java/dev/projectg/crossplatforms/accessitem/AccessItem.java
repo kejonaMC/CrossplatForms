@@ -112,8 +112,7 @@ public class AccessItem {
 
     public void generatePermissions(AccessItemRegistry registry) {
         if (permissions != null) {
-            Logger.getLogger().severe("Permissions in Access Item " + identifier + " have already been generated!");
-            Thread.dumpStack();
+            Logger.getLogger().severe("Permissions in Access Item '" + identifier + "' have already been generated!");
         }
 
         String mainPermission = PERMISSION_BASE + "." + identifier;

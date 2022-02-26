@@ -44,4 +44,8 @@ tasks.withType<ShadowJar> {
     println(archiveFileName.get())
 }
 
+tasks.named("build") {
+    dependsOn(tasks.named("shadowJar"))
+}
+
 description = "spigot"

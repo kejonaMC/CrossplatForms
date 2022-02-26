@@ -58,17 +58,6 @@ public class BedrockFormRegistry implements Reloadable {
         }
     }
 
-    /**
-     * Get a BedrockForm, based off its name.
-     * @param formName The menu name
-     * @return the BedrockForm, null if it doesn't exist.
-     */
-    @Nullable
-    public BedrockForm getForm(@Nonnull String formName) {
-        Objects.requireNonNull(formName);
-        return forms.get(formName);
-    }
-
     @Override
     public boolean reload() {
 
@@ -83,5 +72,16 @@ public class BedrockFormRegistry implements Reloadable {
 
         load();
         return true;
+    }
+
+    /**
+     * Get a BedrockForm, based off its name.
+     * @param formName The menu name
+     * @return the BedrockForm, null if it doesn't exist.
+     */
+    @Nullable
+    public BedrockForm getForm(@Nonnull String formName) {
+        Objects.requireNonNull(formName);
+        return forms.get(formName);
     }
 }

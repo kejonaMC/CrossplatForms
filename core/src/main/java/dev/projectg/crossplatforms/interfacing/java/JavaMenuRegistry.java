@@ -21,7 +21,7 @@ public class JavaMenuRegistry implements Reloadable {
     /**
      * If java menus are enabled. may be false if disabled in the config or if all forms failed to load.
      */
-    private boolean enabled;
+    private boolean enabled = false;
     private final Map<String, JavaMenu> menus = new HashMap<>();
 
     private final ConfigManager configManager;
