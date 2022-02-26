@@ -11,6 +11,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -40,16 +41,19 @@ public class Input extends CustomComponent implements InputComponent {
     /**
      * Static string replacements
      */
-    private Map<String, String> replacements = Collections.emptyMap();
+    private Map<String, String> replacements = new HashMap<>();
 
     @Override
     public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
         Input input = new Input();
         input.type = this.type;
         input.text = resolver.apply(this.text);
-        input.defaultText = resolver.apply(this.defaultText);
         input.placeholder = resolver.apply(this.placeholder);
+        input.defaultText = resolver.apply(this.defaultText);
         input.blockPlaceholders = this.blockPlaceholders;
+        for (String key : this.replacements.keySet()) {
+            input.replacements.put(key, resolver.apply(this.replacements.get(key)));
+        }
         return input;
     }
 
