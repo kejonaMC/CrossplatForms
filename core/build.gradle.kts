@@ -13,7 +13,7 @@ dependencies {
     compileOnly("org.geysermc:core:2.0.1-SNAPSHOT") {
         isTransitive = false // exclude all the junk we won't and can't use
     }
-    compileOnly("org.geysermc.floodgate:api:2.1.0-SNAPSHOT")
+    compileOnly("org.geysermc.floodgate:api:2.1.1-SNAPSHOT")
     api("cloud.commandframework:cloud-core:1.6.1")
     api("cloud.commandframework:cloud-minecraft-extras:1.6.1")
     api("net.kyori:adventure-api:4.9.3")
