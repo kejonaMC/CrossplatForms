@@ -7,7 +7,7 @@ repositories {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.geysermc.cumulus:cumulus:1.0-SNAPSHOT") // needed for testing button components
-    testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
+    testImplementation("com.google.code.gson:gson:2.9.0") // needed for cumulus
 
     compileOnly("org.geysermc:geyser-api:2.0.1-SNAPSHOT")
     compileOnly("org.geysermc:core:2.0.1-SNAPSHOT") {
