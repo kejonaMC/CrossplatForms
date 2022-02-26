@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.form.component;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.Input;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,7 @@ public class InputComponentTest {
 
     @Test
     public void testFilterPlaceholders() {
-        Input input = new Input("", "", "", true);
+        Input input = Input.builder().blockPlaceholders(true).build();
         Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT + " and " + Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("%player_name% and %player_uuid%")));
         Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT + " and " + Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("{player_name} and {player_uuid}")));
         Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("%%player_balance%%")));
@@ -20,7 +21,25 @@ public class InputComponentTest {
         Assertions.assertEquals("%%", input.parse(primitive("%%")));
     }
 
-    private JsonPrimitive primitive(String string) {
+    @Test
+    public void testReplacements() {
+        Input withDashes = Input.builder().replacements(ImmutableMap.of(" ", "-")).build();
+        Assertions.assertEquals("marshy-waters", withDashes.parse(primitive("marshy waters")));
+
+        Input useless = Input.builder().replacements(ImmutableMap.of(" ", "-", "-", " ")).build();
+        Assertions.assertEquals("Big Green Hill", useless.parse(primitive("Big Green Hill")));
+
+        Input cascading = Input.builder().replacements(ImmutableMap.of("a", "b", "bb", "aa")).build();
+        Assertions.assertEquals("aa aa", cascading.parse(primitive("ab ba")));
+    }
+
+    @Test
+    public void testHideCensoredPlaceholder() {
+        Input input = Input.builder().blockPlaceholders(true).replacements(ImmutableMap.of(Input.PLACEHOLDER_REPLACEMENT, "")).build();
+        Assertions.assertEquals("My location is ", input.parse(primitive("My location is {player_location}")));
+    }
+
+    private static JsonPrimitive primitive(String string) {
         return new JsonPrimitive(string);
     }
 }

@@ -2,20 +2,23 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.geysermc.cumulus.component.InputComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @ToString
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
@@ -34,12 +37,10 @@ public class Input extends CustomComponent implements InputComponent {
      */
     private boolean blockPlaceholders = true;
 
-    public Input(@Nonnull String text, @Nonnull String placeholder, @Nonnull String defaultText, boolean blockPlaceholders) {
-        super(ComponentType.INPUT, text);
-        this.placeholder = placeholder;
-        this.defaultText = defaultText;
-        this.blockPlaceholders = blockPlaceholders;
-    }
+    /**
+     * Static string replacements
+     */
+    private Map<String, String> replacements = Collections.emptyMap();
 
     @Override
     public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
@@ -54,11 +55,11 @@ public class Input extends CustomComponent implements InputComponent {
 
     @Override
     public String parse(JsonPrimitive result) {
+        String parsed = result.getAsString();
         if (blockPlaceholders) {
-            String input = result.getAsString();
-            StringBuilder builder = new StringBuilder(input);
-            // Don't use StringBuilder with Matcher. Bad things happen.
-            Matcher matcher = PLACEHOLDER_PATTERN.matcher(input);
+            StringBuilder builder = new StringBuilder(parsed);
+            // Don't use StringBuilder with Matcher, since SB is mutable. Makes things even more difficult.
+            Matcher matcher = PLACEHOLDER_PATTERN.matcher(parsed);
             int offset = 0; // offset required because we modify the StringBuilder while using numbers from the Matcher of its original value
             while (matcher.find()) {
                 int start = matcher.start() + offset; // start of placeholder
@@ -66,9 +67,45 @@ public class Input extends CustomComponent implements InputComponent {
                 builder.replace(start, end, PLACEHOLDER_REPLACEMENT); // replace with censorship
                 offset = offset + (REPLACEMENT_LENGTH - (end - start)); // update offset by adding new length
             }
-            return builder.toString();
-        } else {
-            return super.parse(result);
+            parsed = builder.toString();
+        }
+
+        for (String target : replacements.keySet()) {
+            parsed = parsed.replace(target, replacements.get(target));
+        }
+
+        return parsed;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String placeholder = "";
+        private String defaultText = "";
+        private boolean blockPlaceholders = true;
+        private Map<String, String> replacements = Collections.emptyMap();
+
+        public Builder placeholder(String placeholder) {
+            this.placeholder = placeholder;
+            return this;
+        }
+        public Builder defaultText(String defaultText) {
+            this.defaultText = defaultText;
+            return this;
+        }
+        public Builder blockPlaceholders(boolean blockPlaceholders) {
+            this.blockPlaceholders = blockPlaceholders;
+            return this;
+        }
+        public Builder replacements(Map<String, String> replacements) {
+            this.replacements = replacements;
+            return this;
+        }
+
+        public Input build() {
+            return new Input(placeholder, defaultText, blockPlaceholders, replacements);
         }
     }
 }
