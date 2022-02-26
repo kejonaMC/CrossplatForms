@@ -2,12 +2,13 @@ package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 public class BasicPlaceholders implements PlaceholderHandler {
 
     @Override
-    public String setPlaceholders(@NotNull FormPlayer player, @NotNull String text) {
+    public String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text) {
         if (text.isBlank()) {
             return text;
         }

@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
 import lombok.ToString;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -40,7 +39,7 @@ public class JavaMenu extends Interface {
     }
 
     @Override
-    public void send(@NotNull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager) {
+    public void send(@Nonnull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager) {
         interfaceManager.getServerHandler().sendMenu(recipient, this);
     }
 

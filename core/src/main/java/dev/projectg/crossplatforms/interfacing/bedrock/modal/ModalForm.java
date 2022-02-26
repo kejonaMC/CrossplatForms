@@ -10,7 +10,6 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.response.ModalFormResponse;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
@@ -32,7 +31,7 @@ public class ModalForm extends BedrockForm {
     private ModalButton button2 = null;
 
     @Override
-    public void send(@NotNull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
+    public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();

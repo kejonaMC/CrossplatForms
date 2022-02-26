@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.*;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -23,7 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class ConfigManager {

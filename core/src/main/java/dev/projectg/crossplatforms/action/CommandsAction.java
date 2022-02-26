@@ -6,9 +6,9 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         List<DispatchableCommand> resolved = super.getValue().stream()
                 .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.command(), additionalPlaceholders)))

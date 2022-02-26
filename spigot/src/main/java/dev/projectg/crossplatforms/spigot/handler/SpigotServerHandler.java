@@ -22,8 +22,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class SpigotServerHandler implements ServerHandler, Listener {
         return players;
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Audience asAudience(CommandOrigin origin) {
         return audiences.sender((CommandSender) origin.getHandle());

@@ -64,7 +64,7 @@ public class Input extends CustomComponent implements InputComponent {
                 int start = matcher.start() + offset; // start of placeholder
                 int end = matcher.end() + offset; // end of placeholders
                 builder.replace(start, end, PLACEHOLDER_REPLACEMENT); // replace with censorship
-                offset = offset + (REPLACEMENT_LENGTH - (end - start)); // update placeholder by adding new length
+                offset = offset + (REPLACEMENT_LENGTH - (end - start)); // update offset by adding new length
             }
             return builder.toString();
         } else {

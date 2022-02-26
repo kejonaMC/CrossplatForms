@@ -5,11 +5,12 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class ServerAction extends SimpleAction<String> {
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         String resolved = placeholders.setPlaceholders(player, super.getValue(), additionalPlaceholders);
 

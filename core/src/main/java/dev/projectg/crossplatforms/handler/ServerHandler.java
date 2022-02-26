@@ -8,8 +8,8 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import dev.projectg.crossplatforms.permission.Permission;
 import net.kyori.adventure.audience.Audience;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +33,7 @@ public interface ServerHandler {
 
     List<FormPlayer> getPlayers();
 
-    @NotNull
+    @Nonnull
     Audience asAudience(CommandOrigin origin);
 
     boolean isGeyserEnabled();

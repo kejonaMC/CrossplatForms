@@ -64,7 +64,7 @@ public class CrossplatFormsSpigot extends JavaPlugin {
             logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
         }
 
-        // Bungee channel for selector
+        // For ServerAction
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         PlaceholderHandler placeholders;
