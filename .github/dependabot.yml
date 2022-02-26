@@ -11,18 +11,6 @@ updates:
     schedule:
       interval: "daily"
       
-  - package-ecosystem: "gradle"
-    directory: "/spigot/"
-    target-branch: "dev"
-    schedule:
-      interval: "daily"
-      
-  - package-ecosystem: "gradle" 
-    directory: "/core/" 
-    target-branch: "dev"
-    schedule:
-      interval: "daily"
-      
   - package-ecosystem: "github-actions"
     directory: "/"
     target-branch: "dev"
