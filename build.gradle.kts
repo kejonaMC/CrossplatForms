@@ -34,6 +34,10 @@ subprojects {
         compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
     }
 
+    tasks.named<Test>("test") {
+        useJUnitPlatform()
+    }
+
     tasks.named("build") {
         dependsOn(tasks.named<Test>("test"))
     }

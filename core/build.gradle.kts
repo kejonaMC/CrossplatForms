@@ -21,8 +21,4 @@ dependencies {
     api("org.spongepowered:configurate-yaml:4.1.2")
 }
 
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-}
-
 description = "core"
