@@ -17,7 +17,7 @@ dependencies {
     api(project(":core"))
     api(project(":access-item"))
     api("cloud.commandframework:cloud-paper:1.6.1")
-    api("me.lucko:commodore:1.12")
+    api("me.lucko:commodore:1.13")
     api("net.kyori:adventure-platform-bukkit:4.0.1")
 }
 
