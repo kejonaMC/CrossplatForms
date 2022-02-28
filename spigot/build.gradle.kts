@@ -16,7 +16,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.1")
     api(project(":core"))
     api(project(":access-item"))
-    api("cloud.commandframework:cloud-paper:1.6.1")
+    api("cloud.commandframework:cloud-paper:1.6.2")
     api("me.lucko:commodore:1.13")
     api("net.kyori:adventure-platform-bukkit:4.0.1")
 }
