@@ -17,7 +17,7 @@ dependencies {
     api("cloud.commandframework:cloud-core:1.6.2")
     api("cloud.commandframework:cloud-minecraft-extras:1.6.2")
     api("net.kyori:adventure-api:4.10.0")
-    api("net.kyori:adventure-text-serializer-legacy:4.9.3")
+    api("net.kyori:adventure-text-serializer-legacy:4.10.0")
     api("org.spongepowered:configurate-yaml:4.1.2")
 }
 
