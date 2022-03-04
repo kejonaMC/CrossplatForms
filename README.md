@@ -1,4 +1,4 @@
-<img alt="CrossplatForms" width="500" src="https://gist.githubusercontent.com/Konicai/51c046ebbe11e0ce691315434f45266d/raw/37c244a13fd99e6df5a72fd19d34e140a1350d60/crossplatforms.svg" /> 
+<img alt="CrossplatForms" width="500" src="https://github.com/ProjectG-Plugins/CrossplatForms/blob/main/images/crossplatForms.svg" /> 
 
 [![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
 [![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/ProjectG-Plugins/GeyserUpdater/blob/master/LICENSE)
