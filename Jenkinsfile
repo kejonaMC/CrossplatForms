@@ -8,13 +8,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh './gradlew clean shadowJar'
+                sh './gradlew clean build'
             }
         }
         stage('Post') {
             steps {
-                archiveArtifacts 'build/libs/CrossplatForms.jar'
-                discordSend description: "**Build:** [${currentBuild.id}](${env.BUILD_URL})\n**Status:** [${currentBuild.currentResult}]" , footer: 'ProjectG', link: env.BUILD_URL, result: currentBuild.currentResult, title: "ProjectG-Plugins/CrossplatForms/${env.BRANCH_NAME}", webhookURL: "https://discordapp.com/api/webhooks/853951848948170762/JFgacab-AdmEfjp05MFfb26a0zIN7kdmVL0f3MMcWodNxMX20xFDqs9TGJJG-aH1Iwpu"
+                archiveArtifacts 'spigot/build/libs/CrossplatForms-Spigot.jar'
+                discordSend description: "**Build:** [${currentBuild.id}](${env.BUILD_URL})\n**Status:** [${currentBuild.currentResult}]" , footer: 'ProjectG', link: env.BUILD_URL, result: currentBuild.currentResult, title: "ProjectG-Plugins/CrossplatForms/${env.BRANCH_NAME}", webhookURL: "https://discord.com/api/webhooks/947260101750841364/YHBzWvn61c-Ewa0-3k_5QbxSbJub4KlglpZI3u0zIATZefPDnbLgihn62fFJb87LFASx"
             }
         }
     }
