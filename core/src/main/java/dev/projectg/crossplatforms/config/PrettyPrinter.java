@@ -89,7 +89,7 @@ public class PrettyPrinter {
         int childIndent;
         if (key) {
             childIndent = indent + 1;
-            builder.append(indent(indent));
+            //builder.append(indent(indent)); // For some reason this has no effect whatsoever ???
             builder.append(node.key()).append(":\n");
         } else {
             childIndent = indent;
