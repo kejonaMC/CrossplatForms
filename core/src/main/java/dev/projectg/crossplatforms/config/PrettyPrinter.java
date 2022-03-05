@@ -102,7 +102,7 @@ public class PrettyPrinter {
         for (ConfigurationNode child : children) {
             // recurse and add each child
             builder.append(indent(childIndent));
-            addPretty(builder, child, childIndent, true);
+            addPretty(builder, child, childIndent, true); //newline is handled within this call
         }
     }
 
