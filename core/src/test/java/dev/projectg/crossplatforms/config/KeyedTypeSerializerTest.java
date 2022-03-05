@@ -36,7 +36,7 @@ public class KeyedTypeSerializerTest {
     }
     
     @Test
-    public void testDeserialize() throws IOException {
+    public void testDeserialize() throws ConfigurateException {
         ConfigurationNode actions = loader.load().node("actions");
         Assertions.assertFalse(actions.virtual());
         Assertions.assertTrue(actions.isMap());
