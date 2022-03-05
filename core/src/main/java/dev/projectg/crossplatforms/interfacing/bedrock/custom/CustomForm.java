@@ -10,6 +10,7 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
@@ -47,16 +48,18 @@ public class CustomForm extends BedrockForm {
             return;
         }
 
-        List<CustomComponent> components = new ArrayList<>();
+        List<CustomComponent> customComponents = new ArrayList<>(); // as our custom components
+        List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
         for (CustomComponent component : this.components) {
-            components.add(component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text)));
+            CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
+            customComponents.add(resolved);
+            components.add(resolved);
         }
 
-        @SuppressWarnings("unchecked")
         org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
                 placeholders.setPlaceholders(player, super.getTitle()),
                 image,
-                (List<org.geysermc.cumulus.component.Component>)(List<?>) components // sad noises
+                components
         );
 
         // Set the response handler
@@ -73,8 +76,8 @@ public class CustomForm extends BedrockForm {
             }
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
-            for (int i = 0; i < components.size(); i++) {
-                CustomComponent component = components.get(i);
+            for (int i = 0; i < customComponents.size(); i++) {
+                CustomComponent component = customComponents.get(i);
                 if (component instanceof LabelComponent label) {
                     // label components aren't included in the response
                     resultPlaceholders.put(placeholder(i), label.getText());

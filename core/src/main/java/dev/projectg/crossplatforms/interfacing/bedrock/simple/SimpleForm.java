@@ -40,18 +40,20 @@ public class SimpleForm extends BedrockForm {
         }
 
         // Resolve any placeholders in the button text
-        List<SimpleButton> formattedButtons = new ArrayList<>();
+        List<SimpleButton> formattedButtons = new ArrayList<>(); // as our custom buttons
+        List<ButtonComponent> components = new ArrayList<>(); // as "vanilla" cumulus
         for (SimpleButton rawButton : buttons) {
-            SimpleButton copiedButton = rawButton.withText(placeholders.setPlaceholders(player, rawButton.getText()));
-            formattedButtons.add(copiedButton);
+            SimpleButton resolved = rawButton.withText(placeholders.setPlaceholders(player, rawButton.getText()));
+            formattedButtons.add(resolved);
+            components.add(resolved);
         }
 
         // Create the form
-        @SuppressWarnings("unchecked")
         org.geysermc.cumulus.SimpleForm form = org.geysermc.cumulus.SimpleForm.of(
                 placeholders.setPlaceholders(player, super.getTitle()),
                 placeholders.setPlaceholders(player, content),
-                (List<ButtonComponent>)(List<?>) formattedButtons); // sad noises
+                components
+        );
 
         // Set the response handler
         form.setResponseHandler((responseData) -> {
