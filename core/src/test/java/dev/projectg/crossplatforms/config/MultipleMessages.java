@@ -5,7 +5,6 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
