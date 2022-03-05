@@ -1,0 +1,8 @@
+actions:
+  message: "[WARN] Hello"
+  messages:
+    prefix: "[INFO]"
+    list:
+      - One
+      - Two
+      - Three

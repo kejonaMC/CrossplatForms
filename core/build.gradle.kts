@@ -1,11 +1,10 @@
 
 repositories {
     maven("https://repo.opencollab.dev/main/")
-    maven("https://jitpack.io")
+    maven("https://jitpack.io") // avoids weird transitive dependency error with Geyser core
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("org.geysermc.cumulus:cumulus:1.0-SNAPSHOT") // needed for testing button components
     testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
 

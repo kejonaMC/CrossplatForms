@@ -31,6 +31,9 @@ public class KeyedTypeSerializer<T> implements TypeSerializer<List<T>> {
      * @param type The type of the map value. Must be serializable by Configurate
      */
     public void registerType(String typeId, Class<? extends T> type) {
+        if (types.get(typeId) != null) {
+            throw new IllegalArgumentException("Type " + typeId + " is already registered");
+        }
         types.put(typeId, type);
     }
 
@@ -42,6 +45,9 @@ public class KeyedTypeSerializer<T> implements TypeSerializer<List<T>> {
      * @param <V> The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
      */
     public <V> void registerSimpleType(String typeId, TypeToken<V> type, Function<V, T> creator) {
+        if (simpleTypes.get(typeId) != null) {
+            throw new IllegalArgumentException("Simple Type " + typeId + " is already registered");
+        }
         simpleTypes.put(typeId, new SimpleTypeRegistration<>(type, creator));
     }
 
@@ -53,6 +59,9 @@ public class KeyedTypeSerializer<T> implements TypeSerializer<List<T>> {
      * @param <V> The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
      */
     public <V> void registerSimpleType(String typeId, Class<V> type, Function<V, T> creator) {
+        if (simpleTypes.get(typeId) != null) {
+            throw new IllegalArgumentException("Simple Type " + typeId + " is already registered");
+        }
         registerSimpleType(typeId, TypeToken.get(type), creator);
     }
 
@@ -97,7 +106,7 @@ public class KeyedTypeSerializer<T> implements TypeSerializer<List<T>> {
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
-    public class SimpleTypeRegistration<V> {
+    private class SimpleTypeRegistration<V> {
         private final TypeToken<V> type;
         private final Function<V, T> factory;
 
