@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -39,7 +39,7 @@ public class ConfigManager {
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
 
     @Getter
-    private final ActionSerializer actionSerializer = new ActionSerializer();
+    private final KeyedTypeSerializer<Action> actionSerializer = new KeyedTypeSerializer<>();
 
     public ConfigManager(Path directory, Logger logger) {
         this.directory = directory.toFile();
@@ -51,7 +51,7 @@ public class ConfigManager {
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.register(new TypeToken<>() {}, actionSerializer); // List<Action>
+            builder.register(new TypeToken<>() {}, actionSerializer);
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node

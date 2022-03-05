@@ -16,14 +16,21 @@ import java.util.stream.Collectors;
 @ConfigSerializable
 public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
+    public static final String IDENTIFIER = "commands";
+
     public CommandsAction(List<DispatchableCommand> commands) {
         super(commands);
     }
 
     @Override
+    public String identifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
-        List<DispatchableCommand> resolved = super.getValue().stream()
+        List<DispatchableCommand> resolved = value().stream()
                 .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.command(), additionalPlaceholders)))
                 .collect(Collectors.toList());
 

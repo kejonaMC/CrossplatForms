@@ -2,12 +2,12 @@ package dev.projectg.crossplatforms.utils;
 
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
+import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
-import java.net.URL;
+import java.io.IOException;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public class ConfigurateUtils {
@@ -36,13 +36,16 @@ public class ConfigurateUtils {
         // todo: unit tests
     }
 
-    public static YamlConfigurationLoader.Builder loaderBuilder(String resource) {
+    public static YamlConfigurationLoader.Builder loaderBuilder(File file) {
         YamlConfigurationLoader.Builder loaderBuilder = YamlConfigurationLoader.builder();
+        loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false).shouldCopyDefaults(false));
+        loaderBuilder.nodeStyle(NodeStyle.BLOCK);
+        loaderBuilder.indent(2);
+        loaderBuilder.file(file);
+        return loaderBuilder;
+    }
 
-        URL config = ConfigurateUtils.class.getClassLoader().getResource(resource);
-        Objects.requireNonNull(config);
-        File file = new File(config.getFile());
-
-        return loaderBuilder.file(file);
+    public static YamlConfigurationLoader.Builder loaderBuilder(File directory, String resource) throws IOException {
+        return loaderBuilder(FileUtils.fileOrCopiedFromResource(FileUtils.fileOrCopiedFromResource(new File(directory, resource))));
     }
 }

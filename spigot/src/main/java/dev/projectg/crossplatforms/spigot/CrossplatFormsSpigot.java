@@ -10,10 +10,11 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.accessitem.AccessItemConfig;
 import dev.projectg.crossplatforms.accessitem.GiveCommand;
 import dev.projectg.crossplatforms.accessitem.InspectItemCommand;
-import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.config.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.spigot.handler.PlaceholderAPIHandler;
@@ -113,8 +114,8 @@ public class CrossplatFormsSpigot extends JavaPlugin {
                 AccessItemConfig.class,
                 AccessItemConfig::updater));
 
-        ActionSerializer actions = configManager.getActionSerializer();
-        actions.registerSimple("server", String.class, ServerAction::new);
+        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
+        actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
     }
 
     @Override

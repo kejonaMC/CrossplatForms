@@ -19,17 +19,24 @@ import java.util.Map;
 @ConfigSerializable
 public class ServerAction extends SimpleAction<String> {
 
+    public static final String IDENTIFIER = "server";
+
     public ServerAction(String value) {
         super(value);
     }
 
     @Override
+    public String identifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
-        String resolved = placeholders.setPlaceholders(player, super.getValue(), additionalPlaceholders);
+        String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
-            Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + super.getValue());
+            Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + value());
             out.writeUTF("Connect");
             out.writeUTF(resolved);
             ((Player) player.getHandle()).sendPluginMessage(CrossplatFormsSpigot.getInstance(), "BungeeCord", stream.toByteArray());

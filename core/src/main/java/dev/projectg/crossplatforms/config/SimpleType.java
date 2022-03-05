@@ -1,18 +1,21 @@
-package dev.projectg.crossplatforms.action;
+package dev.projectg.crossplatforms.config;
 
-import lombok.Getter;
 import lombok.ToString;
 
 import javax.annotation.Nonnull;
 
 @ToString(includeFieldNames = false)
-@Getter
-public class SimpleType<V> {
+public abstract class SimpleType<V> implements IdentifiableType {
 
     private final V value;
 
     public SimpleType(@Nonnull V value) {
         this.value = value;
+    }
+
+    @Override
+    public V value() {
+        return value;
     }
 
     @Override

@@ -1,35 +1,17 @@
 package dev.projectg.crossplatforms.action;
 
-import io.leangen.geantyref.TypeToken;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.serialize.SerializationException;
 
-import javax.annotation.Nonnull;
-import java.util.function.Function;
+import dev.projectg.crossplatforms.config.SimpleType;
+import org.jetbrains.annotations.NotNull;
 
-@ToString(includeFieldNames = false)
-@Getter
-@ConfigSerializable
-public abstract class SimpleAction<T> implements Action {
+/**
+ * An essentially empty abstract class to simplify extension clauses for any classes that must extend {@link SimpleType}
+ * and must implement {@link Action}
+ * @param <V> The type of the value that the {@link SimpleType} stores.
+ */
+public abstract class SimpleAction<V> extends SimpleType<V> implements Action {
 
-    private final T value;
-
-    public SimpleAction(@Nonnull T value) {
-        this.value = value;
-    }
-
-    @AllArgsConstructor(access = AccessLevel.PACKAGE)
-    public static class Registration<T> {
-        private final TypeToken<T> type;
-        private final Function<T, SimpleAction<T>> factory;
-
-        protected SimpleAction<T> create(ConfigurationNode node) throws SerializationException {
-            return factory.apply(node.get(type));
-        }
+    public SimpleAction(@NotNull V value) {
+        super(value);
     }
 }

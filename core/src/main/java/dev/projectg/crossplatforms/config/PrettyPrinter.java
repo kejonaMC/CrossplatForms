@@ -48,7 +48,8 @@ public class PrettyPrinter {
      * @return The viewable text
      */
     public String pretty(ConfigurationNode node) {
-        return pretty(node, node.parent() != null);
+        Object key = node.key();
+        return pretty(node, key != null && !key.equals(""));
     }
 
     /**

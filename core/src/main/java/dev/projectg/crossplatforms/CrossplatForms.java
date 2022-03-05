@@ -14,6 +14,7 @@ import dev.projectg.crossplatforms.command.proxy.ProxyCommandManager;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
+import dev.projectg.crossplatforms.config.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
@@ -83,9 +84,9 @@ public class CrossplatForms {
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger);
         ConfigId.defaults().forEach(configManager::register);
-        ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimple("form", String.class, InterfaceAction::new);
-        actionSerializer.registerSimple("commands", new TypeToken<>() {}, CommandsAction::new);
+        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
+        actionSerializer.registerSimpleType(InterfaceAction.IDENTIFIER, String.class, InterfaceAction::new);
+        actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<>() {}, CommandsAction::new);
         preConfigLoad.accept(configManager);
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
@@ -149,8 +150,6 @@ public class CrossplatForms {
 
         // register shortcut commands
         new ProxyCommandManager(this, commandManager);
-
-
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

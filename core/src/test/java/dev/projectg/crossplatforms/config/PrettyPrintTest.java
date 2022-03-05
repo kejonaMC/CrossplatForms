@@ -3,9 +3,12 @@ package dev.projectg.crossplatforms.config;
 import dev.projectg.crossplatforms.utils.ConfigurateUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.spongepowered.configurate.ConfigurateException;
+import org.junit.jupiter.api.io.TempDir;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
+
+import java.io.File;
+import java.io.IOException;
 
 public class PrettyPrintTest {
 
@@ -50,8 +53,8 @@ public class PrettyPrintTest {
                 2: Three""";
 
     @Test
-    public void print() throws ConfigurateException {
-        YamlConfigurationLoader loader = ConfigurateUtils.loaderBuilder("KeyedTypeConfig.yml").build();
+    public void print(@TempDir File directory) throws IOException {
+        YamlConfigurationLoader loader = ConfigurateUtils.loaderBuilder(directory, "KeyedTypeConfig.yml").build();
         ConfigurationNode base = loader.load();
         PrettyPrinter printer = new PrettyPrinter(2);
 

@@ -1,8 +1,6 @@
 package dev.projectg.crossplatforms.config;
 
-public interface Message<T> {
+public interface Message extends IdentifiableType {
 
     void send();
-
-    T get();
 }
