@@ -86,16 +86,17 @@ public class PrettyPrinter {
      */
     private String children(ConfigurationNode node, Collection<? extends ConfigurationNode> children, int indent, boolean key) {
         StringBuilder builder = new StringBuilder();
-        int actualIndent;
+        int childIndent;
         if (key) {
-            actualIndent = indent + 1;
+            childIndent = indent + 1;
+            builder.append(indent(indent));
             builder.append(node.key()).append(":\n");
         } else {
-            actualIndent = indent;
+            childIndent = indent;
         }
         for (ConfigurationNode child : children) {
-            builder.append(indent(actualIndent));
-            builder.append(pretty(child, actualIndent, true)).append("\n");
+            builder.append(indent(childIndent));
+            builder.append(pretty(child, childIndent, true)).append("\n");
         }
         return builder.toString().trim(); // Not really sure why the trim is necessary, but if not we get blank lines following
     }
