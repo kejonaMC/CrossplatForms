@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @ToString
 @ConfigSerializable
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings("FieldMayBeFinal")
 public class ModalForm extends BedrockForm {
 
     private String content = "";

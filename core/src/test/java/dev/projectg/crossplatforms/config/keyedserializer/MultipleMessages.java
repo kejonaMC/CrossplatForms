@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public class MultipleMessages implements Message {
 
     public static final String IDENTIFIER = "messages";

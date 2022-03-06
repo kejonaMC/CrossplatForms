@@ -20,7 +20,6 @@ public abstract class ValuedType {
 
     @Required
     @Setting(KEY)
-    @SuppressWarnings("FieldMayBeFinal")
     private String type = null;
 
     /**
