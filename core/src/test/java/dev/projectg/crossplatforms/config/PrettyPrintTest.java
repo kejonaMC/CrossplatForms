@@ -52,19 +52,44 @@ public class PrettyPrintTest {
                 1: Two
                 2: Three""";
 
-    @Test
-    public void print(@TempDir File directory) throws IOException {
+    private static final String LIST_NOTATION = """
+            actions:
+              message: [WARN] Hello
+              messages:
+                prefix: [INFO]
+                list:
+                  - One
+                  - Two
+                  - Three""";
+
+    @TempDir
+    private static File directory;
+
+    private final ConfigurationNode node;
+
+    private PrettyPrintTest() throws IOException {
         YamlConfigurationLoader loader = ConfigurateUtils.loaderBuilder(directory, "KeyedTypeConfig.yml").build();
-        ConfigurationNode base = loader.load();
-        PrettyPrinter printer = new PrettyPrinter(2);
+        node = loader.load();
+    }
 
-        Assertions.assertEquals(ALL, printer.pretty(base, true));
-        Assertions.assertEquals(ALL_NO_KEY, printer.pretty(base));
-        Assertions.assertEquals(ALL_NO_KEY, printer.pretty(base, false));
+    @Test
+    public void testShowKey() {
+        PrettyPrinter printer = new PrettyPrinter(2, false);
 
-        ConfigurationNode actions = base.node("actions");
+        Assertions.assertEquals(ALL, printer.pretty(node, true));
+        Assertions.assertEquals(ALL_NO_KEY, printer.pretty(node));
+        Assertions.assertEquals(ALL_NO_KEY, printer.pretty(node, false));
+
+        ConfigurationNode actions = node.node("actions");
         Assertions.assertEquals(ACTIONS, printer.pretty(actions, true));
         Assertions.assertEquals(ACTIONS, printer.pretty(actions));
         Assertions.assertEquals(ACTIONS_NO_KEY, printer.pretty(actions, false));
+    }
+
+    @Test
+    public void testIndexLists() {
+        PrettyPrinter printer = new PrettyPrinter(2, true);
+
+        Assertions.assertEquals(LIST_NOTATION, printer.pretty(node));
     }
 }

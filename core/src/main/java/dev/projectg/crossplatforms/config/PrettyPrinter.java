@@ -12,21 +12,26 @@ public class PrettyPrinter {
     private final int indentSize;
     private final String indent;
 
+    private final boolean indexLists;
+
     /**
      * Creates a PrettyPrinter with a default indentation level of 2.
      */
     public PrettyPrinter() {
         this.indentSize = 2;
         this.indent = "  ";
+        this.indexLists = false;
     }
 
     /**
      * Creates a PrettyPrinter
-     * @param indent The indent level to use for indentation.
+     * @param indent The indent level to use for indentation. 2 by default.
+     * @param indexLists If lists should be indexed like maps or lke lists with dashes. False by default.
      */
-    public PrettyPrinter(int indent) {
+    public PrettyPrinter(int indent, boolean indexLists) {
         this.indentSize = indent;
         this.indent = " ".repeat(indentSize);
+        this.indexLists = indexLists;
     }
 
     /**
@@ -60,7 +65,10 @@ public class PrettyPrinter {
      */
     private void addPretty(StringBuilder builder, ConfigurationNode node, int indent, boolean showKey) {
         String prefix;
-        if (showKey) {
+        ConfigurationNode parent = node.parent();
+        if (indexLists && parent != null && parent.isList()) {
+            prefix = "- ";
+        } else if (showKey) {
             prefix = node.key() + ": ";
         } else {
             prefix = "";
