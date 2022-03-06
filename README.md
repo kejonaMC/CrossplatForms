@@ -5,6 +5,6 @@
 [![Build Status](https://ci.projectg.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.projectg.dev/job/CrossplatForms/job/main/)
 [![Version](https://img.shields.io/badge/version-0.3.0-blue)](https://github.com/ProjectG-Plugins/CrossplatForms/actions/workflows/push-master.yml)
 
-CrossplatForms, or CForms, is a Minecraft Java Edition plugin aimed at providing fast, easy, and dynamic creation of Bedrock Edition forms through configurations. Also allows for creation of inventory menus for Java Edition.
+CrossplatForms is a Minecraft Java Edition plugin aimed at providing fast, easy, and dynamic creation of Bedrock Edition forms through configurations. Also allows for creation of inventory menus for Java Edition.
 
-Currently runs on Spigot servers (1.14 and higher) that have Geyser (Floodgate is optional). Support for BungeeCord, Velocity, and Sponge are planned. 
+Currently runs on Spigot servers (1.14 and higher) that have Geyser (Floodgate is optional). Support for BungeeCord, Velocity, Sponge, and older Spigot is planned. 
