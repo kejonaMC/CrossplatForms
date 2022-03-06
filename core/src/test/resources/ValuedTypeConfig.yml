@@ -1,0 +1,7 @@
+numbers:
+  - type: integer
+    integer: 5
+
+  - type: scientific_notation
+    mantissa: 7.200
+    exponent: 3

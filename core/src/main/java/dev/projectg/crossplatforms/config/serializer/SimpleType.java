@@ -1,11 +1,11 @@
-package dev.projectg.crossplatforms.config;
+package dev.projectg.crossplatforms.config.serializer;
 
 import lombok.ToString;
 
 import javax.annotation.Nonnull;
 
 @ToString(includeFieldNames = false)
-public abstract class SimpleType<V> implements IdentifiableType {
+public abstract class SimpleType<V> implements KeyedType {
 
     private final V value;
 

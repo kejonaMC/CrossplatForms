@@ -1,15 +1,11 @@
-package dev.projectg.crossplatforms.config;
+package dev.projectg.crossplatforms.config.keyedserializer;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class MultipleMessages implements Message {
@@ -21,6 +17,16 @@ public class MultipleMessages implements Message {
 
     @Required
     private List<String> list = new ArrayList<>();
+
+    @SuppressWarnings("unused") //configurate
+    private MultipleMessages() {
+
+    }
+
+    public MultipleMessages(String prefix, List<String> messages) {
+        this.prefix = prefix;
+        this.list = messages;
+    }
 
     @Override
     public void send() {

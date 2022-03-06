@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.config;
+package dev.projectg.crossplatforms.config.serializer;
 
 /**
  * For use with {@link KeyedTypeSerializer}
  */
-public interface IdentifiableType {
+public interface KeyedType {
 
     /**
      * @return The identifier for the type of this implementation

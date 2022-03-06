@@ -14,7 +14,7 @@ import dev.projectg.crossplatforms.command.proxy.ProxyCommandManager;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
-import dev.projectg.crossplatforms.config.KeyedTypeSerializer;
+import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;

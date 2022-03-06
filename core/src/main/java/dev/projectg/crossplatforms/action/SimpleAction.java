@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.action;
 
 
-import dev.projectg.crossplatforms.config.SimpleType;
+import dev.projectg.crossplatforms.config.serializer.SimpleType;
 import org.jetbrains.annotations.NotNull;
 
 /**

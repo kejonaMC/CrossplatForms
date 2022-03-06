@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.action;
 
-import dev.projectg.crossplatforms.config.IdentifiableType;
+import dev.projectg.crossplatforms.config.serializer.KeyedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Map;
 
 @ConfigSerializable
-public interface Action extends IdentifiableType {
+public interface Action extends KeyedType {
 
     /**
      * Affects a Java Edition player.

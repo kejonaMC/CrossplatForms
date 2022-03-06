@@ -1,6 +1,8 @@
-package dev.projectg.crossplatforms.config;
+package dev.projectg.crossplatforms.config.keyedserializer;
 
 import com.google.common.collect.ImmutableList;
+import dev.projectg.crossplatforms.config.PrettyPrinter;
+import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.utils.ConfigurateUtils;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
@@ -59,6 +61,9 @@ public class KeyedTypeSerializerTest {
         Objects.requireNonNull(actualMessages);
 
         copy.set(new TypeToken<>() {}, actualMessages);
+        PrettyPrinter prettyPrinter = new PrettyPrinter();
+        System.out.println(prettyPrinter.pretty(actions));
+        System.out.println(prettyPrinter.pretty(copy));
         Assertions.assertEquals(actions, copy);
 
         List<Message> modifiedMessages = new ArrayList<>(actualMessages);
