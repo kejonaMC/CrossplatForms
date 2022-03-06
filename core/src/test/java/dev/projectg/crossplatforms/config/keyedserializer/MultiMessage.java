@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigSerializable
-public class MultipleMessages implements Message {
+public class MultiMessage implements Message {
 
     public static final String IDENTIFIER = "messages";
 
@@ -18,11 +18,11 @@ public class MultipleMessages implements Message {
     private List<String> list = new ArrayList<>();
 
     @SuppressWarnings("unused") //configurate
-    private MultipleMessages() {
+    private MultiMessage() {
 
     }
 
-    public MultipleMessages(String prefix, List<String> messages) {
+    public MultiMessage(String prefix, List<String> messages) {
         this.prefix = prefix;
         this.list = messages;
     }
@@ -38,15 +38,20 @@ public class MultipleMessages implements Message {
     }
 
     @Override
-    public MultipleMessages value() {
+    public MultiMessage value() {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "MultipleMessages{" + "prefix=" + prefix + ", list=" + list + ", identifier=" + identifier() + '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MultipleMessages that = (MultipleMessages) o;
+        MultiMessage that = (MultiMessage) o;
         return prefix.equals(that.prefix) && list.equals(that.list);
     }
 }

@@ -1,12 +1,15 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
+import dev.projectg.crossplatforms.Resolver;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.geysermc.cumulus.component.InputComponent;
+import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -15,6 +18,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @ToString
 @Getter
@@ -43,17 +47,22 @@ public class Input extends CustomComponent implements InputComponent {
     private Map<String, String> replacements = new HashMap<>();
 
     @Override
-    public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
+    public Input copy() {
         Input input = new Input();
-        input.type = this.type;
-        input.text = resolver.apply(this.text);
-        input.placeholder = resolver.apply(this.placeholder);
-        input.defaultText = resolver.apply(this.defaultText);
+        copyBasics(this, input);
+        input.placeholder = this.placeholder;
+        input.defaultText = this.defaultText;
         input.blockPlaceholders = this.blockPlaceholders;
-        for (String key : this.replacements.keySet()) {
-            input.replacements.put(key, resolver.apply(this.replacements.get(key)));
-        }
+        input.replacements = new HashMap<>(this.replacements);
         return input;
+    }
+
+    @Override
+    public void setPlaceholders(@Nonnull Resolver resolver) {
+        super.setPlaceholders(resolver);
+        placeholder = resolver.apply(placeholder);
+        defaultText = resolver.apply(defaultText);
+        replacements = replacements.keySet().stream().collect(Collectors.toMap(Function.identity(), resolver));
     }
 
     @Override
@@ -82,6 +91,11 @@ public class Input extends CustomComponent implements InputComponent {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public @NonNull ComponentType getType() {
+        return ComponentType.INPUT;
     }
 
     public static class Builder {

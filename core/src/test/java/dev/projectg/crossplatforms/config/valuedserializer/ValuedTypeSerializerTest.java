@@ -32,7 +32,7 @@ public class ValuedTypeSerializerTest {
 
         File config = FileUtils.fileOrCopiedFromResource(new File(directory, "ValuedTypeConfig.yml"));
         YamlConfigurationLoader.Builder loaderBuilder = ConfigurateUtils.loaderBuilder(config);
-        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> builder.register(new TypeToken<>() {}, numberSerializer))));
+        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> builder.registerExact(new TypeToken<>() {}, numberSerializer))));
         loader = loaderBuilder.build();
     }
 
@@ -41,8 +41,7 @@ public class ValuedTypeSerializerTest {
         ConfigurationNode numbers = loader.load().node("numbers");
         Assertions.assertFalse(numbers.virtual());
         Assertions.assertTrue(numbers.isList());
-        List<Number> actualMessages = numbers.get(new TypeToken<>() {
-        });
+        List<Number> actualMessages = numbers.get(new TypeToken<>() {});
 
         Integer integer = new Integer(5);
         ScientificNotationNumber scientific = new ScientificNotationNumber(7.200D, 3);

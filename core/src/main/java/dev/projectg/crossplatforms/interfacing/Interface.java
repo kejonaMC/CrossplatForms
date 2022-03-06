@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.interfacing;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public abstract class Interface {
+public abstract class Interface extends ValuedType {
 
     @NodeKey
     @Required

@@ -9,8 +9,15 @@ import java.util.Collection;
  */
 public class PrettyPrinter {
 
+    /**
+     * The amount of spaces per indent
+     */
     private final int indentSize;
-    private final String indent;
+
+    /**
+     * Represent a single indent
+     */
+    private final String singleIndent;
 
     private final boolean indexLists;
 
@@ -19,18 +26,18 @@ public class PrettyPrinter {
      */
     public PrettyPrinter() {
         this.indentSize = 2;
-        this.indent = "  ";
-        this.indexLists = false;
+        this.singleIndent = "  ";
+        this.indexLists = true;
     }
 
     /**
      * Creates a PrettyPrinter
      * @param indent The indent level to use for indentation. 2 by default.
-     * @param indexLists If lists should be indexed like maps or lke lists with dashes. False by default.
+     * @param indexLists If lists should be indexed like maps or lke lists with dashes. True by default.
      */
     public PrettyPrinter(int indent, boolean indexLists) {
         this.indentSize = indent;
-        this.indent = " ".repeat(indentSize);
+        this.singleIndent = " ".repeat(indentSize);
         this.indexLists = indexLists;
     }
 
@@ -116,7 +123,7 @@ public class PrettyPrinter {
     }
 
     private String indent(int level) {
-        return indent.repeat(level);
+        return singleIndent.repeat(level);
     }
 
     private static String fromRaw(Object raw) {

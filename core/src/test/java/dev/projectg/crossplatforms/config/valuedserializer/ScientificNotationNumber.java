@@ -42,6 +42,6 @@ public class ScientificNotationNumber extends Number {
 
     @Override
     public String toString() {
-        return "ScientificNotationNumber{" + "mantissa=" + mantissa + ", exponent=" + exponent + ", type=" + getType() + "}";
+        return "ScientificNotationNumber{" + "mantissa=" + mantissa + ", exponent=" + exponent + ", type=" + identifier() + "}";
     }
 }

@@ -30,11 +30,18 @@ import java.util.UUID;
 @SuppressWarnings("FieldMayBeFinal")
 public class CustomForm extends BedrockForm {
 
+    public static final String TYPE = "CUSTOM_FORM";
+
     private FormImage image = null;
     private List<CustomComponent> components = Collections.emptyList();
 
     @Required
     private List<Action> actions = null;
+
+    @Override
+    public String identifier() {
+        return TYPE;
+    }
 
     @Override
     public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
@@ -51,7 +58,7 @@ public class CustomForm extends BedrockForm {
         List<CustomComponent> customComponents = new ArrayList<>(); // as our custom components
         List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
         for (CustomComponent component : this.components) {
-            CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
+            CustomComponent resolved = CustomComponent.withPlaceholders(component, (text) -> placeholders.setPlaceholders(player, text));
             customComponents.add(resolved);
             components.add(resolved);
         }

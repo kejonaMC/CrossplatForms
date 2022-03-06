@@ -1,17 +1,19 @@
 package dev.projectg.crossplatforms.config.valuedserializer;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.math.BigDecimal;
 
 @ConfigSerializable
 public class Integer extends Number {
 
-    private int integer;
+    @Required
+    private final int integer;
 
     @SuppressWarnings("unused") // configurate
     private Integer() {
-
+        integer = 500;
     }
 
     public Integer(int i) {
@@ -34,6 +36,6 @@ public class Integer extends Number {
 
     @Override
     public String toString() {
-        return "Integer{" + "integer=" + integer + ", type=" + getType() + "}";
+        return "Integer{" + "integer=" + integer + ", type=" + identifier() + "}";
     }
 }

@@ -1,23 +1,21 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
+import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.util.ComponentType;
-import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
+import java.util.Objects;
 
 @ToString
 @Getter
 @ConfigSerializable
-public abstract class CustomComponent implements org.geysermc.cumulus.component.Component {
+public abstract class CustomComponent extends ValuedType implements org.geysermc.cumulus.component.Component {
 
-    @Required
-    protected ComponentType type;
     protected String text = "";
 
     /**
@@ -29,17 +27,37 @@ public abstract class CustomComponent implements org.geysermc.cumulus.component.
     }
 
     public CustomComponent(@Nonnull ComponentType type, @Nonnull String text) {
-        this.type = type;
+        super(type.getName());
         this.text = text;
     }
 
+    public abstract CustomComponent copy();
+
     /**
-     * Returns a new instance of the Component with any placeholders set
-     * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
-     * @return A new instance with placeholders resolved.
+     * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
      */
-    @Contract(pure = true)
-    public abstract CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver);
+    protected final void copyBasics(CustomComponent source, CustomComponent target) {
+        target.type = source.type;
+        target.text = source.text;
+    }
+
+    /**
+     * Sets placeholders
+     * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
+     */
+    public void setPlaceholders(@Nonnull Resolver resolver) {
+        Objects.requireNonNull(resolver);
+        this.text = resolver.apply(text);
+    }
+
+    /**
+     * @return The instance with placeholders set
+     */
+    public static CustomComponent withPlaceholders(CustomComponent component, Resolver resolver) {
+        CustomComponent resolved = component.copy();
+        resolved.setPlaceholders(resolver);
+        return resolved;
+    }
 
     /**
      * Parses the result of a Component.

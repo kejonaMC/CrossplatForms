@@ -22,6 +22,8 @@ import java.util.UUID;
 @SuppressWarnings("FieldMayBeFinal")
 public class ModalForm extends BedrockForm {
 
+    public static final String TYPE = "MODAL_FORM";
+
     private String content = "";
 
     @Required
@@ -29,6 +31,11 @@ public class ModalForm extends BedrockForm {
 
     @Required
     private ModalButton button2 = null;
+
+    @Override
+    public String identifier() {
+        return TYPE;
+    }
 
     @Override
     public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {

@@ -4,6 +4,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
+import dev.projectg.crossplatforms.config.serializer.KeyedTypeListSerializer;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
@@ -52,7 +53,8 @@ public class ConfigManager {
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.register(new TypeToken<>() {}, actionSerializer);
+            builder.register(Action.class, actionSerializer);
+            builder.register(new TypeToken<>() {}, new KeyedTypeListSerializer<>(actionSerializer));
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node

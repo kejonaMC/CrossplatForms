@@ -18,12 +18,16 @@ import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
+import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
+import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.geysermc.geyser.GeyserImpl;
@@ -37,18 +41,20 @@ import java.util.function.Consumer;
 public class CrossplatForms {
     private static CrossplatForms INSTANCE;
 
-    private ConfigManager configManager;
+    private final ConfigManager configManager;
     private final ServerHandler serverHandler;
-    private BedrockHandler bedrockHandler;
+    private final BedrockHandler bedrockHandler;
 
-    private InterfaceManager interfaceManager;
+    private final boolean cumulusAvailable;
+
+    private final InterfaceManager interfaceManager;
 
     private final CommandManager<CommandOrigin> commandManager;
-    private Command.Builder<CommandOrigin> commandBuilder;
+    private final Command.Builder<CommandOrigin> commandBuilder;
 
     private final PlaceholderHandler placeholders;
 
-    private boolean success = true;
+    private final boolean success = true;
 
     public CrossplatForms(Logger logger,
                           Path dataFolder,
@@ -71,19 +77,30 @@ public class CrossplatForms {
             } else {
                 bedrockHandler = new FloodgateHandler();
             }
+            cumulusAvailable = true;
         } else if (serverHandler.isGeyserEnabled()) {
             bedrockHandler = new GeyserHandler();
             logger.warn("Floodgate is recommended and more stable!");
+            cumulusAvailable = true;
         } else {
-            logger.severe("Geyser nor Floodgate are installed! Disabling...");
-            // todo: make this feasible
-            success = false;
-            return;
+            bedrockHandler = BedrockHandler.empty();
+            logger.severe("Geyser nor Floodgate are installed! There may be issues.");
+            cumulusAvailable = false;
         }
 
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger);
-        ConfigId.defaults().forEach(configManager::register);
+
+        if (cumulusAvailable) {
+            ConfigId.defaults().forEach(configManager::register);
+            configManager.serializers(builder -> {
+                builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
+                builder.registerExact(CustomComponent.class, new ComponentSerializer());
+            });
+        } else {
+            configManager.register(ConfigId.GENERAL);
+            configManager.register(ConfigId.JAVA_MENUS);
+        }
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(InterfaceAction.IDENTIFIER, String.class, InterfaceAction::new);
         actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<>() {}, CommandsAction::new);

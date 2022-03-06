@@ -1,10 +1,7 @@
 package dev.projectg.crossplatforms.config.serializer;
 
-import lombok.ToString;
-
 import javax.annotation.Nonnull;
 
-@ToString(includeFieldNames = false)
 public abstract class SimpleType<V> implements KeyedType {
 
     private final V value;
@@ -29,5 +26,10 @@ public abstract class SimpleType<V> implements KeyedType {
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleType{" + "value=" + value + ", identifier=" + identifier() + '}';
     }
 }
