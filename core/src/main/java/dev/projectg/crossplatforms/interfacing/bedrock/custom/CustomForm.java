@@ -30,7 +30,7 @@ import java.util.UUID;
 @SuppressWarnings("FieldMayBeFinal")
 public class CustomForm extends BedrockForm {
 
-    public static final String TYPE = "CUSTOM_FORM";
+    public static final String TYPE = "custom_form";
 
     private FormImage image = null;
     private List<CustomComponent> components = Collections.emptyList();

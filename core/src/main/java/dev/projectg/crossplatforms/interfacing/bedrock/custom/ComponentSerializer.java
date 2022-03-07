@@ -8,11 +8,11 @@ import dev.projectg.crossplatforms.config.serializer.ValuedTypeSerializer;
 public class ComponentSerializer extends ValuedTypeSerializer<CustomComponent> {
 
     public ComponentSerializer() {
-        registerType("DROPDOWN", Dropdown.class);
-        registerType("INPUT", Input.class);
-        registerType("LABEL", Label.class);
-        registerType("SLIDER", Slider.class);
-        registerType("STEP_SLIDER", StepSlider.class);
-        registerType("TOGGLE", Toggle.class);
+        registerType("dropdown", Dropdown.class);
+        registerType("input", Input.class);
+        registerType("label", Label.class);
+        registerType("slider", Slider.class);
+        registerType("step_slider", StepSlider.class);
+        registerType("toggle", Toggle.class);
     }
 }

@@ -24,7 +24,7 @@ import java.util.UUID;
 @SuppressWarnings("FieldMayBeFinal")
 public class SimpleForm extends BedrockForm {
 
-    public static final String TYPE = "SIMPLE_FORM";
+    public static final String TYPE = "simple_form";
 
     private String content = "";
     private List<SimpleButton> buttons = Collections.emptyList();

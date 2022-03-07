@@ -101,9 +101,7 @@ public class CrossplatForms {
             configManager.register(ConfigId.GENERAL);
             configManager.register(ConfigId.JAVA_MENUS);
         }
-        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimpleType(InterfaceAction.IDENTIFIER, String.class, InterfaceAction::new);
-        actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<>() {}, CommandsAction::new);
+        registerDefaultActions(configManager);
         preConfigLoad.accept(configManager);
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
@@ -174,5 +172,11 @@ public class CrossplatForms {
 
     public static CrossplatForms getInstance() {
         return INSTANCE;
+    }
+
+    public static void registerDefaultActions(ConfigManager configManager) {
+        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
+        actionSerializer.registerSimpleType(InterfaceAction.IDENTIFIER, String.class, InterfaceAction::new);
+        actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<>() {}, CommandsAction::new);
     }
 }

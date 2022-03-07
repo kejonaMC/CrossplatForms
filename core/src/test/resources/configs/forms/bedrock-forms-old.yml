@@ -10,72 +10,65 @@ global-permission-defaults:
 
 forms:
   servers:
-    type: simple_form
+    type: SIMPLE_FORM
     title: "Server Selector"
     content: "Click on the server button of choice."
     buttons:
       - text: "Server Lobby: %bungee_lobby% players"
         image: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
-        actions:
-          commands:
-            - "console; tell %player_name% Taking you to the lobby."
-          server: "lobby"
+        commands:
+          - "console; tell %player_name% Taking you to the lobby."
+        server: "lobby"
 
       - text: "Survival: %bungee_survival% players"
         image: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-        actions:
-          server: "survival"
+        server: "survival"
 
       - text: "Minigames"
         image: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
-        actions:
-          form: minigames
+        form: minigames
 
       - text: "Spawn"
-        actions:
-          commands:
-            - "console; tp %player_name% 0 80 0"
+        commands:
+          - "console; tp %player_name% 0 80 0"
 
   minigames:
-    type: simple_form
+    type: SIMPLE_FORM
     command: minigames
     title: "Minigames"
     content: "Click on a minigame of choice."
     buttons:
       - text: "Spleef"
         image: "https://www.digminecraft.com/materials/images/snowball.png"
-        actions:
-          server: "spleef"
+        server: "spleef"
 
       - text: "Hide & Seek"
-        actions:
-          server: "hideseek"
+        server: "hideseek"
 
   leave:
-    type: modal_form
+    type: MODAL_FORM
     title: "Do you want to leave the server?"
     content: "This will result in you leaving the server. Are you sure?"
     button1:
       text: "Yes"
-      actions:
-        commands:
-          - "console; kick %player_name%"
+      commands:
+        - "console; kick %player_name%"
     button2:
       text: "No"
 
   broadcast:
-    type: custom_form
+    type: CUSTOM_FORM
     permission-defaults:
       USE: FALSE
       COMMAND: FALSE
     title: "Choose something to broadcast"
     components:
-      - type: input
+      - type: INPUT
         text: "Enter a broadcast"
 
-    actions:
+    action:
       commands:
         - "say %result_0%"
 
 # Don't touch this
-config-version: 3
+config-version: 1

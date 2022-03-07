@@ -20,6 +20,8 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class JavaMenu extends Interface {
 
+    public static final String TYPE = "java_menu";
+
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
@@ -32,7 +34,7 @@ public class JavaMenu extends Interface {
 
     @Override
     public String identifier() {
-        return "JAVA_MENU";
+        return TYPE;
     }
 
     /**

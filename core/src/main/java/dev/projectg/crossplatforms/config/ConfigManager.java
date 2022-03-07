@@ -34,17 +34,20 @@ import java.util.function.Consumer;
 
 public class ConfigManager {
 
-    private final File directory;
+    private final Path directory;
     private final Logger logger;
+
     private final YamlConfigurationLoader.Builder loaderBuilder;
     private final Set<ConfigId> identifiers = new HashSet<>();
+
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
+    private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
     @Getter
     private final KeyedTypeSerializer<Action> actionSerializer = new KeyedTypeSerializer<>();
 
     public ConfigManager(Path directory, Logger logger) {
-        this.directory = directory.toFile();
+        this.directory = directory;
         this.logger = logger;
         // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();
@@ -77,6 +80,18 @@ public class ConfigManager {
     }
 
     /**
+     * Get the {@link ConfigurationNode} for a given {@link Configuration} type.
+     * @param clazz The class representing the Configuration
+     * @param <T> Configuration type
+     * @return The configuration node for the given type. This will only return not-null if there was complete success in
+     * updating and deserializing the given config. For example, {@link #getConfig(Class)} may return not-null for the
+     * same config, but if deserialization failed and it only exists as minimal defaults, this will return false.
+     */
+    public <T extends Configuration> Optional<ConfigurationNode> getNode(Class<T> clazz) {
+        return Optional.ofNullable(nodes.get(clazz));
+    }
+
+    /**
      * Load every config in {@link ConfigId}
      * @return false if there was a failure loading any of configurations
      */
@@ -88,7 +103,7 @@ public class ConfigManager {
                     return false;
                 }
             } catch (IOException e) {
-                logger.severe("Failed to load configuration " + configId.fileName);
+                logger.severe("Failed to load configuration " + configId.file);
                 String message = e.getMessage();
                 if (logger.isDebug() || message.contains("Unknown error")) {
                     // message is useless on its own if unknown
@@ -111,48 +126,51 @@ public class ConfigManager {
      * @return The success state
      */
     private boolean loadConfig(ConfigId config) throws IOException {
-        File file = FileUtils.fileOrCopiedFromResource(new File(directory, config.fileName));
+        String name = config.file;
+        File file = FileUtils.fileOrCopiedFromResource(directory.resolve(config.file).toFile(), config.file);
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();
-        ConfigurationNode nodes = loader.load();
+        ConfigurationNode node = loader.load();
 
         boolean correctVersion = true;
-        if (nodes.hasChild(Configuration.VERSION_KEY)) { // ensure version is correct
-            int currentVersion = nodes.node(Configuration.VERSION_KEY).getInt();
+        if (node.hasChild(Configuration.VERSION_KEY)) { // ensure version is correct
+            int currentVersion = node.node(Configuration.VERSION_KEY).getInt();
             if (currentVersion != config.version) {
                 if (config.updater == null) {
-                    logger.severe(config.fileName + " must have a version of " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
+                    logger.severe(name + " must have a version of " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
                     correctVersion = false;
                 } else if (currentVersion < config.minimumVersion || currentVersion > config.version) {
-                    logger.severe(config.fileName + " must have a version between " + config.minimumVersion + " and " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
+                    logger.severe(name + " must have a version between " + config.minimumVersion + " and " + config.version + " but is at " + currentVersion + ". Please back it up and regenerate a new config.");
                     correctVersion = false;
                 } else {
-                    ConfigurationNode copy = nodes.copy(); // keep an old copy to save to file if an update happens
+                    ConfigurationNode copy = node.copy(); // keep an old copy to save to file if an update happens
                     ConfigurationTransformation.Versioned updater = config.updater.get(); // transformer for performing updates
-                    int startVersion = updater.version(nodes);
-                    updater.apply(nodes); // update if necessary
-                    int endVersion = updater.version(nodes);
+                    int startVersion = updater.version(node);
+                    updater.apply(node); // update if necessary
+                    int endVersion = updater.version(node);
                     if (startVersion != endVersion) {
-                        loaderBuilder.file(new File(directory, "old_" + config.fileName)).build().save(copy); // save the old copy
-                        loader.save(nodes); // save the updated version
+                        loaderBuilder.file(oldCopy(config)).build().save(copy); // save the old copy
+                        loader.save(node); // save the updated version
                     }
                     if (endVersion == config.version) {
-                        logger.info("Updated " + config.fileName + " from version " + startVersion + " to " + endVersion);
+                        logger.info("Updated " + name + " from version " + startVersion + " to " + endVersion);
                     } else {
-                        logger.severe("Failed to update " + config.fileName + " from version " + startVersion + " to " + endVersion);
+                        logger.severe("Failed to update " + name + " from version " + startVersion + " to " + endVersion);
                         correctVersion = false;
                     }
                 }
+            } else {
+                logger.debug(name + " is at the correct version: " + config.version);
             }
         } else {
-            logger.severe(config.fileName + " must defined a " + Configuration.VERSION_KEY + ". Please back it up and regenerate a new config.");
+            logger.severe(name + " must defined a " + Configuration.VERSION_KEY + ". Please back it up and regenerate a new config.");
             correctVersion = false;
         }
 
         Configuration mapped;
         if (correctVersion) {
-            mapped = nodes.get(config.clazz); // Map it to the object
+            mapped = node.get(config.clazz); // Map it to the object
             if (mapped == null) {
-                logger.severe("Failed to deserialize " + config.fileName + " to " + config.clazz + ": Mapped object returned null.");
+                logger.severe("Failed to deserialize " + name + " to " + config.clazz + ": Mapped object returned null.");
             }
         } else {
             mapped = null;
@@ -162,23 +180,28 @@ public class ConfigManager {
             return useMinimalDefaults(config);
         } else {
             configurations.put(config.clazz, mapped);
+            nodes.put(config.clazz, node);
             return true;
         }
     }
-
 
     private boolean useMinimalDefaults(ConfigId config) {
         try {
             // Get the default values so that the plugin can be reloaded at a later time
             configurations.put(config.clazz, config.clazz.getConstructor().newInstance());
-            logger.warn("Falling back to MINIMAL DEFAULTS for configuration: " + config.fileName);
+            logger.warn("Falling back to MINIMAL DEFAULTS for configuration: " + config.file);
             return true;
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            logger.severe("Failed to fallback to defaults for configuration " + config.fileName + ": " + e.getLocalizedMessage());
+            logger.severe("Failed to fallback to defaults for configuration " + config.file + ": " + e.getLocalizedMessage());
             if (logger.isDebug()) {
                 e.printStackTrace();
             }
             return false;
         }
+    }
+
+    private File oldCopy(ConfigId config) {
+        Path file = Path.of(config.file);
+        return directory.resolve(file.getParent()).resolve("old-" + file.getFileName()).toFile();
     }
 }

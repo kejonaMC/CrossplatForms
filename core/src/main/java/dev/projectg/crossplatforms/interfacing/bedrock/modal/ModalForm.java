@@ -22,7 +22,7 @@ import java.util.UUID;
 @SuppressWarnings("FieldMayBeFinal")
 public class ModalForm extends BedrockForm {
 
-    public static final String TYPE = "MODAL_FORM";
+    public static final String TYPE = "modal_form";
 
     private String content = "";
 
