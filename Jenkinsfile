@@ -13,6 +13,7 @@ pipeline {
             post {
                 success {
                     archiveArtifacts 'spigot/build/libs/CrossplatForms-Spigot.jar'
+                    archiveArtifacts 'spigot-legacy/build/libs/CrossplatForms-SpigotLegacy.jar'
                 }
             }
         }
