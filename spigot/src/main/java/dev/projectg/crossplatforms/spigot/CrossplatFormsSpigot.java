@@ -44,7 +44,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
     public void onEnable() {
         INSTANCE = this;
         ServerAction.SENDER = this; // hack to have ServerAction in common module
-        Logger logger = new JavaUtilLogger(Bukkit.getLogger());
+        Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
@@ -113,6 +113,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
         new InspectItemCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
     }
 
+    @Override
     public void preConfigLoad(ConfigManager configManager) {
         configManager.register(ConfigId.JAVA_MENUS);
         configManager.register(new ConfigId(

@@ -40,7 +40,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
     public void onEnable() {
         INSTANCE = this;
         ServerAction.SENDER = this; // hack to have ServerAction in common module
-        Logger logger = new JavaUtilLogger(Bukkit.getLogger());
+        Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
@@ -90,6 +90,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         );
     }
 
+    @Override
     public void preConfigLoad(ConfigManager configManager) {
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);

@@ -97,7 +97,7 @@ public class CrossplatForms {
         configManager = new ConfigManager(dataFolder, logger);
         configManager.register(ConfigId.GENERAL);
         if (cumulusAvailable) {
-            ConfigId.defaults().forEach(configManager::register);
+            configManager.register(ConfigId.BEDROCK_FORMS);
             configManager.serializers(builder -> {
                 builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
                 builder.registerExact(FormImage.class, new FormImageSerializer());

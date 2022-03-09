@@ -37,7 +37,8 @@ public class Slider extends CustomComponent implements SliderComponent {
         slider.max = this.max;
         slider.step = this.step;
         slider.defaultValue = this.defaultValue;
-        return slider;    }
+        return slider;
+    }
 
     @Override
     public @NonNull ComponentType getType() {
