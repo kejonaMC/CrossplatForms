@@ -68,6 +68,11 @@ public class Input extends CustomComponent implements InputComponent {
     @Override
     public String parse(JsonPrimitive result) {
         String parsed = result.getAsString();
+
+        for (String target : replacements.keySet()) {
+            parsed = parsed.replace(target, replacements.get(target));
+        }
+
         if (blockPlaceholders) {
             StringBuilder builder = new StringBuilder(parsed);
             // Don't use StringBuilder with Matcher, since SB is mutable. Makes things even more difficult.
@@ -80,10 +85,6 @@ public class Input extends CustomComponent implements InputComponent {
                 offset = offset + (REPLACEMENT_LENGTH - (end - start)); // update offset by adding new length
             }
             parsed = builder.toString();
-        }
-
-        for (String target : replacements.keySet()) {
-            parsed = parsed.replace(target, replacements.get(target));
         }
 
         return parsed;
