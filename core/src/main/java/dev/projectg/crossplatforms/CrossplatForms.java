@@ -8,6 +8,7 @@ import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.action.CommandsAction;
 import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
@@ -26,16 +27,19 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
+import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
+import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Getter
@@ -91,16 +95,14 @@ public class CrossplatForms {
 
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger);
-
+        configManager.register(ConfigId.GENERAL);
         if (cumulusAvailable) {
             ConfigId.defaults().forEach(configManager::register);
             configManager.serializers(builder -> {
                 builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
+                builder.registerExact(FormImage.class, new FormImageSerializer());
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
-        } else {
-            configManager.register(ConfigId.GENERAL);
-            configManager.register(ConfigId.JAVA_MENUS);
         }
         registerDefaultActions(configManager);
         bootstrap.preConfigLoad(configManager);
@@ -177,6 +179,6 @@ public class CrossplatForms {
     public static void registerDefaultActions(ConfigManager configManager) {
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(InterfaceAction.IDENTIFIER, String.class, InterfaceAction::new);
-        actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<>() {}, CommandsAction::new);
+        actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
     }
 }

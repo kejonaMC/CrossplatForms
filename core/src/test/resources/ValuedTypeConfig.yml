@@ -5,3 +5,5 @@ numbers:
   - type: scientific_notation
     mantissa: 7.200
     exponent: 3
+
+config-version: 1

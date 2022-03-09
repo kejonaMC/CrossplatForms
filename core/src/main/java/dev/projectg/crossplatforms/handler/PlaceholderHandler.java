@@ -35,7 +35,7 @@ public interface PlaceholderHandler {
      * @return the formatted text.
      */
     default String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text, @Nonnull Map<String, String> additional) {
-        if (text.isBlank()) {
+        if (text.isEmpty()) {
             return text;
         }
 

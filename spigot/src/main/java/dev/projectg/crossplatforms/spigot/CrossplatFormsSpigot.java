@@ -23,11 +23,10 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
+import dev.projectg.crossplatforms.spigot.common.ServerAction;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
-import dev.projectg.crossplatforms.spigot.handler.SpigotAccessItemRegistry;
-import dev.projectg.crossplatforms.spigot.handler.SpigotInterfacer;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -44,6 +43,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
     @Override
     public void onEnable() {
         INSTANCE = this;
+        ServerAction.SENDER = this; // hack to have ServerAction in common module
         Logger logger = new JavaUtilLogger(Bukkit.getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
@@ -90,7 +90,8 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
                 serverHandler,
                 commandManager,
                 placeholders,
-                this);
+                this
+        );
 
         if (!crossplatForms.isSuccess()) {
             return;
@@ -101,7 +102,8 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
                 serverHandler,
                 crossplatForms.getInterfaceManager(),
                 crossplatForms.getBedrockHandler(),
-                placeholders);
+                placeholders
+        );
 
         // Registering events required to manage access items
         Bukkit.getServer().getPluginManager().registerEvents(accessItemRegistry, this);
@@ -112,12 +114,15 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
     }
 
     public void preConfigLoad(ConfigManager configManager) {
+        configManager.register(ConfigId.JAVA_MENUS);
         configManager.register(new ConfigId(
                 "access-items.yml",
                 AccessItemConfig.VERSION,
                 AccessItemConfig.MINIMUM_VERSION,
                 AccessItemConfig.class,
-                AccessItemConfig::updater));
+                AccessItemConfig::updater
+                )
+        );
 
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);

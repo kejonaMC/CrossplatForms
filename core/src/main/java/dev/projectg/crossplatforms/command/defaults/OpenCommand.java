@@ -17,6 +17,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ public class OpenCommand extends FormsCommand {
                         .build())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    UUID uuid = origin.getUUID().orElseThrow();
+                    UUID uuid = origin.getUUID().orElseThrow(NoSuchElementException::new);
                     FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
                     String identifier = context.get(ARGUMENT);
                     Interface ui = interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));

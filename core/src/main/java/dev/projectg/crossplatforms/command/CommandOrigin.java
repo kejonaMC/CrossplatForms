@@ -9,6 +9,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -88,6 +89,6 @@ public interface CommandOrigin {
      * @return True if the command origin is a bedrock player. false if it is anything else, such as a java player or console command sender.
      */
     default boolean isBedrockPlayer(BedrockHandler handler) {
-        return isPlayer() && handler.isBedrockPlayer(getUUID().orElseThrow());
+        return isPlayer() && handler.isBedrockPlayer(getUUID().orElseThrow(NoSuchElementException::new));
     }
 }

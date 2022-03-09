@@ -37,7 +37,7 @@ public class JavaMenuRegistry implements Reloadable {
     private void load() {
         menus.clear();
 
-        if (configManager.getConfig(MenuConfig.class).isEmpty()) {
+        if (!configManager.getConfig(MenuConfig.class).isPresent()) {
             enabled = false;
             Logger.getLogger().warn("Menu config is not present, not enabling menus.");
             return;

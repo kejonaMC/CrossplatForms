@@ -39,9 +39,4 @@ public class InterfaceAction extends SimpleAction<String> {
             ui.send(player, interfaceManager);
         }
     }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 }

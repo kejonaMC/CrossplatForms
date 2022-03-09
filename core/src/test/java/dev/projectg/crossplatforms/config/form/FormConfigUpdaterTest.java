@@ -2,20 +2,21 @@ package dev.projectg.crossplatforms.config.form;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.TestLogger;
-import dev.projectg.crossplatforms.action.SimpleAction;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.config.ConfigManagerTest;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.FormConfig;
-import org.jetbrains.annotations.NotNull;
+import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
+import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
+import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
+import org.geysermc.cumulus.util.FormImage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 public class FormConfigUpdaterTest {
 
@@ -34,7 +35,13 @@ public class FormConfigUpdaterTest {
         ConfigManager manager = new ConfigManager(directory, logger);
         // serializers
         CrossplatForms.registerDefaultActions(manager);
-        manager.getActionSerializer().registerSimpleType("server", String.class, FakeServer::new);
+        manager.getActionSerializer().registerSimpleType("server", String.class, ConfigManagerTest.FakeServer::new);
+        manager.serializers(builder -> {
+            builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
+            builder.registerExact(FormImage.class, new FormImageSerializer());
+            builder.registerExact(CustomComponent.class, new ComponentSerializer());
+        });
+        // register configs
         manager.register(oldest);
         manager.register(current);
 
@@ -45,22 +52,5 @@ public class FormConfigUpdaterTest {
 
     private static ConfigId id(String name) {
         return new ConfigId("configs/forms/" + name, CURRENT_VERSION, OLD_VERSION, FormConfig.class, FormConfig::updater);
-    }
-
-    private static class FakeServer extends SimpleAction<String> {
-
-        public FakeServer(@NotNull String value) {
-            super(value);
-        }
-
-        @Override
-        public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
-            //no-op
-        }
-
-        @Override
-        public String identifier() {
-            return "server";
-        }
     }
 }

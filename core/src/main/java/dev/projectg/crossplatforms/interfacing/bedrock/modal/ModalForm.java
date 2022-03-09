@@ -69,11 +69,15 @@ public class ModalForm extends BedrockForm {
             }
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             int id = response.getClickedButtonId();
-            List<Action> actions = switch (id) {
-                case 0 -> button1.getActions();
-                case 1 -> button2.getActions();
-                default -> throw new AssertionError();
-            };
+
+            List<Action> actions;
+            if (id == 0) {
+                actions = button1.getActions();
+            } else if (id == 1) {
+                actions = button2.getActions();
+            } else {
+                throw new AssertionError("Got " + id + " from modal form response instead of 0 or 1");
+            }
 
             // Handle effects of pressing the button
             for (Action action : actions) {

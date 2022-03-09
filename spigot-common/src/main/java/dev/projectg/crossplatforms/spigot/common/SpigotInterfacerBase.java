@@ -115,7 +115,8 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
         // This is used for processing inventory clicks WITHIN the java menu GUI
 
         if (javaRegistry.isEnabled()) {
-            if (event.getWhoClicked() instanceof Player player) {
+            if (event.getWhoClicked() instanceof Player) {
+                Player player = (Player) event.getWhoClicked();
                 ItemStack item = event.getCurrentItem();
 
                 if (item != null) {

@@ -26,7 +26,7 @@ public class KeyedTypeListSerializer<E extends KeyedType> implements TypeSeriali
 
     @Override
     public List<E> deserialize(Type type, ConfigurationNode node) throws SerializationException {
-        Map<String, ConfigurationNode> childMap = node.get(new TypeToken<>() {});
+        Map<String, ConfigurationNode> childMap = node.get(new TypeToken<Map<String, ConfigurationNode>>() {});
         if (childMap == null) {
             throw new SerializationException("Map at " + node.path() + " is empty or not the correct type!");
         }

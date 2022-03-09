@@ -35,7 +35,7 @@ public class DispatchableCommandSerializer implements TypeSerializer<Dispatchabl
     @Override
     public DispatchableCommand deserialize(Type type, ConfigurationNode node) throws SerializationException {
         String raw = node.getString();
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.isEmpty()) {
             throw new SerializationException("Command at " + node.path() + " is empty!");
         }
         return deserialize(raw);
@@ -49,8 +49,8 @@ public class DispatchableCommandSerializer implements TypeSerializer<Dispatchabl
         }
 
         String prefix;
-        if (command.player()) {
-            if (command.op()) {
+        if (command.isPlayer()) {
+            if (command.isOp()) {
                 prefix = OP_PREFIX;
             } else {
                 prefix = PLAYER_PREFIX;
@@ -59,6 +59,6 @@ public class DispatchableCommandSerializer implements TypeSerializer<Dispatchabl
             prefix = CONSOLE_PREFIX;
         }
 
-        node.set(prefix + " " + command.command());
+        node.set(prefix + " " + command.getCommand());
     }
 }

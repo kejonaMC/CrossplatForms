@@ -14,6 +14,7 @@ import dev.projectg.crossplatforms.handler.ServerHandler;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class GiveCommand extends FormsCommand {
@@ -47,7 +48,7 @@ public class GiveCommand extends FormsCommand {
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    FormPlayer player = serverHandler.getPlayer(origin.getUUID().orElseThrow());
+                    FormPlayer player = serverHandler.getPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new));
                     String identifier = context.get(ARGUMENT);
                     AccessItem item = itemRegistry.getItems().get(identifier);
 

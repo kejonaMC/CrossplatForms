@@ -17,6 +17,7 @@ import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class ProxyCommandManager implements Reloadable {
@@ -45,7 +46,7 @@ public class ProxyCommandManager implements Reloadable {
     }
 
     private void load() {
-        if (configManager.getConfig(GeneralConfig.class).isEmpty()) {
+        if (!configManager.getConfig(GeneralConfig.class).isPresent()) {
             return;
         }
         GeneralConfig config = configManager.getConfig(GeneralConfig.class).get();
@@ -54,7 +55,7 @@ public class ProxyCommandManager implements Reloadable {
 
         for (ProxyCommand command : config.getCommands().values()) {
             String name = command.getName();
-            if (command.getPermission() == null || command.getPermission().isBlank()) {
+            if (command.getPermission() == null || command.getPermission().isEmpty()) {
                 command.setPermission(Constants.ID + ".shortcut." + name);
             }
             CommandType type = command.getMethod();
@@ -75,7 +76,7 @@ public class ProxyCommandManager implements Reloadable {
                                     }
                                 })
                                 .handler((context) -> {
-                                    FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow()));
+                                    FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow(NoSuchElementException::new)));
                                     registeredCommands.get(name).run(player, interfaceManager, bedrockHandler);
                                 })
                         );

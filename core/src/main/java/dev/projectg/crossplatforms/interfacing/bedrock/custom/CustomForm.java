@@ -85,7 +85,8 @@ public class CustomForm extends BedrockForm {
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < customComponents.size(); i++) {
                 CustomComponent component = customComponents.get(i);
-                if (component instanceof LabelComponent label) {
+                if (component instanceof LabelComponent) {
+                    LabelComponent label = (LabelComponent) component;
                     // label components aren't included in the response
                     resultPlaceholders.put(placeholder(i), label.getText());
                     continue;

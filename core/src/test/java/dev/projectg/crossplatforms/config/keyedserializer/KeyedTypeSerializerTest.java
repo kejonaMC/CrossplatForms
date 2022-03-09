@@ -21,11 +21,13 @@ import java.util.Objects;
 
 public class KeyedTypeSerializerTest {
 
-    private final KeyedTypeSerializer<Message> messageSerializer = new KeyedTypeSerializer<>();
-    private final YamlConfigurationLoader loader;
+    private static final TypeToken<Map<String, Message>> messagesType = new TypeToken<Map<String, Message>>() {};
 
     @TempDir
     private static File directory;
+
+    private final KeyedTypeSerializer<Message> messageSerializer = new KeyedTypeSerializer<>();
+    private final YamlConfigurationLoader loader;
 
     public KeyedTypeSerializerTest() throws IOException {
         messageSerializer.registerSimpleType("message", String.class, SingleMessage::new);
@@ -33,7 +35,7 @@ public class KeyedTypeSerializerTest {
 
         File config = FileUtils.fileOrCopiedFromResource(new File(directory, "KeyedTypeConfig.yml"));
         YamlConfigurationLoader.Builder loaderBuilder = ConfigurateUtils.loaderBuilder(config);
-        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> builder.registerExact(new TypeToken<>() {}, messageSerializer))));
+        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> builder.registerExact(new TypeToken<Message>() {}, messageSerializer))));
         loader = loaderBuilder.build();
     }
 
@@ -43,7 +45,7 @@ public class KeyedTypeSerializerTest {
         Assertions.assertFalse(actions.virtual());
         Assertions.assertTrue(actions.isMap());
 
-        Map<String, Message> actualMessages = actions.get(new TypeToken<>() {});
+        Map<String, Message> actualMessages = actions.get(messagesType);
 
         SingleMessage single = new SingleMessage("[WARN] Hello");
         MultiMessage list = new MultiMessage("[INFO]", ImmutableList.of("One", "Two", "Three"));
@@ -57,14 +59,14 @@ public class KeyedTypeSerializerTest {
         ConfigurationNode actions = loader.load().node("actions");
         ConfigurationNode copy = actions.copy();
 
-        Map<String, Message> actualMessages = actions.get(new TypeToken<>() {});
+        Map<String, Message> actualMessages = actions.get(messagesType);
         Objects.requireNonNull(actualMessages);
-        copy.set(new TypeToken<>() {}, actualMessages);
+        copy.set(messagesType, actualMessages);
         Assertions.assertEquals(actions, copy);
 
         Map<String, Message> modifiedMessages = new HashMap<>(actualMessages);
         modifiedMessages.put(SingleMessage.IDENTIFIER, new SingleMessage("greetings"));
-        copy.set(new TypeToken<>() {}, modifiedMessages);
+        copy.set(messagesType, modifiedMessages);
         Assertions.assertNotEquals(actions, copy);
     }
 }

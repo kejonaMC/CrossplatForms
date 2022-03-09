@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.config;
 
+import dev.projectg.crossplatforms.utils.StringUtils;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.Collection;
@@ -8,11 +9,6 @@ import java.util.Collection;
  * Constructs printable, user-friendly text from {@link ConfigurationNode}s
  */
 public class PrettyPrinter {
-
-    /**
-     * The amount of spaces per indent
-     */
-    private final int indentSize;
 
     /**
      * Represent a single indent
@@ -25,7 +21,6 @@ public class PrettyPrinter {
      * Creates a PrettyPrinter with a default indentation level of 2.
      */
     public PrettyPrinter() {
-        this.indentSize = 2;
         this.singleIndent = "  ";
         this.indexLists = true;
     }
@@ -36,8 +31,7 @@ public class PrettyPrinter {
      * @param indexLists If lists should be indexed like maps or lke lists with dashes. True by default.
      */
     public PrettyPrinter(int indent, boolean indexLists) {
-        this.indentSize = indent;
-        this.singleIndent = " ".repeat(indentSize);
+        this.singleIndent = StringUtils.repeatChar(' ', indent);
         this.indexLists = indexLists;
     }
 
@@ -123,7 +117,7 @@ public class PrettyPrinter {
     }
 
     private String indent(int level) {
-        return singleIndent.repeat(level);
+        return StringUtils.repeatString(singleIndent, level);
     }
 
     private static String fromRaw(Object raw) {

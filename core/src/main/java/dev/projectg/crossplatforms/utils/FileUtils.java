@@ -2,9 +2,10 @@ package dev.projectg.crossplatforms.utils;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class FileUtils {
 
@@ -39,9 +40,7 @@ public class FileUtils {
         if (!file.createNewFile()) {
             throw new IllegalStateException("Resource already exists at: " + file.getCanonicalPath());
         }
-        FileOutputStream output = new FileOutputStream(file);
-        input.transferTo(output);
-        output.close();
+        Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
         input.close();
         return file;
     }

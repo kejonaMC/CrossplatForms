@@ -20,11 +20,13 @@ import java.util.Objects;
 
 public class ValuedTypeSerializerTest {
 
-    private final ValuedTypeSerializer<Number> numberSerializer = new ValuedTypeSerializer<>();
-    private final YamlConfigurationLoader loader;
+    private static final TypeToken<List<Number>> numberListType = new TypeToken<List<Number>>() {};
 
     @TempDir
     private static File directory;
+
+    private final ValuedTypeSerializer<Number> numberSerializer = new ValuedTypeSerializer<>();
+    private final YamlConfigurationLoader loader;
 
     public ValuedTypeSerializerTest() throws IOException {
         numberSerializer.registerType("integer", Integer.class);
@@ -32,7 +34,7 @@ public class ValuedTypeSerializerTest {
 
         File config = FileUtils.fileOrCopiedFromResource(new File(directory, "ValuedTypeConfig.yml"));
         YamlConfigurationLoader.Builder loaderBuilder = ConfigurateUtils.loaderBuilder(config);
-        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> builder.registerExact(new TypeToken<>() {}, numberSerializer))));
+        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> builder.registerExact(new TypeToken<Number>() {}, numberSerializer))));
         loader = loaderBuilder.build();
     }
 
@@ -41,7 +43,7 @@ public class ValuedTypeSerializerTest {
         ConfigurationNode numbers = loader.load().node("numbers");
         Assertions.assertFalse(numbers.virtual());
         Assertions.assertTrue(numbers.isList());
-        List<Number> actualMessages = numbers.get(new TypeToken<>() {});
+        List<Number> actualMessages = numbers.get(numberListType);
 
         Integer integer = new Integer(5);
         ScientificNotationNumber scientific = new ScientificNotationNumber(7.200D, 3);
@@ -55,16 +57,16 @@ public class ValuedTypeSerializerTest {
         ConfigurationNode numbers = loader.load().node("numbers");
         ConfigurationNode copy = numbers.copy();
 
-        List<Number> actualNumbers = numbers.get(new TypeToken<>() {});
+        List<Number> actualNumbers = numbers.get(numberListType);
         Assertions.assertNotEquals(null, actualNumbers);
         Objects.requireNonNull(actualNumbers);
 
-        copy.set(new TypeToken<>() {}, actualNumbers);
+        copy.set(numberListType, actualNumbers);
         Assertions.assertEquals(numbers, copy);
 
         List<Number> modifiedMessages = new ArrayList<>(actualNumbers);
         modifiedMessages.add(new ScientificNotationNumber(3.141D, 0));
-        copy.set(new TypeToken<>() {}, modifiedMessages);
+        copy.set(numberListType, modifiedMessages);
         Assertions.assertNotEquals(numbers, copy);
     }
 }

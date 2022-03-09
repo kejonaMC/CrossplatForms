@@ -31,15 +31,10 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         List<DispatchableCommand> resolved = value().stream()
-                .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.command(), additionalPlaceholders)))
+                .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.getCommand(), additionalPlaceholders)))
                 .collect(Collectors.toList());
 
         CrossplatForms.getInstance().getServerHandler().dispatchCommands(player.getUuid(), resolved);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }
 

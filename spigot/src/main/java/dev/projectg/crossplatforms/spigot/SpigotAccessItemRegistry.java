@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
@@ -10,7 +10,6 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.spigot.CrossplatFormsSpigot;
 import dev.projectg.crossplatforms.spigot.common.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -188,7 +187,8 @@ public class SpigotAccessItemRegistry extends AccessItemRegistry implements List
 
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event) { // Stop players without possession permission to pickup items
-        if (event.getEntity() instanceof Player player) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
             ItemStack item = event.getItem().getItemStack();
             String id = getItemId(item);
             if (id != null) {

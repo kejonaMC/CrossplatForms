@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 
 public class SpigotServerHandler implements ServerHandler, Listener {
 
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("\s");
+    private static final Pattern COMMAND_PATTERN = Pattern.compile("\\s");
     private static final String PERMISSION_MESSAGE = Constants.MESSAGE_PREFIX + "You don't have permission to run that.";
 
     private final Server server;
@@ -100,11 +100,18 @@ public class SpigotServerHandler implements ServerHandler, Listener {
 
     @Override
     public void registerPermission(String key, @Nullable String description, dev.projectg.crossplatforms.permission.PermissionDefault def) {
-        PermissionDefault perm = switch (def) {
-            case TRUE -> PermissionDefault.TRUE;
-            case FALSE -> PermissionDefault.FALSE;
-            case OP -> PermissionDefault.OP;
-        };
+        PermissionDefault perm;
+        switch (def) {
+            case TRUE:
+                perm = PermissionDefault.TRUE;
+                break;
+            case OP:
+                perm = PermissionDefault.OP;
+                break;
+            default:
+                perm = PermissionDefault.FALSE;
+                break;
+        }
 
         Logger.getLogger().debug("Registering permission " + key + " : " + perm);
         server.getPluginManager().addPermission(new Permission(key, description, perm));
@@ -118,7 +125,7 @@ public class SpigotServerHandler implements ServerHandler, Listener {
     @Override
     public void dispatchCommand(DispatchableCommand command) {
         Logger.getLogger().debug("Executing [" + command + "] as console");
-        server.getScheduler().runTask(plugin, () -> server.dispatchCommand(server.getConsoleSender(), command.command()));
+        server.getScheduler().runTask(plugin, () -> server.dispatchCommand(server.getConsoleSender(), command.getCommand()));
     }
 
     @Override
@@ -127,7 +134,7 @@ public class SpigotServerHandler implements ServerHandler, Listener {
         server.getScheduler().runTask(plugin, () -> {
             for (DispatchableCommand command : commands) {
                 Logger.getLogger().debug("Executing [" + command + "] as console");
-                server.dispatchCommand(console, command.command());
+                server.dispatchCommand(console, command.getCommand());
             }
         });
     }
@@ -153,16 +160,16 @@ public class SpigotServerHandler implements ServerHandler, Listener {
      * this method is called on. (Does not create a new Runnable).
      */
     private void dispatchCommand(Player player, DispatchableCommand command) {
-        if (command.player()) {
-            if (command.op()) {
+        if (command.isPlayer()) {
+            if (command.isOp()) {
                 player.setOp(true);
-                server.dispatchCommand(player, command.command());
+                server.dispatchCommand(player, command.getCommand());
                 player.setOp(false);
             } else {
-                server.dispatchCommand(player, command.command());
+                server.dispatchCommand(player, command.getCommand());
             }
         } else {
-            server.dispatchCommand(server.getConsoleSender(), command.command());
+            server.dispatchCommand(server.getConsoleSender(), command.getCommand());
         }
     }
 

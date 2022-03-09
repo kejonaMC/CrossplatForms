@@ -1,11 +1,10 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot;
 
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.spigot.CrossplatFormsSpigot;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.meta.ItemMeta;

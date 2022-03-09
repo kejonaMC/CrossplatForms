@@ -12,55 +12,50 @@ import java.io.IOException;
 
 public class PrettyPrintTest {
 
-    private static final String ALL = """
-            null:
-              actions:
-                message: [WARN] Hello
-                messages:
-                  prefix: [INFO]
-                  list:
-                    0: One
-                    1: Two
-                    2: Three""";
+    private static final String ALL = "null:\n" +
+            "    actions:\n" +
+            "        message: [WARN] Hello\n" +
+            "        messages:\n" +
+            "            prefix: [INFO]\n" +
+            "            list:\n" +
+            "                0: One\n" +
+            "                1: Two\n" +
+            "                2: Three";
 
-    private static final String ALL_NO_KEY = """
-            actions:
-              message: [WARN] Hello
-              messages:
-                prefix: [INFO]
-                list:
-                  0: One
-                  1: Two
-                  2: Three""";
+    private static final String ALL_NO_KEY = "actions:\n" +
+            "    message: [WARN] Hello\n" +
+            "    messages:\n" +
+            "        prefix: [INFO]\n" +
+            "        list:\n" +
+            "            0: One\n" +
+            "            1: Two\n" +
+            "            2: Three";
 
-    private static final String ACTIONS = """
-            actions:
-              message: [WARN] Hello
-              messages:
-                prefix: [INFO]
-                list:
-                  0: One
-                  1: Two
-                  2: Three""";
+    private static final String ACTIONS = "actions:\n" +
+            "    message: [WARN] Hello\n" +
+            "    messages:\n" +
+            "        prefix: [INFO]\n" +
+            "        list:\n" +
+            "            0: One\n" +
+            "            1: Two\n" +
+            "            2: Three";
 
-    private static final String ACTIONS_NO_KEY = """
-            message: [WARN] Hello
-            messages:
-              prefix: [INFO]
-              list:
-                0: One
-                1: Two
-                2: Three""";
+    private static final String ACTIONS_NO_KEY = "message: [WARN] Hello\n" +
+            "messages:\n" +
+            "    prefix: [INFO]\n" +
+            "    list:\n" +
+            "        0: One\n" +
+            "        1: Two\n" +
+            "        2: Three";
 
-    private static final String LIST_NOTATION = """
-            actions:
-              message: [WARN] Hello
-              messages:
-                prefix: [INFO]
-                list:
-                  - One
-                  - Two
-                  - Three""";
+    private static final String LIST_NOTATION = "actions:\n" +
+            "    message: [WARN] Hello\n" +
+            "    messages:\n" +
+            "        prefix: [INFO]\n" +
+            "        list:\n" +
+            "            - One\n" +
+            "            - Two\n" +
+            "            - Three";
 
     @TempDir
     private static File directory;
@@ -74,7 +69,7 @@ public class PrettyPrintTest {
 
     @Test
     public void testShowKey() {
-        PrettyPrinter printer = new PrettyPrinter(2, false);
+        PrettyPrinter printer = new PrettyPrinter(4, false);
 
         Assertions.assertEquals(ALL, printer.pretty(node, true));
         Assertions.assertEquals(ALL_NO_KEY, printer.pretty(node));
@@ -88,7 +83,7 @@ public class PrettyPrintTest {
 
     @Test
     public void testIndexLists() {
-        PrettyPrinter printer = new PrettyPrinter(2, true);
+        PrettyPrinter printer = new PrettyPrinter(4, true);
 
         Assertions.assertEquals(LIST_NOTATION, printer.pretty(node));
     }

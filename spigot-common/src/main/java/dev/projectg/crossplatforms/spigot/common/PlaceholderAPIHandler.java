@@ -23,7 +23,7 @@ public class PlaceholderAPIHandler implements PlaceholderHandler {
      * @return the formatted text.
      */
     public String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text) {
-        if (text.isBlank()) {
+        if (text.isEmpty()) {
             return text;
         }
 

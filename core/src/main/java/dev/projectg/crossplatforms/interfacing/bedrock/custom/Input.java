@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("FieldMayBeFinal")
 public class Input extends CustomComponent implements InputComponent {
 
-    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%{]([^\s]+)[%}]"); // blocks % and {} placeholders
+    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%{]([^\\s]+)[%}]"); // blocks % and {} placeholders
     public static final String PLACEHOLDER_REPLACEMENT = "<blocked placeholder>";
     private static final int REPLACEMENT_LENGTH = PLACEHOLDER_REPLACEMENT.length();
 

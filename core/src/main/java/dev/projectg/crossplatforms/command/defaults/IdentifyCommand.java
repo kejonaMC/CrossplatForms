@@ -11,6 +11,7 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class IdentifyCommand extends FormsCommand {
@@ -33,7 +34,12 @@ public class IdentifyCommand extends FormsCommand {
                 .permission(sender -> sender.hasPermission(PERMISSION) && sender.isPlayer())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    String message = bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow()) ? "You are a bedrock player" : "You are not a bedrock player";
+                    String message;
+                    if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new))) {
+                        message = "You are a bedrock player";
+                    } else {
+                        message = "You are not a bedrock player";
+                    }
                     origin.sendMessage(Logger.Level.INFO, message);
                 }).build());
 

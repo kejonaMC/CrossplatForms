@@ -14,6 +14,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class ListCommand extends FormsCommand {
@@ -37,7 +38,7 @@ public class ListCommand extends FormsCommand {
                     List<Interface> interfaces = new ArrayList<>();
                     CommandOrigin origin = context.getSender();
                     if (origin.isPlayer() && !origin.hasPermission(OpenCommand.PERMISSION_OTHER)) {
-                        if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow())) {
+                        if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new))) {
                             interfaces.addAll(bedrockRegistry.getForms().values());
                             javaRegistry.getMenus().values().stream().filter(JavaMenu::isAllowBedrock).forEach(interfaces::add);
                         } else {

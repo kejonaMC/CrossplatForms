@@ -6,15 +6,9 @@ import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeListSerializer;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
-import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
-import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
@@ -25,8 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -40,6 +36,7 @@ public class ConfigManager {
     private final YamlConfigurationLoader.Builder loaderBuilder;
     private final Set<ConfigId> identifiers = new HashSet<>();
 
+    // todo: support using the same config class for two different configs
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
     private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
@@ -52,12 +49,9 @@ public class ConfigManager {
         // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
-            builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
-            builder.registerExact(FormImage.class, new FormImageSerializer());
-            builder.registerExact(CustomComponent.class, new ComponentSerializer());
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.register(Action.class, actionSerializer);
-            builder.register(new TypeToken<>() {}, new KeyedTypeListSerializer<>(actionSerializer));
+            builder.register(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(actionSerializer));
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node
@@ -201,7 +195,16 @@ public class ConfigManager {
     }
 
     private File oldCopy(ConfigId config) {
-        Path file = Path.of(config.file);
-        return directory.resolve(file.getParent()).resolve("old-" + file.getFileName()).toFile();
+        Path configFile = Paths.get(config.file);
+        Path parent = configFile.getParent();
+
+        String newName = "old-" + configFile.getFileName();
+        if (parent == null) {
+            // ConfigId was just defined as a filename
+            return directory.resolve(newName).toFile();
+        } else {
+            // config file is in a sub directory below the main directory
+            return directory.resolve(parent).resolve(newName).toFile();
+        }
     }
 }
