@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor
-public class InterfaceManager {
+public abstract class InterfaceManager {
 
     public static final String PLAYER_PREFIX = "player;";
     public static final String OP_PREFIX = "op;";
@@ -26,8 +26,8 @@ public class InterfaceManager {
 
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
-    private final BedrockFormRegistry bedrockRegistry;
-    private final JavaMenuRegistry javaRegistry;
+    protected final BedrockFormRegistry bedrockRegistry;
+    protected final JavaMenuRegistry javaRegistry;
 
     /**
      * Get an interface to fetch
@@ -124,4 +124,6 @@ public class InterfaceManager {
             }
         }
     }
+
+    public abstract void sendMenu(FormPlayer player, JavaMenu menu);
 }

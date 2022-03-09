@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;

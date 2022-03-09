@@ -4,12 +4,7 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-}
-
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
     api(project(":spigot-common"))
 }
 
@@ -25,14 +20,13 @@ tasks.withType<ShadowJar> {
 
         }
         exclude {
-                e -> e.name.startsWith("com.mojang") // Remove when we support less than 1.13
-                || e.name.startsWith("org.yaml") // Available on Spigot
+                e -> e.name.startsWith("org.yaml") // todo: pretty sure the snakeyaml that comes with spigot on *old* versions isn't up to par for Configurate
                 || e.name.startsWith("com.google")
         }
     }
 
     println(destinationDirectory.get())
-    archiveFileName.set("CrossplatForms-Spigot.jar")
+    archiveFileName.set("CrossplatForms-SpigotLegacy.jar")
     println(archiveFileName.get())
 }
 
@@ -40,4 +34,4 @@ tasks.named("build") {
     dependsOn(tasks.named("shadowJar"))
 }
 
-description = "spigot"
+description = "spigot-legacy"
