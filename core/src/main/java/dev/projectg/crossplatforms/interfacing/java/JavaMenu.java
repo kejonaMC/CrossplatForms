@@ -47,7 +47,7 @@ public class JavaMenu extends Interface {
 
     @Override
     public void send(@Nonnull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager) {
-        interfaceManager.getServerHandler().sendMenu(recipient, this);
+        interfaceManager.sendMenu(recipient, this);
     }
 
     /**

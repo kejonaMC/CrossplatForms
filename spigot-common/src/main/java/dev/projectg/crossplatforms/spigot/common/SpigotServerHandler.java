@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot.handler;
+package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
@@ -9,8 +9,6 @@ import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.spigot.MenuHelper;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
@@ -199,10 +197,5 @@ public class SpigotServerHandler implements ServerHandler, Listener {
                 event.setCancelled(true);
             }
         }
-    }
-
-    @Override
-    public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
-        MenuHelper.sendMenu(formPlayer, menu);
     }
 }

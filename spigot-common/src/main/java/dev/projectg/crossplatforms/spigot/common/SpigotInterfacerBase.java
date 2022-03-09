@@ -1,17 +1,18 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.projectg.crossplatforms.spigot.handler.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,26 +21,24 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
-public class MenuHelper implements Listener {
+public abstract class SpigotInterfacerBase extends InterfaceManager implements Listener {
 
-    private static final int HOPPER_SIZE = 5;
-    private static final NamespacedKey BUTTON_KEY = new NamespacedKey(CrossplatFormsSpigot.getInstance(), ItemButton.STATIC_IDENTIFIER);
-    private static final PersistentDataType<String, String> BUTTON_KEY_TYPE = PersistentDataType.STRING;
+    protected static final int HOPPER_SIZE = 5;
 
-    private final InterfaceManager interfaceManager;
-    private final JavaMenuRegistry javaMenuRegistry;
-
-    public MenuHelper(InterfaceManager interfaceManager) {
-        this.interfaceManager = interfaceManager;
-        this.javaMenuRegistry = interfaceManager.getJavaRegistry();
+    public SpigotInterfacerBase(ServerHandler serverHandler, BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry javaRegistry) {
+        super(serverHandler, bedrockHandler, bedrockRegistry, javaRegistry);
     }
+
+    @Nullable
+    public abstract String getMenuName(@Nonnull ItemMeta meta);
+
+    public abstract void setMenuName(@Nonnull ItemMeta meta, @Nonnull String identifier);
 
     /**
      * Attempt to retrieve the menu that an ItemStack points to
@@ -47,7 +46,7 @@ public class MenuHelper implements Listener {
      * @return The menu if the ItemStack contained the menu name and the menu exists. If no menu name was contained or the menu contained doesn't exist, this will return null.
      */
     @Nullable
-    public static JavaMenu getMenu(@Nonnull ItemStack itemStack, @Nonnull JavaMenuRegistry menuRegistry) {
+    public JavaMenu getMenu(@Nonnull ItemStack itemStack, @Nonnull JavaMenuRegistry menuRegistry) {
         String menuName = getMenuName(itemStack);
         if (menuName == null) {
             return null;
@@ -62,16 +61,16 @@ public class MenuHelper implements Listener {
      * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
      */
     @Nullable
-    public static String getMenuName(@Nonnull ItemStack itemStack) {
+    public String getMenuName(@Nonnull ItemStack itemStack) {
         Objects.requireNonNull(itemStack);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
-            return meta.getPersistentDataContainer().get(BUTTON_KEY, BUTTON_KEY_TYPE);
+            return getMenuName(meta);
         }
         return null;
     }
 
-    public static void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
+    public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
         Logger logger = Logger.getLogger();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
@@ -102,7 +101,7 @@ public class MenuHelper implements Listener {
             } else {
                 meta.setDisplayName(placeholders.setPlaceholders(formPlayer, button.getDisplayName()));
                 meta.setLore(placeholders.setPlaceholders(formPlayer, button.getLore()));
-                meta.getPersistentDataContainer().set(BUTTON_KEY, BUTTON_KEY_TYPE, menu.getIdentifier());
+                setMenuName(meta, menu.getIdentifier());
                 item.setItemMeta(meta);
                 selectorGUI.setItem(slot, item);
             }
@@ -115,15 +114,15 @@ public class MenuHelper implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         // This is used for processing inventory clicks WITHIN the java menu GUI
 
-        if (javaMenuRegistry.isEnabled()) {
+        if (javaRegistry.isEnabled()) {
             if (event.getWhoClicked() instanceof Player player) {
                 ItemStack item = event.getCurrentItem();
 
                 if (item != null) {
-                    JavaMenu menu = getMenu(item, interfaceManager.getJavaRegistry());
+                    JavaMenu menu = getMenu(item, javaRegistry);
                     if (menu != null) {
                         event.setCancelled(true);
-                        menu.process(event.getSlot(), event.isRightClick(), new SpigotPlayer(player), interfaceManager);
+                        menu.process(event.getSlot(), event.isRightClick(), new SpigotPlayer(player), this);
                     }
                 }
             }

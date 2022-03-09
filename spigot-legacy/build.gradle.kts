@@ -20,7 +20,7 @@ tasks.withType<ShadowJar> {
 
         }
         exclude {
-                e -> e.name.startsWith("org.yaml")
+                e -> e.name.startsWith("org.yaml") // todo: pretty sure the snakeyaml that comes with spigot on *old* versions isn't up to par for Configurate
                 || e.name.startsWith("com.google")
         }
     }

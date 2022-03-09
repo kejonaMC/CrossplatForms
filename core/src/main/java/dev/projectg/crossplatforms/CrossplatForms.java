@@ -4,7 +4,9 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import dev.projectg.crossplatforms.action.*;
+import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.CommandsAction;
+import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
@@ -35,7 +37,6 @@ import org.geysermc.geyser.session.auth.AuthType;
 
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 @Getter
 public class CrossplatForms {
@@ -61,7 +62,7 @@ public class CrossplatForms {
                           ServerHandler serverHandler,
                           CommandManager<CommandOrigin> commandManager,
                           PlaceholderHandler placeholders,
-                          Consumer<ConfigManager> preConfigLoad) {
+                          CrossplatFormsBoostrap bootstrap) {
         long start = System.currentTimeMillis();
         INSTANCE = this;
         this.serverHandler = serverHandler;
@@ -102,7 +103,7 @@ public class CrossplatForms {
             configManager.register(ConfigId.JAVA_MENUS);
         }
         registerDefaultActions(configManager);
-        preConfigLoad.accept(configManager);
+        bootstrap.preConfigLoad(configManager);
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }
@@ -111,8 +112,7 @@ public class CrossplatForms {
 
         // Load forms
         long registryTime = System.currentTimeMillis();
-        interfaceManager = new InterfaceManager(
-                serverHandler,
+        interfaceManager = bootstrap.interfaceManager(
                 bedrockHandler,
                 new BedrockFormRegistry(configManager, serverHandler),
                 new JavaMenuRegistry(configManager, serverHandler)
