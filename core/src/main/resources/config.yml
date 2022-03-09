@@ -6,7 +6,7 @@ commands:
   servers:
     method: REGISTER
     # Target both bedrock and java players
-    all:
+    actions:
       # Open the form or menu called "servers"
       form: servers
 
