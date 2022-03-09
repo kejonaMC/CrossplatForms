@@ -1,6 +1,5 @@
 package dev.projectg.crossplatforms.spigot.common;
 
-import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,11 +24,6 @@ public class SpigotCommandOrigin implements CommandOrigin {
     @Override
     public void sendRaw(String message) {
         handle.sendMessage(message);
-    }
-
-    @Override
-    public void sendMessage(String message) {
-        handle.sendMessage(Constants.MESSAGE_PREFIX + message);
     }
 
     @Override

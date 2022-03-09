@@ -1,0 +1,8 @@
+name: CrossplatForms
+main: dev.projectg.bungeecord.CrossplatFormsBungeeCord
+version: 0.3.0
+description: Unifies inventory menus with Bedrock Edition forms.
+author: Konicai, Jens
+softdepends:
+  - Geyser-BungeeCord
+  - floodgate

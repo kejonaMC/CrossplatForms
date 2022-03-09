@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import net.kyori.adventure.text.Component;
@@ -43,7 +44,9 @@ public interface CommandOrigin {
      * Send a message with the plugin name prefix
      * @param message The message to send
      */
-    void sendMessage(String message);
+    default void sendMessage(String message) {
+        sendRaw(Constants.MESSAGE_PREFIX + message);
+    }
 
     /**
      * @return True if the command origin represents a player

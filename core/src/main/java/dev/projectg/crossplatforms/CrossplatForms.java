@@ -13,7 +13,7 @@ import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
-import dev.projectg.crossplatforms.command.proxy.ProxyCommandManager;
+import dev.projectg.crossplatforms.command.proxy.CustomCommandManager;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
@@ -166,7 +166,7 @@ public class CrossplatForms {
         }
 
         // register shortcut commands
-        new ProxyCommandManager(this, commandManager);
+        new CustomCommandManager(this, commandManager);
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

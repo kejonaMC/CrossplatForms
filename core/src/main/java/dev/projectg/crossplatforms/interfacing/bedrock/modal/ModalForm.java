@@ -80,9 +80,7 @@ public class ModalForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            for (Action action : actions) {
-                action.affectPlayer(player, interfaceManager, bedrockHandler);
-            }
+            Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
         });
 
         // Send the form to the floodgate player

@@ -1,0 +1,105 @@
+package dev.projectg.crossplatforms.bungeecord;
+
+import cloud.commandframework.bungee.BungeeCommandManager;
+import cloud.commandframework.execution.CommandExecutionCoordinator;
+import dev.projectg.crossplatforms.BasicPlaceholders;
+import dev.projectg.crossplatforms.Constants;
+import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.JavaUtilLogger;
+import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
+import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordInterfacer;
+import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordServerHandler;
+import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.plugin.Plugin;
+
+public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBoostrap {
+
+    private static CrossplatFormsBungeeCord INSTANCE;
+
+    static {
+        Constants.setId("crossplatformsbungee"); // todo: this can probably be improved
+    }
+
+    private BungeeAudiences audiences;
+    private CrossplatForms crossplatForms;
+    private BungeeCordServerHandler serverHandler;
+
+    @Override
+    public void onEnable() {
+        INSTANCE = this;
+        Logger logger = new JavaUtilLogger(getLogger());
+        if (crossplatForms != null) {
+            logger.warn("Bukkit reloading is NOT supported!");
+        }
+        audiences = BungeeAudiences.create(this);
+        serverHandler = new BungeeCordServerHandler(this, audiences);
+
+        // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
+        BungeeCommandManager<CommandOrigin> commandManager;
+        try {
+            commandManager = new BungeeCommandManager<>(
+                    this,
+                    CommandExecutionCoordinator.simpleCoordinator(),
+                    (BungeeCommandOrigin::new),
+                    origin -> (CommandSender) origin.getHandle()
+            );
+        } catch (Exception e) {
+            logger.severe("Failed to create CommandManager, stopping");
+            e.printStackTrace();
+            return;
+        }
+
+        logger.warn("CrossplatForms-BungeeCord does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
+        PlaceholderHandler placeholders = new BasicPlaceholders();
+
+        crossplatForms = new CrossplatForms(
+                logger,
+                getDataFolder().toPath(),
+                serverHandler,
+                commandManager,
+                placeholders,
+                this
+        );
+
+        getProxy().getPluginManager().registerListener(this, serverHandler); // events for catching proxy commands
+
+    }
+
+    @Override
+    public void preConfigLoad(ConfigManager configManager) {
+        // register java menu config once java menus are supported
+
+        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
+        actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
+    }
+
+    @Override
+    public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
+        return new BungeeCordInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+    }
+
+    @Override
+    public void onDisable() {
+        if (audiences != null) {
+            audiences.close();
+        }
+
+        getProxy().getPluginManager().unregisterListeners(this);
+    }
+
+    public static CrossplatFormsBungeeCord getInstance() {
+        return INSTANCE;
+    }
+}

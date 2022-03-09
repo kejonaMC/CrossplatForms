@@ -12,5 +12,5 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class BedrockForm extends Interface {
 
-    protected transient final String permissionBase = Constants.ID + ".form.";
+    protected transient final String permissionBase = Constants.Id() + ".form.";
 }

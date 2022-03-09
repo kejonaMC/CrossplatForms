@@ -1,12 +1,12 @@
 package dev.projectg.crossplatforms.spigot.common;
 
-import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
+import dev.projectg.crossplatforms.command.proxy.CustomCommand;
+import dev.projectg.crossplatforms.command.proxy.ProxyCommandCache;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import net.kyori.adventure.audience.Audience;
@@ -23,23 +23,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-public class SpigotServerHandler implements ServerHandler, Listener {
-
-    private static final Pattern COMMAND_PATTERN = Pattern.compile("\\s");
-    private static final String PERMISSION_MESSAGE = Constants.MESSAGE_PREFIX + "You don't have permission to run that.";
+public class SpigotServerHandler extends ProxyCommandCache implements ServerHandler, Listener {
 
     private final Server server;
     private final JavaPlugin plugin;
     private final BukkitAudiences audiences;
-
-    private final Map<String, ProxyCommand> proxyCommands = new HashMap<>();
 
     public SpigotServerHandler(JavaPlugin plugin, BukkitAudiences audiences) {
         this.server = plugin.getServer();
@@ -70,11 +62,7 @@ public class SpigotServerHandler implements ServerHandler, Listener {
 
     @Override
     public List<FormPlayer> getPlayers() {
-        List<FormPlayer> players = new ArrayList<>();
-        for (Player player : server.getOnlinePlayers()) {
-            players.add(new SpigotPlayer(player));
-        }
-        return players;
+        return server.getOnlinePlayers().stream().map(SpigotPlayer::new).collect(Collectors.toList());
     }
 
     @Nonnull
@@ -173,23 +161,14 @@ public class SpigotServerHandler implements ServerHandler, Listener {
         }
     }
 
-    @Override
-    public void registerProxyCommand(ProxyCommand proxyCommand) {
-        proxyCommands.put(proxyCommand.getName(), proxyCommand);
-    }
-
-    @Override
-    public void clearProxyCommands() {
-        proxyCommands.clear();
-    }
-
     @EventHandler
     public void onPreProcessCommand(PlayerCommandPreprocessEvent event) {
         String name = COMMAND_PATTERN.split(event.getMessage().substring(1))[0]; // remove command slash and get first command
         Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + name + "]");
-        ProxyCommand command = proxyCommands.get(name);
+        CustomCommand command = proxyCommands.get(name);
         if (command != null) {
             Player player = event.getPlayer();
+            CommandType type = command.getMethod();
             if (player.hasPermission(command.getPermission())) {
                 command.run(
                         new SpigotPlayer(player),
@@ -197,10 +176,12 @@ public class SpigotServerHandler implements ServerHandler, Listener {
                         CrossplatForms.getInstance().getBedrockHandler()
                 );
             } else {
-                player.sendMessage(PERMISSION_MESSAGE);
+                if (type == CommandType.INTERCEPT_CANCEL) {
+                    player.sendMessage(PERMISSION_MESSAGE);
+                }
             }
 
-            if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
+            if (type == CommandType.INTERCEPT_CANCEL) {
                 event.setCancelled(true);
             }
         }

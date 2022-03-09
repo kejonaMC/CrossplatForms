@@ -28,7 +28,7 @@ import java.util.Map;
 public class AccessItem {
 
     public static final String STATIC_IDENTIFIER = "crossplatFormsAccessItem"; // changing this will break existing setups
-    private static final String PERMISSION_BASE = Constants.ID + ".item";
+    private static final String PERMISSION_BASE = Constants.Id() + ".item";
 
     /**
      * The reliable identifier of the access item
@@ -37,11 +37,11 @@ public class AccessItem {
     @Required
     private String identifier = null;
 
-    private List<Action> actions = null;
+    private List<Action> actions = Collections.emptyList();
 
-    private List<Action> bedrockActions = null;
+    private List<Action> bedrockActions = Collections.emptyList();
 
-    private List<Action> javaActions = null;
+    private List<Action> javaActions = Collections.emptyList();
 
     @Required
     private String material = null;
@@ -90,23 +90,12 @@ public class AccessItem {
     private transient Map<Limit, Permission> permissions;
 
     public void trigger(FormPlayer player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        if (actions != null) {
-            for (Action action : actions) {
-                action.affectPlayer(player, interfaceManager, bedrockHandler);
-            }
-        }
+        Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
+
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            if (bedrockActions != null) {
-                for (Action action : bedrockActions) {
-                    action.affectPlayer(player, interfaceManager, bedrockHandler);
-                }
-            }
+            Action.affectPlayer(player, bedrockActions, interfaceManager, bedrockHandler);
         } else {
-            if (javaActions != null) {
-                for (Action action : javaActions) {
-                    action.affectPlayer(player, interfaceManager, BedrockHandler.empty());
-                }
-            }
+            Action.affectPlayer(player, javaActions, interfaceManager, BedrockHandler.empty());
         }
     }
 

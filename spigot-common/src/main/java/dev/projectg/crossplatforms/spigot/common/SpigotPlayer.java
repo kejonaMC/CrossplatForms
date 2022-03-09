@@ -39,7 +39,7 @@ public class SpigotPlayer implements FormPlayer {
     public Map<String, Boolean> getPermissions() {
         return handle.getEffectivePermissions()
                 .stream()
-                .filter(info -> info.getPermission().startsWith(Constants.ID))
+                .filter(info -> info.getPermission().startsWith(Constants.Id()))
                 .sorted(Comparator.comparing(PermissionAttachmentInfo::getPermission))
                 .collect(Collectors.toMap(PermissionAttachmentInfo::getPermission, PermissionAttachmentInfo::getValue, (x, y) -> y, LinkedHashMap::new));
     }

@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.interfacing.java;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
@@ -25,7 +26,7 @@ public class JavaMenu extends Interface {
     public static final int MAX_SIZE = 54;
     public static final int HOPPER_SIZE = 5;
 
-    protected transient final String permissionBase = Constants.ID + ".menu.";
+    protected transient final String permissionBase = Constants.Id() + ".menu.";
 
     private boolean allowBedrock = false;
 
@@ -61,25 +62,11 @@ public class JavaMenu extends Interface {
             ItemButton button = buttons.get(slot);
             List<Action> any = button.getAnyClick();
 
-            if (any != null) {
-                for (Action action : any) {
-                    action.affectPlayer(player, interfaceManager);
-                }
-            }
+            Action.affectPlayer(player, any, interfaceManager, BedrockHandler.empty());
             if (rightClick) {
-                List<Action> right = button.getRightClick();
-                if (right != null) {
-                    for (Action action : right) {
-                        action.affectPlayer(player, interfaceManager);
-                    }
-                }
+                Action.affectPlayer(player, button.getRightClick(), interfaceManager, BedrockHandler.empty());
             } else {
-                List<Action> left = button.getLeftClick();
-                if (left != null) {
-                    for (Action action : left) {
-                        action.affectPlayer(player, interfaceManager);
-                    }
-                }
+                Action.affectPlayer(player, button.getLeftClick(), interfaceManager, BedrockHandler.empty());
             }
         }
     }

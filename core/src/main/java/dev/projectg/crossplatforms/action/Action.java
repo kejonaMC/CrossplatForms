@@ -14,25 +14,6 @@ import java.util.Map;
 public interface Action extends KeyedType {
 
     /**
-     * Affects a Java Edition player.
-     * @param player The JE player to affect
-     * @param interfaceManager The interface manager to use
-     */
-    default void affectPlayer(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
-        affectPlayer(player, interfaceManager, BedrockHandler.empty());
-    }
-
-    /**
-     * Affects a Java Edition player.
-     * @param player The JE player to affect
-     * @param interfaceManager The interface manager to use
-     * @param additionalPlaceholders Additional placeholders to resolve
-     */
-    default void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager) {
-        affectPlayer(player, additionalPlaceholders, interfaceManager, BedrockHandler.empty());
-    }
-
-    /**
      * Affects a player
      * @param player The player to affect
      * @param interfaceManager The interface manager to use
@@ -49,5 +30,27 @@ public interface Action extends KeyedType {
      * @param interfaceManager The interface manager to use
      * @param bedrockHandler The bedrock handler to use
      */
-    void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler);
+    void affectPlayer(@Nonnull FormPlayer player,
+                      @Nonnull Map<String, String> additionalPlaceholders,
+                      @Nonnull InterfaceManager interfaceManager,
+                      @Nonnull BedrockHandler bedrockHandler);
+
+    // Static methods for batching multiple actions together:
+
+    static void affectPlayer(@Nonnull FormPlayer player,
+                             @Nonnull Iterable<Action> actions,
+                             @Nonnull Map<String, String> additionalPlaceholders,
+                             @Nonnull InterfaceManager interfaceManager,
+                             @Nonnull BedrockHandler bedrockHandler) {
+
+        actions.forEach(a -> a.affectPlayer(player, additionalPlaceholders, interfaceManager, bedrockHandler));
+    }
+
+    static void affectPlayer(@Nonnull FormPlayer player,
+                             @Nonnull Iterable<Action> actions,
+                             @Nonnull InterfaceManager interfaceManager,
+                             @Nonnull BedrockHandler bedrockHandler) {
+
+        actions.forEach(a -> a.affectPlayer(player, Collections.emptyMap(), interfaceManager, bedrockHandler));
+    }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-public class ProxyCommandManager implements Reloadable {
+public class CustomCommandManager implements Reloadable {
 
     private final ConfigManager configManager;
     private final CommandManager<CommandOrigin> commandManager;
@@ -32,9 +32,9 @@ public class ProxyCommandManager implements Reloadable {
      * Only stored registered commands, not intercept commands.
      * @see CommandType
      */
-    private final Map<String, ProxyCommand> registeredCommands = new HashMap<>();
+    private final Map<String, CustomCommand> registeredCommands = new HashMap<>();
 
-    public ProxyCommandManager(CrossplatForms forms, CommandManager<CommandOrigin> commandManager) {
+    public CustomCommandManager(CrossplatForms forms, CommandManager<CommandOrigin> commandManager) {
         this.configManager = forms.getConfigManager();
         this.commandManager = commandManager;
         this.serverHandler = forms.getServerHandler();
@@ -53,10 +53,10 @@ public class ProxyCommandManager implements Reloadable {
         commandManager.setSetting(CommandManager.ManagerSettings.ALLOW_UNSAFE_REGISTRATION, config.isUnsafeCommandRegistration());
         registeredCommands.clear();
 
-        for (ProxyCommand command : config.getCommands().values()) {
-            String name = command.getName();
+        for (CustomCommand command : config.getCommands().values()) {
+            String name = command.getIdentifier();
             if (command.getPermission() == null || command.getPermission().isEmpty()) {
-                command.setPermission(Constants.ID + ".shortcut." + name);
+                command.setPermission(Constants.Id() + ".shortcut." + name);
             }
             CommandType type = command.getMethod();
             if (type == CommandType.REGISTER) {
@@ -64,10 +64,10 @@ public class ProxyCommandManager implements Reloadable {
                     // only register if it hasn't been yet
                     // any references to the command are done through the map so that it can be updated after a reload
                     if (commandManager.isCommandRegistrationAllowed()) {
-                        Logger.getLogger().debug("Registering shortcut command: " + command.getName());
+                        Logger.getLogger().debug("Registering shortcut command: " + command.getIdentifier());
                         commandManager.command(commandManager.commandBuilder(name)
                                 .permission((origin) -> {
-                                    ProxyCommand target = registeredCommands.get(name);
+                                    CustomCommand target = registeredCommands.get(name);
                                     if (target == null) {
                                         // no longer present in the config
                                         return false;

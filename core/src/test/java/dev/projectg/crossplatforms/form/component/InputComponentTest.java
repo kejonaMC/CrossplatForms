@@ -33,12 +33,6 @@ public class InputComponentTest {
         Assertions.assertEquals("aa aa", cascading.parse(primitive("ab ba")));
     }
 
-    @Test
-    public void testHideCensoredPlaceholder() {
-        Input input = Input.builder().blockPlaceholders(true).replacements(ImmutableMap.of(Input.PLACEHOLDER_REPLACEMENT, "")).build();
-        Assertions.assertEquals("My location is ", input.parse(primitive("My location is {player_location}")));
-    }
-
     private static JsonPrimitive primitive(String string) {
         return new JsonPrimitive(string);
     }
