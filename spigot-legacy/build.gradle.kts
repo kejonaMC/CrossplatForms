@@ -25,9 +25,7 @@ tasks.withType<ShadowJar> {
         }
     }
 
-    println(destinationDirectory.get())
     archiveFileName.set("CrossplatForms-SpigotLegacy.jar")
-    println(archiveFileName.get())
 }
 
 tasks.named("build") {
