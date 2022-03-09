@@ -4,10 +4,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-}
-
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
     api(project(":spigot-common"))

@@ -24,8 +24,15 @@ subprojects {
     apply(plugin = "maven-publish")
 
     repositories {
-        mavenLocal()
+        //mavenLocal()
         mavenCentral()
+
+        if (project.name.contains("spigot")) {
+            // this is only used to uniformly apply repositories common between the spigot modules
+            maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // spigot
+            maven("https://oss.sonatype.org/content/repositories/snapshots/") // bungeecord-chat
+            maven("https://libraries.minecraft.net/") // brigadier
+        }
     }
 
     dependencies {
