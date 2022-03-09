@@ -1,5 +1,5 @@
 name: CrossplatForms
-main: dev.projectg.bungeecord.CrossplatFormsBungeeCord
+main: dev.projectg.crossplatforms.bungeecord.CrossplatFormsBungeeCord
 version: 0.3.0
 description: Unifies inventory menus with Bedrock Edition forms.
 author: Konicai, Jens
