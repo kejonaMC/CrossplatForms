@@ -30,7 +30,7 @@ public class SimpleForm extends BedrockForm {
     private List<SimpleButton> buttons = Collections.emptyList();
 
     @Override
-    public String identifier() {
+    public String type() {
         return TYPE;
     }
 
@@ -40,7 +40,7 @@ public class SimpleForm extends BedrockForm {
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();
 
-        BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
+        BedrockHandler bedrockHandler = interfaceManager.getBedrockHandler();
         if (!bedrockHandler.isBedrockPlayer(uuid)) {
             logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
             return;
@@ -52,7 +52,7 @@ public class SimpleForm extends BedrockForm {
         for (SimpleButton rawButton : buttons) {
             SimpleButton resolved = rawButton.withText(placeholders.setPlaceholders(player, rawButton.getText()));
             formattedButtons.add(resolved);
-            components.add(resolved);
+            components.add(resolved.cumulusComponent());
         }
 
         // Create the form

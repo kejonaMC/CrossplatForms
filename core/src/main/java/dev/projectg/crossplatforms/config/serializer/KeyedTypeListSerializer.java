@@ -47,7 +47,7 @@ public class KeyedTypeListSerializer<E extends KeyedType> implements TypeSeriali
             for (E element : list) {
                 // action decides what value should be serialized. If it is a non-simple type, it is expected that the action
                 // itself is passed. if its a simple typed, its expected that the singleton value is passed.
-                node.node(element.identifier()).set(element.value());
+                node.node(element.type()).set(element.value());
             }
         }
     }

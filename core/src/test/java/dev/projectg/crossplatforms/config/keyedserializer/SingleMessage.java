@@ -7,17 +7,12 @@ public class SingleMessage extends SimpleType<String> implements Message {
 
     public static final String IDENTIFIER = "message";
 
-    public SingleMessage(@NotNull String value) {
-        super(value);
+    public SingleMessage( @NotNull String value) {
+        super(IDENTIFIER, value);
     }
 
     @Override
     public void send() {
         System.out.println(value());
-    }
-
-    @Override
-    public String identifier() {
-        return IDENTIFIER;
     }
 }

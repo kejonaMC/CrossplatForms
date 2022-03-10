@@ -4,19 +4,28 @@ import dev.projectg.crossplatforms.Resolver;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import java.util.function.Function;
 
 @ToString
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
-public class Label extends CustomComponent implements LabelComponent {
-    // text is handled in Component super class (both here and in Cumulus)
+public class Label extends CustomComponent {
+
+    @Override
+    public Label copy() {
+        Label label = new Label();
+        label.copyBasics(this);
+        return label;
+    }
+
+    @Override
+    public Component cumulusComponent() {
+        return LabelComponent.of(text);
+    }
 
     @Override
     public void setPlaceholders(@Nonnull Resolver resolver) {
@@ -24,14 +33,9 @@ public class Label extends CustomComponent implements LabelComponent {
     }
 
     @Override
-    public Label copy() {
-        Label label = new Label();
-        copyBasics(this, label);
-        return label;
-    }
-
-    @Override
-    public @NonNull ComponentType getType() {
-        return ComponentType.LABEL;
+    public Label withPlaceholders(Resolver resolver) {
+        Label copy = copy();
+        copy.setPlaceholders(resolver);
+        return copy;
     }
 }

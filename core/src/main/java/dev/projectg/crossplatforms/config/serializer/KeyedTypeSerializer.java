@@ -79,10 +79,10 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         node.raw(null);
 
         if (keyedType != null) {
-            if (keyedType.identifier().equals(node.key())) {
+            if (keyedType.type().equals(node.key())) {
                 node.set(keyedType.value());
             } else {
-                throw new SerializationException("Cannot deserialize '" + keyedType.value() + "' of type '" + keyedType.identifier() + "' because the key of the node at " + node.path() + " does not match the type");
+                throw new SerializationException("Cannot deserialize '" + keyedType.value() + "' of type '" + keyedType.type() + "' because the key of the node at " + node.path() + " does not match the type");
             }
         }
     }

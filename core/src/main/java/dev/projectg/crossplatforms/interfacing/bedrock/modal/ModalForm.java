@@ -33,7 +33,7 @@ public class ModalForm extends BedrockForm {
     private ModalButton button2 = null;
 
     @Override
-    public String identifier() {
+    public String type() {
         return TYPE;
     }
 

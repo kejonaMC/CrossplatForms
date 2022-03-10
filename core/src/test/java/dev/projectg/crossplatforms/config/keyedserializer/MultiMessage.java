@@ -28,23 +28,18 @@ public class MultiMessage implements Message {
     }
 
     @Override
-    public void send() {
-        list.forEach(System.out::println);
-    }
-
-    @Override
-    public String identifier() {
+    public String type() {
         return IDENTIFIER;
     }
 
     @Override
-    public MultiMessage value() {
+    public Object value() {
         return this;
     }
 
     @Override
-    public String toString() {
-        return "MultipleMessages{" + "prefix=" + prefix + ", list=" + list + ", identifier=" + identifier() + '}';
+    public void send() {
+        list.forEach(System.out::println);
     }
 
     @Override

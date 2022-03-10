@@ -19,12 +19,7 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
     public static final String IDENTIFIER = "commands";
 
     public CommandsAction(List<DispatchableCommand> commands) {
-        super(commands);
-    }
-
-    @Override
-    public String identifier() {
-        return IDENTIFIER;
+        super(IDENTIFIER, commands);
     }
 
     @Override

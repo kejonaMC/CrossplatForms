@@ -53,17 +53,12 @@ public class ConfigManagerTest {
     public static class FakeServer extends SimpleAction<String> {
 
         public FakeServer(@NotNull String value) {
-            super(value);
+            super("server", value);
         }
 
         @Override
         public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
             //no-op
-        }
-
-        @Override
-        public String identifier() {
-            return "server";
         }
     }
 }

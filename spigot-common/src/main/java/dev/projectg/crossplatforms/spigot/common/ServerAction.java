@@ -25,11 +25,11 @@ public class ServerAction extends SimpleAction<String> {
     public static final String IDENTIFIER = "server";
 
     public ServerAction(String value) {
-        super(value);
+        super(IDENTIFIER, value);
     }
 
     @Override
-    public String identifier() {
+    public String type() {
         return IDENTIFIER;
     }
 

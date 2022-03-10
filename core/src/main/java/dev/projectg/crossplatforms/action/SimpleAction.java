@@ -4,6 +4,8 @@ package dev.projectg.crossplatforms.action;
 import dev.projectg.crossplatforms.config.serializer.SimpleType;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+
 /**
  * An essentially empty abstract class to simplify extension clauses for any classes that must extend {@link SimpleType}
  * and must implement {@link Action}
@@ -11,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class SimpleAction<V> extends SimpleType<V> implements Action {
 
-    public SimpleAction(@NotNull V value) {
-        super(value);
+    public SimpleAction(@Nonnull String type, @NotNull V value) {
+        super(type, value);
     }
 }

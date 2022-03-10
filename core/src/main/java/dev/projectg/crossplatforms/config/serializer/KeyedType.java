@@ -8,7 +8,7 @@ public interface KeyedType {
     /**
      * @return The identifier for the type of this implementation
      */
-    String identifier();
+    String type();
 
     /**
      * @return An object serializable by Configurate that represents this implementation, which should be successfully

@@ -6,6 +6,8 @@ import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeListSerializer;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
+import dev.projectg.crossplatforms.parser.Parser;
+import dev.projectg.crossplatforms.parser.ParserSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
@@ -49,9 +51,10 @@ public class ConfigManager {
         // type serializers for abstract classes and external library classes
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
-            builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.register(Action.class, actionSerializer);
+            builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
+            builder.registerExact(Action.class, actionSerializer);
             builder.register(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(actionSerializer));
+            builder.registerExact(Parser.class, new ParserSerializer());
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node

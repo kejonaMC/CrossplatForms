@@ -29,7 +29,6 @@ public class KeyedTypeListSerializerTest {
     private final KeyedTypeSerializer<Message> messageSerializer = new KeyedTypeSerializer<>();
     private final YamlConfigurationLoader loader;
 
-
     public KeyedTypeListSerializerTest() throws IOException {
         messageSerializer.registerSimpleType("message", String.class, SingleMessage::new);
         messageSerializer.registerType("messages", MultiMessage.class);

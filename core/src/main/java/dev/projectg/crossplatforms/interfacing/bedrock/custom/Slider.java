@@ -5,9 +5,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.SliderComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -17,7 +16,7 @@ import javax.annotation.Nonnull;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class Slider extends CustomComponent implements SliderComponent {
+public class Slider extends CustomComponent {
 
     private float min = 0;
     private float max = 10;
@@ -25,14 +24,9 @@ public class Slider extends CustomComponent implements SliderComponent {
     private float defaultValue = 0;
 
     @Override
-    public void setPlaceholders(@Nonnull Resolver resolver) {
-        super.setPlaceholders(resolver);
-    }
-
-    @Override
-    public CustomComponent copy() {
+    public Slider copy() {
         Slider slider = new Slider();
-        copyBasics(this, slider);
+        slider.copyBasics(this);
         slider.min = this.min;
         slider.max = this.max;
         slider.step = this.step;
@@ -41,7 +35,19 @@ public class Slider extends CustomComponent implements SliderComponent {
     }
 
     @Override
-    public @NonNull ComponentType getType() {
-        return ComponentType.SLIDER;
+    public Component cumulusComponent() {
+        return SliderComponent.of(text, min, max, step, defaultValue);
+    }
+
+    @Override
+    public void setPlaceholders(@Nonnull Resolver resolver) {
+        super.setPlaceholders(resolver);
+    }
+
+    @Override
+    public Slider withPlaceholders(Resolver resolver) {
+        Slider copy = copy();
+        copy.setPlaceholders(resolver);
+        return copy;
     }
 }

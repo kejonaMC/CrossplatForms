@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @ConfigSerializable
-public class ScientificNotationNumber extends Number {
+public class ScientificNotationNumber implements Number {
+
+    public static final String TYPE = "scientific_notation";
 
     private double mantissa;
     private int exponent;
@@ -17,9 +19,13 @@ public class ScientificNotationNumber extends Number {
     }
 
     public ScientificNotationNumber(double mantissa, int exponent) {
-        super("scientific_notation");
         this.mantissa = mantissa;
         this.exponent = exponent;
+    }
+
+    @Override
+    public String type() {
+        return TYPE;
     }
 
     @Override
@@ -32,7 +38,7 @@ public class ScientificNotationNumber extends Number {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ScientificNotationNumber that = (ScientificNotationNumber) o;
-        return Double.compare(that.mantissa, mantissa) == 0 && exponent == that.exponent && sameType(that);
+        return Double.compare(that.mantissa, mantissa) == 0 && exponent == that.exponent && type().equals(that.type());
     }
 
     @Override
@@ -42,6 +48,6 @@ public class ScientificNotationNumber extends Number {
 
     @Override
     public String toString() {
-        return "ScientificNotationNumber{" + "mantissa=" + mantissa + ", exponent=" + exponent + ", type=" + identifier() + "}";
+        return "ScientificNotationNumber{" + "mantissa=" + mantissa + ", exponent=" + exponent + ", type=" + type() + "}";
     }
 }

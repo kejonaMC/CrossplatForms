@@ -17,12 +17,7 @@ public class InterfaceAction extends SimpleAction<String> {
     public static final String IDENTIFIER = "form";
 
     public InterfaceAction(@Nonnull String value) {
-        super(value);
-    }
-
-    @Override
-    public String identifier() {
-        return IDENTIFIER;
+        super(IDENTIFIER, value);
     }
 
     @Override

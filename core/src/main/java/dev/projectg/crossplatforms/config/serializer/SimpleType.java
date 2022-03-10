@@ -1,18 +1,24 @@
 package dev.projectg.crossplatforms.config.serializer;
 
-import javax.annotation.Nonnull;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
+import javax.annotation.Nonnull;
+import java.util.Objects;
+
+@ToString
+@Getter
+@Accessors(fluent = true)
 public abstract class SimpleType<V> implements KeyedType {
+
+    private final String type;
 
     private final V value;
 
-    public SimpleType(@Nonnull V value) {
-        this.value = value;
-    }
-
-    @Override
-    public V value() {
-        return value;
+    public SimpleType(@Nonnull String type, @Nonnull V value) {
+        this.type = Objects.requireNonNull(type);
+        this.value = Objects.requireNonNull(value);
     }
 
     @Override
@@ -26,10 +32,5 @@ public abstract class SimpleType<V> implements KeyedType {
     @Override
     public int hashCode() {
         return value.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "SimpleType{" + "value=" + value + ", identifier=" + identifier() + '}';
     }
 }

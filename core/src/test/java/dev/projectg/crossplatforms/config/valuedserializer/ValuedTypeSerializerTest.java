@@ -29,8 +29,8 @@ public class ValuedTypeSerializerTest {
     private final YamlConfigurationLoader loader;
 
     public ValuedTypeSerializerTest() throws IOException {
-        numberSerializer.registerType("integer", Integer.class);
-        numberSerializer.registerType("scientific_notation", ScientificNotationNumber.class);
+        numberSerializer.registerType(Integer.TYPE, Integer.class);
+        numberSerializer.registerType(ScientificNotationNumber.TYPE, ScientificNotationNumber.class);
 
         File config = FileUtils.fileOrCopiedFromResource(new File(directory, "ValuedTypeConfig.yml"));
         YamlConfigurationLoader.Builder loaderBuilder = ConfigurateUtils.loaderBuilder(config);

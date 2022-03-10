@@ -17,7 +17,7 @@ public class ServerAction extends SimpleAction<String> {
     public static final String IDENTIFIER = "server";
 
     public ServerAction(@NotNull String value) {
-        super(value);
+        super(IDENTIFIER, value);
     }
 
     @Override
@@ -25,10 +25,5 @@ public class ServerAction extends SimpleAction<String> {
         ProxiedPlayer player = (ProxiedPlayer) formPlayer.getHandle();
         ServerInfo downstream = ProxyServer.getInstance().getServerInfo(value()); // find target
         player.connect(downstream, ServerConnectEvent.Reason.PLUGIN);
-    }
-
-    @Override
-    public String identifier() {
-        return IDENTIFIER;
     }
 }

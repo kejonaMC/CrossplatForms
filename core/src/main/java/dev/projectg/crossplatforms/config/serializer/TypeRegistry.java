@@ -11,7 +11,7 @@ import java.util.Set;
  * into a list of T.
  * @param <T> The parent type that all entry values have in common.
  */
-public abstract class TypeRegistry<T> {
+public class TypeRegistry<T> {
 
     private final Map<String, Class<? extends T>> types = new HashMap<>();
 

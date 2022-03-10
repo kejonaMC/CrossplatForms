@@ -1,47 +1,16 @@
 package dev.projectg.crossplatforms.config.serializer;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
-
-import javax.annotation.Nonnull;
-import java.util.Objects;
+import org.spongepowered.configurate.ConfigurationNode;
 
 /**
- * For use with {@link ValuedTypeSerializer}. Allows child classes to be successfully deserializes and serialized using a
- * String field representing the exact type to use when serializing.
+ * For use with {@link ValuedTypeSerializer}. Implementing classes must adhere to {@link ConfigurationNode#isMap()}
+ * in order to be successfully serialized. They, do not need to be concerned with containing a type field,
+ * as {@link ValuedTypeSerializer} handles the reading and writing of the type.
+ *
+ * However, the implementation of {@link ValuedType#type()} must be exactly equal to the String type identifier
+ * provided in {@link ValuedTypeSerializer#registerType(String, Class)} when this implementation is registered.
  */
-@ConfigSerializable
-public abstract class ValuedType {
+public interface ValuedType {
 
-    public static final String KEY = "type";
-
-    @Setting(KEY)
-    protected String type = null;
-
-    /**
-     * Only to be used by Configurate.
-     */
-    protected ValuedType() {
-
-    }
-
-    protected ValuedType(@Nonnull String type) {
-        this.type = Objects.requireNonNull(type);
-    }
-
-    public String identifier() {
-        return type;
-    }
-
-    /**
-     * Checks if the types of two different {@link ValuedType}'s are the same.
-     */
-    public boolean sameType(ValuedType other) {
-        return Objects.equals(identifier(), other.identifier());
-    }
-
-    @Override
-    public String toString() {
-        return "ValuedType{" + "type='" + identifier() + '}';
-    }
+    String type();
 }

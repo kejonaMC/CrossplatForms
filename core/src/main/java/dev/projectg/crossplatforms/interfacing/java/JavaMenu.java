@@ -33,11 +33,6 @@ public class JavaMenu extends Interface {
     private int size = 5; // Hopper size
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
-    @Override
-    public String identifier() {
-        return TYPE;
-    }
-
     /**
      * @param slot The inventory slot
      * @return If there is a button at the given inventory slot

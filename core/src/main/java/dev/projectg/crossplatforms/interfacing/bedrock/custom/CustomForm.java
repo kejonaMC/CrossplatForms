@@ -4,11 +4,12 @@ import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @ToString
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class CustomForm extends BedrockForm {
+public class CustomForm extends BedrockForm implements ValuedType {
 
     public static final String TYPE = "custom_form";
 
@@ -39,7 +40,7 @@ public class CustomForm extends BedrockForm {
     private List<Action> actions = null;
 
     @Override
-    public String identifier() {
+    public String type() {
         return TYPE;
     }
 
@@ -58,9 +59,9 @@ public class CustomForm extends BedrockForm {
         List<CustomComponent> customComponents = new ArrayList<>(); // as our custom components
         List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
         for (CustomComponent component : this.components) {
-            CustomComponent resolved = CustomComponent.withPlaceholders(component, (text) -> placeholders.setPlaceholders(player, text));
+            CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
             customComponents.add(resolved);
-            components.add(resolved);
+            components.add(resolved.cumulusComponent());
         }
 
         org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
@@ -100,7 +101,7 @@ public class CustomForm extends BedrockForm {
                     return;
                 }
 
-                resultPlaceholders.put(placeholder(i), component.parse(result));
+                resultPlaceholders.put(placeholder(i), component.parse(player, result.getAsString()));
             }
 
             if (logger.isDebug()) {

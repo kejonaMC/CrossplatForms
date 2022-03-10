@@ -1,14 +1,13 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
-import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.DropdownComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class Dropdown extends CustomComponent implements DropdownComponent {
+public class Dropdown extends CustomComponent {
 
     private List<String> options = new ArrayList<>();
     private int defaultOption = 0;
@@ -34,11 +33,16 @@ public class Dropdown extends CustomComponent implements DropdownComponent {
     @Override
     public Dropdown copy() {
         Dropdown dropdown = new Dropdown();
-        copyBasics(this, dropdown);
+        dropdown.copyBasics(this);
         dropdown.options = new ArrayList<>(this.options);
         dropdown.defaultOption = this.defaultOption;
         dropdown.returnText = this.returnText;
         return dropdown;
+    }
+
+    @Override
+    public Component cumulusComponent() {
+        return DropdownComponent.of(text, options, defaultOption);
     }
 
     @Override
@@ -48,16 +52,18 @@ public class Dropdown extends CustomComponent implements DropdownComponent {
     }
 
     @Override
-    public String parse(JsonPrimitive result) {
-        if (returnText) {
-            return options.get(result.getAsInt());
-        } else {
-            return super.parse(result);
-        }
+    public Dropdown withPlaceholders(Resolver resolver) {
+        Dropdown copy = copy();
+        copy.setPlaceholders(resolver);
+        return copy;
     }
 
     @Override
-    public @NonNull ComponentType getType() {
-        return ComponentType.DROPDOWN;
+    public String parse(FormPlayer player, String result) {
+        if (returnText) {
+            return super.parse(player, options.get(Integer.parseInt(result)));
+        } else {
+            return super.parse(player, result);
+        }
     }
 }

@@ -1,13 +1,12 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
-import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.InputComponent;
 import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -20,13 +19,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class Input extends CustomComponent implements InputComponent {
+public class Input extends CustomComponent {
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%{]([^\\s]+)[%}]"); // blocks % and {} placeholders
     public static final String PLACEHOLDER_REPLACEMENT = "<blocked placeholder>";
@@ -46,15 +44,29 @@ public class Input extends CustomComponent implements InputComponent {
      */
     private Map<String, String> replacements = new HashMap<>();
 
+    public Input(String text, String placeholder, String defaultText, boolean blockPlaceholders, Map<String, String> replacements) {
+        super(ComponentType.INPUT, text);
+        this.text = text;
+        this.placeholder = placeholder;
+        this.defaultText = defaultText;
+        this.blockPlaceholders = blockPlaceholders;
+        this.replacements = replacements;
+    }
+
     @Override
     public Input copy() {
         Input input = new Input();
-        copyBasics(this, input);
+        input.copyBasics(this);
         input.placeholder = this.placeholder;
         input.defaultText = this.defaultText;
         input.blockPlaceholders = this.blockPlaceholders;
         input.replacements = new HashMap<>(this.replacements);
         return input;
+    }
+
+    @Override
+    public Component cumulusComponent() {
+        return InputComponent.of(text, placeholder, defaultText);
     }
 
     @Override
@@ -66,8 +78,15 @@ public class Input extends CustomComponent implements InputComponent {
     }
 
     @Override
-    public String parse(JsonPrimitive result) {
-        String parsed = result.getAsString();
+    public Input withPlaceholders(Resolver resolver) {
+        Input copy = copy();
+        copy.setPlaceholders(resolver);
+        return copy;
+    }
+
+    @Override
+    public String parse(FormPlayer player, String result) {
+        String parsed = result;
 
         for (String target : replacements.keySet()) {
             parsed = parsed.replace(target, replacements.get(target));
@@ -87,24 +106,35 @@ public class Input extends CustomComponent implements InputComponent {
             parsed = builder.toString();
         }
 
-        return parsed;
+        return super.parse(player, parsed);
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    @Override
-    public @NonNull ComponentType getType() {
-        return ComponentType.INPUT;
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o.getClass().equals(getClass()))) return false;
+        final Input other = (Input) o;
+        return other.type.equals(type)
+                && other.text.equals(text)
+                && other.placeholder.equals(placeholder)
+                && other.defaultText.equals(defaultText)
+                && other.blockPlaceholders == blockPlaceholders && other.replacements.equals(replacements);
     }
 
     public static class Builder {
+        private String text = "";
         private String placeholder = "";
         private String defaultText = "";
         private boolean blockPlaceholders = true;
         private Map<String, String> replacements = new HashMap<>();
 
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
         public Builder placeholder(String placeholder) {
             this.placeholder = placeholder;
             return this;
@@ -123,7 +153,7 @@ public class Input extends CustomComponent implements InputComponent {
         }
 
         public Input build() {
-            return new Input(placeholder, defaultText, blockPlaceholders, replacements);
+            return new Input(text, placeholder, defaultText, blockPlaceholders, replacements);
         }
     }
 }

@@ -14,9 +14,16 @@ import java.lang.reflect.Type;
  */
 public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> implements TypeSerializer<T> {
 
+    public static final String KEY = "type";
+
+    @Override
+    public void registerType(String typeId, Class<? extends T> type) {
+        super.registerType(typeId, type);
+    }
+
     @Override
     public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
-        String typeId = node.node(ValuedType.KEY).getString();
+        String typeId = node.node(KEY).getString();
         if (typeId == null) {
             throw new SerializationException("Entry at " + node.path() + " does not contain a 'type' value. Possible options are: " + getTypes());
         }
@@ -30,16 +37,18 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
     }
 
     @Override
-    public void serialize(Type type, @Nullable T value, ConfigurationNode node) throws SerializationException {
+    public void serialize(Type returnType, @Nullable T value, ConfigurationNode node) throws SerializationException {
         node.raw(null);
 
         if (value != null) {
-            String valueType = value.identifier();
-            if (valueType == null || valueType.equals("")) {
-                throw new SerializationException("Developer error: " + valueType + " has null or empty type field (child class of ValuedType)");
+            String typeIdentifier = value.type();
+            if (getType(typeIdentifier) == null) {
+                // we don't actually need it for serializing but its probably a mistake or bad design
+                throw new SerializationException("Cannot serialize implementation of ValueType " + value.getClass() + " that has not been registered");
             }
 
-            node.set(getType(valueType), value);
+            node.set(value);
+            node.node(KEY).set(typeIdentifier); // set it after to make sure its not overridden
         }
     }
 }
