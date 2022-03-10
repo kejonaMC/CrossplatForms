@@ -2,9 +2,11 @@ package dev.projectg.crossplatforms.command;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+@ToString
 @EqualsAndHashCode
 @Getter
 @ConfigSerializable

@@ -19,13 +19,11 @@ tasks.withType<ShadowJar> {
             relocate("me.lucko.commodore", "dev.projectg.crossplatforms.shaded.commodore")
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
             relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
-            // Used by cloud and configurate
             relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
 
         }
         exclude {
-                e -> e.name.startsWith("com.mojang") // Remove when we support less than 1.13
-                || e.name.startsWith("org.yaml") // Available on Spigot
+                e -> e.name.startsWith("org.yaml") // Available on Spigot
                 || e.name.startsWith("com.google")
         }
     }
