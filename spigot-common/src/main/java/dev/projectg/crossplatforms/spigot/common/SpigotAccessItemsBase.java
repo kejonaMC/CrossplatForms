@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
@@ -10,16 +10,13 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.spigot.common.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -28,10 +25,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,26 +36,33 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class SpigotAccessItemRegistry extends AccessItemRegistry implements Listener {
-
-    public static final NamespacedKey ACCESS_ITEM_KEY = new NamespacedKey(CrossplatFormsSpigot.getInstance(), AccessItem.STATIC_IDENTIFIER);
-    public static final PersistentDataType<String, String> ACCESS_ITEM_KEY_TYPE = PersistentDataType.STRING;
+/**
+ * Abstract AccessItemRegistry for spigot platforms. Automatically registers {@link PlayerSwapHandItemsListener} if
+ * the class is event is available on the current server version.
+ */
+public abstract class SpigotAccessItemsBase extends AccessItemRegistry implements Listener {
 
     private final Logger logger = Logger.getLogger();
-    private final InterfaceManager interfaceManager;
-    private final BedrockHandler bedrockHandler;
-    private final PlaceholderHandler placeholders;
+    protected final InterfaceManager interfaceManager;
+    protected final BedrockHandler bedrockHandler;
+    protected final PlaceholderHandler placeholders;
 
-    public SpigotAccessItemRegistry(ConfigManager configManager,
-                                    ServerHandler serverHandler,
-                                    InterfaceManager interfaceManager,
-                                    BedrockHandler bedrockHandler,
-                                    PlaceholderHandler placeholders) {
+    public SpigotAccessItemsBase(JavaPlugin plugin, ConfigManager configManager,
+                                 ServerHandler serverHandler,
+                                 InterfaceManager interfaceManager,
+                                 BedrockHandler bedrockHandler,
+                                 PlaceholderHandler placeholders) {
         super(configManager, serverHandler);
         this.interfaceManager = interfaceManager;
         this.bedrockHandler = bedrockHandler;
         this.placeholders = placeholders;
+
+        if (!Bukkit.getVersion().contains("1.8")) { // Older versions not supported, 1.9 and newer has offhand
+            Bukkit.getPluginManager().registerEvents(new PlayerSwapHandItemsListener(this), plugin);
+        }
     }
+
+    public abstract void setItemId(@Nonnull ItemStack itemStack, @Nonnull String identifier);
 
     /**
      * Attempt to retrieve the Access Item ID that an ItemStack points to. The Access Item ID may or may not refer
@@ -68,14 +71,7 @@ public class SpigotAccessItemRegistry extends AccessItemRegistry implements List
      * @return The AccessItem ID if the ItemStack contained the name, null if not.
      */
     @Nullable
-    public static String getItemId(@Nonnull ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) {
-            return null;
-        } else {
-            return meta.getPersistentDataContainer().get(ACCESS_ITEM_KEY, ACCESS_ITEM_KEY_TYPE);
-        }
-    }
+    public abstract String getItemId(@Nonnull ItemStack itemStack);
 
     /**
      * Attempt to retrieve the Access Item that an ItemStack points to
@@ -99,10 +95,6 @@ public class SpigotAccessItemRegistry extends AccessItemRegistry implements List
             logger.severe(String.format("Failed to get access item from '%s' for access item '%s'", accessItem.getMaterial(), accessItem.getIdentifier()));
             material = Material.COMPASS;
         }
-        if (!material.isItem()) {
-            logger.severe(String.format("Material %s for access item %s is not a valid item material!", material, accessItem.getIdentifier()));
-            material = Material.COMPASS;
-        }
 
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
@@ -113,8 +105,8 @@ public class SpigotAccessItemRegistry extends AccessItemRegistry implements List
         }
         meta.setDisplayName(placeholders.setPlaceholders(formPlayer, accessItem.getDisplayName()));
         meta.setLore(placeholders.setPlaceholders(formPlayer, accessItem.getLore()));
-        meta.getPersistentDataContainer().set(ACCESS_ITEM_KEY, ACCESS_ITEM_KEY_TYPE, accessItem.getIdentifier());
         item.setItemMeta(meta);
+        setItemId(item, accessItem.getIdentifier());
         return item;
     }
 
@@ -171,31 +163,6 @@ public class SpigotAccessItemRegistry extends AccessItemRegistry implements List
                     }
                 } else {
                     // restrict items even if the registry is disabled
-                    event.setCancelled(true);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void PlayerSwapHandItemsEvent(PlayerSwapHandItemsEvent event) { // Don't allow putting it in the offhand
-        ItemStack item = event.getOffHandItem();
-        if (item != null && getItemId(item) != null) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onEntityPickupItem(EntityPickupItemEvent event) { // Stop players without possession permission to pickup items
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            ItemStack item = event.getItem().getItemStack();
-            String id = getItemId(item);
-            if (id != null) {
-                AccessItem access = super.getItem(id);
-                if (access == null) {
-                    event.setCancelled(true);
-                } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                     event.setCancelled(true);
                 }
             }

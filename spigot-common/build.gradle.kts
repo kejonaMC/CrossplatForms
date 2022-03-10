@@ -7,7 +7,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+    // 1.8.8 is supported but we target 1.9.4 to use PlayerSwapItemEvent if necessary
+    compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.1")
     api(project(":core"))
     api(project(":access-item"))

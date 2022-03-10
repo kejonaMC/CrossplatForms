@@ -8,8 +8,12 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.accessitem.AccessItemConfig;
+import dev.projectg.crossplatforms.accessitem.GiveCommand;
+import dev.projectg.crossplatforms.accessitem.InspectItemCommand;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -20,6 +24,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
+import dev.projectg.crossplatforms.spigot.common.SpigotAccessItemsBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
@@ -88,10 +93,33 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
                 placeholders,
                 this
         );
+
+        if (!crossplatForms.isSuccess()) {
+            return;
+        }
+
+        LegacySpigotAccessItems accessItemRegistry = new LegacySpigotAccessItems(
+                this,
+                crossplatForms.getConfigManager(),
+                serverHandler,
+                crossplatForms.getInterfaceManager(),
+                crossplatForms.getBedrockHandler(),
+                placeholders
+        );
+
+        // Registering events required to manage access items
+        Bukkit.getServer().getPluginManager().registerEvents(accessItemRegistry, this);
+
+        // Commands added by access items
+        new GiveCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
+        new InspectItemCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
     }
 
     @Override
     public void preConfigLoad(ConfigManager configManager) {
+        configManager.register(ConfigId.JAVA_MENUS);
+        configManager.register(AccessItemConfig.asConfigId());
+
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
     }

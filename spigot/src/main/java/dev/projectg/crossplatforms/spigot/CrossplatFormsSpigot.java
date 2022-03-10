@@ -97,7 +97,8 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
             return;
         }
 
-        SpigotAccessItemRegistry accessItemRegistry = new SpigotAccessItemRegistry(
+        SpigotAccessItems accessItemRegistry = new SpigotAccessItems(
+                this,
                 crossplatForms.getConfigManager(),
                 serverHandler,
                 crossplatForms.getInterfaceManager(),
@@ -116,14 +117,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
     @Override
     public void preConfigLoad(ConfigManager configManager) {
         configManager.register(ConfigId.JAVA_MENUS);
-        configManager.register(new ConfigId(
-                "access-items.yml",
-                AccessItemConfig.VERSION,
-                AccessItemConfig.MINIMUM_VERSION,
-                AccessItemConfig.class,
-                AccessItemConfig::updater
-                )
-        );
+        configManager.register(AccessItemConfig.asConfigId());
 
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);

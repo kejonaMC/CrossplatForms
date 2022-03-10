@@ -7,12 +7,12 @@ import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import javax.annotation.Nonnull;
 
 public class SpigotInterfacer extends SpigotInterfacerBase {
 
@@ -23,16 +23,25 @@ public class SpigotInterfacer extends SpigotInterfacerBase {
         super(serverHandler, bedrockHandler, bedrockRegistry, javaRegistry);
     }
 
-    @Nullable
     @Override
-    public String getMenuName(@NotNull ItemMeta meta) {
-        return meta.getPersistentDataContainer().get(BUTTON_KEY, BUTTON_KEY_TYPE);
+    public void setMenuName(@Nonnull ItemStack stack, @Nonnull String identifier) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            throw new IllegalArgumentException("ItemStack " + stack + " does not have ItemMeta");
+        } else {
+            meta.getPersistentDataContainer().set(BUTTON_KEY, BUTTON_KEY_TYPE, identifier);
+            stack.setItemMeta(meta);
+        }
     }
 
+    @Nullable
     @Override
-    public void setMenuName(@NotNull ItemMeta meta, @NotNull String identifier) {
-        Objects.requireNonNull(meta);
-        Objects.requireNonNull(identifier);
-        meta.getPersistentDataContainer().set(BUTTON_KEY, BUTTON_KEY_TYPE, identifier);
+    public String getMenuName(@Nonnull ItemStack stack) {
+        ItemMeta meta = stack.getItemMeta();
+        if (meta == null) {
+            return null;
+        } else {
+            return meta.getPersistentDataContainer().get(BUTTON_KEY, BUTTON_KEY_TYPE);
+        }
     }
 }

@@ -35,10 +35,15 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
         super(serverHandler, bedrockHandler, bedrockRegistry, javaRegistry);
     }
 
-    @Nullable
-    public abstract String getMenuName(@Nonnull ItemMeta meta);
+    public abstract void setMenuName(@Nonnull ItemStack stack, @Nonnull String identifier);
 
-    public abstract void setMenuName(@Nonnull ItemMeta meta, @Nonnull String identifier);
+    /**
+     * Attempt to retrieve the menu name that an ItemStack is contained in
+     * @param stack The ItemStack to check
+     * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
+     */
+    @Nullable
+    public abstract String getMenuName(@Nonnull ItemStack stack);
 
     /**
      * Attempt to retrieve the menu that an ItemStack points to
@@ -53,21 +58,6 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
         } else {
             return menuRegistry.getMenu(menuName);
         }
-    }
-
-    /**
-     * Attempt to retrieve the menu name that an ItemStack is contained in
-     * @param itemStack The ItemStack to check
-     * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
-     */
-    @Nullable
-    public String getMenuName(@Nonnull ItemStack itemStack) {
-        Objects.requireNonNull(itemStack);
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta != null) {
-            return getMenuName(meta);
-        }
-        return null;
     }
 
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
@@ -101,8 +91,8 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
             } else {
                 meta.setDisplayName(placeholders.setPlaceholders(formPlayer, button.getDisplayName()));
                 meta.setLore(placeholders.setPlaceholders(formPlayer, button.getLore()));
-                setMenuName(meta, menu.getIdentifier());
                 item.setItemMeta(meta);
+                setMenuName(item, menu.getIdentifier());
                 selectorGUI.setItem(slot, item);
             }
         }
