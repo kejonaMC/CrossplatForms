@@ -2,11 +2,11 @@ package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Constants;
+import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -16,8 +16,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CommandOrigin {
-
-    LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
 
     /**
      * Mapping of Logger levels to Bukkit chat colours
@@ -82,7 +80,7 @@ public interface CommandOrigin {
             Logger.getLogger().log(level, message);
         } else {
             // todo: fully use adventure
-            sendMessage(LEGACY_SERIALIZER.serialize(Component.text(message, LOGGER_COLORS.getOrDefault(level, NamedTextColor.WHITE))));
+            sendMessage(CrossplatForms.LEGACY_SERIALIZER.serialize(Component.text(message, LOGGER_COLORS.getOrDefault(level, NamedTextColor.WHITE))));
         }
     }
 

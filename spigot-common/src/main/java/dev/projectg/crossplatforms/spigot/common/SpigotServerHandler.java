@@ -72,11 +72,6 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
     }
 
     @Override
-    public boolean isPermissionRegistered(String key) {
-        return server.getPluginManager().getPermission(key) != null;
-    }
-
-    @Override
     public boolean isGeyserEnabled() {
         return server.getPluginManager().isPluginEnabled("Geyser-Spigot");
     }
@@ -164,7 +159,6 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
     @EventHandler
     public void onPreProcessCommand(PlayerCommandPreprocessEvent event) {
         String name = COMMAND_PATTERN.split(event.getMessage().substring(1))[0]; // remove command slash and get first command
-        Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + name + "]");
         CustomCommand command = proxyCommands.get(name);
         if (command != null) {
             Player player = event.getPlayer();

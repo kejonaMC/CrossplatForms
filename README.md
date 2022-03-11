@@ -7,4 +7,4 @@
 
 CrossplatForms is a Minecraft Java Edition plugin aimed at providing fast, easy, and dynamic creation of Bedrock Edition forms through configurations. Also allows for creation of inventory menus for Java Edition.
 
-Currently runs on Spigot servers (1.14 and higher) that have Geyser (Floodgate is optional). Support for BungeeCord, Velocity, Sponge, and older Spigot is planned. 
+Currently runs on Spigot (1.8 - 1.18), BungeeCord, and Velocity. Sponge support is planned.

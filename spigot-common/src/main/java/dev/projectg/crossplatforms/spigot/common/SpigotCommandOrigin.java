@@ -7,14 +7,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.UUID;
 
 @AllArgsConstructor
 public class SpigotCommandOrigin implements CommandOrigin {
 
+    @Nonnull
     @Getter
-    CommandSender handle;
+    private final CommandSender handle;
 
     @Override
     public boolean hasPermission(String permission) {

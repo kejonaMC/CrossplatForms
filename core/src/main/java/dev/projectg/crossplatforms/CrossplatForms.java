@@ -34,6 +34,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.geysermc.cumulus.util.FormImage;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.auth.AuthType;
@@ -45,6 +46,8 @@ import java.util.concurrent.ExecutionException;
 @Getter
 public class CrossplatForms {
     private static CrossplatForms INSTANCE;
+
+    public static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
 
     private final ConfigManager configManager;
     private final ServerHandler serverHandler;

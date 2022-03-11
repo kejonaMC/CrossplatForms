@@ -73,8 +73,11 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
                 this
         );
 
-        getProxy().getPluginManager().registerListener(this, serverHandler); // events for catching proxy commands
+        if (!crossplatForms.isSuccess()) {
+            return;
+        }
 
+        getProxy().getPluginManager().registerListener(this, serverHandler); // events for catching proxy commands
     }
 
     @Override

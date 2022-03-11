@@ -2,6 +2,7 @@ rootProject.name = "CrossplatForms"
 
 include(":core")
 include(":bungeecord")
+include("velocity")
 include(":access-item")
 include("spigot-common")
 include(":spigot")

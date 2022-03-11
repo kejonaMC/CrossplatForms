@@ -46,13 +46,15 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
     @Nullable
     @Override
     public FormPlayer getPlayer(UUID uuid) {
-        return new BungeeCordPlayer(server.getPlayer(uuid));
+        ProxiedPlayer player = server.getPlayer(uuid);
+        return (player == null) ? null : new BungeeCordPlayer(player);
     }
 
     @Nullable
     @Override
     public FormPlayer getPlayer(String name) {
-        return new BungeeCordPlayer(server.getPlayer(name));
+        ProxiedPlayer player = server.getPlayer(name);
+        return (player == null) ? null : new BungeeCordPlayer(player);
     }
 
     @Override
@@ -77,11 +79,6 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
     }
 
     @Override
-    public boolean isPermissionRegistered(String key) {
-        return false;
-    }
-
-    @Override
     public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
         if (def != PermissionDefault.FALSE) {
             Logger.getLogger().warn("Registering permissions is currently not supported on BungeeCord! Remove permission default settings in configs to stop attempting.");
@@ -98,11 +95,6 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
         pluginManager.dispatchCommand(server.getConsole(), command.getCommand());
     }
 
-    @Override
-    public void dispatchCommands(List<DispatchableCommand> commands) {
-        commands.forEach(this::dispatchCommand);
-    }
-
     public void dispatchCommand(ProxiedPlayer player, DispatchableCommand command) {
         if (command.isPlayer()) {
             if (command.isOp()) {
@@ -115,17 +107,15 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
         } else {
             dispatchCommand(command);
         }
-        pluginManager.dispatchCommand(player, command.getCommand());
     }
 
     @Override
     public void dispatchCommand(UUID uuid, DispatchableCommand command) {
-        dispatchCommand(server.getPlayer(uuid), command);
-    }
-
-    @Override
-    public void dispatchCommands(UUID player, List<DispatchableCommand> commands) {
-        commands.forEach(this::dispatchCommand);
+        ProxiedPlayer player = server.getPlayer(uuid);
+        if (player == null) {
+            throw new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid);
+        }
+        dispatchCommand(player, command);
     }
 
     @EventHandler

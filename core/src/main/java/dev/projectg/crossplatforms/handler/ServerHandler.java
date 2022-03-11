@@ -38,8 +38,6 @@ public interface ServerHandler {
     boolean isGeyserEnabled();
     boolean isFloodgateEnabled();
 
-    boolean isPermissionRegistered(String key);
-
     void registerPermission(String key, @Nullable String description, PermissionDefault def);
 
     default void registerPermission(Permission permission) {
@@ -54,16 +52,21 @@ public interface ServerHandler {
      */
     void dispatchCommand(DispatchableCommand command);
 
-    void dispatchCommands(List<DispatchableCommand> commands);
+    default void dispatchCommands(List<DispatchableCommand> commands) {
+        commands.forEach(this::dispatchCommand);
+    }
 
     /**
-     * Execute a command as the given player.
-     * @param player The player to run the command as
+     * Execute a command. The command should only be run as the given player if {@link DispatchableCommand#isPlayer()}
+     * returns true.
+     * @param player The player to possibly run the command as
      * @param command The command string to execute
      */
     void dispatchCommand(UUID player, DispatchableCommand command);
 
-    void dispatchCommands(UUID player, List<DispatchableCommand> commands);
+    default void dispatchCommands(UUID player, List<DispatchableCommand> commands) {
+        commands.forEach(c -> dispatchCommand(player, c));
+    }
 
 
     /**
