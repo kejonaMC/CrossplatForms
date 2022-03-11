@@ -2,8 +2,6 @@ package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.handler.FormPlayer;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
 
 public class FakePlayer implements FormPlayer {
@@ -23,11 +21,6 @@ public class FakePlayer implements FormPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return false;
-    }
-
-    @Override
-    public Map<String, Boolean> getPermissions() {
-        return Collections.emptyMap();
     }
 
     @Override

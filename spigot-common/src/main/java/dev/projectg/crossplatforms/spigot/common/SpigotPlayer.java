@@ -36,14 +36,6 @@ public class SpigotPlayer implements FormPlayer {
         return handle.hasPermission(permission);
     }
 
-    public Map<String, Boolean> getPermissions() {
-        return handle.getEffectivePermissions()
-                .stream()
-                .filter(info -> info.getPermission().startsWith(Constants.Id()))
-                .sorted(Comparator.comparing(PermissionAttachmentInfo::getPermission))
-                .collect(Collectors.toMap(PermissionAttachmentInfo::getPermission, PermissionAttachmentInfo::getValue, (x, y) -> y, LinkedHashMap::new));
-    }
-
     @Override
     public void sendMessage(String message) {
         handle.sendMessage(Constants.MESSAGE_PREFIX + message);

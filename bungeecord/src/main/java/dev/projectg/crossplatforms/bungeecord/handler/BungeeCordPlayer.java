@@ -6,10 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class BungeeCordPlayer implements FormPlayer {
@@ -30,12 +27,6 @@ public class BungeeCordPlayer implements FormPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return player.hasPermission(permission);
-    }
-
-    @Override
-    public Map<String, Boolean> getPermissions() {
-        // getPermissions() returns string collection, of all permissions granted
-        return player.getPermissions().stream().collect(Collectors.toMap(Function.identity(), e -> true));
     }
 
     @Override

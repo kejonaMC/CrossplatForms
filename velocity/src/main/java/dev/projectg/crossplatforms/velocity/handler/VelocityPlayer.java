@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -29,11 +27,6 @@ public class VelocityPlayer implements FormPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return player.hasPermission(permission);
-    }
-
-    @Override
-    public Map<String, Boolean> getPermissions() {
-        return Collections.emptyMap(); // todo: find way to do this with velocity or a third party plugin
     }
 
     @Override
