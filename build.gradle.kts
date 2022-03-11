@@ -11,7 +11,7 @@ allprojects{
     apply(plugin = "java-library")
 
     group = "dev.projectg"
-    version = "0.3.0"
+    version = "0.4.0"
     java.sourceCompatibility = JavaVersion.VERSION_1_8
     java.targetCompatibility = JavaVersion.VERSION_1_8
 

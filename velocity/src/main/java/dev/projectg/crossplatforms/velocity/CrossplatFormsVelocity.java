@@ -35,7 +35,7 @@ import java.nio.file.Path;
 
 @Plugin(id = "crossplatforms",
         name = "CrossplatForms-Velocity",
-        version = "0.3.0",
+        version = "0.4.0",
         url = "https://github.com/ProjectG-Plugins/CrossplatForms",
         description = "Unifies inventory menus with Bedrock Edition forms.",
         authors = "Konicai",
