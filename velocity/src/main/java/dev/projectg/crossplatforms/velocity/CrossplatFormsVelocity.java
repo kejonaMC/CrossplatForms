@@ -54,8 +54,9 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     private final Path dataFolder;
     private final Logger logger;
 
+    private final VelocityServerHandler serverHandler;
+
     private CrossplatForms crossplatForms;
-    private VelocityServerHandler serverHandler;
 
     @Inject
     public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, Path dataFolder, java.util.logging.Logger logger) {
@@ -64,15 +65,15 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
         this.container = container;
         this.dataFolder = dataFolder;
         this.logger = new JavaUtilLogger(logger);
+
+        serverHandler = new VelocityServerHandler(server);
     }
 
     @Subscribe
-    public void initialize(ProxyInitializeEvent event) {
+    public void load(ProxyInitializeEvent event) {
         if (crossplatForms != null) {
             logger.warn("Initializing already occurred");
         }
-
-        serverHandler = new VelocityServerHandler(server);
 
         // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         VelocityCommandManager<CommandOrigin> commandManager;
