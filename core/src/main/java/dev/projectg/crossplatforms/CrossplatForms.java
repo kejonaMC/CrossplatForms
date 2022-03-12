@@ -5,6 +5,7 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.BedrockTransferAction;
 import dev.projectg.crossplatforms.action.CommandsAction;
 import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.CommandOrigin;
@@ -36,8 +37,6 @@ import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.geysermc.cumulus.util.FormImage;
-import org.geysermc.geyser.GeyserImpl;
-import org.geysermc.geyser.session.auth.AuthType;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -78,13 +77,8 @@ public class CrossplatForms {
         ReloadableRegistry.clear();
         logger.info("Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
 
-        if (serverHandler.isFloodgateEnabled()) {
-            if (serverHandler.isGeyserEnabled() && GeyserImpl.getInstance().getConfig().getRemote().getAuthType() != AuthType.FLOODGATE ) {
-                logger.warn("Floodgate is installed but auth-type in Geyser's config is not set to Floodgate! Ignoring Floodgate.");
-                bedrockHandler = new GeyserHandler();
-            } else {
-                bedrockHandler = new FloodgateHandler();
-            }
+        if (serverHandler.isFloodgateEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreFloodgate")) {
+            bedrockHandler = new FloodgateHandler();
             cumulusAvailable = true;
         } else if (serverHandler.isGeyserEnabled()) {
             bedrockHandler = new GeyserHandler();
@@ -181,7 +175,8 @@ public class CrossplatForms {
 
     public static void registerDefaultActions(ConfigManager configManager) {
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimpleType(InterfaceAction.IDENTIFIER, String.class, InterfaceAction::new);
-        actionSerializer.registerSimpleType(CommandsAction.IDENTIFIER, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
+        actionSerializer.registerSimpleType(InterfaceAction.TYPE, String.class, InterfaceAction::new);
+        actionSerializer.registerSimpleType(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
+        actionSerializer.registerType(BedrockTransferAction.TYPE, BedrockTransferAction.class);
     }
 }

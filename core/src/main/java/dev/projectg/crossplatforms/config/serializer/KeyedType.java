@@ -13,6 +13,10 @@ public interface KeyedType {
     /**
      * @return An object serializable by Configurate that represents this implementation, which should be successfully
      * deserialized back to an equivalent instance of this implementation if necessary.
+     *
+     * The default implementation is that this returns the given instance that this is called on.
      */
-    Object value();
+    default Object value() {
+        return this;
+    }
 }

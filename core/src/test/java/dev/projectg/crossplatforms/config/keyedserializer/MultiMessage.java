@@ -33,11 +33,6 @@ public class MultiMessage implements Message {
     }
 
     @Override
-    public Object value() {
-        return this;
-    }
-
-    @Override
     public void send() {
         list.forEach(System.out::println);
     }

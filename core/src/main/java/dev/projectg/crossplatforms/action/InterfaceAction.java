@@ -14,10 +14,10 @@ import java.util.Map;
 @ConfigSerializable
 public class InterfaceAction extends SimpleAction<String> {
 
-    public static final String IDENTIFIER = "form";
+    public static final String TYPE = "form";
 
     public InterfaceAction(@Nonnull String value) {
-        super(IDENTIFIER, value);
+        super(TYPE, value);
     }
 
     @Override

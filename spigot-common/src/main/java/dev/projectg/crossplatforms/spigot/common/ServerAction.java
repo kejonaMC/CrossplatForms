@@ -29,11 +29,6 @@ public class ServerAction extends SimpleAction<String> {
     }
 
     @Override
-    public String type() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);

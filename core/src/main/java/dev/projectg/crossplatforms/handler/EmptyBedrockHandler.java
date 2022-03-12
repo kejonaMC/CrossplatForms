@@ -18,11 +18,11 @@ public class EmptyBedrockHandler implements BedrockHandler {
 
     @Override
     public void sendForm(UUID uuid, Form form) {
-        throw new AssertionError("Attempted to send a form with EmptyBedrockHandler");
+        throw new UnsupportedOperationException("Cannot send forms");
     }
 
     @Override
-    public int getPlayerCount() {
-        return 0;
+    public void transfer(FormPlayer player, String address, int port) {
+        throw new UnsupportedOperationException("Cannot transfer players");
     }
 }

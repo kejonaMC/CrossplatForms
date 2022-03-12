@@ -16,10 +16,10 @@ import java.util.stream.Collectors;
 @ConfigSerializable
 public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
-    public static final String IDENTIFIER = "commands";
+    public static final String TYPE = "commands";
 
     public CommandsAction(List<DispatchableCommand> commands) {
-        super(IDENTIFIER, commands);
+        super(TYPE, commands);
     }
 
     @Override

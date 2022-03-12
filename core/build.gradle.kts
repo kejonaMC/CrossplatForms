@@ -8,10 +8,7 @@ dependencies {
     testImplementation("org.geysermc.cumulus:cumulus:1.0-SNAPSHOT") // needed for testing button components
     testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
 
-    compileOnly("org.geysermc:geyser-api:2.0.2-SNAPSHOT")
-    compileOnly("org.geysermc:core:2.0.2-SNAPSHOT") {
-        isTransitive = false // exclude all the junk we won't and can't use
-    }
+    compileOnly("org.geysermc:core:2.0.2-SNAPSHOT")
     compileOnly("org.geysermc.floodgate:api:2.1.0-SNAPSHOT")
     api("cloud.commandframework:cloud-core:1.6.2")
     api("cloud.commandframework:cloud-minecraft-extras:1.6.2")

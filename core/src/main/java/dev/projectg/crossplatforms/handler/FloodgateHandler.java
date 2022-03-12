@@ -24,7 +24,7 @@ public class FloodgateHandler implements BedrockHandler {
     }
 
     @Override
-    public int getPlayerCount() {
-        return api.getPlayerCount();
+    public void transfer(FormPlayer player, String address, int port) {
+        api.transferPlayer(player.getUuid(), address, port);
     }
 }

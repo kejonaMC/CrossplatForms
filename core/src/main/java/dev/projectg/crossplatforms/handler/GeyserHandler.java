@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
+import com.nukkitx.protocol.bedrock.packet.TransferPacket;
 import org.geysermc.cumulus.Form;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.GeyserSession;
@@ -30,7 +31,15 @@ public class GeyserHandler implements BedrockHandler {
     }
 
     @Override
-    public int getPlayerCount() {
-        return geyser.getSessionManager().getAllSessions().size();
+    public void transfer(FormPlayer player, String address, int port) {
+        GeyserSession session = geyser.connectionByUuid(player.getUuid());
+        if (session == null) {
+            throw new IllegalArgumentException("Failed to find GeyserSession for " + player.getName() + player.getUuid());
+        } else {
+            TransferPacket packet = new TransferPacket();
+            packet.setAddress(address);
+            packet.setPort(port);
+            session.sendUpstreamPacket(packet);
+        }
     }
 }
