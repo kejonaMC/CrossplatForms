@@ -26,10 +26,9 @@ tasks.withType<ShadowJar> {
         }
         exclude {
                 e -> e.name.startsWith("com.mojang") // all available on velocity
-                || e.name.startsWith("org.yaml.snakeyaml")
+                || e.name.startsWith("org.yaml")
                 || e.name.startsWith("com.google")
-                || e.name.startsWith("net.kyori.adventure")
-                || e.name.startsWith("net.kyori.examination")
+                || e.name.startsWith("net.kyori")
         }
     }
 
