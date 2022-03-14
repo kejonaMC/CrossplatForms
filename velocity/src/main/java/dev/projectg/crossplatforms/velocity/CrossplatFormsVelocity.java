@@ -75,7 +75,6 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
             logger.warn("Initializing already occurred");
         }
 
-        // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         VelocityCommandManager<CommandOrigin> commandManager;
         try {
             commandManager = new VelocityCommandManager<>(
