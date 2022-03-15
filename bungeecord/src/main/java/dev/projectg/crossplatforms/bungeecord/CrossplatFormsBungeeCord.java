@@ -46,7 +46,6 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         audiences = BungeeAudiences.create(this);
         serverHandler = new BungeeCordServerHandler(this, audiences);
 
-        // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         BungeeCommandManager<CommandOrigin> commandManager;
         try {
             commandManager = new BungeeCommandManager<>(
