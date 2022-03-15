@@ -26,6 +26,7 @@ subprojects {
     repositories {
         //mavenLocal()
         mavenCentral()
+        maven("https://jitpack.io")
 
         if (project.name.contains("spigot")) {
             // this is only used to uniformly apply repositories common between the spigot modules
@@ -45,14 +46,14 @@ subprojects {
         compileOnly("org.projectlombok:lombok:1.18.22")
         compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
     }
+}
 
-    tasks.named<Test>("test") {
-        useJUnitPlatform()
-    }
+tasks.named<Test>("test") {
+    useJUnitPlatform()
+}
 
-    tasks.named("build") {
-        dependsOn(tasks.named<Test>("test"))
-    }
+tasks.named("build") {
+    dependsOn(tasks.named<Test>("test"))
 }
 
 // todo: process resources / token replacement

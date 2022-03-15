@@ -81,8 +81,9 @@ public class CrossplatForms {
             bedrockHandler = new FloodgateHandler();
             cumulusAvailable = true;
         } else if (serverHandler.isGeyserEnabled()) {
+            // java 16 GeyserHandler should always be instantiated here since Geyser can only run on java 16+
             bedrockHandler = new GeyserHandler();
-            logger.warn("Floodgate is recommended and more stable!");
+            logger.warn("Floodgate is recommended and less likely to break with new updates!");
             cumulusAvailable = true;
         } else {
             bedrockHandler = BedrockHandler.empty();

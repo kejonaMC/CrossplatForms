@@ -14,6 +14,7 @@ pluginManagement {
         gradlePluginPortal()
     }
     plugins {
+        id("net.kyori.indra") version "2.1.1" // multi-release jar
         id("com.github.johnrengelman.shadow") version "7.1.2" // shadowing dependencies
     }
 }
