@@ -10,8 +10,8 @@ import java.lang.reflect.Type;
 public class DispatchableCommandSerializer implements TypeSerializer<DispatchableCommand> {
 
     private static final String PLAYER_PREFIX = "player;";
-    private static final String OP_PREFIX = "op";
-    private static final String CONSOLE_PREFIX = "console";
+    private static final String OP_PREFIX = "op;";
+    private static final String CONSOLE_PREFIX = "console;";
 
     public static DispatchableCommand deserialize(String value) {
         boolean player = value.startsWith(PLAYER_PREFIX);
