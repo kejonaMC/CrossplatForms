@@ -26,7 +26,7 @@ dependencies {
     testImplementation("org.geysermc.cumulus:cumulus:1.0-SNAPSHOT") // needed for testing button components
     testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
 
-    compileOnly("org.geysermc.floodgate:api:2.1.0-SNAPSHOT")
+    compileOnly("org.geysermc.floodgate:api:2.1.1-SNAPSHOT")
     api("cloud.commandframework:cloud-core:1.6.2")
     api("cloud.commandframework:cloud-minecraft-extras:1.6.2")
     api("net.kyori:adventure-api:4.10.1")
