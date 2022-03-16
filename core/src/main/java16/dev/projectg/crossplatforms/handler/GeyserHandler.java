@@ -5,15 +5,12 @@ import org.geysermc.cumulus.Form;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.GeyserSession;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class GeyserHandler implements BedrockHandler {
 
-    private final GeyserImpl geyser;
-
-    public GeyserHandler() {
-        geyser = GeyserImpl.getInstance();
-    }
+    private final GeyserImpl geyser = Objects.requireNonNull(GeyserImpl.getInstance());
 
     @Override
     public boolean isBedrockPlayer(UUID uuid) {

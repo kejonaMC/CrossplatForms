@@ -3,7 +3,6 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow")
 }
 
 allprojects{
@@ -18,11 +17,16 @@ allprojects{
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
     }
+
+    // avoids having to use indra on every module. core module is multi-release.
+    tasks.jar {
+        manifest {
+            attributes("Multi-Release" to "true")
+        }
+    }
 }
 
 subprojects {
-    apply(plugin = "maven-publish")
-
     repositories {
         //mavenLocal()
         mavenCentral()
