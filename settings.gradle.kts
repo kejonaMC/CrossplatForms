@@ -1,6 +1,5 @@
 rootProject.name = "CrossplatForms"
 
-include(":build-logic")
 include(":core")
 include(":bungeecord")
 include("velocity")
