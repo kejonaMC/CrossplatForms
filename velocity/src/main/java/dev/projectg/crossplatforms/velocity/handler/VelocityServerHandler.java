@@ -59,7 +59,7 @@ public class VelocityServerHandler extends ProxyCommandCache implements ServerHa
 
     @Override
     public boolean isGeyserEnabled() {
-        return server.getPluginManager().isLoaded("Geyser-Velocity");
+        return server.getPluginManager().isLoaded("geyser");
     }
 
     @Override
