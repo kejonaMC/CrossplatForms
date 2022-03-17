@@ -16,13 +16,12 @@ import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
-import dev.projectg.crossplatforms.JavaUtilLogger;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
@@ -40,7 +39,7 @@ import java.nio.file.Path;
         url = "https://github.com/ProjectG-Plugins/CrossplatForms",
         description = "Unifies inventory menus with Bedrock Edition forms.",
         authors = "Konicai",
-        dependencies = {@Dependency(id = "Geyser-Velocity", optional = true), @Dependency(id = "floodgate", optional = true)})
+        dependencies = {@Dependency(id = "geyser", optional = true), @Dependency(id = "floodgate", optional = true)})
 public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
     private static CrossplatFormsVelocity INSTANCE;
@@ -60,12 +59,12 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     private CrossplatForms crossplatForms;
 
     @Inject
-    public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, java.util.logging.Logger logger) {
+    public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, org.slf4j.Logger logger) {
         INSTANCE = this;
         this.server = server;
         this.container = container;
         this.dataFolder = dataFolder;
-        this.logger = new JavaUtilLogger(logger);
+        this.logger = new SLF4JLogger(logger);
 
         serverHandler = new VelocityServerHandler(server);
     }
