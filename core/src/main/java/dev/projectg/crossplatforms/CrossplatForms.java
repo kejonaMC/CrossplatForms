@@ -40,6 +40,7 @@ import org.geysermc.cumulus.util.FormImage;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Getter
@@ -66,6 +67,7 @@ public class CrossplatForms {
     public CrossplatForms(Logger logger,
                           Path dataFolder,
                           ServerHandler serverHandler,
+                          String defaultCommand,
                           CommandManager<CommandOrigin> commandManager,
                           PlaceholderHandler placeholders,
                           CrossplatFormsBoostrap bootstrap) {
@@ -77,10 +79,11 @@ public class CrossplatForms {
         ReloadableRegistry.clear();
         logger.info("Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
 
+        // Decide on which implementation to deal with bedrock players
         if (serverHandler.isFloodgateEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreFloodgate")) {
             bedrockHandler = new FloodgateHandler();
             cumulusAvailable = true;
-        } else if (serverHandler.isGeyserEnabled()) {
+        } else if (serverHandler.isGeyserEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreGeyser")) {
             // java 16 GeyserHandler should always be instantiated here since Geyser can only run on java 16+
             bedrockHandler = new GeyserHandler();
             logger.warn("Floodgate is recommended and less likely to break with new updates!");
@@ -91,10 +94,12 @@ public class CrossplatForms {
             cumulusAvailable = false;
         }
 
+        // Load all configs
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger);
         configManager.register(ConfigId.GENERAL);
         if (cumulusAvailable) {
+            // Only register bedrock form features and only references cumulus classes if cumulus is available
             configManager.register(ConfigId.BEDROCK_FORMS);
             configManager.serializers(builder -> {
                 builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
@@ -102,15 +107,16 @@ public class CrossplatForms {
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
         }
-        registerDefaultActions(configManager);
-        bootstrap.preConfigLoad(configManager);
+        registerDefaultActions(configManager); // actions that are available on any implementation
+        bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }
-        logger.setDebug(configManager.getConfig(GeneralConfig.class).map(GeneralConfig::isEnableDebug).orElse(false));
+        Optional<GeneralConfig> generalConfig = configManager.getConfig(GeneralConfig.class);
+        logger.setDebug(generalConfig.map(GeneralConfig::isEnableDebug).orElse(false));
         logger.debug("Took " + (System.currentTimeMillis() - configTime) + "ms to load config files.");
 
-        // Load forms
+        // Load forms and menus from the configs into registries
         long registryTime = System.currentTimeMillis();
         interfaceManager = bootstrap.interfaceManager(
                 bedrockHandler,
@@ -118,6 +124,9 @@ public class CrossplatForms {
                 new JavaMenuRegistry(configManager, serverHandler)
         );
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
+
+        // Command defined in config or default provided by implementation
+        String rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);
 
         // Makes the info messages for invalid syntax, sender, etc exceptions nicer
         new MinecraftExceptionHandler<CommandOrigin>()
@@ -130,13 +139,13 @@ public class CrossplatForms {
 
 
         MinecraftHelp<CommandOrigin> minecraftHelp = new MinecraftHelp<>(
-                "/" + FormsCommand.NAME + " help",
+                "/" + rootCommand + " help",
                 (serverHandler::asAudience),
                 commandManager
         );
 
         // The top of our command tree
-        commandBuilder = commandManager.commandBuilder(FormsCommand.NAME);
+        commandBuilder = commandManager.commandBuilder(rootCommand);
 
         // The handler for the root /forms command
         commandManager.command(commandBuilder
@@ -146,7 +155,7 @@ public class CrossplatForms {
                     try {
                         if (origin.hasPermission(ListCommand.PERMISSION)) {
                             logger.debug("Executing /forms list from /forms");
-                            commandManager.executeCommand(origin, FormsCommand.NAME + " list").get();
+                            commandManager.executeCommand(origin, rootCommand + " list").get();
                         } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
                             minecraftHelp.queryCommands("", context.getSender());
                         } else {

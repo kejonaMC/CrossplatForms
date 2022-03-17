@@ -4,10 +4,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://repo.codemc.org/repository/maven-public/") // NBT api
-}
-
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     api("de.tr7zw:item-nbt-api:2.9.2")

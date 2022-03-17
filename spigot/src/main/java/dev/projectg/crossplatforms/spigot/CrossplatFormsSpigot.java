@@ -88,6 +88,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
                 logger,
                 getDataFolder().toPath(),
                 serverHandler,
+                "forms",
                 commandManager,
                 placeholders,
                 this

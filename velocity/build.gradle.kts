@@ -4,10 +4,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://nexus.velocitypowered.com/repository/maven-public/")
-}
-
 dependencies {
     annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
     compileOnly("com.velocitypowered:velocity-api:3.0.1")

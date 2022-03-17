@@ -5,20 +5,27 @@ plugins {
     `maven-publish`
 }
 
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.targetCompatibility = JavaVersion.VERSION_1_8
+
 allprojects{
     apply(plugin = "java")
     apply(plugin = "java-library")
 
     group = "dev.projectg"
     version = "0.4.0"
-    java.sourceCompatibility = JavaVersion.VERSION_1_8
-    java.targetCompatibility = JavaVersion.VERSION_1_8
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
     }
 
-    // avoids having to use indra on every module. core module is multi-release.
+    tasks.withType<Test>().configureEach {
+        // Disable creating of test report files
+        reports.html.required.set(false)
+        reports.junitXml.required.set(false)
+    }
+
+    // Ensure platform jars are flagged as multi release
     tasks.jar {
         manifest {
             attributes("Multi-Release" to "true")
@@ -27,19 +34,6 @@ allprojects{
 }
 
 subprojects {
-    repositories {
-        //mavenLocal()
-        mavenCentral()
-        maven("https://jitpack.io")
-
-        if (project.name.contains("spigot")) {
-            // this is only used to uniformly apply repositories common between the spigot modules
-            maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // spigot
-            maven("https://oss.sonatype.org/content/repositories/snapshots/") // bungeecord-chat
-            maven("https://libraries.minecraft.net/") // brigadier
-        }
-    }
-
     dependencies {
         testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
         testCompileOnly("org.projectlombok:lombok:1.18.22")

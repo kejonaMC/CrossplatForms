@@ -97,6 +97,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
                 logger,
                 dataFolder,
                 serverHandler,
+                "formsv",
                 commandManager,
                 placeholders,
                 this

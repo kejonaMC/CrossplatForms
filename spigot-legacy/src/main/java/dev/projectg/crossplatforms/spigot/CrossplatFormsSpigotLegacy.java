@@ -24,7 +24,6 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
-import dev.projectg.crossplatforms.spigot.common.SpigotAccessItemsBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
@@ -89,6 +88,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
                 logger,
                 getDataFolder().toPath(),
                 serverHandler,
+                "forms",
                 commandManager,
                 placeholders,
                 this

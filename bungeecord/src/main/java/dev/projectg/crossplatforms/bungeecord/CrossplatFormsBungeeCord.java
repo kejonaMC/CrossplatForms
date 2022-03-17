@@ -67,6 +67,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
                 logger,
                 getDataFolder().toPath(),
                 serverHandler,
+                "formsb",
                 commandManager,
                 placeholders,
                 this

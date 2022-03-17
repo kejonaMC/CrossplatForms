@@ -1,25 +1,14 @@
 
 plugins {
-    id("net.kyori.indra")
-}
+    id("me.champeau.mrjar")}
 
-sourceSets {
-    main {
-        multirelease {
-            alternateVersions(16)
-        }
-    }
-
-    create("java16")
+multiRelease {
+    targetVersions(8, 16)
 }
 
 // Add more configurations here as necessary
 val java16CompileOnly: Configuration by configurations.getting {
     extendsFrom(configurations.compileOnly.get())
-}
-
-repositories {
-    maven("https://repo.opencollab.dev/main/")
 }
 
 dependencies {

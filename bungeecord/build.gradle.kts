@@ -4,10 +4,6 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-}
-
 dependencies {
     compileOnly("net.md-5:bungeecord-api:1.18-R0.1-SNAPSHOT")
     api("cloud.commandframework:cloud-bungee:1.6.2")
