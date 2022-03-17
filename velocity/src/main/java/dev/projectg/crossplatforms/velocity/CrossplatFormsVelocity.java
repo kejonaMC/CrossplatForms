@@ -10,6 +10,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
@@ -59,7 +60,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     private CrossplatForms crossplatForms;
 
     @Inject
-    public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, Path dataFolder, java.util.logging.Logger logger) {
+    public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, java.util.logging.Logger logger) {
         INSTANCE = this;
         this.server = server;
         this.container = container;
