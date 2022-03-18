@@ -12,7 +12,6 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
-import org.geysermc.cumulus.component.LabelComponent;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@ToString
+@ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class CustomForm extends BedrockForm implements ValuedType {
@@ -86,10 +85,10 @@ public class CustomForm extends BedrockForm implements ValuedType {
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < customComponents.size(); i++) {
                 CustomComponent component = customComponents.get(i);
-                if (component instanceof LabelComponent) {
-                    LabelComponent label = (LabelComponent) component;
+                if (component instanceof Label) {
+                    Label label = (Label) component;
                     // label components aren't included in the response
-                    resultPlaceholders.put(placeholder(i), label.getText());
+                    resultPlaceholders.put(placeholder(i), label.text());
                     continue;
                 }
 

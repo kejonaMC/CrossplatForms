@@ -1,7 +1,6 @@
 package dev.projectg.crossplatforms.config.serializer;
 
 import io.leangen.geantyref.TypeToken;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -87,7 +86,7 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor
     private class SimpleTypeRegistration<V> {
         private final TypeToken<V> valueType;
         private final Function<V, T> factory;

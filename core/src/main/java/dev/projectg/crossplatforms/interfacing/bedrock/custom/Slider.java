@@ -11,7 +11,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable

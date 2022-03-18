@@ -18,6 +18,13 @@ public class NbtUtils {
         return item.getString(key);
     }
 
+    /**
+     * Set a custom NBT tag on the itemstack. Vanilla tags will not be placed on the item.
+     * @param stack The ItemStack whose NBT to put the tag on
+     * @param key The key of the tag
+     * @param value The value of the tag
+     * @see NBTItem#mergeCustomNBT(ItemStack)
+     */
     public static void setCustomString(@Nonnull ItemStack stack, @Nonnull String key, @Nonnull String value) {
         NBTItem item = new NBTItem(stack);
         item.setString(key, value);

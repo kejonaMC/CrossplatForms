@@ -8,7 +8,7 @@ import lombok.ToString;
 import org.geysermc.cumulus.component.ToggleComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable

@@ -1,21 +1,19 @@
 package dev.projectg.crossplatforms.config.serializer;
 
+import lombok.AllArgsConstructor;
 import lombok.ToString;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 @ToString
+@AllArgsConstructor
 public abstract class SimpleType<V> implements KeyedType {
 
+    @Nonnull
     private final String type;
 
+    @Nonnull
     private final V value;
-
-    public SimpleType(@Nonnull String type, @Nonnull V value) {
-        this.type = Objects.requireNonNull(type);
-        this.value = Objects.requireNonNull(value);
-    }
 
     @Override
     public final String type() {

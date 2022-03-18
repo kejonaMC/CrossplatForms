@@ -10,7 +10,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 public class Label extends CustomComponent {

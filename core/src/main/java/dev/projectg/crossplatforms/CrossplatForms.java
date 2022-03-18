@@ -90,7 +90,7 @@ public class CrossplatForms {
             cumulusAvailable = true;
         } else {
             bedrockHandler = BedrockHandler.empty();
-            logger.severe("Geyser nor Floodgate are installed! There may be issues.");
+            logger.warn("Geyser nor Floodgate are installed! There may be issues.");
             cumulusAvailable = false;
         }
 

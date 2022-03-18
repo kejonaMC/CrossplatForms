@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Getter
 @ToString
+@Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class CustomComponent implements ValuedType {

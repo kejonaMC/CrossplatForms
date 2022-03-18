@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-@ToString
+@ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class ModalForm extends BedrockForm {

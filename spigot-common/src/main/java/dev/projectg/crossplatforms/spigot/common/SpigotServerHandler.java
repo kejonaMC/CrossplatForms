@@ -43,21 +43,13 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
     @Override
     public FormPlayer getPlayer(UUID uuid) {
         Player player = server.getPlayer(uuid);
-        if (player == null) {
-            return null;
-        } else {
-            return new SpigotPlayer(player);
-        }
+        return (player == null) ? null : new SpigotPlayer(player);
     }
 
     @Override
     public FormPlayer getPlayer(String name) {
         Player player = server.getPlayer(name);
-        if (player == null) {
-            return null;
-        } else {
-            return new SpigotPlayer(player);
-        }
+        return (player == null) ? null : new SpigotPlayer(player);
     }
 
     @Override

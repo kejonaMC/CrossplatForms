@@ -11,7 +11,6 @@ public class MultiMessage implements Message {
 
     public static final String IDENTIFIER = "messages";
 
-    @Required
     private String prefix = "";
 
     @Required

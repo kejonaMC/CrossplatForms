@@ -42,6 +42,6 @@ public class Integer implements Number {
 
     @Override
     public String toString() {
-        return "Integer{" + "integer=" + integer + ", type=" + type() + "}";
+        return "Integer{" + "integer=" + integer + "}";
     }
 }

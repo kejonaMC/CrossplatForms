@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.permission;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
@@ -7,6 +8,7 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class Permission {
@@ -26,17 +28,6 @@ public class Permission {
         this.key = key;
         this.description = description;
         this.defaultPermission = permissionDefault;
-    }
-
-    public String key() {
-        return key;
-    }
-    public String description() {
-        return description;
-    }
-
-    public PermissionDefault defaultPermission() {
-        return defaultPermission;
     }
 
     @Override

@@ -46,6 +46,6 @@ public class ConfigurateUtils {
     }
 
     public static YamlConfigurationLoader.Builder loaderBuilder(File directory, String resource) throws IOException {
-        return loaderBuilder(FileUtils.fileOrCopiedFromResource(FileUtils.fileOrCopiedFromResource(new File(directory, resource))));
+        return loaderBuilder(FileUtils.fileOrCopiedFromResource(new File(directory, resource)));
     }
 }

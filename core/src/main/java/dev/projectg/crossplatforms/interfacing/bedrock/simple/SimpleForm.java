@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@ToString
+@ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class SimpleForm extends BedrockForm {

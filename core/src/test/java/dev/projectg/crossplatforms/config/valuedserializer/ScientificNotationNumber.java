@@ -48,6 +48,6 @@ public class ScientificNotationNumber implements Number {
 
     @Override
     public String toString() {
-        return "ScientificNotationNumber{" + "mantissa=" + mantissa + ", exponent=" + exponent + ", type=" + type() + "}";
+        return "ScientificNotationNumber{" + "mantissa=" + mantissa + ", exponent=" + exponent + "}";
     }
 }
