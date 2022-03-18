@@ -1,7 +1,7 @@
 name: Feature request
 description: Suggest an idea for this project
 labels: "Feature Request"
-body:.
+body:
 - type: textarea
   attributes:
     label: What feature do you want to see added?
