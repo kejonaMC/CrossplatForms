@@ -9,6 +9,8 @@ CrossplatForms is a Java Edition plugin aimed at creating Bedrock Edition Forms 
 
 Inventory menus for Java Edition players can also be created. Forms and menus are together referred to as interfaces.
 
+See the [gallery](images/README.md) for visual examples.
+
 ## Features:
 
 * Define Actions to run commands, open interfaces, change servers, etc
