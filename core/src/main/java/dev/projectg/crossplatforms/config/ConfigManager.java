@@ -106,7 +106,7 @@ public class ConfigManager {
                     // message is useless on its own if unknown
                     e.printStackTrace();
                 } else {
-                    logger.severe("Enabled debug mode for further information.");
+                    logger.severe("Enable debug mode for further information.");
                     logger.severe(message);
                 }
                 if (!useMinimalDefaults(configId)) {

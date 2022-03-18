@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("FieldMayBeFinal")
 public class Dropdown extends CustomComponent {
 
+    public static final String TYPE = "dropdown";
+
     private List<String> options = new ArrayList<>();
     private int defaultOption = 0;
 
@@ -46,15 +48,15 @@ public class Dropdown extends CustomComponent {
     }
 
     @Override
-    public void setPlaceholders(@Nonnull Resolver resolver) {
-        super.setPlaceholders(resolver);
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
         options = options.stream().map(resolver).collect(Collectors.toList());
     }
 
     @Override
     public Dropdown withPlaceholders(Resolver resolver) {
         Dropdown copy = copy();
-        copy.setPlaceholders(resolver);
+        copy.placeholders(resolver);
         return copy;
     }
 

@@ -5,6 +5,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @ConfigSerializable
@@ -14,7 +15,16 @@ public class ReplacementParser implements Parser {
     public static final String TYPE = "replacements";
 
     @Required
-    private Map<String, String> replacements = null;
+    private Map<String, String> replacements = new HashMap<>(0);
+
+    @SuppressWarnings("unused")
+    private ReplacementParser() {
+
+    }
+
+    public ReplacementParser(Map<String, String> replacements) {
+        this.replacements = replacements;
+    }
 
     @Override
     public String type() {
@@ -26,9 +36,8 @@ public class ReplacementParser implements Parser {
         String result = primitive;
         for (String target : replacements.keySet()) {
             String value = replacements.get(target);
-            if (value != null && !value.isEmpty()) {
-                result = result.replace(target, value);
-            }
+            value = (value == null) ? "" : value;
+            result = result.replace(target, value);
         }
         return result;
     }

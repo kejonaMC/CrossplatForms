@@ -4,8 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.FakePlayer;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.Input;
+import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
+import dev.projectg.crossplatforms.parser.ReplacementParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
 
 public class InputComponentTest {
 
@@ -13,30 +17,30 @@ public class InputComponentTest {
 
     @Test
     public void testFilterPlaceholders() {
-        Input input = Input.builder().blockPlaceholders(true).build();
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT + " and " + Input.PLACEHOLDER_REPLACEMENT, input.parse(player, primitive("%player_name% and %player_uuid%")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT + " and " + Input.PLACEHOLDER_REPLACEMENT, input.parse(player, primitive("{player_name} and {player_uuid}")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(player, primitive("%%player_balance%%")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(player, primitive("{{player_balance}}")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(player, primitive("%%nested_placeholder%_other%")));
-        Assertions.assertEquals("I took 50%.", input.parse(player, primitive("I took 50%.")));
-        Assertions.assertEquals("I took 50% and then 20%.", input.parse(player, primitive("I took 50% and then 20%.")));
-        Assertions.assertEquals("%%", input.parse(player, primitive("%%")));
+        Input input = new Input("", "", "");
+        input.parsers(Collections.singletonList(new BlockPlaceholderParser()));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT + " and " + BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%player_name% and %player_uuid%"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT + " and " + BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "{player_name} and {player_uuid}"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%%player_balance%%"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "{{player_balance}}"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%%nested_placeholder%_other%"));
+        Assertions.assertEquals("I took 50%.", input.parse(player, "I took 50%."));
+        Assertions.assertEquals("I took 50% and then 20%.", input.parse(player, "I took 50% and then 20%."));
+        Assertions.assertEquals("%%", input.parse(player, "%%"));
     }
 
     @Test
     public void testReplacements() {
-        Input withDashes = Input.builder().replacements(ImmutableMap.of(" ", "-")).build();
-        Assertions.assertEquals("marshy-waters", withDashes.parse(player, primitive("marshy waters")));
+        Input withDashes = new Input();
+        withDashes.parser(new ReplacementParser(ImmutableMap.of(" ", "-")));
+        Assertions.assertEquals("marshy-waters", withDashes.parse(player, "marshy waters"));
 
-        Input useless = Input.builder().replacements(ImmutableMap.of(" ", "-", "-", " ")).build();
-        Assertions.assertEquals("Big Green Hill", useless.parse(player, primitive("Big Green Hill")));
+        Input useless = new Input();
+        useless.parser(new ReplacementParser(ImmutableMap.of(" ", "-", "-", " ")));
+        Assertions.assertEquals("Big Green Hill", useless.parse(player, "Big Green Hill"));
 
-        Input cascading = Input.builder().replacements(ImmutableMap.of("a", "b", "bb", "aa")).build();
-        Assertions.assertEquals("aa aa", cascading.parse(player, primitive("ab ba")));
-    }
-
-    private static String primitive(String string) {
-        return string; // too lazy to undo this
+        Input cascading = new Input();
+        cascading.parser(new ReplacementParser(ImmutableMap.of("a", "b", "bb", "aa")));
+        Assertions.assertEquals("aa aa", cascading.parse(player, "ab ba"));
     }
 }

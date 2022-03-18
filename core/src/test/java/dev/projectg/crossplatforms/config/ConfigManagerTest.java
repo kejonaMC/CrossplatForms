@@ -28,9 +28,8 @@ public class ConfigManagerTest {
 
     @Test
     public void testBasicConfig() {
-        TestLogger logger = new TestLogger(false);
-        ConfigId root = new ConfigId("bedrock-forms.yml", FormConfig.VERSION, FormConfig.class);
-        ConfigId nested = new ConfigId("configs/forms/bedrock-forms.yml", FormConfig.VERSION, FormConfig.class);
+        TestLogger logger = new TestLogger();
+        ConfigId config = new ConfigId("configs/forms/bedrock-forms-" + FormConfig.VERSION + ".yml", FormConfig.VERSION, FormConfig.class);
 
         ConfigManager manager = new ConfigManager(directory, logger);
         manager.serializers(builder -> {
@@ -41,12 +40,8 @@ public class ConfigManagerTest {
         CrossplatForms.registerDefaultActions(manager);
         manager.getActionSerializer().registerSimpleType("server", String.class, FakeServer::new);
 
-        manager.register(root);
+        manager.register(config);
         Assertions.assertTrue(manager.load());
-
-        manager.register(nested);
-        Assertions.assertTrue(manager.load());
-
         Assertions.assertFalse(logger.failed());
     }
 

@@ -15,6 +15,7 @@ public interface PlaceholderHandler {
      * @param text The text
      * @return the formatted text.
      */
+    @Nonnull
     default List<String> setPlaceholders(@Nonnull FormPlayer player, @Nonnull List<String> text) {
         List<String> processedText = new ArrayList<>();
         if (text.isEmpty()) {
@@ -34,6 +35,7 @@ public interface PlaceholderHandler {
      * @param additional Additional placeholders to apply
      * @return the formatted text.
      */
+    @Nonnull
     default String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text, @Nonnull Map<String, String> additional) {
         if (text.isEmpty()) {
             return text;
@@ -58,6 +60,7 @@ public interface PlaceholderHandler {
      * @param additional Additional placeholders to apply
      * @return the formatted text.
      */
+    @Nonnull
     default List<String> setPlaceholders(@Nonnull FormPlayer player, @Nonnull List<String> text, Map<String, String> additional) {
         List<String> processedText = new ArrayList<>();
         if (text.isEmpty()) {

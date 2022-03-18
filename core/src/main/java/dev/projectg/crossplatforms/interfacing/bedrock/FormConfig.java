@@ -1,7 +1,11 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
 import dev.projectg.crossplatforms.interfacing.InterfaceConfig;
+import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
+import dev.projectg.crossplatforms.parser.Parser;
+import dev.projectg.crossplatforms.parser.ReplacementParser;
 import dev.projectg.crossplatforms.utils.ConfigurateUtils;
+import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.NodePath;
@@ -9,6 +13,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 import org.spongepowered.configurate.transformation.TransformAction;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -19,7 +24,7 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class FormConfig extends InterfaceConfig {
 
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
     public static final int MINIMUM_VERSION = 1;
 
     private Map<String, BedrockForm> forms = Collections.emptyMap();
@@ -29,6 +34,7 @@ public class FormConfig extends InterfaceConfig {
                 .versionKey("config-version")
                 .addVersion(2, update1_2())
                 .addVersion(3, update2_3())
+                .addVersion(4, update3_4())
                 .build();
     }
 
@@ -88,6 +94,33 @@ public class FormConfig extends InterfaceConfig {
             String type = value.getString();
             if (type != null) {
                 value.set(String.class, type.toLowerCase(Locale.ROOT));
+            }
+            return null; // don't move value
+        }));
+
+        return builder.build();
+    }
+
+    private static ConfigurationTransformation update3_4() {
+        NodePath component = NodePath.path("forms", ConfigurationTransformation.WILDCARD_OBJECT, "components", ConfigurationTransformation.WILDCARD_OBJECT);
+        ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
+        builder.addAction(component, ((path, value) -> {
+            if ("input".equals(value.node("type").getString())) {
+                // get values to move
+                Map<String, String> replacements = value.node("replacements").get(new TypeToken<Map<String, String>>() {});
+                boolean blockPlaceholders = value.node("block-placeholders").getBoolean(true);
+                // set new values
+                List<Parser> parsers = new ArrayList<>();
+                if (replacements != null && !replacements.isEmpty()) {
+                    parsers.add(new ReplacementParser(replacements));
+                }
+                if (blockPlaceholders) {
+                    parsers.add(new BlockPlaceholderParser());
+                }
+                value.node("parsers").setList(Parser.class, parsers);
+                // delete old values
+                value.node("replacements").raw(null);
+                value.node("block-placeholders").raw(null);
             }
             return null; // don't move value
         }));

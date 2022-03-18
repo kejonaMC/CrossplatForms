@@ -1,38 +1,35 @@
 package dev.projectg.crossplatforms;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestLogger extends Logger {
 
-    private final boolean printInfo;
     private boolean debug = false;
     private boolean failed = false;
-
-    public TestLogger(boolean printInfo) {
-        this.printInfo = printInfo;
-    }
+    private final List<String> messages = new ArrayList<>();
 
     @Override
     public void info(String message) {
-        if (printInfo) {
-            System.out.println("[INFO] " + message);
-        }
+        messages.add("[INFO] " + message);
     }
 
     @Override
     public void warn(String message) {
-        System.out.println("[WARN] " + message);
+        messages.add("[WARN] " + message);
         failed = true;
     }
 
     @Override
     public void severe(String message) {
-        System.out.println("[SEVERE] " + message);
+        messages.add("[SEVERE] " + message);
         failed = true;
     }
 
     @Override
     public void debug(String message) {
-        if (debug && printInfo) {
-            System.out.println("[DEBUG] " + message);
+        if (debug) {
+            messages.add("[DEBUG] " + message);
         }
     }
 
@@ -48,5 +45,9 @@ public class TestLogger extends Logger {
 
     public boolean failed() {
         return failed;
+    }
+
+    public String dump() {
+        return String.join("\n", messages);
     }
 }

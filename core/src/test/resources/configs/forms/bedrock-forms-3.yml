@@ -72,12 +72,12 @@ forms:
     components:
       - type: input
         text: "Enter a broadcast"
-        parsers:
-          - type: block-placeholders
+        replacements:
+          one: two
 
     actions:
       commands:
         - "say %result_0%"
 
 # Don't touch this
-config-version: 4
+config-version: 3

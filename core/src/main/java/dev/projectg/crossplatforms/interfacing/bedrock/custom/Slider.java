@@ -18,6 +18,8 @@ import javax.annotation.Nonnull;
 @SuppressWarnings("FieldMayBeFinal")
 public class Slider extends CustomComponent {
 
+    public static final String TYPE = "slider";
+
     private float min = 0;
     private float max = 10;
     private int step = 1;
@@ -40,14 +42,14 @@ public class Slider extends CustomComponent {
     }
 
     @Override
-    public void setPlaceholders(@Nonnull Resolver resolver) {
-        super.setPlaceholders(resolver);
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
     }
 
     @Override
     public Slider withPlaceholders(Resolver resolver) {
         Slider copy = copy();
-        copy.setPlaceholders(resolver);
+        copy.placeholders(resolver);
         return copy;
     }
 }

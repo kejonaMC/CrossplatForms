@@ -20,9 +20,14 @@ allprojects{
     }
 
     tasks.withType<Test>().configureEach {
+        useJUnitPlatform()
         // Disable creating of test report files
         reports.html.required.set(false)
         reports.junitXml.required.set(false)
+    }
+
+    tasks.named("build") {
+        dependsOn(tasks.named<Test>("test"))
     }
 
     // Ensure platform jars are flagged as multi release
@@ -44,14 +49,6 @@ subprojects {
         compileOnly("org.projectlombok:lombok:1.18.22")
         compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
     }
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-}
-
-tasks.named("build") {
-    dependsOn(tasks.named<Test>("test"))
 }
 
 // todo: process resources / token replacement

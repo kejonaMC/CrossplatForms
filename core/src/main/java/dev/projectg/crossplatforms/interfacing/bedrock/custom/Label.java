@@ -15,6 +15,8 @@ import javax.annotation.Nonnull;
 @ConfigSerializable
 public class Label extends CustomComponent {
 
+    public static final String TYPE = "label";
+
     @Override
     public Label copy() {
         Label label = new Label();
@@ -28,14 +30,14 @@ public class Label extends CustomComponent {
     }
 
     @Override
-    public void setPlaceholders(@Nonnull Resolver resolver) {
-        super.setPlaceholders(resolver);
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
     }
 
     @Override
     public Label withPlaceholders(Resolver resolver) {
         Label copy = copy();
-        copy.setPlaceholders(resolver);
+        copy.placeholders(resolver);
         return copy;
     }
 }

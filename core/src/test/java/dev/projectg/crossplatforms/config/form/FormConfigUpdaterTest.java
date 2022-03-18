@@ -5,18 +5,23 @@ import dev.projectg.crossplatforms.TestLogger;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.ConfigManagerTest;
+import dev.projectg.crossplatforms.config.PrettyPrinter;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.FormConfig;
 import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
+import dev.projectg.crossplatforms.utils.StringUtils;
 import org.geysermc.cumulus.util.FormImage;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
+import java.util.NoSuchElementException;
+import java.util.stream.IntStream;
 
 public class FormConfigUpdaterTest {
 
@@ -26,13 +31,18 @@ public class FormConfigUpdaterTest {
     @TempDir
     private static Path directory;
 
-    @Test
-    public void testLoadAndUpdateFormConfig() {
-        TestLogger logger = new TestLogger(false);
-        // configs to load
-        ConfigId oldest = id("bedrock-forms-old.yml");
-        ConfigId current = id("bedrock-forms.yml");
-        ConfigManager manager = new ConfigManager(directory, logger);
+    private static final PrettyPrinter PRINTER = new PrettyPrinter(2, true);
+
+    private final TestLogger logger = new TestLogger();
+    private ConfigManager manager = null;
+
+    public FormConfigUpdaterTest() {
+        logger.setDebug(true);
+    }
+
+    @BeforeEach
+    public void setupManager() {
+        manager = new ConfigManager(directory, logger);
         // serializers
         CrossplatForms.registerDefaultActions(manager);
         manager.getActionSerializer().registerSimpleType("server", String.class, ConfigManagerTest.FakeServer::new);
@@ -41,16 +51,26 @@ public class FormConfigUpdaterTest {
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         });
-        // register configs
-        manager.register(oldest);
-        manager.register(current);
-
-        Assertions.assertTrue(manager.load());
-        Assertions.assertEquals(manager.getNode(oldest.clazz), manager.getNode(current.clazz));
-        Assertions.assertFalse(logger.failed());
     }
 
-    private static ConfigId id(String name) {
-        return new ConfigId("configs/forms/" + name, CURRENT_VERSION, OLD_VERSION, FormConfig.class, FormConfig::updater);
+    @Test
+    public void testAllVersions() {
+        IntStream.range(OLD_VERSION, CURRENT_VERSION).forEachOrdered(this::testVersion);
+    }
+
+    public void testVersion(int version) {
+        ConfigId config = id(version);
+        manager.register(config);
+        Assertions.assertTrue(manager.load());
+        Assertions.assertFalse(logger.failed());
+        System.out.println(StringUtils.repeatString("\n", 5));
+        System.out.println(PRINTER.pretty(manager.getNode(FormConfig.class).orElseThrow(NoSuchElementException::new)));
+    }
+
+    private static ConfigId id(int version) {
+        return new ConfigId("configs/forms/bedrock-forms-" + version + ".yml",
+            CURRENT_VERSION, OLD_VERSION,
+            FormConfig.class,
+            FormConfig::updater);
     }
 }

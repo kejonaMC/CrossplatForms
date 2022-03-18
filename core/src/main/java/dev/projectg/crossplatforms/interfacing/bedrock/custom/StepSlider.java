@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("FieldMayBeFinal")
 public class StepSlider extends CustomComponent {
 
+    public static final String TYPE = "step_slider";
+
     private List<String> steps = new ArrayList<>();
     private int defaultStep = 0;
 
@@ -45,15 +47,15 @@ public class StepSlider extends CustomComponent {
     }
 
     @Override
-    public void setPlaceholders(@Nonnull Resolver resolver) {
-        super.setPlaceholders(resolver);
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
         steps = steps.stream().map(resolver).collect(Collectors.toList());
     }
 
     @Override
     public StepSlider withPlaceholders(Resolver resolver) {
         StepSlider copy = copy();
-        copy.setPlaceholders(resolver);
+        copy.placeholders(resolver);
         return copy;
     }
 

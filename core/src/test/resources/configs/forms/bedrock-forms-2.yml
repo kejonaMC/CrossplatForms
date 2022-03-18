@@ -10,7 +10,7 @@ global-permission-defaults:
 
 forms:
   servers:
-    type: simple_form
+    type: SIMPLE_FORM
     title: "Server Selector"
     content: "Click on the server button of choice."
     buttons:
@@ -37,7 +37,7 @@ forms:
             - "console; tp %player_name% 0 80 0"
 
   minigames:
-    type: simple_form
+    type: SIMPLE_FORM
     command: minigames
     title: "Minigames"
     content: "Click on a minigame of choice."
@@ -52,7 +52,7 @@ forms:
           server: "hideseek"
 
   leave:
-    type: modal_form
+    type: MODAL_FORM
     title: "Do you want to leave the server?"
     content: "This will result in you leaving the server. Are you sure?"
     button1:
@@ -64,18 +64,20 @@ forms:
       text: "No"
 
   broadcast:
-    type: custom_form
+    type: CUSTOM_FORM
     permission-defaults:
       USE: FALSE
       COMMAND: FALSE
     title: "Choose something to broadcast"
     components:
-      - type: input
+      - type: INPUT
         text: "Enter a broadcast"
+        replacements:
+          one: two
 
     actions:
       commands:
         - "say %result_0%"
 
 # Don't touch this
-config-version: 3
+config-version: 2

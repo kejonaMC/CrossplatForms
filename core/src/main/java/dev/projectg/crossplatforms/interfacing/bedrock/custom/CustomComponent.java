@@ -6,13 +6,14 @@ import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.parser.Parser;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +26,8 @@ public abstract class CustomComponent implements ValuedType {
     protected String type = "";
     protected String text = "";
 
-    private List<Parser> parsers = Collections.emptyList();
+    @Setter
+    private List<Parser> parsers = new ArrayList<>(0);
 
     /**
      * This protected no-arg constructor should ONLY be used for object-mapping in deserialization.
@@ -37,8 +39,8 @@ public abstract class CustomComponent implements ValuedType {
     }
 
     public CustomComponent(ComponentType type, @Nonnull String text) {
-        this.type = type.getName(); // lowercase it for serialization to work in cumulus
-        this.text = text;
+        this.type = Objects.requireNonNull(type.getName()); // lowercase it for serialization to work in cumulus
+        this.text = Objects.requireNonNull(text);
     }
 
     public abstract CustomComponent copy();
@@ -57,7 +59,7 @@ public abstract class CustomComponent implements ValuedType {
      * Sets placeholders
      * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
      */
-    public void setPlaceholders(@Nonnull Resolver resolver) {
+    public void placeholders(@Nonnull Resolver resolver) {
         Objects.requireNonNull(resolver);
         this.text = resolver.apply(text);
     }
@@ -78,5 +80,9 @@ public abstract class CustomComponent implements ValuedType {
             value = parser.parse(player, this, value);
         }
         return value;
+    }
+
+    public void parser(Parser parser) {
+        parsers.add(parser);
     }
 }

@@ -15,6 +15,8 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @SuppressWarnings("FieldMayBeFinal")
 public class Toggle extends CustomComponent {
 
+    public static final String TYPE = "toggle";
+
     private boolean defaultValue = false;
 
     @Override
@@ -33,7 +35,7 @@ public class Toggle extends CustomComponent {
     @Override
     public Toggle withPlaceholders(Resolver resolver) {
         Toggle copy = copy();
-        copy.setPlaceholders(resolver);
+        copy.placeholders(resolver);
         return copy;
     }
 }
