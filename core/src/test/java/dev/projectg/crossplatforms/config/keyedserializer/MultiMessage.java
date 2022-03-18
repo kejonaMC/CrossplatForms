@@ -5,6 +5,7 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @ConfigSerializable
 public class MultiMessage implements Message {
@@ -42,5 +43,10 @@ public class MultiMessage implements Message {
         if (o == null || getClass() != o.getClass()) return false;
         MultiMessage that = (MultiMessage) o;
         return prefix.equals(that.prefix) && list.equals(that.list);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(prefix, list);
     }
 }

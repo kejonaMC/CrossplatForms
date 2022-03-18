@@ -1,9 +1,16 @@
 
 plugins {
-    id("me.champeau.mrjar")}
+    id("net.kyori.indra")
+}
 
-multiRelease {
-    targetVersions(8, 16)
+sourceSets {
+    main {
+        multirelease {
+            alternateVersions(16)
+        }
+    }
+
+    create("java16")
 }
 
 // Add more configurations here as necessary

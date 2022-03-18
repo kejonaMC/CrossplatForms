@@ -4,6 +4,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @ConfigSerializable
 public class Integer implements Number {
@@ -43,5 +44,10 @@ public class Integer implements Number {
     @Override
     public String toString() {
         return "Integer{" + "integer=" + integer + "}";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(integer);
     }
 }

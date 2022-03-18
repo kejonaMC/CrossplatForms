@@ -74,6 +74,11 @@ public class Input extends CustomComponent {
                 && other.defaultText.equals(defaultText);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(placeholder, defaultText);
+    }
+
     public static class Builder {
         private String text = "";
         private String placeholder = "";

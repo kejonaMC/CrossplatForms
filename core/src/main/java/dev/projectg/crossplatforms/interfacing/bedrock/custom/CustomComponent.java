@@ -33,7 +33,6 @@ public abstract class CustomComponent implements ValuedType {
      * This protected no-arg constructor should ONLY be used for object-mapping in deserialization.
      * The zero-arg constructor in concrete child classes can be private if mapped with Configurate.
      */
-    @Deprecated
     protected CustomComponent() {
         //no-op
     }

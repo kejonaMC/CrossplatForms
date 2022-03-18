@@ -13,7 +13,7 @@ pluginManagement {
         gradlePluginPortal()
     }
     plugins {
-        id("me.champeau.mrjar") version "0.1" // multi release jar
+        id("net.kyori.indra") version "2.1.1" // multi-release jar
         id("com.github.johnrengelman.shadow") version "7.1.2" // shadowing dependencies
     }
 }
