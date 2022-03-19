@@ -30,9 +30,10 @@ import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBoostrap {
+public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBoostrap, Listener {
 
     private static CrossplatFormsSpigot INSTANCE;
 
@@ -78,7 +79,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
 
         PlaceholderHandler placeholders;
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            placeholders = new PlaceholderAPIHandler();
+            placeholders = new PlaceholderAPIHandler(this);
         } else {
             logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work (typically).");
             placeholders = new BasicPlaceholders();

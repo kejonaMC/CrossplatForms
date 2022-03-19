@@ -78,7 +78,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
 
         PlaceholderHandler placeholders;
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            placeholders = new PlaceholderAPIHandler();
+            placeholders = new PlaceholderAPIHandler(this);
         } else {
             logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work (typically).");
             placeholders = new BasicPlaceholders();

@@ -36,11 +36,13 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
     private final ProxyServer server;
     private final PluginManager pluginManager;
     private final BungeeAudiences audiences;
+    private final CommandSender console;
 
     public BungeeCordServerHandler(Plugin plugin, BungeeAudiences audiences) {
         this.server = plugin.getProxy();
         this.pluginManager = server.getPluginManager();
         this.audiences = audiences;
+        this.console = server.getConsole();
     }
 
     @Nullable
@@ -92,7 +94,7 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        pluginManager.dispatchCommand(server.getConsole(), command.getCommand());
+        pluginManager.dispatchCommand(console, command.getCommand());
     }
 
     public void dispatchCommand(ProxiedPlayer player, DispatchableCommand command) {

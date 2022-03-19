@@ -13,6 +13,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,11 +33,13 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
     private final Server server;
     private final JavaPlugin plugin;
     private final BukkitAudiences audiences;
+    private final ConsoleCommandSender console;
 
     public SpigotServerHandler(JavaPlugin plugin, BukkitAudiences audiences) {
         this.server = plugin.getServer();
         this.plugin = plugin;
         this.audiences = audiences;
+        this.console = server.getConsoleSender();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -100,34 +103,21 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
     @Override
     public void dispatchCommand(DispatchableCommand command) {
         Logger.getLogger().debug("Executing [" + command + "] as console");
-        server.getScheduler().runTask(plugin, () -> server.dispatchCommand(server.getConsoleSender(), command.getCommand()));
-    }
-
-    @Override
-    public void dispatchCommands(List<DispatchableCommand> commands) {
-        CommandSender console = server.getConsoleSender();
-        server.getScheduler().runTask(plugin, () -> {
-            for (DispatchableCommand command : commands) {
-                Logger.getLogger().debug("Executing [" + command + "] as console");
-                server.dispatchCommand(console, command.getCommand());
-            }
-        });
+        server.dispatchCommand(console, command.getCommand());
     }
 
     @Override
     public void dispatchCommand(UUID playerId, DispatchableCommand command) {
         Player player = server.getPlayer(playerId);
-        server.getScheduler().runTask(plugin, () -> dispatchCommand(player, command));
+        dispatchCommand(player, command);
     }
 
     @Override
     public void dispatchCommands(UUID playerId, List<DispatchableCommand> commands) {
         Player player = server.getPlayer(playerId);
-        server.getScheduler().runTask(plugin, () -> {
-            for (DispatchableCommand command : commands) {
-                dispatchCommand(player, command);
-            }
-        });
+        for (DispatchableCommand command : commands) {
+            dispatchCommand(player, command);
+        }
     }
 
     /**
@@ -171,5 +161,10 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
                 event.setCancelled(true);
             }
         }
+    }
+
+    @Override
+    public void executeSafely(Runnable runnable) {
+        server.getScheduler().runTask(plugin, runnable);
     }
 }

@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @ToString(callSuper = true)
 @ConfigSerializable
@@ -70,7 +71,7 @@ public class CustomForm extends BedrockForm implements ValuedType {
         );
 
         // Set the response handler
-        form.setResponseHandler((responseData) -> {
+        Consumer<String> handler = (responseData) -> {
             CustomFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -112,7 +113,9 @@ public class CustomForm extends BedrockForm implements ValuedType {
 
             // Handle effects of pressing the button
             Action.affectPlayer(player, actions, resultPlaceholders, interfaceManager, bedrockHandler);
-        });
+        };
+
+        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

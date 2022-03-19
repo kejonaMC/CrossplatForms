@@ -21,7 +21,12 @@ public class GeyserHandler implements BedrockHandler {
     }
 
     @Override
-    public void transfer(FormPlayer player, String address, int port) {
-        //no-op
+    public boolean executesResponseHandlersSafely() {
+        return false;
+    }
+
+    @Override
+    public boolean transfer(FormPlayer player, String address, int port) {
+        return false;
     }
 }

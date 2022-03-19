@@ -80,4 +80,13 @@ public interface ServerHandler {
      * Clear any previously registered {@link CustomCommand} registered as proxy commands.
      */
     void clearProxyCommands();
+
+    /**
+     * Execute the given runnable in a manner that allows for thread safe access to the server API of the given implementation.
+     * The default implementation is simply running the runnable immediately
+     * @param runnable The runnable to execute
+     */
+    default void executeSafely(Runnable runnable) {
+        runnable.run();
+    }
 }

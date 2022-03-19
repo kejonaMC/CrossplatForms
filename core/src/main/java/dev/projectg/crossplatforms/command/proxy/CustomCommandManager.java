@@ -76,6 +76,7 @@ public class CustomCommandManager implements Reloadable {
                                     }
                                 })
                                 .handler((context) -> {
+                                    Logger.getLogger().debug("Executing registered command on thread: " + Thread.currentThread());
                                     FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow(NoSuchElementException::new)));
                                     registeredCommands.get(name).run(player, interfaceManager, bedrockHandler);
                                 })

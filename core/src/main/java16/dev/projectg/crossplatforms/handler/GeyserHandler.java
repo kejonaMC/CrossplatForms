@@ -29,12 +29,17 @@ public class GeyserHandler implements BedrockHandler {
     }
 
     @Override
-    public void transfer(FormPlayer player, String address, int port) {
+    public boolean executesResponseHandlersSafely() {
+        return false;
+    }
+
+    @Override
+    public boolean transfer(FormPlayer player, String address, int port) {
         Connection connection = geyser.connectionByUuid(player.getUuid());
         if (connection == null) {
             throw new IllegalArgumentException("Failed to find GeyserSession for " + player.getName() + player.getUuid());
         } else {
-            connection.transfer(address, port);
+            return connection.transfer(address, port);
         }
     }
 }

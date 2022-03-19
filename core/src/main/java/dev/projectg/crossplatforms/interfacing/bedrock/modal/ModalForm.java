@@ -2,12 +2,12 @@ package dev.projectg.crossplatforms.interfacing.bedrock.modal;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.response.ModalFormResponse;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -16,6 +16,7 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @ToString(callSuper = true)
 @ConfigSerializable
@@ -56,7 +57,7 @@ public class ModalForm extends BedrockForm {
                 placeholders.setPlaceholders(player, button2.getText()));
 
         // Set the response handler
-        form.setResponseHandler((responseData) -> {
+        Consumer<String> handler = (responseData) -> {
             ModalFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -81,7 +82,9 @@ public class ModalForm extends BedrockForm {
 
             // Handle effects of pressing the button
             Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
-        });
+        };
+
+        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

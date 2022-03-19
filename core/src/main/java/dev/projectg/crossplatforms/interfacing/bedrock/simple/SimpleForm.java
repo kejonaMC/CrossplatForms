@@ -5,9 +5,9 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.response.SimpleFormResponse;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @ToString(callSuper = true)
 @ConfigSerializable
@@ -62,8 +63,7 @@ public class SimpleForm extends BedrockForm {
                 components
         );
 
-        // Set the response handler
-        form.setResponseHandler((responseData) -> {
+        Consumer<String> handler = (responseData) -> {
             SimpleFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -78,7 +78,10 @@ public class SimpleForm extends BedrockForm {
             // Handle effects of pressing the button
             List<Action> actions = formattedButtons.get(response.getClickedButtonId()).getActions();
             Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
-        });
+        };
+
+        // Set the response handler
+        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

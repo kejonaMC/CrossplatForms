@@ -79,5 +79,29 @@ forms:
       commands:
         - "say %result_0%"
 
+  switch:
+    type: custom_form
+    title: Server Switcher
+    components:
+      - type: label
+        text: "            Enter server details"
+      - type: input
+        text: Address
+        placeholder: address
+        parsers:
+          - type: block-placeholders
+      - type: input
+        text: Port
+        placeholder: port
+        default-text: 19132
+        parsers:
+          - type: block-placeholders
+    actions:
+      commands:
+        - "tell %player_name% Sending you to %result_1%:%result_2%"
+      transfer_packet:
+        address: "%result_1%"
+        port: "%result_2%"
+
 # Don't touch this
 config-version: 4
