@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
-import com.nukkitx.protocol.bedrock.packet.TransferPacket;
+import org.geysermc.api.session.Connection;
 import org.geysermc.cumulus.Form;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.GeyserSession;
@@ -8,6 +8,7 @@ import org.geysermc.geyser.session.GeyserSession;
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("unused") // loaded on JDK 16
 public class GeyserHandler implements BedrockHandler {
 
     private final GeyserImpl geyser = Objects.requireNonNull(GeyserImpl.getInstance());
@@ -29,14 +30,11 @@ public class GeyserHandler implements BedrockHandler {
 
     @Override
     public void transfer(FormPlayer player, String address, int port) {
-        GeyserSession session = geyser.connectionByUuid(player.getUuid());
-        if (session == null) {
+        Connection connection = geyser.connectionByUuid(player.getUuid());
+        if (connection == null) {
             throw new IllegalArgumentException("Failed to find GeyserSession for " + player.getName() + player.getUuid());
         } else {
-            TransferPacket packet = new TransferPacket();
-            packet.setAddress(address);
-            packet.setPort(port);
-            session.sendUpstreamPacket(packet);
+            connection.transfer(address, port);
         }
     }
 }

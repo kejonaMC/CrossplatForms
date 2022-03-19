@@ -14,8 +14,8 @@ sourceSets {
 }
 
 // Add more configurations here as necessary
-val java16CompileOnly: Configuration by configurations.getting {
-    extendsFrom(configurations.compileOnly.get())
+val java16Implementation: Configuration by configurations.getting {
+    extendsFrom(configurations.implementation.get())
 }
 
 dependencies {
@@ -30,7 +30,11 @@ dependencies {
     api("org.spongepowered:configurate-yaml:4.1.2")
 
     // dependencies for java16 sources (optionally used at runtime)
-    java16CompileOnly("org.geysermc:core:2.0.2-SNAPSHOT")
+    java16Implementation("org.geysermc:geyser-api:2.0.2-SNAPSHOT")
+    java16Implementation("org.geysermc:base-api:2.0.2-SNAPSHOT")
+    java16Implementation("org.geysermc:core:2.0.2-SNAPSHOT") {
+        isTransitive = false
+    }
 }
 
 description = "core"
