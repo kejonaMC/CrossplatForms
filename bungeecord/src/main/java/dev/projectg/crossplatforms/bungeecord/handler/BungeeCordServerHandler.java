@@ -45,6 +45,14 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
         this.console = server.getConsole();
     }
 
+    private ProxiedPlayer getPlayerOrThrow(UUID uuid) {
+        ProxiedPlayer player = server.getPlayer(uuid);
+        if (player == null) {
+            throw new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid);
+        }
+        return player;
+    }
+
     @Nullable
     @Override
     public FormPlayer getPlayer(UUID uuid) {
@@ -97,6 +105,17 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
         pluginManager.dispatchCommand(console, command.getCommand());
     }
 
+    @Override
+    public void dispatchCommand(UUID uuid, DispatchableCommand command) {
+        dispatchCommand(getPlayerOrThrow(uuid), command);
+    }
+
+    @Override
+    public void dispatchCommands(UUID uuid, List<DispatchableCommand> commands) {
+        ProxiedPlayer player = getPlayerOrThrow(uuid);
+        commands.forEach(c -> dispatchCommand(player, c));
+    }
+
     public void dispatchCommand(ProxiedPlayer player, DispatchableCommand command) {
         if (command.isPlayer()) {
             if (command.isOp()) {
@@ -109,15 +128,6 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
         } else {
             dispatchCommand(command);
         }
-    }
-
-    @Override
-    public void dispatchCommand(UUID uuid, DispatchableCommand command) {
-        ProxiedPlayer player = server.getPlayer(uuid);
-        if (player == null) {
-            throw new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid);
-        }
-        dispatchCommand(player, command);
     }
 
     @EventHandler

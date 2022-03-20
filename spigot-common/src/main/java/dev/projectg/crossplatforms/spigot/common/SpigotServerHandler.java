@@ -43,6 +43,14 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
+    private Player getPlayerOrThrow(UUID uuid) {
+        Player player = server.getPlayer(uuid);
+        if (player == null) {
+            throw new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid);
+        }
+        return player;
+    }
+
     @Override
     public FormPlayer getPlayer(UUID uuid) {
         Player player = server.getPlayer(uuid);
@@ -108,13 +116,13 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
 
     @Override
     public void dispatchCommand(UUID playerId, DispatchableCommand command) {
-        Player player = server.getPlayer(playerId);
+        Player player = getPlayerOrThrow(playerId);
         dispatchCommand(player, command);
     }
 
     @Override
     public void dispatchCommands(UUID playerId, List<DispatchableCommand> commands) {
-        Player player = server.getPlayer(playerId);
+        Player player = getPlayerOrThrow(playerId);
         for (DispatchableCommand command : commands) {
             dispatchCommand(player, command);
         }

@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
+import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.projectg.crossplatforms.CrossplatForms;
@@ -28,10 +29,16 @@ public class VelocityServerHandler extends ProxyCommandCache implements ServerHa
 
     private final ProxyServer server;
     private final CommandManager commandManager;
+    private final ConsoleCommandSource console;
 
     public VelocityServerHandler(@Nonnull ProxyServer server) {
         this.server = server;
         this.commandManager = server.getCommandManager();
+        this.console = server.getConsoleCommandSource();
+    }
+
+    private Player getPlayerOrThrow(UUID uuid) {
+        return server.getPlayer(uuid).orElseThrow(() -> new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid));
     }
 
     @Nullable
@@ -81,15 +88,21 @@ public class VelocityServerHandler extends ProxyCommandCache implements ServerHa
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        commandManager.executeAsync(server.getConsoleCommandSource(), command.getCommand());
+        commandManager.executeAsync(console, command.getCommand());
     }
 
     @Override
     public void dispatchCommand(UUID uuid, DispatchableCommand command) {
-        Player player = server.getPlayer(uuid).orElse(null);
-        if (player == null) {
-            throw new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid);
-        }
+        dispatchCommand(getPlayerOrThrow(uuid), command);
+    }
+
+    @Override
+    public void dispatchCommands(UUID uuid, List<DispatchableCommand> commands) {
+        Player player = getPlayerOrThrow(uuid);
+        commands.forEach(c -> dispatchCommand(player, c));
+    }
+
+    private void dispatchCommand(Player player, DispatchableCommand command) {
         if (command.isPlayer()) {
             if (command.isOp()) {
                 // todo: op commands on velocity
