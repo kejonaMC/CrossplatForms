@@ -27,7 +27,7 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class AccessItem {
 
-    public static final String STATIC_IDENTIFIER = "crossplatFormsAccessItem"; // changing this will break existing setups
+    public static final String STATIC_IDENTIFIER = "crossplatformsaccessitem"; // changing this will break existing setups
     private static final String PERMISSION_BASE = Constants.Id() + ".item";
 
     /**

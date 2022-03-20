@@ -90,7 +90,9 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
 
     public ItemStack createItemStack(AccessItem accessItem, Player player) {
         FormPlayer formPlayer = new SpigotPlayer(player);
-        Material material = Material.getMaterial(accessItem.getMaterial());
+        // todo: material lookups on 1.13 on SpigotLegacy seem to fail on materials with underscores.
+        // Have not checked any other versions
+        Material material = Material.matchMaterial(accessItem.getMaterial());
         if (material == null) {
             logger.severe(String.format("Failed to get access item from '%s' for access item '%s'", accessItem.getMaterial(), accessItem.getIdentifier()));
             material = Material.COMPASS;

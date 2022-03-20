@@ -76,7 +76,7 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
 
-            Material material = Material.getMaterial(button.getMaterial());
+            Material material = Material.matchMaterial(button.getMaterial());
             if (material == null) {
                 logger.severe("Java Button: " + menu.getIdentifier() + "." + slot + " will be stone because '" + button.getMaterial() +"' failed to map to a valid Spigot Material.");
                 material = Material.STONE;
