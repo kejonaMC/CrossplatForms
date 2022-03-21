@@ -1,36 +1,32 @@
 package dev.projectg.crossplatforms.handler;
 
 import org.geysermc.cumulus.Form;
-import org.geysermc.geyser.GeyserImpl;
-import org.geysermc.geyser.session.GeyserSession;
 
 import java.util.UUID;
 
 public class GeyserHandler implements BedrockHandler {
 
-    private final GeyserImpl geyser;
-
     public GeyserHandler() {
-        geyser = GeyserImpl.getInstance();
+        throw new UnsupportedOperationException("GeyserHandler is not supported on anything lower than Java 16");
     }
 
     @Override
     public boolean isBedrockPlayer(UUID uuid) {
-        return geyser.connectionByUuid(uuid) != null;
+        return false;
     }
 
     @Override
     public void sendForm(UUID uuid, Form form) {
-        GeyserSession session = geyser.connectionByUuid(uuid);
-        if (session == null) {
-            throw new NullPointerException("Failed to get GeyserSession for UUID " + uuid);
-        } else {
-            session.getFormCache().showForm(form);
-        }
+        //no-op
     }
 
     @Override
-    public int getPlayerCount() {
-        return geyser.getSessionManager().getAllSessions().size();
+    public boolean executesResponseHandlersSafely() {
+        return false;
+    }
+
+    @Override
+    public boolean transfer(FormPlayer player, String address, int port) {
+        return false;
     }
 }

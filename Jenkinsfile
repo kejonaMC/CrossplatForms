@@ -13,6 +13,9 @@ pipeline {
             post {
                 success {
                     archiveArtifacts 'spigot/build/libs/CrossplatForms-Spigot.jar'
+                    archiveArtifacts 'spigot-legacy/build/libs/CrossplatForms-SpigotLegacy.jar'
+                    archiveArtifacts 'bungeecord/build/libs/CrossplatForms-BungeeCord.jar'
+                    archiveArtifacts 'velocity/build/libs/CrossplatForms-Velocity.jar'
                 }
             }
         }

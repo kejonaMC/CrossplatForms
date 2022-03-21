@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public abstract class FormsCommand {
 
-    public static final String NAME = "forms";
-
-    public static final String PERMISSION_BASE = Constants.ID + ".command.";
+    public static final String PERMISSION_BASE = Constants.Id() + ".command.";
 
     protected final CrossplatForms crossplatForms;
 

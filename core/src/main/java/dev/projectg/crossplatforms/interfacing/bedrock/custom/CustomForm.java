@@ -4,13 +4,14 @@ import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
-import org.geysermc.cumulus.component.LabelComponent;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -23,17 +24,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-@ToString
+@ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class CustomForm extends BedrockForm {
+public class CustomForm extends BedrockForm implements ValuedType {
+
+    public static final String TYPE = "custom_form";
 
     private FormImage image = null;
     private List<CustomComponent> components = Collections.emptyList();
 
     @Required
     private List<Action> actions = null;
+
+    @Override
+    public String type() {
+        return TYPE;
+    }
 
     @Override
     public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
@@ -47,20 +56,22 @@ public class CustomForm extends BedrockForm {
             return;
         }
 
-        List<CustomComponent> components = new ArrayList<>();
+        List<CustomComponent> customComponents = new ArrayList<>(); // as our custom components
+        List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
         for (CustomComponent component : this.components) {
-            components.add(component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text)));
+            CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
+            customComponents.add(resolved);
+            components.add(resolved.cumulusComponent());
         }
 
-        @SuppressWarnings("unchecked")
         org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
                 placeholders.setPlaceholders(player, super.getTitle()),
                 image,
-                (List<org.geysermc.cumulus.component.Component>)(List<?>) components // sad noises
+                components
         );
 
         // Set the response handler
-        form.setResponseHandler((responseData) -> {
+        Consumer<String> handler = (responseData) -> {
             CustomFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -73,11 +84,12 @@ public class CustomForm extends BedrockForm {
             }
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
-            for (int i = 0; i < components.size(); i++) {
-                CustomComponent component = components.get(i);
-                if (component instanceof LabelComponent label) {
+            for (int i = 0; i < customComponents.size(); i++) {
+                CustomComponent component = customComponents.get(i);
+                if (component instanceof Label) {
+                    Label label = (Label) component;
                     // label components aren't included in the response
-                    resultPlaceholders.put(placeholder(i), label.getText());
+                    resultPlaceholders.put(placeholder(i), label.text());
                     continue;
                 }
 
@@ -89,7 +101,7 @@ public class CustomForm extends BedrockForm {
                     return;
                 }
 
-                resultPlaceholders.put(placeholder(i), component.parse(result));
+                resultPlaceholders.put(placeholder(i), component.parse(player, result.getAsString()));
             }
 
             if (logger.isDebug()) {
@@ -100,10 +112,10 @@ public class CustomForm extends BedrockForm {
             }
 
             // Handle effects of pressing the button
-            for (Action action : actions) {
-                action.affectPlayer(player, resultPlaceholders, interfaceManager, bedrockHandler);
-            }
-        });
+            Action.affectPlayer(player, actions, resultPlaceholders, interfaceManager, bedrockHandler);
+        };
+
+        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

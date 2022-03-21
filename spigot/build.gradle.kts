@@ -4,21 +4,12 @@ plugins {
     id("com.github.johnrengelman.shadow")
 }
 
-repositories {
-    maven("https://libraries.minecraft.net/")
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots/")
-}
-
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.14.4-R0.1-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.1")
-    api(project(":core"))
-    api(project(":access-item"))
-    api("cloud.commandframework:cloud-paper:1.6.2")
-    api("me.lucko:commodore:1.13")
-    api("net.kyori:adventure-platform-bukkit:4.1.0")
+    api(project(":spigot-common")) {
+        // this should be overridden by the version specified here, but just making sure
+        exclude(group = "org.spigotmc", module = "spigot-api")
+    }
 }
 
 tasks.withType<ShadowJar> {
@@ -28,20 +19,16 @@ tasks.withType<ShadowJar> {
             relocate("me.lucko.commodore", "dev.projectg.crossplatforms.shaded.commodore")
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
             relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
-            // Used by cloud and configurate
             relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
 
         }
         exclude {
-                e -> e.name.startsWith("com.mojang") // Remove when we support less than 1.13
-                || e.name.startsWith("org.yaml") // Available on Spigot
+                e -> e.name.startsWith("org.yaml") // Available on Spigot
                 || e.name.startsWith("com.google")
         }
     }
 
-    println(destinationDirectory.get())
     archiveFileName.set("CrossplatForms-Spigot.jar")
-    println(archiveFileName.get())
 }
 
 tasks.named("build") {

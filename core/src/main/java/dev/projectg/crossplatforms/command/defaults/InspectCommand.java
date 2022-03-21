@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -15,7 +14,6 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InspectCommand extends FormsCommand {
@@ -73,29 +71,6 @@ public class InspectCommand extends FormsCommand {
                     } else {
                         origin.sendMessage(Logger.Level.INFO, "Inspection of menu: " + name);
                         origin.sendMessage(Logger.Level.INFO, menu.toString());
-                    }
-                })
-        );
-
-        manager.command(base
-                .literal("player")
-                .argument(StringArgument.<CommandOrigin>newBuilder("player")
-                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
-                                .stream()
-                                .map(FormPlayer::getName)
-                                .collect(Collectors.toList()))
-                        .build())
-                .handler(context -> {
-                    CommandOrigin origin = context.getSender();
-                    String target = context.get("player");
-                    FormPlayer player = serverHandler.getPlayer(target);
-                    if (player == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
-                        return;
-                    }
-                    origin.sendMessage("The player " + player.getName() + " has the following permissions:");
-                    for (Map.Entry<String, Boolean> permission : player.getPermissions().entrySet()) {
-                        origin.sendMessage(permission.getKey() + " : " + permission.getValue());
                     }
                 })
         );

@@ -1,24 +1,28 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
-import com.google.gson.JsonPrimitive;
+import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.DropdownComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class Dropdown extends CustomComponent implements DropdownComponent {
+public class Dropdown extends CustomComponent {
+
+    public static final String TYPE = "dropdown";
 
     private List<String> options = new ArrayList<>();
     private int defaultOption = 0;
@@ -29,24 +33,39 @@ public class Dropdown extends CustomComponent implements DropdownComponent {
     private boolean returnText = true;
 
     @Override
-    public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
+    public Dropdown copy() {
         Dropdown dropdown = new Dropdown();
-        dropdown.type = this.type;
-        dropdown.text = resolver.apply(this.text);
+        dropdown.copyBasics(this);
+        dropdown.options = new ArrayList<>(this.options);
         dropdown.defaultOption = this.defaultOption;
-        for (String option : this.options) {
-            dropdown.options.add(resolver.apply(option));
-        }
         dropdown.returnText = this.returnText;
         return dropdown;
     }
 
     @Override
-    public String parse(JsonPrimitive result) {
+    public Component cumulusComponent() {
+        return DropdownComponent.of(text, options, defaultOption);
+    }
+
+    @Override
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
+        options = options.stream().map(resolver).collect(Collectors.toList());
+    }
+
+    @Override
+    public Dropdown withPlaceholders(Resolver resolver) {
+        Dropdown copy = copy();
+        copy.placeholders(resolver);
+        return copy;
+    }
+
+    @Override
+    public String parse(FormPlayer player, String result) {
         if (returnText) {
-            return options.get(result.getAsInt());
+            return super.parse(player, options.get(Integer.parseInt(result)));
         } else {
-            return super.parse(result);
+            return super.parse(player, result);
         }
     }
 }

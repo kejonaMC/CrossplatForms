@@ -1,45 +1,46 @@
 package dev.projectg.crossplatforms.form.component;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonPrimitive;
+import dev.projectg.crossplatforms.FakePlayer;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.Input;
+import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
+import dev.projectg.crossplatforms.parser.ReplacementParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 public class InputComponentTest {
+
+    private static final FormPlayer player = new FakePlayer();
 
     @Test
     public void testFilterPlaceholders() {
-        Input input = Input.builder().blockPlaceholders(true).build();
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT + " and " + Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("%player_name% and %player_uuid%")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT + " and " + Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("{player_name} and {player_uuid}")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("%%player_balance%%")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("{{player_balance}}")));
-        Assertions.assertEquals(Input.PLACEHOLDER_REPLACEMENT, input.parse(primitive("%%nested_placeholder%_other%")));
-        Assertions.assertEquals("I took 50%.", input.parse(primitive("I took 50%.")));
-        Assertions.assertEquals("I took 50% and then 20%.", input.parse(primitive("I took 50% and then 20%.")));
-        Assertions.assertEquals("%%", input.parse(primitive("%%")));
+        Input input = new Input("", "", "");
+        input.parsers(Collections.singletonList(new BlockPlaceholderParser()));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT + " and " + BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%player_name% and %player_uuid%"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT + " and " + BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "{player_name} and {player_uuid}"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%%player_balance%%"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "{{player_balance}}"));
+        Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%%nested_placeholder%_other%"));
+        Assertions.assertEquals("I took 50%.", input.parse(player, "I took 50%."));
+        Assertions.assertEquals("I took 50% and then 20%.", input.parse(player, "I took 50% and then 20%."));
+        Assertions.assertEquals("%%", input.parse(player, "%%"));
     }
 
     @Test
     public void testReplacements() {
-        Input withDashes = Input.builder().replacements(ImmutableMap.of(" ", "-")).build();
-        Assertions.assertEquals("marshy-waters", withDashes.parse(primitive("marshy waters")));
+        Input withDashes = new Input();
+        withDashes.parser(new ReplacementParser(ImmutableMap.of(" ", "-")));
+        Assertions.assertEquals("marshy-waters", withDashes.parse(player, "marshy waters"));
 
-        Input useless = Input.builder().replacements(ImmutableMap.of(" ", "-", "-", " ")).build();
-        Assertions.assertEquals("Big Green Hill", useless.parse(primitive("Big Green Hill")));
+        Input useless = new Input();
+        useless.parser(new ReplacementParser(ImmutableMap.of(" ", "-", "-", " ")));
+        Assertions.assertEquals("Big Green Hill", useless.parse(player, "Big Green Hill"));
 
-        Input cascading = Input.builder().replacements(ImmutableMap.of("a", "b", "bb", "aa")).build();
-        Assertions.assertEquals("aa aa", cascading.parse(primitive("ab ba")));
-    }
-
-    @Test
-    public void testHideCensoredPlaceholder() {
-        Input input = Input.builder().blockPlaceholders(true).replacements(ImmutableMap.of(Input.PLACEHOLDER_REPLACEMENT, "")).build();
-        Assertions.assertEquals("My location is ", input.parse(primitive("My location is {player_location}")));
-    }
-
-    private static JsonPrimitive primitive(String string) {
-        return new JsonPrimitive(string);
+        Input cascading = new Input();
+        cascading.parser(new ReplacementParser(ImmutableMap.of("a", "b", "bb", "aa")));
+        Assertions.assertEquals("aa aa", cascading.parse(player, "ab ba"));
     }
 }

@@ -2,12 +2,12 @@ package dev.projectg.crossplatforms.interfacing.bedrock.modal;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import lombok.ToString;
 import org.geysermc.cumulus.response.ModalFormResponse;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -16,11 +16,14 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-@ToString
+@ToString(callSuper = true)
 @ConfigSerializable
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings("FieldMayBeFinal")
 public class ModalForm extends BedrockForm {
+
+    public static final String TYPE = "modal_form";
 
     private String content = "";
 
@@ -29,6 +32,11 @@ public class ModalForm extends BedrockForm {
 
     @Required
     private ModalButton button2 = null;
+
+    @Override
+    public String type() {
+        return TYPE;
+    }
 
     @Override
     public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
@@ -49,7 +57,7 @@ public class ModalForm extends BedrockForm {
                 placeholders.setPlaceholders(player, button2.getText()));
 
         // Set the response handler
-        form.setResponseHandler((responseData) -> {
+        Consumer<String> handler = (responseData) -> {
             ModalFormResponse response = form.parseResponse(responseData);
             if (response.isClosed()) {
                 return;
@@ -62,17 +70,21 @@ public class ModalForm extends BedrockForm {
             }
             logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             int id = response.getClickedButtonId();
-            List<Action> actions = switch (id) {
-                case 0 -> button1.getActions();
-                case 1 -> button2.getActions();
-                default -> throw new AssertionError();
-            };
+
+            List<Action> actions;
+            if (id == 0) {
+                actions = button1.getActions();
+            } else if (id == 1) {
+                actions = button2.getActions();
+            } else {
+                throw new AssertionError("Got " + id + " from modal form response instead of 0 or 1");
+            }
 
             // Handle effects of pressing the button
-            for (Action action : actions) {
-                action.affectPlayer(player, interfaceManager, bedrockHandler);
-            }
-        });
+            Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
+        };
+
+        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

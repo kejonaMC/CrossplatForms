@@ -20,7 +20,7 @@ import java.util.List;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class SimpleButton implements ButtonComponent {
+public class SimpleButton {
 
     @Required
     private String text;
@@ -43,5 +43,9 @@ public class SimpleButton implements ButtonComponent {
         button.image = this.image; // form image is immutable
         button.actions = new ArrayList<>(this.actions);
         return button;
+    }
+
+    public ButtonComponent cumulusComponent() {
+        return ButtonComponent.of(text, image);
     }
 }

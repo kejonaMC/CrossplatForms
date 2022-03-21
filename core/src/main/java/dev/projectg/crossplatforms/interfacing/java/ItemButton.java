@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @SuppressWarnings("FieldMayBeFinal")
 public class ItemButton {
 
-    public static final String STATIC_IDENTIFIER = "crossplatFormsButton";
+    public static final String STATIC_IDENTIFIER = "crossplatformsbutton";
 
     @Required
     private String displayName;
@@ -26,10 +25,7 @@ public class ItemButton {
 
     private List<String> lore = Collections.emptyList();
 
-    @Nullable
-    private List<Action> anyClick;
-    @Nullable
-    private List<Action> leftClick;
-    @Nullable
-    private List<Action> rightClick;
+    private List<Action> anyClick = Collections.emptyList();
+    private List<Action> leftClick = Collections.emptyList();
+    private List<Action> rightClick = Collections.emptyList();
 }

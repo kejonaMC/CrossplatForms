@@ -3,10 +3,9 @@ package dev.projectg.crossplatforms.handler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.proxy.ProxyCommand;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.projectg.crossplatforms.command.proxy.CustomCommand;
 import dev.projectg.crossplatforms.permission.Permission;
+import dev.projectg.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
 
 import javax.annotation.Nonnull;
@@ -39,8 +38,6 @@ public interface ServerHandler {
     boolean isGeyserEnabled();
     boolean isFloodgateEnabled();
 
-    boolean isPermissionRegistered(String key);
-
     void registerPermission(String key, @Nullable String description, PermissionDefault def);
 
     default void registerPermission(Permission permission) {
@@ -55,25 +52,41 @@ public interface ServerHandler {
      */
     void dispatchCommand(DispatchableCommand command);
 
-    void dispatchCommands(List<DispatchableCommand> commands);
+    default void dispatchCommands(List<DispatchableCommand> commands) {
+        commands.forEach(this::dispatchCommand);
+    }
 
     /**
-     * Execute a command as the given player.
-     * @param player The player to run the command as
+     * Execute a command. The command should only be run as the given player if {@link DispatchableCommand#isPlayer()}
+     * returns true.
+     * @param player The player to possibly run the command as
      * @param command The command string to execute
      */
     void dispatchCommand(UUID player, DispatchableCommand command);
 
-    void dispatchCommands(UUID player, List<DispatchableCommand> commands);
+    default void dispatchCommands(UUID player, List<DispatchableCommand> commands) {
+        commands.forEach(c -> dispatchCommand(player, c));
+    }
 
 
     /**
-     * Register a {@link ProxyCommand}
-     * @param proxyCommand The ProxyCommand to register. It's {@link CommandType} must be only {@link CommandType#INTERCEPT_CANCEL} or {@link CommandType#INTERCEPT_PASS}.
+     * Register a {@link CustomCommand} as a proxy command. It's expected that the implementation actually deals with
+     * any command executions that match the criteria of given CustomCommand.
+     * @param proxyCommand The command to register. It's {@link CommandType} must be only {@link CommandType#INTERCEPT_CANCEL} or {@link CommandType#INTERCEPT_PASS}.
      */
-    void registerProxyCommand(ProxyCommand proxyCommand);
+    void registerProxyCommand(CustomCommand proxyCommand);
 
+    /**
+     * Clear any previously registered {@link CustomCommand} registered as proxy commands.
+     */
     void clearProxyCommands();
 
-    void sendMenu(FormPlayer formPlayer, JavaMenu menu);
+    /**
+     * Execute the given runnable in a manner that allows for thread safe access to the server API of the given implementation.
+     * The default implementation is simply running the runnable immediately
+     * @param runnable The runnable to execute
+     */
+    default void executeSafely(Runnable runnable) {
+        runnable.run();
+    }
 }

@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
       - name: Set up JDK 16
         uses: actions/setup-java@v3.0.0
         with:
@@ -23,9 +23,12 @@ jobs:
         run: ./gradlew clean build
       
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v3
         if: success()
         with:
-          name: CrossplatForms-Spigot.jar
-          path: spigot/build/libs/CrossplatForms-Spigot.jar
-          retention-days: 15
+          name: CrossplatForms
+          path: |
+            spigot/build/libs/CrossplatForms-Spigot.jar
+            spigot-legacy/build/libs/CrossplatForms-SpigotLegacy.jar
+            bungeecord/build/libs/CrossplatForms-BungeeCord.jar
+            velocity/build/libs/CrossplatForms-Velocity.jar

@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
-import com.google.gson.JsonPrimitive;
+import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,14 +12,16 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class StepSlider extends CustomComponent implements StepSliderComponent {
+public class StepSlider extends CustomComponent {
+
+    public static final String TYPE = "step_slider";
 
     private List<String> steps = new ArrayList<>();
     private int defaultStep = 0;
@@ -29,24 +32,39 @@ public class StepSlider extends CustomComponent implements StepSliderComponent {
     private boolean returnText = true;
 
     @Override
-    public CustomComponent withPlaceholders(@Nonnull Function<String, String> resolver) {
+    public StepSlider copy() {
         StepSlider stepSlider = new StepSlider();
-        stepSlider.type = this.type;
-        stepSlider.text = resolver.apply(this.text);
-        for (String option : this.steps) {
-            stepSlider.steps.add(resolver.apply(option));
-        }
+        stepSlider.copyBasics(this);
+        stepSlider.steps = new ArrayList<>(steps);
         stepSlider.defaultStep = this.defaultStep;
         stepSlider.returnText = this.returnText;
         return stepSlider;
     }
 
     @Override
-    public String parse(JsonPrimitive result) {
+    public StepSliderComponent cumulusComponent() {
+        return StepSliderComponent.of(text, steps, defaultStep);
+    }
+
+    @Override
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
+        steps = steps.stream().map(resolver).collect(Collectors.toList());
+    }
+
+    @Override
+    public StepSlider withPlaceholders(Resolver resolver) {
+        StepSlider copy = copy();
+        copy.placeholders(resolver);
+        return copy;
+    }
+
+    @Override
+    public String parse(FormPlayer player, String result) {
         if (returnText) {
-            return steps.get(result.getAsInt());
+            return steps.get(Integer.parseInt(result));
         } else {
-            return super.parse(result);
+            return super.parse(player, result);
         }
     }
 }

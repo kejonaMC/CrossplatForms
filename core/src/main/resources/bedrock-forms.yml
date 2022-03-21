@@ -10,7 +10,7 @@ global-permission-defaults:
 
 forms:
   servers:
-    type: SIMPLE_FORM
+    type: simple_form
     title: "Server Selector"
     content: "Click on the server button of choice."
     buttons:
@@ -37,7 +37,7 @@ forms:
             - "console; tp %player_name% 0 80 0"
 
   minigames:
-    type: SIMPLE_FORM
+    type: simple_form
     command: minigames
     title: "Minigames"
     content: "Click on a minigame of choice."
@@ -52,7 +52,7 @@ forms:
           server: "hideseek"
 
   leave:
-    type: MODAL_FORM
+    type: modal_form
     title: "Do you want to leave the server?"
     content: "This will result in you leaving the server. Are you sure?"
     button1:
@@ -64,18 +64,44 @@ forms:
       text: "No"
 
   broadcast:
-    type: CUSTOM_FORM
+    type: custom_form
     permission-defaults:
       USE: FALSE
       COMMAND: FALSE
     title: "Choose something to broadcast"
     components:
-      - type: INPUT
+      - type: input
         text: "Enter a broadcast"
+        parsers:
+          - type: block-placeholders
 
     actions:
       commands:
         - "say %result_0%"
 
+  switch:
+    type: custom_form
+    title: Server Switcher
+    components:
+      - type: label
+        text: "            Enter server details"
+      - type: input
+        text: Address
+        placeholder: address
+        parsers:
+          - type: block-placeholders
+      - type: input
+        text: Port
+        placeholder: port
+        default-text: 19132
+        parsers:
+          - type: block-placeholders
+    actions:
+      commands:
+        - "tell %player_name% Sending you to %result_1%:%result_2%"
+      transfer_packet:
+        address: "%result_1%"
+        port: "%result_2%"
+
 # Don't touch this
-config-version: 2
+config-version: 4

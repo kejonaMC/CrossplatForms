@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.accessitem;
 
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.Configuration;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
@@ -56,5 +57,15 @@ public class AccessItemConfig extends Configuration {
                 .addAction(WILDCARD_ITEM.withAppendedChild("bedrock-action"), TransformAction.rename("bedrock-actions"))
                 .addAction(WILDCARD_ITEM.withAppendedChild("java-action"), TransformAction.rename("java-actions"))
                 .build();
+    }
+
+    public static ConfigId asConfigId() {
+        return new ConfigId(
+                "access-items.yml",
+                VERSION,
+                MINIMUM_VERSION,
+                AccessItemConfig.class,
+                AccessItemConfig::updater
+        );
     }
 }

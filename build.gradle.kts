@@ -3,7 +3,6 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow")
 }
 
 allprojects{
@@ -11,35 +10,42 @@ allprojects{
     apply(plugin = "java-library")
 
     group = "dev.projectg"
-    version = "0.3.0"
-    java.sourceCompatibility = JavaVersion.VERSION_16
-    java.targetCompatibility = JavaVersion.VERSION_16
+    version = "0.4.0"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
-    }
-}
-
-subprojects {
-    apply(plugin = "maven-publish")
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
+        options.release.set(8)
     }
 
-    dependencies {
-        annotationProcessor("org.projectlombok:lombok:1.18.22")
-        compileOnly("org.projectlombok:lombok:1.18.22")
-        compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
-    }
-
-    tasks.named<Test>("test") {
+    tasks.withType<Test>().configureEach {
         useJUnitPlatform()
+        // Disable creating of test report files
+        reports.html.required.set(false)
+        reports.junitXml.required.set(false)
     }
 
     tasks.named("build") {
         dependsOn(tasks.named<Test>("test"))
+    }
+
+    // Ensure platform jars are flagged as multi release
+    tasks.jar {
+        manifest {
+            attributes("Multi-Release" to "true")
+        }
+    }
+}
+
+subprojects {
+    dependencies {
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
+        testCompileOnly("org.projectlombok:lombok:1.18.22")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+        testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
+
+        annotationProcessor("org.projectlombok:lombok:1.18.22")
+        compileOnly("org.projectlombok:lombok:1.18.22")
+        compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
     }
 }
 

@@ -52,7 +52,7 @@ public abstract class AccessItemRegistry implements Reloadable {
     private void load() {
         items.clear();
 
-        if (configManager.getConfig(AccessItemConfig.class).isEmpty()) {
+        if (!configManager.getConfig(AccessItemConfig.class).isPresent()) {
             enabled = false;
             return;
         }

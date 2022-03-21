@@ -14,10 +14,18 @@ public abstract class Logger {
 
     public void log(Level level, String message) {
         switch (level) {
-            case INFO -> info(message);
-            case WARN -> warn(message);
-            case SEVERE -> severe(message);
-            case DEBUG -> debug(message);
+            case WARN:
+                warn(message);
+                break;
+            case SEVERE:
+                severe(message);
+                break;
+            case DEBUG:
+                debug(message);
+                break;
+            default:
+                info(message);
+                break;
         }
     }
 

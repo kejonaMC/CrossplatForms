@@ -14,13 +14,15 @@ import java.util.Map;
 @ConfigSerializable
 public class InterfaceAction extends SimpleAction<String> {
 
+    public static final String TYPE = "form";
+
     public InterfaceAction(@Nonnull String value) {
-        super(value);
+        super(TYPE, value);
     }
 
     @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
-        String resolved = CrossplatForms.getInstance().getPlaceholders().setPlaceholders(player, super.getValue(), additionalPlaceholders);
+        String resolved = CrossplatForms.getInstance().getPlaceholders().setPlaceholders(player, value(), additionalPlaceholders);
         Interface ui = interfaceManager.getInterface(resolved, bedrockHandler.isBedrockPlayer(player.getUuid()));
         if (ui == null) {
             Logger logger = Logger.getLogger();
@@ -31,10 +33,5 @@ public class InterfaceAction extends SimpleAction<String> {
         } else {
             ui.send(player, interfaceManager);
         }
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
     }
 }
