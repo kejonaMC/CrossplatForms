@@ -1,14 +1,23 @@
 package dev.projectg.crossplatforms;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LegacyToMiniTranslator {
 
     private static final Map<Character, String> TRANSLATIONS = new HashMap<>();
+    private static final List<Character> DECORATIONS = ImmutableList.of('k', 'l', 'm', 'n', 'o');
+    private static final Map<Character, String> CLOSERS = new HashMap<>();
+    private static final char RESET = 'r';
 
     static {
+        // todo
         TRANSLATIONS.put('0', "<black>");
+        CLOSERS.put('k', "<\\obf>");
     }
 
     private final char legacyChar;
@@ -59,6 +68,8 @@ public class LegacyToMiniTranslator {
         final int maxIndex = input.length() - 1; // max index
 
         boolean expectingCodes = false;
+        List<Character> open = new ArrayList<>(); // need to close everything after a reset
+        List<Character> openDecorations = new ArrayList<>(); // need to close all decorations after a new colour
         // this looks until the second last index, as formatting char would have to be at the last index
         for (int i = 0; i < maxIndex; i++) {
             char c = chars[i];
@@ -70,6 +81,25 @@ public class LegacyToMiniTranslator {
                     expectingCodes = false;
                     result.append(c);
                 } else {
+                    if (DECORATIONS.contains(c)) {
+                        // decoration character
+                        openDecorations.add(c);
+                    } else if (c == RESET) {
+                        // close all previous colours/decorations
+                        for (char format : open) {
+                            result.append(CLOSERS.get(format));
+                        }
+                        open.clear(); // everything has been closed
+                        openDecorations.clear();
+                        break; // No further action required
+                    } else {
+                        // color char, need to end all previous decorations
+                        for (char decor : openDecorations) {
+                            result.append(CLOSERS.get(decor));
+                        }
+                    }
+
+                    open.add(c);
                     // char was a code, add replacement
                     result.append(replacement);
                 }
