@@ -1,9 +1,11 @@
 <img alt="CrossplatForms" width="500" src="https://github.com/ProjectG-Plugins/CrossplatForms/blob/main/images/crossplatForms.svg" /> 
 
-[![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
-[![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/ProjectG-Plugins/CrossplatForms/blob/master/LICENSE)
 [![Build Status](https://ci.projectg.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.projectg.dev/job/CrossplatForms/job/main/)
 [![Version](https://img.shields.io/badge/version-0.4.0-blue)](https://github.com/ProjectG-Plugins/CrossplatForms/releases)
+[![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/ProjectG-Plugins/CrossplatForms/blob/master/LICENSE)
+[![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
+[![bStats](https://img.shields.io/badge/bStats-click%20me-yellow)](https://bstats.org/author/Konicai)
+
 
 CrossplatForms is a Java Edition plugin aimed at creating Bedrock Edition Forms for [Geyser](https://github.com/GeyserMC/Geyser) players through flexible configurations. Bedrock Forms allow servers to provide players with abritrary choices in a styled menu, which the server then handles in any way desired. This allows you to customize forms specifically for your server, plugins, etc.
 
