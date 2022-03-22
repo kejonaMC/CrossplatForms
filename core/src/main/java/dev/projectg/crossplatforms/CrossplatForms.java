@@ -86,12 +86,12 @@ public class CrossplatForms {
             cumulusAvailable = true;
         } else if (serverHandler.isGeyserEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreGeyser")) {
             // java 16 GeyserHandler should always be instantiated here since Geyser can only run on java 16+
-            if (GeyserHandler.SUPPORTED) {
+            logger.warn("Floodgate is recommended and less likely to break with new updates!");
+            if (GeyserHandler.supported()) {
                 bedrockHandler = new GeyserHandler();
-                logger.warn("Floodgate is recommended and less likely to break with new updates!");
                 cumulusAvailable = true;
             } else {
-                logger.info("Cannot use Geyser on less than Java 16");
+                logger.warn("This platform does not appear to support multi release jars, add '-Djdk.util.jar.enableMultiRelease=force' to your JVM flags in order to use Geyser.");
                 bedrockHandler = BedrockHandler.empty();
                 cumulusAvailable = false;
             }

@@ -11,9 +11,12 @@ import java.util.UUID;
 @SuppressWarnings("unused") // loaded on JDK 16
 public class GeyserHandler implements BedrockHandler {
 
-    public static final boolean SUPPORTED = true;
-
     private final GeyserImpl geyser = Objects.requireNonNull(GeyserImpl.getInstance());
+
+    public static boolean supported() {
+        // method is used so that compiler doesn't inline value
+        return true;
+    }
 
     @Override
     public String getType() {

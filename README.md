@@ -44,4 +44,4 @@ BungeeCord and Velocity do not support Access Items. BungeeCord and Velocity don
 Although using Floodgate should always be preferred, it is not required. If you want to use Geyser, [Java 16](https://adoptium.net/) or higher is required. There may be additional steps depending on your platform:
 
 Paper 1.16.5 and newer, Velocity:&ensp;&ensp;&ensp; No extra steps necessary  
-Spigot, BungeeCord, Waterfall:&ensp;&ensp;&ensp;&ensp;&ensp; Add `-Djdk.util.jar.enableMultiRelease=true` to your JVM startup flags.
+Spigot, BungeeCord, Waterfall:&ensp;&ensp;&ensp;&ensp;&ensp; Add `-Djdk.util.jar.enableMultiRelease=force` to your JVM startup flags.
