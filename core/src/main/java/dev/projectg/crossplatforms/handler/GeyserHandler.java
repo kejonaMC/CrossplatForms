@@ -6,8 +6,15 @@ import java.util.UUID;
 
 public class GeyserHandler implements BedrockHandler {
 
+    public static final boolean SUPPORTED = false;
+
     public GeyserHandler() {
         throw new UnsupportedOperationException("GeyserHandler is not supported on anything lower than Java 16");
+    }
+
+    @Override
+    public String getType() {
+        return "";
     }
 
     @Override

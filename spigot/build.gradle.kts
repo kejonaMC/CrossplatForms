@@ -20,7 +20,7 @@ tasks.withType<ShadowJar> {
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
             relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
             relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
-
+            relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
         }
         exclude {
                 e -> e.name.startsWith("org.yaml") // Available on Spigot

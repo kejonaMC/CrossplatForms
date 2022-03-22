@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 
 public interface BedrockHandler {
 
+    String getType();
+
     boolean isBedrockPlayer(UUID uuid);
 
     void sendForm(UUID uuid, Form form);
@@ -43,6 +45,11 @@ public interface BedrockHandler {
     class Empty implements BedrockHandler {
 
         public static BedrockHandler INSTANCE = new Empty();
+
+        @Override
+        public String getType() {
+            return "None";
+        }
 
         @Override
         public boolean isBedrockPlayer(UUID uuid) {

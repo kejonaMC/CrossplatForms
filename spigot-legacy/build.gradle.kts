@@ -18,6 +18,7 @@ tasks.withType<ShadowJar> {
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
             relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
             relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
+            relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
             // Only used on spigot-legacy - legacy versions don't contain a version acceptable for configurate
             relocate("org.yaml.snakeyaml", "dev.projectg.crossplatforms.shaded.snakeyaml")
             relocate("de.tr7zw.changeme.nbtapi", "dev.projectg.crossplatforms.shaded.nbtapi")

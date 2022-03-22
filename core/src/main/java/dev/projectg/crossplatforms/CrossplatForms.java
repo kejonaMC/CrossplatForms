@@ -36,6 +36,7 @@ import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bstats.charts.SimplePie;
 import org.geysermc.cumulus.util.FormImage;
 
 import java.nio.file.Path;
@@ -85,13 +86,22 @@ public class CrossplatForms {
             cumulusAvailable = true;
         } else if (serverHandler.isGeyserEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreGeyser")) {
             // java 16 GeyserHandler should always be instantiated here since Geyser can only run on java 16+
-            bedrockHandler = new GeyserHandler();
-            logger.warn("Floodgate is recommended and less likely to break with new updates!");
-            cumulusAvailable = true;
+            if (GeyserHandler.SUPPORTED) {
+                bedrockHandler = new GeyserHandler();
+                logger.warn("Floodgate is recommended and less likely to break with new updates!");
+                cumulusAvailable = true;
+            } else {
+                logger.info("Cannot use Geyser on less than Java 16");
+                bedrockHandler = BedrockHandler.empty();
+                cumulusAvailable = false;
+            }
         } else {
             bedrockHandler = BedrockHandler.empty();
-            logger.warn("Geyser nor Floodgate are installed! There may be issues.");
             cumulusAvailable = false;
+        }
+
+        if (!cumulusAvailable) {
+            logger.warn("No Bedrock Handler being used! There may be issues.");
         }
 
         // Load all configs
@@ -174,6 +184,9 @@ public class CrossplatForms {
 
         // register shortcut commands
         new CustomCommandManager(this, commandManager);
+
+        // extra charts for bstats
+        bootstrap.addCustomChart(new SimplePie("bedrockHandler", bedrockHandler::getType));
 
         logger.info("Took " + (System.currentTimeMillis() - start) + "ms to boot CrossplatForms.");
     }

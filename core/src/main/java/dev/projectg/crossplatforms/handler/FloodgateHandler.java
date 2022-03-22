@@ -15,6 +15,11 @@ public class FloodgateHandler implements BedrockHandler {
     }
 
     @Override
+    public String getType() {
+        return "Floodgate";
+    }
+
+    @Override
     public boolean isBedrockPlayer(UUID uuid) {
         return api.isFloodgatePlayer(uuid);
     }

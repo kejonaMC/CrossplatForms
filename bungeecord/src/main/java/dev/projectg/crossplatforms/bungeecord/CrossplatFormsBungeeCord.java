@@ -23,9 +23,12 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.bstats.bungeecord.Metrics;
+import org.bstats.charts.CustomChart;
 
 public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBoostrap {
 
+    private static final int BSTATS_ID = 14706;
     private static CrossplatFormsBungeeCord INSTANCE;
 
     static {
@@ -35,10 +38,12 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
     private BungeeAudiences audiences;
     private CrossplatForms crossplatForms;
     private BungeeCordServerHandler serverHandler;
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
         INSTANCE = this;
+        metrics = new Metrics(this, BSTATS_ID);
         Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
@@ -100,6 +105,11 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         }
 
         getProxy().getPluginManager().unregisterListeners(this);
+    }
+
+    @Override
+    public void addCustomChart(CustomChart chart) {
+        metrics.addCustomChart(chart);
     }
 
     public static CrossplatFormsBungeeCord getInstance() {

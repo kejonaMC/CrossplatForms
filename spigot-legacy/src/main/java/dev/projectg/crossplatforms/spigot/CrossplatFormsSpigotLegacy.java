@@ -25,24 +25,31 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
+import dev.projectg.crossplatforms.spigot.common.SpigotConstants;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.CustomChart;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatFormsBoostrap {
 
+    private static final int BSTATS_ID = 14707;
     private static CrossplatFormsSpigotLegacy INSTANCE;
 
     private BukkitAudiences audiences;
     private CrossplatForms crossplatForms;
     private ServerHandler serverHandler;
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
         INSTANCE = this;
+        metrics = new Metrics(this, BSTATS_ID);
         ServerAction.SENDER = this; // hack to have ServerAction in common module
         Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
@@ -113,6 +120,9 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         // Commands added by access items
         new GiveCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
         new InspectItemCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
+
+        // bstats
+        addCustomChart(new SimplePie(SpigotConstants.PIE_CHART_LEGACY, () -> "true")); // this is legacy
     }
 
     @Override
@@ -138,6 +148,11 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         }
 
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+    }
+
+    @Override
+    public void addCustomChart(CustomChart chart) {
+        metrics.addCustomChart(chart);
     }
 
     public static CrossplatFormsSpigotLegacy getInstance() {

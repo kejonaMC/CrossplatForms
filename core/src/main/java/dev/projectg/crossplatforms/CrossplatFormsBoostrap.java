@@ -6,6 +6,7 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import org.bstats.charts.CustomChart;
 
 public interface CrossplatFormsBoostrap {
 
@@ -20,4 +21,6 @@ public interface CrossplatFormsBoostrap {
      * during the construction of {@link CrossplatForms}. This method exists
      */
     InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry);
+
+    void addCustomChart(CustomChart chart);
 }

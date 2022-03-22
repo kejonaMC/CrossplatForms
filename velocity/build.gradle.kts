@@ -8,6 +8,7 @@ dependencies {
     annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
     compileOnly("com.velocitypowered:velocity-api:3.0.1")
     api("cloud.commandframework:cloud-velocity:1.6.2")
+    api("org.bstats:bstats-velocity:3.0.0")
     api(project(":core"))
 }
 
@@ -18,7 +19,7 @@ tasks.withType<ShadowJar> {
             relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
             // Used by cloud and configurate
             relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
-
+            relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
         }
         exclude {
                 e -> e.name.startsWith("com.mojang") // all available on velocity

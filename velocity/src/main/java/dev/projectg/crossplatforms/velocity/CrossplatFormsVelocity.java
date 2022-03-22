@@ -16,12 +16,12 @@ import dev.projectg.crossplatforms.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
@@ -30,6 +30,8 @@ import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
 import dev.projectg.crossplatforms.velocity.handler.VelocityInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
 import lombok.Getter;
+import org.bstats.charts.CustomChart;
+import org.bstats.velocity.Metrics;
 
 import java.nio.file.Path;
 
@@ -42,6 +44,7 @@ import java.nio.file.Path;
         dependencies = {@Dependency(id = "geyser", optional = true), @Dependency(id = "floodgate", optional = true)})
 public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
+    private static final int BSTATS_ID = 14708;
     private static CrossplatFormsVelocity INSTANCE;
 
     static {
@@ -53,18 +56,21 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     private final PluginContainer container;
     private final Path dataFolder;
     private final Logger logger;
+    private final Metrics.Factory metricsFactory;
 
     private final VelocityServerHandler serverHandler;
 
     private CrossplatForms crossplatForms;
+    private Metrics metrics;
 
     @Inject
-    public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, org.slf4j.Logger logger) {
+    public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, org.slf4j.Logger logger, Metrics.Factory metricsFactory) {
         INSTANCE = this;
         this.server = server;
         this.container = container;
         this.dataFolder = dataFolder;
         this.logger = new SLF4JLogger(logger);
+        this.metricsFactory = metricsFactory;
 
         serverHandler = new VelocityServerHandler(server);
     }
@@ -74,6 +80,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
         if (crossplatForms != null) {
             logger.warn("Initializing already occurred");
         }
+        metrics = metricsFactory.make(this, BSTATS_ID);
 
         VelocityCommandManager<CommandOrigin> commandManager;
         try {
@@ -121,6 +128,11 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     @Override
     public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
         return new VelocityInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+    }
+
+    @Override
+    public void addCustomChart(CustomChart chart) {
+        metrics.addCustomChart(chart);
     }
 
     @Subscribe
