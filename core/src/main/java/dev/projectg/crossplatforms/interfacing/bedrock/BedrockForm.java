@@ -2,15 +2,20 @@ package dev.projectg.crossplatforms.interfacing.bedrock;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.Form;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 @ToString
@@ -20,6 +25,8 @@ import java.util.function.Consumer;
 public abstract class BedrockForm extends Interface implements ValuedType {
 
     protected transient final String permissionBase = Constants.Id() + ".form.";
+
+    private final List<Action> incorrectActions = Collections.emptyList();
 
     /**
      * Determines a way to safely execute the given response handler, and sets it on the given form.
@@ -37,5 +44,9 @@ public abstract class BedrockForm extends Interface implements ValuedType {
                 responseHandler.accept(data);
             }));
         }
+    }
+
+    protected void handleIncorrect(FormPlayer player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
+        Action.affectPlayer(player, incorrectActions, interfaceManager, bedrockHandler);
     }
 }

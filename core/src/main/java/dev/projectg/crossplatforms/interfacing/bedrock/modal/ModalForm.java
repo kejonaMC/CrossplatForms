@@ -59,16 +59,10 @@ public class ModalForm extends BedrockForm {
         // Set the response handler
         Consumer<String> handler = (responseData) -> {
             ModalFormResponse response = form.parseResponse(responseData);
-            if (response.isClosed()) {
-                return;
-            } else if (response.isInvalid()) {
-                if (logger.isDebug()) {
-                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player " + player.getName());
-                    logger.warn(form.getJsonData());
-                }
+            if (!response.isCorrect()) {
+                handleIncorrect(player, interfaceManager, bedrockHandler);
                 return;
             }
-            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             int id = response.getClickedButtonId();
 
             List<Action> actions;

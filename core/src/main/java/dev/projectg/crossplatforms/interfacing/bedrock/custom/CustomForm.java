@@ -73,16 +73,10 @@ public class CustomForm extends BedrockForm implements ValuedType {
         // Set the response handler
         Consumer<String> handler = (responseData) -> {
             CustomFormResponse response = form.parseResponse(responseData);
-            if (response.isClosed()) {
-                return;
-            } else if (response.isInvalid()) {
-                if (logger.isDebug()) {
-                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player " + player.getName());
-                    logger.warn(form.getJsonData());
-                }
+            if (!response.isCorrect()) {
+                handleIncorrect(player, interfaceManager, bedrockHandler);
                 return;
             }
-            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < customComponents.size(); i++) {
                 CustomComponent component = customComponents.get(i);

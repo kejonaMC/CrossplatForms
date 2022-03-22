@@ -65,16 +65,10 @@ public class SimpleForm extends BedrockForm {
 
         Consumer<String> handler = (responseData) -> {
             SimpleFormResponse response = form.parseResponse(responseData);
-            if (response.isClosed()) {
-                return;
-            } else if (response.isInvalid()) {
-                if (logger.isDebug()) {
-                    logger.warn("Got invalid response for form " + super.getIdentifier() + " by player: " + player.getName());
-                    logger.warn(form.getJsonData());
-                }
+            if (!response.isCorrect()) {
+                handleIncorrect(player, interfaceManager, bedrockHandler);
                 return;
             }
-            logger.debug("Parsing form response for form " + super.getIdentifier() + " and player: " + player.getName());
             // Handle effects of pressing the button
             List<Action> actions = formattedButtons.get(response.getClickedButtonId()).getActions();
             Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
