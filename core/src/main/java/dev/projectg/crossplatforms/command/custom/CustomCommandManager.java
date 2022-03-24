@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.command.proxy;
+package dev.projectg.crossplatforms.command.custom;
 
 import cloud.commandframework.CommandManager;
 import dev.projectg.crossplatforms.Constants;
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CustomCommandManager implements Reloadable {
 
@@ -60,21 +61,17 @@ public class CustomCommandManager implements Reloadable {
             }
             CommandType type = command.getMethod();
             if (type == CommandType.REGISTER) {
+                if (!(command instanceof RegisteredCommand)) {
+                    throw new IllegalStateException("CustomCommand has method type REGISTER but is not a RegisteredCommand: " + command);
+                }
+
                 if (commandManager.getCommandTree().getNamedNode(name) == null) {
                     // only register if it hasn't been yet
                     // any references to the command are done through the map so that it can be updated after a reload
                     if (commandManager.isCommandRegistrationAllowed()) {
                         Logger.getLogger().debug("Registering shortcut command: " + command.getIdentifier());
                         commandManager.command(commandManager.commandBuilder(name)
-                                .permission((origin) -> {
-                                    CustomCommand target = registeredCommands.get(name);
-                                    if (target == null) {
-                                        // no longer present in the config
-                                        return false;
-                                    } else {
-                                        return origin.isPlayer() && origin.hasPermission(target.getPermission());
-                                    }
-                                })
+                                .permission(origin -> hasPermission(origin, name))
                                 .handler((context) -> {
                                     Logger.getLogger().debug("Executing registered command on thread: " + Thread.currentThread());
                                     FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow(NoSuchElementException::new)));
@@ -86,11 +83,30 @@ public class CustomCommandManager implements Reloadable {
                     }
                 }
 
-                registeredCommands.put(name, command); // store the command
+                registeredCommands.put(name, command); // store the command or update it
             } else if (type == CommandType.INTERCEPT_CANCEL || type == CommandType.INTERCEPT_PASS) {
-                serverHandler.registerProxyCommand(command);
+                if (command instanceof InterceptCommand) {
+                    serverHandler.registerProxyCommand((InterceptCommand) command);
+                } else {
+                    throw new IllegalStateException("CustomCommand has method type INTERCEPT_CANCEL or INTERCEPT_PASS but is not a ProxiedCommand: " + command);
+                }
             } else {
-                Logger.getLogger().severe("Unhandled CommandType enum constant: " + type);
+                Logger.getLogger().severe("Unhandled CommandType enum: " + type);
+            }
+        }
+    }
+
+    private boolean hasPermission(CommandOrigin origin, String commandName) {
+        CustomCommand target = registeredCommands.get(commandName);
+        if (target == null) {
+            // no longer present in the config
+            return false;
+        } else {
+            if (origin.isPlayer()) {
+                UUID uuid = origin.getUUID().orElseThrow(NullPointerException::new);
+                return target.getPlatform().matches(uuid, bedrockHandler) && origin.hasPermission(target.getPermission());
+            } else {
+                return false;
             }
         }
     }

@@ -5,8 +5,8 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.proxy.CustomCommand;
-import dev.projectg.crossplatforms.command.proxy.ProxyCommandCache;
+import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
+import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
@@ -14,7 +14,6 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BungeeCordServerHandler extends ProxyCommandCache implements ServerHandler, Listener {
+public class BungeeCordServerHandler extends CustomCommandCache implements ServerHandler, Listener {
 
     private static final String OP_GROUP = "op";
 
@@ -137,24 +136,22 @@ public class BungeeCordServerHandler extends ProxyCommandCache implements Server
             return;
         }
 
-        String name = COMMAND_PATTERN.split(event.getMessage().substring(1))[0]; // remove command slash and get first command
-        Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + name + "]");
-        CustomCommand command = proxyCommands.get(name);
+        String input = event.getMessage().substring(1);
+        Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + input + "]");
+        // attempt to find an exact match
+        InterceptCommand command = findCommand(input);
         if (command != null) {
             ProxiedPlayer player = (ProxiedPlayer) connection;
-            CommandType type = command.getMethod();
             if (player.hasPermission(command.getPermission())) {
                 command.run(
-                        new BungeeCordPlayer(player),
-                        CrossplatForms.getInstance().getInterfaceManager(),
-                        CrossplatForms.getInstance().getBedrockHandler()
+                    new BungeeCordPlayer(player),
+                    CrossplatForms.getInstance().getInterfaceManager(),
+                    CrossplatForms.getInstance().getBedrockHandler()
                 );
-            } else if (type == CommandType.INTERCEPT_CANCEL) {
-                player.sendMessage(TextComponent.fromLegacyText(PERMISSION_MESSAGE));
-            }
 
-            if (type == CommandType.INTERCEPT_CANCEL) {
-                event.setCancelled(true);
+                if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
+                    event.setCancelled(true);
+                }
             }
         }
     }

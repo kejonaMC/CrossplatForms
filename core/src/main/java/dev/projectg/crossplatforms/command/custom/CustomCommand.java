@@ -1,8 +1,9 @@
-package dev.projectg.crossplatforms.command.proxy;
+package dev.projectg.crossplatforms.command.custom;
 
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandType;
+import dev.projectg.crossplatforms.config.serializer.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class CustomCommand {
+public abstract class CustomCommand implements ValuedType {
 
     @NodeKey
     private String identifier = null;

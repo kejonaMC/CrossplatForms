@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * An enum containing the identities of all valid configuration files.
  */
 public class ConfigId {
-    public static final ConfigId GENERAL = new ConfigId("config.yml", GeneralConfig.VERSION, GeneralConfig.class);
+    public static final ConfigId GENERAL = new ConfigId("config.yml", GeneralConfig.VERSION, GeneralConfig.MINIMUM_VERSION, GeneralConfig.class, GeneralConfig::updater);
     public static final ConfigId BEDROCK_FORMS = new ConfigId("bedrock-forms.yml", FormConfig.VERSION, FormConfig.MINIMUM_VERSION, FormConfig.class, FormConfig::updater);
     public static final ConfigId JAVA_MENUS = new ConfigId("java-menus.yml", MenuConfig.VERSION, MenuConfig.class);
 

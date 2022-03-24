@@ -22,4 +22,4 @@ unsafe-command-registration: false
 enable-debug: false
 
 # Don't touch this
-config-version: 1
+config-version: 2

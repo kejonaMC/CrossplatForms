@@ -3,7 +3,8 @@ package dev.projectg.crossplatforms.handler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.proxy.CustomCommand;
+import dev.projectg.crossplatforms.command.custom.CustomCommand;
+import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
@@ -74,7 +75,7 @@ public interface ServerHandler {
      * any command executions that match the criteria of given CustomCommand.
      * @param proxyCommand The command to register. It's {@link CommandType} must be only {@link CommandType#INTERCEPT_CANCEL} or {@link CommandType#INTERCEPT_PASS}.
      */
-    void registerProxyCommand(CustomCommand proxyCommand);
+    void registerProxyCommand(InterceptCommand proxyCommand);
 
     /**
      * Clear any previously registered {@link CustomCommand} registered as proxy commands.

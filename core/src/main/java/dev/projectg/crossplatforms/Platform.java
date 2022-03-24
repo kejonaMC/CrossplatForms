@@ -28,4 +28,8 @@ public enum Platform {
             return !isBedrock;
         }
     }
+
+    public boolean matches(UUID player, BedrockHandler handler) {
+        return matches(player, this, handler);
+    }
 }
