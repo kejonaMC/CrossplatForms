@@ -8,9 +8,13 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -23,6 +27,14 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
 
     private final Map<String, SimpleTypeRegistration<?>> simpleTypes = new HashMap<>();
 
+    @Override
+    @Nonnull
+    public Set<String> getTypes() {
+        Set<String> types = new HashSet<>(simpleTypes.keySet());
+        types.addAll(super.getTypes());
+        return types;
+    }
+
     /**
      * Register a simple type to be deserialized.
      *
@@ -32,10 +44,11 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
      * @param <V>       The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
      */
     public <V> void registerSimpleType(String typeId, TypeToken<V> valueType, Function<V, T> creator) {
-        if (simpleTypes.get(typeId) != null) {
-            throw new IllegalArgumentException("Simple Type " + typeId + " is already registered");
+        String lowerCase = typeId.toLowerCase(Locale.ROOT);
+        if (simpleTypes.get(lowerCase) != null) {
+            throw new IllegalArgumentException("Simple Type " + lowerCase + " is already registered");
         }
-        simpleTypes.put(typeId, new SimpleTypeRegistration<>(valueType, creator));
+        simpleTypes.put(lowerCase, new SimpleTypeRegistration<>(valueType, creator));
     }
 
     /**
@@ -61,9 +74,9 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
 
         T instance;
         if (type == null) {
-            SimpleTypeRegistration<?> simpleType = simpleTypes.get(typeId);
+            SimpleTypeRegistration<?> simpleType = simpleTypes.get(typeId.toLowerCase(Locale.ROOT));
             if (simpleType == null) {
-                throw new SerializationException("Unsupported type (not registered) '" + typeId + "'");
+                throw new SerializationException("Unsupported type (not registered) '" + typeId + "'. Possible options are: " + getTypes());
             } else {
                 instance = simpleType.deserialize(node);
             }

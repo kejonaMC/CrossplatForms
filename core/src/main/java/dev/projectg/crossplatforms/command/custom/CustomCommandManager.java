@@ -50,6 +50,7 @@ public class CustomCommandManager implements Reloadable {
         if (!configManager.getConfig(GeneralConfig.class).isPresent()) {
             return;
         }
+        Logger logger = Logger.getLogger();
         GeneralConfig config = configManager.getConfig(GeneralConfig.class).get();
         commandManager.setSetting(CommandManager.ManagerSettings.ALLOW_UNSAFE_REGISTRATION, config.isUnsafeCommandRegistration());
         registeredCommands.clear();
@@ -69,7 +70,7 @@ public class CustomCommandManager implements Reloadable {
                     // only register if it hasn't been yet
                     // any references to the command are done through the map so that it can be updated after a reload
                     if (commandManager.isCommandRegistrationAllowed()) {
-                        Logger.getLogger().debug("Registering shortcut command: " + command.getIdentifier());
+                        logger.debug("Registering shortcut command: " + command.getIdentifier());
                         commandManager.command(commandManager.commandBuilder(name)
                                 .permission(origin -> hasPermission(origin, name))
                                 .handler((context) -> {
@@ -79,19 +80,24 @@ public class CustomCommandManager implements Reloadable {
                                 })
                         );
                     } else {
-                        Logger.getLogger().warn("Unable to register shortcut command '" + name + "' because registration is no longer possible. Restart the server for changes to apply.");
+                        logger.warn("Unable to register shortcut command '" + name + "' because registration is no longer possible. Restart the server for changes to apply.");
                     }
                 }
 
                 registeredCommands.put(name, command); // store the command or update it
             } else if (type == CommandType.INTERCEPT_CANCEL || type == CommandType.INTERCEPT_PASS) {
                 if (command instanceof InterceptCommand) {
-                    serverHandler.registerProxyCommand((InterceptCommand) command);
+                    InterceptCommand interceptCommand = (InterceptCommand) command;
+                    if (interceptCommand.getPattern() == null && interceptCommand.getExact() == null) {
+                        logger.severe("CustomCommand of method INTERCEPT_CANCEL or INTERCEPT_PASS defines both 'exact' and 'pattern': " + command + ". Not registering, as only one must be specified.");
+                    } else {
+                        serverHandler.registerProxyCommand(interceptCommand);
+                    }
                 } else {
                     throw new IllegalStateException("CustomCommand has method type INTERCEPT_CANCEL or INTERCEPT_PASS but is not a ProxiedCommand: " + command);
                 }
             } else {
-                Logger.getLogger().severe("Unhandled CommandType enum: " + type);
+                logger.severe("Unhandled CommandType enum: " + type + ". Not registering command with name: " + name);
             }
         }
     }

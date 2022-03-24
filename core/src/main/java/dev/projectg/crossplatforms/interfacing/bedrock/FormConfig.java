@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
+import dev.projectg.crossplatforms.config.Configuration;
 import dev.projectg.crossplatforms.interfacing.InterfaceConfig;
 import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
 import dev.projectg.crossplatforms.parser.Parser;
@@ -33,7 +34,7 @@ public class FormConfig extends InterfaceConfig {
 
     public static ConfigurationTransformation.Versioned updater() {
         return ConfigurationTransformation.versionedBuilder()
-                .versionKey("config-version")
+                .versionKey(Configuration.VERSION_KEY)
                 .addVersion(2, update1_2())
                 .addVersion(3, update2_3())
                 .addVersion(4, update3_4())

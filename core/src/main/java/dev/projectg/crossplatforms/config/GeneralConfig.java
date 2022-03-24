@@ -36,7 +36,7 @@ public class GeneralConfig extends Configuration {
 
     public static ConfigurationTransformation.Versioned updater() {
         return ConfigurationTransformation.versionedBuilder()
-            .versionKey("config-version")
+            .versionKey(Configuration.VERSION_KEY)
             .addVersion(2, update1_2())
             .build();
     }
