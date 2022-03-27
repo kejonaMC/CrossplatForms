@@ -27,16 +27,21 @@ See the [gallery](images/README.md) for visual examples.
 
 ## Supported Platforms:
 
+#### If you both have Geyser and Velocity installed on BungeeCord or Velocity, you'll need to either:  
+A: Use [Geyser-Standalone](https://wiki.geysermc.org/geyser/setup/#standalone-setup) instead  
+B: Use our [fork](https://github.com/ProjectG-Plugins/Floodgate) of Floodgate that allows using the [Floodgate API](https://wiki.geysermc.org/floodgate/api/) on BungeeCord/Velocity while Geyser is also installed. It does not contain any other changes.
+
+BungeeCord and Velocity do not support Access Items. BungeeCord and Velocity don't support inventory menus yet, but they will in the future.
+
+
 * [`CrossplatForms-Spigot.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; Spigot 1.14.4 - 1.18.2
 * [`CrossplatForms-SpigotLegacy.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp; Spigot 1.8.8 - 1.13.2
 * [`CrossplatForms-BungeeCord.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp; BungeeCord
 * [`CrossplatForms-Velocity.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp; Velocity 3.x
 
-BungeeCord and Velocity do not support Access Items. BungeeCord and Velocity don't support inventory menus yet, but they will in the future.
-
 ## Requirements:
 * Java 8 or higher
-* Geyser or Floodgate are required for Bedrock Edition specific features. Other features will still work without them.
+* [Geyser](https://github.com/GeyserMC/Geyser) or [Floodgate](https://github.com/GeyserMC/Floodgate) are required for Bedrock Edition specific features. Other features will still work without them.
   * If you want to install CForms on Spigot servers behind a BungeeCord/Velocity proxy, Floodgate must also be installed on the backend servers. Follow this [guide](https://wiki.geysermc.org/floodgate/setup/) closely. If you need setup help or Bedrock players are being treated as Java players, ask the [Geyser Discord](https://discord.gg/geysermc) for help.
 
 ### How to use Geyser instead of Floodgate:
