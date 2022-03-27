@@ -18,7 +18,7 @@ See the [gallery](images/README.md) for visual examples.
 * Define Actions to run commands, open interfaces, change servers, etc
 * Simple, Modal, and Custom Forms for Bedrock Edition players
   * Simple and Modal Forms: Trigger different Actions depending on the button pressed
-  * Custom Forms: Actions are trigggerd, and the response of each component is available as a placeholder
+  * Custom Forms: Actions are triggered, and the response of each component is available as a placeholder
 * Inventory menus. Trigger different Actions depending on the button pressed
 * Access Items for players that trigger Actions when clicked in hand
 * Register new commands that trigger Actions
