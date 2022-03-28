@@ -21,7 +21,7 @@ See the [gallery](images/README.md) for visual examples.
   * Custom Forms: Actions are triggered, and the response of each component is available as a placeholder
 * Inventory menus. Trigger different Actions depending on the button pressed
 * Access Items for players that trigger Actions when clicked in hand
-* Register new commands that trigger Actions
+* Register custom commands that trigger Actions
 * Trigger Actions when existing commands are executed
 * Broad placeholder support
 
