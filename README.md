@@ -33,11 +33,12 @@ B: Use our [fork](https://github.com/ProjectG-Plugins/Floodgate) of Floodgate th
 
 BungeeCord and Velocity do not support Access Items. BungeeCord and Velocity don't support inventory menus yet, but they will in the future.
 
-
 * [`CrossplatForms-Spigot.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; Spigot 1.14.4 - 1.18.2
 * [`CrossplatForms-SpigotLegacy.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp; Spigot 1.8.8 - 1.13.2
 * [`CrossplatForms-BungeeCord.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp; BungeeCord
 * [`CrossplatForms-Velocity.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp; Velocity 3.x
+
+Alternative downloads are available [here](https://github.com/ProjectG-Plugins/CrossplatForms/actions/workflows/push-main.yml) and development builds are available [here](https://github.com/ProjectG-Plugins/CrossplatForms/actions/workflows/push-dev.yml).
 
 ## Requirements:
 * Java 8 or higher
