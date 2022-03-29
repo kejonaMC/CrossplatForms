@@ -32,7 +32,9 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
     private static CrossplatFormsBungeeCord INSTANCE;
 
     static {
-        Constants.setId("crossplatformsbungee"); // todo: this can probably be improved
+        // load information from build.properties
+        Constants.fetch();
+        Constants.setId("crossplatformsbungee");
     }
 
     private BungeeAudiences audiences;

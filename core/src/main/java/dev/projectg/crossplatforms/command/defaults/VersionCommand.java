@@ -24,7 +24,7 @@ public class VersionCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     origin.sendMessage(Logger.Level.INFO, "CrossplatForms version:");
-                    origin.sendMessage(Logger.Level.INFO, "Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
+                    origin.sendMessage(Logger.Level.INFO, "Version: " + Constants.version() + ", Branch: " + Constants.branch() + ", Build: " + Constants.buildNumber() + ", Commit: " + Constants.commit());
                 })
                 .build());
     }

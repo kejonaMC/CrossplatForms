@@ -7,8 +7,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
-import com.velocitypowered.api.plugin.Dependency;
-import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -35,20 +33,15 @@ import org.bstats.velocity.Metrics;
 
 import java.nio.file.Path;
 
-@Plugin(id = "crossplatforms",
-        name = "CrossplatForms-Velocity",
-        version = "0.4.0",
-        url = "https://github.com/ProjectG-Plugins/CrossplatForms",
-        description = "Unifies inventory menus with Bedrock Edition forms.",
-        authors = "Konicai",
-        dependencies = {@Dependency(id = "geyser", optional = true), @Dependency(id = "floodgate", optional = true)})
 public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
     private static final int BSTATS_ID = 14708;
     private static CrossplatFormsVelocity INSTANCE;
 
     static {
-        Constants.setId("crossplatformsvelocity"); // todo: this can probably be improved
+        // load information from build.properties
+        Constants.fetch();
+        Constants.setId("crossplatformsvelocity");
     }
 
     @Getter

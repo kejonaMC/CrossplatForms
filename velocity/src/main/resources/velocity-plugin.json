@@ -1,0 +1,19 @@
+{
+  "main": "dev.projectg.crossplatforms.velocity.CrossplatFormsVelocity",
+  "id": "crossplatforms",
+  "name": "CrossplatForms-Velocity",
+  "version": "${project_version}",
+  "description": "${project_description}",
+  "url": "${project_url}",
+  "authors": ["Konicai"],
+  "dependencies": [
+    {
+      "id": "geyser",
+      "optional": true
+    },
+    {
+      "id": "floodgate",
+      "optional": true
+    }
+  ]
+}

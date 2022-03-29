@@ -3,14 +3,16 @@ plugins {
     java
     `java-library`
     `maven-publish`
+    id("net.kyori.indra.git")
 }
 
 allprojects{
     apply(plugin = "java")
     apply(plugin = "java-library")
+    apply(plugin = "net.kyori.indra.git")
 
     group = "dev.projectg"
-    version = "0.4.0"
+    version = "1.0.0"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -33,6 +35,17 @@ allprojects{
         manifest {
             attributes("Multi-Release" to "true")
         }
+    }
+
+    tasks.processResources {
+        expand(
+            "project_description" to "Bedrock Edition forms, inventory menus, and more.",
+            "project_url" to "https://github.com/ProjectG-Plugins/CrossplatForms",
+            "project_version" to project.version,
+            "git_branch" to (indraGit.branchName() ?: "UNKNOWN"),
+            "git_commit" to (indraGit.commit()?.abbreviate(7)?.name() ?: "UNKNOWN"),
+            "build_number" to (System.getenv("BUILD_NUMBER") ?: "UNKNOWN")
+        )
     }
 }
 

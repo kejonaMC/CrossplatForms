@@ -1,8 +1,8 @@
 main: dev.projectg.crossplatforms.spigot.CrossplatFormsSpigot
 name: CrossplatForms
-version: 0.4.0
+version: ${project_version}
 api-version: 1.14
-description: Unifies inventory menus with Bedrock Edition forms.
+description: ${project_description}
 prefix: CForms
 authors:
   - Konicai

@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
+    //annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
     compileOnly("com.velocitypowered:velocity-api:3.0.1")
     api("cloud.commandframework:cloud-velocity:1.6.2")
     api("org.bstats:bstats-velocity:3.0.0")

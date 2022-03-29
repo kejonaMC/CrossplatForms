@@ -4,6 +4,7 @@ import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
 import dev.projectg.crossplatforms.BasicPlaceholders;
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
@@ -40,6 +41,11 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
 
     private static final int BSTATS_ID = 14707;
     private static CrossplatFormsSpigotLegacy INSTANCE;
+
+    static {
+        // load information from build.properties
+        Constants.fetch();
+    }
 
     private BukkitAudiences audiences;
     private CrossplatForms crossplatForms;

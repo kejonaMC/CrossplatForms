@@ -78,7 +78,7 @@ public class CrossplatForms {
         this.commandManager = commandManager;
         this.placeholders = placeholders;
         ReloadableRegistry.clear();
-        logger.info("Branch: " + Constants.BRANCH + ", Commit: " + Constants.COMMIT);
+        logger.info("Version: " + Constants.version() + ", Branch: " + Constants.branch() + ", Build: " + Constants.buildNumber() + ", Commit: " + Constants.commit());
 
         // Decide on which implementation to deal with bedrock players
         if (serverHandler.isFloodgateEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreFloodgate")) {
