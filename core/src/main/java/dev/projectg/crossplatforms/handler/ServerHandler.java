@@ -75,12 +75,12 @@ public interface ServerHandler {
      * any command executions that match the criteria of given CustomCommand.
      * @param proxyCommand The command to register. It's {@link CommandType} must be only {@link CommandType#INTERCEPT_CANCEL} or {@link CommandType#INTERCEPT_PASS}.
      */
-    void registerProxyCommand(InterceptCommand proxyCommand);
+    void registerInterceptCommand(InterceptCommand proxyCommand);
 
     /**
      * Clear any previously registered {@link CustomCommand} registered as proxy commands.
      */
-    void clearProxyCommands();
+    void clearInterceptCommands();
 
     /**
      * Execute the given runnable in a manner that allows for thread safe access to the server API of the given implementation.

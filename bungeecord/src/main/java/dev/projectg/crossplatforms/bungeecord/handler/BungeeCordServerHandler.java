@@ -5,7 +5,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
+import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BungeeCordServerHandler extends CustomCommandCache implements ServerHandler, Listener {
+public class BungeeCordServerHandler extends InterceptCommandCache implements ServerHandler, Listener {
 
     private static final String OP_GROUP = "op";
 

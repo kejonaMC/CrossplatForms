@@ -49,7 +49,7 @@ public class CustomCommandManager implements Reloadable {
     }
 
     private void load() {
-        serverHandler.clearProxyCommands();
+        serverHandler.clearInterceptCommands();
         if (!configManager.getConfig(GeneralConfig.class).isPresent()) {
             return;
         }
@@ -158,7 +158,7 @@ public class CustomCommandManager implements Reloadable {
         if (command.getPattern() == null && command.getExact() == null) {
             logger.severe("CustomCommand of method INTERCEPT_CANCEL or INTERCEPT_PASS defines both 'exact' and 'pattern': " + command + ". Not registering, as only one must be specified.");
         } else {
-            serverHandler.registerProxyCommand(command);
+            serverHandler.registerInterceptCommand(command);
         }
     }
 

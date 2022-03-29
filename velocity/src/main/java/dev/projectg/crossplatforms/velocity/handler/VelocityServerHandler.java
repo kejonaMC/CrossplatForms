@@ -12,7 +12,7 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
+import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class VelocityServerHandler extends CustomCommandCache implements ServerHandler {
+public class VelocityServerHandler extends InterceptCommandCache implements ServerHandler {
 
     private final ProxyServer server;
     private final CommandManager commandManager;
