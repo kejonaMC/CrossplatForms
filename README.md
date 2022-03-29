@@ -13,15 +13,17 @@ Inventory menus for Java Edition players can also be created. Forms and menus ar
 
 See the [gallery](images/README.md) for visual examples.
 
+See the [wiki](https://github.com/ProjectG-Plugins/CrossplatForms/wiki) for configuration information.
+
 ## Features:
 
-* Define Actions to run commands, open interfaces, change servers, etc
-* Simple, Modal, and Custom Forms for Bedrock Edition players
+* Define [Actions](https://github.com/ProjectG-Plugins/CrossplatForms/wiki/Common-Configuration-Elements#actions) to run commands, open interfaces, change servers, etc
+* Simple, Modal, and Custom [Forms](https://github.com/ProjectG-Plugins/CrossplatForms/wiki/bedrock-forms.yml) for Bedrock Edition players
   * Simple and Modal Forms: Trigger different Actions depending on the button pressed
   * Custom Forms: Actions are triggered, and the response of each component is available as a placeholder
-* Inventory menus. Trigger different Actions depending on the button pressed
-* Access Items for players that trigger Actions when clicked in hand
-* Register custom commands that trigger Actions
+* Inventory [menus](https://github.com/ProjectG-Plugins/CrossplatForms/wiki/java-menus.yml). Trigger different Actions depending on the button pressed
+* [Access Items](https://github.com/ProjectG-Plugins/CrossplatForms/wiki/access-items.yml) for players that trigger Actions when clicked in hand
+* Register [custom commands](https://github.com/ProjectG-Plugins/CrossplatForms/wiki/config.yml) that trigger Actions
 * Trigger Actions when existing commands are executed
 * Broad placeholder support
 
