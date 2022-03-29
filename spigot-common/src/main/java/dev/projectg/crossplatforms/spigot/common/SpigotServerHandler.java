@@ -5,8 +5,9 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.proxy.CustomCommand;
-import dev.projectg.crossplatforms.command.proxy.ProxyCommandCache;
+import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
+import dev.projectg.crossplatforms.command.custom.InterceptCommand;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import net.kyori.adventure.audience.Audience;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SpigotServerHandler extends ProxyCommandCache implements ServerHandler, Listener {
+public class SpigotServerHandler extends CustomCommandCache implements ServerHandler, Listener {
 
     private final Server server;
     private final JavaPlugin plugin;
@@ -148,25 +149,24 @@ public class SpigotServerHandler extends ProxyCommandCache implements ServerHand
 
     @EventHandler
     public void onPreProcessCommand(PlayerCommandPreprocessEvent event) {
-        String name = COMMAND_PATTERN.split(event.getMessage().substring(1))[0]; // remove command slash and get first command
-        CustomCommand command = proxyCommands.get(name);
+        String input = event.getMessage().substring(1); // remove command slash and get first command
+        InterceptCommand command = findCommand(input);
         if (command != null) {
             Player player = event.getPlayer();
-            CommandType type = command.getMethod();
-            if (player.hasPermission(command.getPermission())) {
-                command.run(
+            BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
+            if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
+                String permission = command.getPermission();
+                if (permission == null || player.hasPermission(permission)) {
+                    command.run(
                         new SpigotPlayer(player),
                         CrossplatForms.getInstance().getInterfaceManager(),
-                        CrossplatForms.getInstance().getBedrockHandler()
-                );
-            } else {
-                if (type == CommandType.INTERCEPT_CANCEL) {
-                    player.sendMessage(PERMISSION_MESSAGE);
-                }
-            }
+                        bedrockHandler
+                    );
 
-            if (type == CommandType.INTERCEPT_CANCEL) {
-                event.setCancelled(true);
+                    if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.config.serializer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,20 +24,21 @@ public class TypeRegistry<T> {
      * @throws IllegalArgumentException If the type identifier has already been registered.
      */
     public void registerType(String typeId, Class<? extends T> type) {
-        if (types.get(typeId) != null) {
-            throw new IllegalArgumentException("Type " + typeId + " is already registered");
+        String lowerCase = typeId.toLowerCase(Locale.ROOT);
+        if (types.get(lowerCase) != null) {
+            throw new IllegalArgumentException("Type " + lowerCase + " is already registered");
         }
-        types.put(typeId, type);
+        types.put(lowerCase, type);
     }
 
     /**
      * Get a type by its identifier
-     * @param typeID The identifier to look up
+     * @param typeId The identifier to look up
      * @return The type, null if the type identifier is not registered.
      */
     @Nullable
-    public Class<? extends T> getType(String typeID) {
-        return types.get(typeID);
+    public Class<? extends T> getType(String typeId) {
+        return types.get(typeId.toLowerCase(Locale.ROOT));
     }
 
     @Nonnull

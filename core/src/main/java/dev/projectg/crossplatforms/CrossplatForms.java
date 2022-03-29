@@ -14,7 +14,7 @@ import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
-import dev.projectg.crossplatforms.command.proxy.CustomCommandManager;
+import dev.projectg.crossplatforms.command.custom.CustomCommandManager;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;

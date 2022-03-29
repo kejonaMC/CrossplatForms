@@ -1,7 +1,6 @@
 package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.accessitem.AccessItem;
 import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
 import dev.projectg.crossplatforms.config.ConfigManager;
@@ -258,7 +257,7 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         // Give any access items that should be given
         boolean changedHand = false; // If we have changed the item the player is holding
         for (AccessItem access : super.getItems().values()) {
-            if (give.test(access) && Platform.matches(player.getUniqueId(), access.getPlatform(), bedrockHandler) && player.hasPermission(access.permission(AccessItem.Limit.EVENT))) {
+            if (give.test(access) && access.getPlatform().matches(player.getUniqueId(), bedrockHandler) && player.hasPermission(access.permission(AccessItem.Limit.EVENT))) {
                 if (!contained.contains(access.getIdentifier())) {
                     if (super.setHeldSlot() && !changedHand) {
                         giveAccessItem(new SpigotPlayer(player), access, true);

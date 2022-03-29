@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
+import dev.projectg.crossplatforms.config.Configuration;
 import dev.projectg.crossplatforms.interfacing.InterfaceConfig;
 import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
 import dev.projectg.crossplatforms.parser.Parser;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.spongepowered.configurate.transformation.ConfigurationTransformation.WILDCARD_OBJECT;
+
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
@@ -31,7 +34,7 @@ public class FormConfig extends InterfaceConfig {
 
     public static ConfigurationTransformation.Versioned updater() {
         return ConfigurationTransformation.versionedBuilder()
-                .versionKey("config-version")
+                .versionKey(Configuration.VERSION_KEY)
                 .addVersion(2, update1_2())
                 .addVersion(3, update2_3())
                 .addVersion(4, update3_4())
@@ -39,7 +42,7 @@ public class FormConfig extends InterfaceConfig {
     }
 
     private static ConfigurationTransformation update1_2() {
-        NodePath wildcardForm = NodePath.path("forms", ConfigurationTransformation.WILDCARD_OBJECT);
+        NodePath wildcardForm = NodePath.path("forms", WILDCARD_OBJECT);
         ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
 
         // Custom forms
@@ -76,7 +79,7 @@ public class FormConfig extends InterfaceConfig {
 
     private static ConfigurationTransformation update2_3() {
         ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
-        NodePath wildcardForm = NodePath.path("forms", ConfigurationTransformation.WILDCARD_OBJECT);
+        NodePath wildcardForm = NodePath.path("forms", WILDCARD_OBJECT);
 
         // form types
         NodePath formType = wildcardForm.withAppendedChild("type");
@@ -89,7 +92,7 @@ public class FormConfig extends InterfaceConfig {
         }));
 
         // component types of custom forms
-        NodePath componentType = wildcardForm.plus(NodePath.path("components", ConfigurationTransformation.WILDCARD_OBJECT, "type"));
+        NodePath componentType = wildcardForm.plus(NodePath.path("components", WILDCARD_OBJECT, "type"));
         builder.addAction(componentType, ((path, value) -> {
             String type = value.getString();
             if (type != null) {
@@ -102,7 +105,7 @@ public class FormConfig extends InterfaceConfig {
     }
 
     private static ConfigurationTransformation update3_4() {
-        NodePath component = NodePath.path("forms", ConfigurationTransformation.WILDCARD_OBJECT, "components", ConfigurationTransformation.WILDCARD_OBJECT);
+        NodePath component = NodePath.path("forms", WILDCARD_OBJECT, "components", WILDCARD_OBJECT);
         ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
         builder.addAction(component, ((path, value) -> {
             if ("input".equals(value.node("type").getString())) {

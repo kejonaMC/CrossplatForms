@@ -1,11 +1,13 @@
 package dev.projectg.crossplatforms.config.serializer;
 
+import lombok.Getter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * Deserializes a value {@link T} depending on a string node in the node representing {@link T}.
@@ -14,7 +16,25 @@ import java.lang.reflect.Type;
  */
 public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> implements TypeSerializer<T> {
 
-    public static final String KEY = "type";
+    @Getter
+    private final String typeKey;
+
+    /**
+     * Creates a ValuedTypeSerializer with the given key to read the type at
+     * @param typeKey The key that the type value is expected to reside at when deserializing/serializing
+     */
+    public ValuedTypeSerializer(String typeKey) {
+        Objects.requireNonNull(typeKey);
+        this.typeKey = typeKey;
+
+    }
+
+    /**
+     * Creates a ValuedTypeSerializer with a type key of "type".
+     */
+    public ValuedTypeSerializer() {
+        this("type");
+    }
 
     @Override
     public void registerType(String typeId, Class<? extends T> type) {
@@ -23,7 +43,7 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
 
     @Override
     public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
-        String typeId = node.node(KEY).getString();
+        String typeId = node.node(typeKey).getString();
         if (typeId == null) {
             throw new SerializationException("Entry at " + node.path() + " does not contain a 'type' value. Possible options are: " + getTypes());
         }
@@ -48,7 +68,7 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
             }
 
             node.set(value);
-            node.node(KEY).set(typeIdentifier); // set it after to make sure its not overridden
+            node.node(typeKey).set(typeIdentifier); // set it after to make sure its not overridden
         }
     }
 }

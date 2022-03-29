@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.FormPlayer;
 
 import java.util.UUID;
 
@@ -27,5 +28,17 @@ public enum Platform {
         } else {
             return !isBedrock;
         }
+    }
+
+    public static boolean matches(FormPlayer player, Platform platform, BedrockHandler handler) {
+        return matches(player.getUuid(), platform, handler);
+    }
+
+    public boolean matches(UUID player, BedrockHandler handler) {
+        return matches(player, this, handler);
+    }
+
+    public boolean matches(FormPlayer player, BedrockHandler handler) {
+        return matches(player.getUuid(), handler);
     }
 }
