@@ -9,6 +9,7 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.NodeKey;
 import org.spongepowered.configurate.objectmapping.meta.Required;
@@ -16,11 +17,13 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 import java.util.Collections;
 import java.util.List;
 
+@ToString
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class CustomCommand implements ValuedType {
 
+    @Required
     @NodeKey
     private String identifier = null;
 

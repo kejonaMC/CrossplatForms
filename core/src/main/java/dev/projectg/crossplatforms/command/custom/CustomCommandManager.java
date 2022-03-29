@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.command.custom;
 
+import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
@@ -15,7 +16,10 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -28,12 +32,9 @@ public class CustomCommandManager implements Reloadable {
     private final ServerHandler serverHandler;
     private final InterfaceManager interfaceManager;
     private final BedrockHandler bedrockHandler;
+    private final Logger logger;
 
-    /**
-     * Only stored registered commands, not intercept commands.
-     * @see CommandType
-     */
-    private final Map<String, CustomCommand> registeredCommands = new HashMap<>();
+    private final Map<Arguments, RegisteredCommand> registeredCommands = new HashMap<>();
 
     public CustomCommandManager(CrossplatForms forms, CommandManager<CommandOrigin> commandManager) {
         this.configManager = forms.getConfigManager();
@@ -41,70 +42,129 @@ public class CustomCommandManager implements Reloadable {
         this.serverHandler = forms.getServerHandler();
         this.interfaceManager = forms.getInterfaceManager();
         this.bedrockHandler = forms.getBedrockHandler();
+        this.logger = Logger.getLogger();
 
         load();
         ReloadableRegistry.register(this);
     }
 
     private void load() {
+        serverHandler.clearProxyCommands();
         if (!configManager.getConfig(GeneralConfig.class).isPresent()) {
             return;
         }
-        Logger logger = Logger.getLogger();
         GeneralConfig config = configManager.getConfig(GeneralConfig.class).get();
         commandManager.setSetting(CommandManager.ManagerSettings.ALLOW_UNSAFE_REGISTRATION, config.isUnsafeCommandRegistration());
-        registeredCommands.clear();
 
+        List<Arguments> currentCommands = new ArrayList<>();
         for (CustomCommand command : config.getCommands().values()) {
-            String name = command.getIdentifier();
-            if (command.getPermission() == null || command.getPermission().isEmpty()) {
-                command.setPermission(Constants.Id() + ".shortcut." + name);
+            if (command == null) {
+                continue;
             }
+
             CommandType type = command.getMethod();
             if (type == CommandType.REGISTER) {
-                if (!(command instanceof RegisteredCommand)) {
+                if (command instanceof RegisteredCommand) {
+                    RegisteredCommand registered = (RegisteredCommand) command;
+                    registerCommand(registered);
+                    currentCommands.add(registered.literals());
+                } else {
                     throw new IllegalStateException("CustomCommand has method type REGISTER but is not a RegisteredCommand: " + command);
                 }
-
-                if (commandManager.getCommandTree().getNamedNode(name) == null) {
-                    // only register if it hasn't been yet
-                    // any references to the command are done through the map so that it can be updated after a reload
-                    if (commandManager.isCommandRegistrationAllowed()) {
-                        logger.debug("Registering shortcut command: " + command.getIdentifier());
-                        commandManager.command(commandManager.commandBuilder(name)
-                                .permission(origin -> hasPermission(origin, name))
-                                .handler((context) -> {
-                                    Logger.getLogger().debug("Executing registered command on thread: " + Thread.currentThread());
-                                    FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(context.getSender().getUUID().orElseThrow(NoSuchElementException::new)));
-                                    registeredCommands.get(name).run(player, interfaceManager, bedrockHandler);
-                                })
-                        );
-                    } else {
-                        logger.warn("Unable to register shortcut command '" + name + "' because registration is no longer possible. Restart the server for changes to apply.");
-                    }
-                }
-
-                registeredCommands.put(name, command); // store the command or update it
             } else if (type == CommandType.INTERCEPT_CANCEL || type == CommandType.INTERCEPT_PASS) {
                 if (command instanceof InterceptCommand) {
-                    InterceptCommand interceptCommand = (InterceptCommand) command;
-                    if (interceptCommand.getPattern() == null && interceptCommand.getExact() == null) {
-                        logger.severe("CustomCommand of method INTERCEPT_CANCEL or INTERCEPT_PASS defines both 'exact' and 'pattern': " + command + ". Not registering, as only one must be specified.");
-                    } else {
-                        serverHandler.registerProxyCommand(interceptCommand);
-                    }
+                    interceptCommand((InterceptCommand) command);
                 } else {
                     throw new IllegalStateException("CustomCommand has method type INTERCEPT_CANCEL or INTERCEPT_PASS but is not a ProxiedCommand: " + command);
                 }
             } else {
-                logger.severe("Unhandled CommandType enum: " + type + ". Not registering command with name: " + name);
+                logger.severe("Unhandled CommandType enum: " + type + ". Not registering command with name: " + command.getIdentifier());
             }
+        }
+
+        for (Map.Entry<Arguments, RegisteredCommand> entry : registeredCommands.entrySet()) {
+            // enable commands that are current
+            // disable commands that are no longer current
+            // cannot remove old commands from the map because a double reload could result in cloud raising exceptions due to duplicate nodes/arguments
+            entry.getValue().enable(currentCommands.contains(entry.getKey()));
         }
     }
 
-    private boolean hasPermission(CommandOrigin origin, String commandName) {
-        CustomCommand target = registeredCommands.get(commandName);
-        if (target == null) {
+    private void registerCommand(RegisteredCommand command) {
+        Objects.requireNonNull(command);
+        final String name = command.getIdentifier();
+        final Arguments literals = command.literals();
+        final String[] array = literals.source();
+
+
+        if (command.getPermission() == null || command.getPermission().isEmpty()) {
+            command.setPermission(Constants.Id() + ".shortcut." + name);
+        }
+
+        if (literals.length < 1) {
+            logger.warn("Cannot register custom command '" + name + "' because its length is less than 1");
+            return;
+        }
+
+        if (!registeredCommands.containsKey(literals)) {
+            if (commandManager.isCommandRegistrationAllowed()) {
+
+                Command.Builder<CommandOrigin> builder = commandManager.commandBuilder(array[0]);
+                for (int i = 1; i < literals.length; i++) {
+                    // build the command with all the literal arguments
+                    builder = builder.literal(array[i]);
+                }
+
+                try {
+                    commandManager.command(builder
+                        .permission(origin -> hasPermission(origin, literals))
+                        .handler((context) -> executeCommand(context.getSender(), literals))
+                    );
+                    registeredCommands.put(literals, command); // set definition
+                } catch (Exception e) {
+                    logger.warn("Failed to register custom command '" + name + "', likely because it already exists: " + Arrays.toString(array));
+                    logger.warn(e.getMessage());
+                    if (logger.isDebug()) {
+                        e.printStackTrace();
+                    } else {
+                        logger.warn("Enable debug for further information");
+                    }
+                }
+            } else {
+                logger.warn("Unable to register shortcut command '" + name + "' because registration is no longer possible. Restart the server for changes to apply.");
+            }
+        } else {
+            // already setup, just update the definition.
+            registeredCommands.put(literals, command);
+        }
+    }
+
+    private void executeCommand(CommandOrigin player, Arguments command) {
+        logger.debug("Executing registered command on thread: " + Thread.currentThread());
+        FormPlayer target = Objects.requireNonNull(serverHandler.getPlayer(player.getUUID().orElseThrow(NoSuchElementException::new)));
+        RegisteredCommand latest = registeredCommands.get(command);
+        if (latest == null) {
+            String message = "Unexpected state: command " + Arrays.toString(command.source()) + " no longer exists internally";
+            target.sendMessage(message);
+            logger.warn(message);
+        } else if (latest.isEnabled()) {
+            latest.run(target, interfaceManager, bedrockHandler);
+        } else {
+            target.sendMessage("That command is no longer available");
+        }
+    }
+
+    private void interceptCommand(InterceptCommand command) {
+        if (command.getPattern() == null && command.getExact() == null) {
+            logger.severe("CustomCommand of method INTERCEPT_CANCEL or INTERCEPT_PASS defines both 'exact' and 'pattern': " + command + ". Not registering, as only one must be specified.");
+        } else {
+            serverHandler.registerProxyCommand(command);
+        }
+    }
+
+    private boolean hasPermission(CommandOrigin origin, Arguments command) {
+        RegisteredCommand target = registeredCommands.get(command);
+        if (target == null || !target.isEnabled()) {
             // no longer present in the config
             return false;
         } else {
@@ -119,7 +179,6 @@ public class CustomCommandManager implements Reloadable {
 
     @Override
     public boolean reload() {
-        serverHandler.clearProxyCommands();
         load();
         return true;
     }

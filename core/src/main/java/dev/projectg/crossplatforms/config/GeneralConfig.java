@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.config;
 
+import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.custom.CustomCommand;
 import lombok.Getter;
@@ -47,6 +48,12 @@ public class GeneralConfig extends Configuration {
                 CommandType type = value.node("method").get(CommandType.class);
                 if (type == CommandType.INTERCEPT_CANCEL || type == CommandType.INTERCEPT_PASS) {
                     value.node("exact").set(String.class, value.key());
+                    if (value.node("permission").virtual()) {
+                        // no permission listed for intercept now means permission not necessary
+                        value.node("permission").set(Constants.Id() + ".shortcut." + value.key());
+                    }
+                } else if (type == CommandType.REGISTER) {
+                    value.node("command").set(String.class, value.key());
                 }
                 return null;
             })).build();

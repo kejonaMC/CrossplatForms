@@ -7,6 +7,7 @@ import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
@@ -142,15 +143,19 @@ public class BungeeCordServerHandler extends CustomCommandCache implements Serve
         InterceptCommand command = findCommand(input);
         if (command != null) {
             ProxiedPlayer player = (ProxiedPlayer) connection;
-            if (player.hasPermission(command.getPermission())) {
-                command.run(
-                    new BungeeCordPlayer(player),
-                    CrossplatForms.getInstance().getInterfaceManager(),
-                    CrossplatForms.getInstance().getBedrockHandler()
-                );
+            BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
+            if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
+                String permission = command.getPermission();
+                if (permission == null || player.hasPermission(permission)) {
+                    command.run(
+                        new BungeeCordPlayer(player),
+                        CrossplatForms.getInstance().getInterfaceManager(),
+                        bedrockHandler
+                    );
 
-                if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
-                    event.setCancelled(true);
+                    if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

@@ -4,6 +4,8 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
+import dev.projectg.crossplatforms.command.custom.Arguments;
+import dev.projectg.crossplatforms.command.custom.ArgumentsSerializer;
 import dev.projectg.crossplatforms.command.custom.CustomCommand;
 import dev.projectg.crossplatforms.command.custom.CustomCommandSerializer;
 import dev.projectg.crossplatforms.config.serializer.KeyedTypeListSerializer;
@@ -54,6 +56,7 @@ public class ConfigManager {
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
             builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
+            builder.registerExact(Arguments.class, new ArgumentsSerializer());
             builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(Action.class, actionSerializer);
             builder.register(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(actionSerializer));

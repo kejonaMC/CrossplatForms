@@ -2,17 +2,29 @@
 
 # Commands can be dynamically defined here, to open specific forms.
 commands:
-  # The command name
-  servers:
-    method: REGISTER
-    # Target both bedrock and java players
+  servers1:
+    method: register
+    # The command sequence
+    command: list servers
     actions:
       # Open the form or menu called "servers"
       form: servers
 
     # The permission key to use. This will not register the permission or give it a default, so existing permissions can be used.
     # This uses the permission for the "/forms open" command.
+    # If permissions for register are not specified, they are given a default of crossplatforms.shortcut.<identifier> (prefix may differ proxy platforms)
     permission: crossplatforms.command.open
+
+  switch_intercept:
+    method: intercept_cancel
+    # Cancel any commands that match this exact string
+    exact: forms open switch
+    # Only target java players, since this form is available to bedrock players
+    platform: java
+    actions:
+      commands:
+        - tell %player_name% That interface is exclusive to Bedrock Edition.
+    # If permissions for intercept_pass and intercept_cancel are not specified, there is no permission requirement.
 
 # Allows commands to be registered with the REGISTER method after server startup.
 # Even with this disabled, the actions and permission of existing commands can still be changed and reloaded.

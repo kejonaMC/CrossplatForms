@@ -5,8 +5,9 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.CustomCommand;
 import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
+import dev.projectg.crossplatforms.command.custom.InterceptCommand;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import net.kyori.adventure.audience.Audience;
@@ -149,18 +150,22 @@ public class SpigotServerHandler extends CustomCommandCache implements ServerHan
     @EventHandler
     public void onPreProcessCommand(PlayerCommandPreprocessEvent event) {
         String input = event.getMessage().substring(1); // remove command slash and get first command
-        CustomCommand command = findCommand(input);
+        InterceptCommand command = findCommand(input);
         if (command != null) {
             Player player = event.getPlayer();
-            if (player.hasPermission(command.getPermission())) {
-                command.run(
+            BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
+            if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
+                String permission = command.getPermission();
+                if (permission == null || player.hasPermission(permission)) {
+                    command.run(
                         new SpigotPlayer(player),
                         CrossplatForms.getInstance().getInterfaceManager(),
-                        CrossplatForms.getInstance().getBedrockHandler()
-                );
+                        bedrockHandler
+                    );
 
-                if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
-                    event.setCancelled(true);
+                    if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

@@ -24,8 +24,14 @@ public class ReloadCommand extends FormsCommand {
                 .permission(PERMISSION)
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    if (!ReloadableRegistry.reloadAll() && !origin.isConsole()) {
-                        origin.sendMessage(Logger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
+                    boolean success = ReloadableRegistry.reloadAll();
+                    if (!origin.isConsole()) {
+                        // reloadable registry handles console messages
+                        if (success) {
+                            origin.sendMessage(Logger.Level.INFO, "Successfully reloaded");
+                        } else {
+                            origin.sendMessage(Logger.Level.SEVERE, "There was an error reloading something! Please check the server console for further information.");
+                        }
                     }
                 })
                 .build());

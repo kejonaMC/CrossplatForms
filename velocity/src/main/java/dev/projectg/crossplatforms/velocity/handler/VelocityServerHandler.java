@@ -12,8 +12,9 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.CustomCommand;
 import dev.projectg.crossplatforms.command.custom.CustomCommandCache;
+import dev.projectg.crossplatforms.command.custom.InterceptCommand;
+import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
@@ -121,21 +122,25 @@ public class VelocityServerHandler extends CustomCommandCache implements ServerH
             return;
         }
 
-        String input = event.getCommand().substring(1);
+        String input = event.getCommand();
         Logger.getLogger().debug("preprocess command: [" + event.getCommand() + "] -> [" + input + "]");
-        CustomCommand command = findCommand(input);
+        InterceptCommand command = findCommand(input);
         if (command != null) {
             Player player = (Player) source;
             CommandType type = command.getMethod();
-            if (player.hasPermission(command.getPermission())) {
-                command.run(
+            BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
+            if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
+                String permission = command.getPermission();
+                if (permission == null || player.hasPermission(permission)) {
+                    command.run(
                         new VelocityPlayer(player),
                         CrossplatForms.getInstance().getInterfaceManager(),
-                        CrossplatForms.getInstance().getBedrockHandler()
-                );
+                        bedrockHandler
+                    );
 
-                if (type == CommandType.INTERCEPT_CANCEL) {
-                    event.setResult(CommandExecuteEvent.CommandResult.denied()); // todo: if this sends a message about denial we might have to replace the common with a dummy
+                    if (type == CommandType.INTERCEPT_CANCEL) {
+                        event.setResult(CommandExecuteEvent.CommandResult.denied()); // todo: if this sends a message about denial we might have to replace the common with a dummy
+                    }
                 }
             }
         }
