@@ -1,9 +1,19 @@
 pipeline {
     agent any
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                scmSkip(deleteBuild: true, skipPattern:'.*\\[ci skip\\].*')
+            }
+        }
+    }
+    
     tools {
         jdk 'Jdk17'
         gradle 'gradle'
     }
+    
     stages {
         stage('Build') {
             steps {
