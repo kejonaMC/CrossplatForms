@@ -34,7 +34,7 @@ pipeline {
             deleteDir()
         }
 
-        successful {
+        success {
             script {
                 def changeLogSets = currentBuild.changeSets
                 def message = "**Changes:**"
