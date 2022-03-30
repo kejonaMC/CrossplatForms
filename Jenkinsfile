@@ -31,6 +31,10 @@ pipeline {
 
     post {
         always {
+            deleteDir()
+        }
+
+        successful {
             script {
                 def changeLogSets = currentBuild.changeSets
                 def message = "**Changes:**"
@@ -59,11 +63,10 @@ pipeline {
                         message += "\n   - ${extra} more commits"
                     }
                 }
-
                 env.changes = message
             }
-            deleteDir()
-                discordSend description: "**Build:** [${currentBuild.id}](${env.BUILD_URL})\n**Status:** [${currentBuild.currentResult}](${env.BUILD_URL})\n${changes}\n\n[**Artifacts on Jenkins**](https://ci.projectg.dev/job/CrossplatForms/)", footer: 'ProjectG', link: env.BUILD_URL, successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'), result: currentBuild.currentResult, title: "${env.JOB_NAME}", webhookURL: "${env.DISCORD_WEBHOOK}"
-               }
+
+            discordSend description: "**Build:** [${currentBuild.id}](${env.BUILD_URL})\n**Status:** [${currentBuild.currentResult}](${env.BUILD_URL})\n${changes}\n\n[**Artifacts on Jenkins**](https://ci.projectg.dev/job/CrossplatForms/)", footer: 'ProjectG', link: env.BUILD_URL, successful: currentBuild.resultIsBetterOrEqualTo('SUCCESS'), result: currentBuild.currentResult, title: "${env.JOB_NAME}", webhookURL: "${env.DISCORD_WEBHOOK}"
+        }
     }
 }
