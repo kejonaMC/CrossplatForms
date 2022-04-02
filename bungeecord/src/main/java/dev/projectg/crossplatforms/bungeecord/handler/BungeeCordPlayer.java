@@ -1,8 +1,9 @@
 package dev.projectg.crossplatforms.bungeecord.handler;
 
+import dev.projectg.crossplatforms.bungeecord.CrossplatFormsBungeeCord;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import lombok.AllArgsConstructor;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.annotation.Nonnull;
@@ -30,9 +31,8 @@ public class BungeeCordPlayer implements FormPlayer {
     }
 
     @Override
-    public void sendMessage(String message) {
-        player.sendMessage(TextComponent.fromLegacyText(message));
-
+    public void sendRaw(TextComponent component) {
+        player.sendMessage(CrossplatFormsBungeeCord.COMPONENT_SERIALIZER.serialize(component));
     }
 
     @Override

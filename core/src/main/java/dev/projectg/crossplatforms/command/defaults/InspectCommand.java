@@ -4,7 +4,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.ServerHandler;
@@ -47,10 +46,10 @@ public class InspectCommand extends FormsCommand {
                     String name = context.get("form");
                     BedrockForm form = bedrockRegistry.getForm(name);
                     if (form == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "That form doesn't exist!");
+                        origin.warn("That form doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of form: " + name);
-                        origin.sendMessage(Logger.Level.INFO, form.toString());
+                        origin.sendMessage("Inspection of form: " + name);
+                        origin.sendMessage(form.toString());
                     }
                 })
         );
@@ -67,10 +66,10 @@ public class InspectCommand extends FormsCommand {
                     String name = context.get("menu");
                     JavaMenu menu = javaRegistry.getMenu(name);
                     if (menu == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "That menu doesn't exist!");
+                        origin.warn("That menu doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of menu: " + name);
-                        origin.sendMessage(Logger.Level.INFO, menu.toString());
+                        origin.sendMessage("Inspection of menu: " + name);
+                        origin.sendMessage(menu.toString());
                     }
                 })
         );

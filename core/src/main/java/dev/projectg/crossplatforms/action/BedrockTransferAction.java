@@ -44,10 +44,10 @@ public class BedrockTransferAction implements Action {
 
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
             if (!bedrockHandler.transfer(player, actualAddress, actualPort)) {
-                player.sendMessage("Failed to transfer you to a server due to an unknown reason");
+                player.warn("Failed to transfer you to a server due to an unknown reason");
             }
         } else {
-            player.sendMessage("Attempted to transfer you to a server that supports Bedrock Edition but you aren't a Bedrock player.");
+            player.warn("Attempted to transfer you to a server that supports Bedrock Edition but you aren't a Bedrock player.");
             Logger.getLogger().warn("Can't use transfer_packet " + actualAddress + ":" + actualPort + " on JE player " + player.getName());
         }
     }
@@ -66,7 +66,7 @@ public class BedrockTransferAction implements Action {
                 try {
                     actualPort = Integer.parseUnsignedInt(resolved);
                 } catch (NumberFormatException e) {
-                    player.sendMessage("Failed to transfer you to a server because " + resolved + " is not a valid port");
+                    player.warn("Failed to transfer you to a server because " + resolved + " is not a valid port");
                     Logger.getLogger().warn("Failed to send " + player.getName() + " to " + address + " because " + resolved + " is not a valid port");
                     return null;
                 }

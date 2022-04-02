@@ -4,7 +4,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.command.defaults.InspectCommand;
@@ -37,10 +36,10 @@ public class InspectItemCommand extends FormsCommand {
                     String name = context.get("item");
                     AccessItem item = itemRegistry.getItems().get(name);
                     if (item == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "That Access Item doesn't exist!");
+                        origin.warn("That Access Item doesn't exist!");
                     } else {
-                        origin.sendMessage(Logger.Level.INFO, "Inspection of access item: " + name);
-                        origin.sendMessage(Logger.Level.INFO, item.toString());
+                        origin.sendMessage("Inspection of access item: " + name);
+                        origin.sendMessage(item.toString());
                     }
                 })
         );

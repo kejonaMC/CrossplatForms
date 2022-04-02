@@ -5,7 +5,6 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -53,19 +52,19 @@ public class GiveCommand extends FormsCommand {
                     AccessItem item = itemRegistry.getItems().get(identifier);
 
                     if (item == null) {
-                        origin.sendMessage("'" + identifier + "' doesn't exist.");
+                        origin.warn("'" + identifier + "' doesn't exist.");
                         return;
                     }
                     if (origin.hasPermission(item.permission(AccessItem.Limit.COMMAND))) {
                         if (origin.hasPermission(item.permission(AccessItem.Limit.POSSESS))) {
                             if (!itemRegistry.giveAccessItem(player, item, false)) {
-                                origin.sendMessage("Your inventory is too full!");
+                                origin.warn("Your inventory is too full!");
                             }
                         } else {
-                            origin.sendMessage("You don't have permission to have: " + identifier);
+                            origin.warn("You don't have permission to have: " + identifier);
                         }
                     } else {
-                        origin.sendMessage("You don't have permission to give: " + identifier);
+                        origin.warn("You don't have permission to give: " + identifier);
                     }
                 }));
 
@@ -84,25 +83,25 @@ public class GiveCommand extends FormsCommand {
                     String target = context.get("player");
                     FormPlayer targetPlayer = serverHandler.getPlayer(target);
                     if (targetPlayer == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
+                        origin.warn("The player " + target + " doesn't exist.");
                         return;
                     }
                     String identifier = context.get(ARGUMENT);
                     AccessItem item = itemRegistry.getItems().get(identifier);
                     if (item == null) {
-                        origin.sendMessage("'" + identifier + "' doesn't exist.");
+                        origin.warn("'" + identifier + "' doesn't exist.");
                         return;
                     }
                     if (origin.hasPermission(item.permission(AccessItem.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(item.permission(AccessItem.Limit.POSSESS))) {
                             if (!itemRegistry.giveAccessItem(targetPlayer, item, false)) {
-                                origin.sendMessage(String.format("%s's inventory is too full!", targetPlayer.getName()));
+                                origin.warn(String.format("%s's inventory is too full!", targetPlayer.getName()));
                             }
                         } else {
-                            origin.sendMessage(target + " doesn't have permission to have: " + identifier);
+                            origin.warn(target + " doesn't have permission to have: " + identifier);
                         }
                     } else {
-                        origin.sendMessage("You don't have permission to give: " + identifier);
+                        origin.warn("You don't have permission to give: " + identifier);
                     }
                 })
                 .build()

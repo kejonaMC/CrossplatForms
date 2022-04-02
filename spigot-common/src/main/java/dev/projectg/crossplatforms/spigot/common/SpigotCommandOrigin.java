@@ -3,6 +3,7 @@ package dev.projectg.crossplatforms.spigot.common;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -24,8 +25,8 @@ public class SpigotCommandOrigin implements CommandOrigin {
     }
 
     @Override
-    public void sendRaw(String message) {
-        handle.sendMessage(message);
+    public void sendRaw(TextComponent message) {
+        handle.sendMessage(SpigotCommon.LEGACY_SERIALIZER.serialize(message));
     }
 
     @Override

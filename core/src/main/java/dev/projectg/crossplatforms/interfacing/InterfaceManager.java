@@ -95,7 +95,7 @@ public abstract class InterfaceManager {
                 if (player.hasPermission(form.permission(Interface.Limit.USE))) {
                     form.send(player, this);
                 } else {
-                    player.sendMessage("You don't have permission to use: " + id);
+                    denyPermission(player, id);
                 }
             } else if (menu != null) {
                 if (menu.isAllowBedrock()) {
@@ -103,26 +103,34 @@ public abstract class InterfaceManager {
                     if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
                         menu.send(player, this);
                     } else {
-                        player.sendMessage("You don't have permission to use: " + id);
+                        denyPermission(player, id);
                     }
                 } else {
                     // menu exists and BE is not allowed
-                    player.sendMessage("That menu is only available to Java Edition players.");
+                    player.warn("That menu is only available to Java Edition players.");
                 }
             } else {
-                player.sendMessage("'" + id + "' doesn't exist.");
+                denyBadTarget(player, id);
             }
         } else {
             if (menu != null) {
                 if (player.hasPermission(menu.permission(Interface.Limit.USE))) {
                     menu.send(player, this);
                 } else {
-                    player.sendMessage("You don't have permission to use: " + id);
+                    denyPermission(player, id);
                 }
             } else {
-                player.sendMessage("'" + id + "' doesn't exist.");
+                denyBadTarget(player, id);
             }
         }
+    }
+
+    private static void denyPermission(FormPlayer player, String name) {
+        player.warn("You don't have permission to use: " + name);
+    }
+
+    private static void denyBadTarget(FormPlayer player, String name) {
+        player.warn("'" + name + "' doesn't exist.");
     }
 
     public abstract void sendMenu(FormPlayer player, JavaMenu menu);

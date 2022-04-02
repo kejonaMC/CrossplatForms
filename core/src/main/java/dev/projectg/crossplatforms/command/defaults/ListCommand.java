@@ -3,7 +3,6 @@ package dev.projectg.crossplatforms.command.defaults;
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -57,10 +56,10 @@ public class ListCommand extends FormsCommand {
                             .collect(Collectors.toList());
 
                     if (names.isEmpty()) {
-                        context.getSender().sendMessage(Logger.Level.INFO, "There are no menus or forms to list.");
+                        context.getSender().sendMessage("There are no menus or forms to list.");
                     } else {
-                        context.getSender().sendMessage(Logger.Level.INFO, "Available forms/menus:");
-                        context.getSender().sendMessage(Logger.Level.INFO, String.join(", ", names));
+                        context.getSender().sendMessage("Available forms/menus:");
+                        context.getSender().sendMessage(String.join(", ", names));
                     }
                 })
                 .build());

@@ -21,6 +21,7 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
@@ -30,6 +31,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
     private static final int BSTATS_ID = 14706;
     private static CrossplatFormsBungeeCord INSTANCE;
+    public static final BungeeComponentSerializer COMPONENT_SERIALIZER = BungeeComponentSerializer.get();
 
     static {
         // load information from build.properties

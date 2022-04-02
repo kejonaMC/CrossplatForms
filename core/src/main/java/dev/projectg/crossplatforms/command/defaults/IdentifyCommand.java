@@ -4,7 +4,6 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -40,7 +39,7 @@ public class IdentifyCommand extends FormsCommand {
                     } else {
                         message = "You are not a bedrock player";
                     }
-                    origin.sendMessage(Logger.Level.INFO, message);
+                    origin.sendMessage(message);
                 }).build());
 
         manager.command(defaultBuilder
@@ -54,10 +53,10 @@ public class IdentifyCommand extends FormsCommand {
                     String targetName = context.get("player");
                     FormPlayer target = serverHandler.getPlayer(targetName);
                     if (target == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "That player doesn't exist");
+                        origin.warn("That player doesn't exist");
                     } else {
                         String message = targetName + (bedrockHandler.isBedrockPlayer(target.getUuid()) ? " is a Bedrock player" : " is not a Bedrock player");
-                        origin.sendMessage(Logger.Level.INFO, message);
+                        origin.sendMessage(message);
                     }
                 })
                 .build()

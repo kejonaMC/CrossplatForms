@@ -26,7 +26,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
-import dev.projectg.crossplatforms.spigot.common.SpigotConstants;
+import dev.projectg.crossplatforms.spigot.common.SpigotCommon;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
 import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -39,7 +39,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatFormsBoostrap {
 
-    private static final int BSTATS_ID = 14707;
     private static CrossplatFormsSpigotLegacy INSTANCE;
 
     static {
@@ -55,7 +54,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
     @Override
     public void onEnable() {
         INSTANCE = this;
-        metrics = new Metrics(this, BSTATS_ID);
+        metrics = new Metrics(this, SpigotCommon.METRICS_ID);
         ServerAction.SENDER = this; // hack to have ServerAction in common module
         Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
@@ -128,7 +127,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         new InspectItemCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
 
         // bstats
-        addCustomChart(new SimplePie(SpigotConstants.PIE_CHART_LEGACY, () -> "true")); // this is legacy
+        addCustomChart(new SimplePie(SpigotCommon.PIE_CHART_LEGACY, () -> "true")); // this is legacy
     }
 
     @Override

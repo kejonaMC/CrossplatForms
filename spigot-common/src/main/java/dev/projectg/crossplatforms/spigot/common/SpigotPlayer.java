@@ -1,17 +1,12 @@
 package dev.projectg.crossplatforms.spigot.common;
 
-import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import javax.annotation.Nonnull;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class SpigotPlayer implements FormPlayer {
 
@@ -37,8 +32,8 @@ public class SpigotPlayer implements FormPlayer {
     }
 
     @Override
-    public void sendMessage(String message) {
-        handle.sendMessage(Constants.MESSAGE_PREFIX + message);
+    public void sendRaw(TextComponent component) {
+        handle.sendMessage(SpigotCommon.LEGACY_SERIALIZER.serialize(component));
     }
 
     @Override

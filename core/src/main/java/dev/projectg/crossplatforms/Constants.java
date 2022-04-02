@@ -1,6 +1,9 @@
 package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.utils.FileUtils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -8,7 +11,10 @@ import java.util.Properties;
 public final class Constants {
     public static final String NAME = "CrossplatForms";
     private static String ID = "crossplatforms";
-    public static final String MESSAGE_PREFIX = "[CForms] ";
+    public static final TextComponent MESSAGE_PREFIX = Component.text()
+        .append(Component.text("[C", TextColor.color(128, 184, 224)))
+        .append(Component.text("Forms ]", TextColor.color(203, 93, 128)))
+        .build();
 
     private static String VERSION = "UNKNOWN";
     private static String BRANCH = "UNKNOWN";

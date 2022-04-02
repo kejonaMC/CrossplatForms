@@ -5,7 +5,6 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.FormsCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
@@ -62,17 +61,17 @@ public class OpenCommand extends FormsCommand {
                     Interface ui = interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
                     if (ui == null) {
-                        origin.sendMessage("'" + identifier + "' doesn't exist.");
+                        origin.warn("'" + identifier + "' doesn't exist.");
                         return;
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (origin.hasPermission(ui.permission(Interface.Limit.USE))) {
                             ui.send(player, interfaceManager);
                         } else {
-                            origin.sendMessage("You don't have permission to use: " + identifier);
+                            origin.warn("You don't have permission to use: " + identifier);
                         }
                     } else {
-                        origin.sendMessage("You don't have permission to send: " + identifier);
+                        origin.warn("You don't have permission to send: " + identifier);
                     }
                 }));
 
@@ -94,23 +93,23 @@ public class OpenCommand extends FormsCommand {
                     String target = context.get("player");
                     FormPlayer targetPlayer = serverHandler.getPlayer(target);
                     if (targetPlayer == null) {
-                        origin.sendMessage(Logger.Level.SEVERE, "The player " + target + " doesn't exist.");
+                        origin.warn("The player " + target + " doesn't exist.");
                         return;
                     }
                     String identifier = context.get(ARGUMENT);
                     Interface ui = this.interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
                     if (ui == null) {
-                        origin.sendMessage("'" + identifier + "' doesn't exist.");
+                        origin.warn("'" + identifier + "' doesn't exist.");
                         return;
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(ui.permission(Interface.Limit.USE))) {
                             ui.send(targetPlayer, interfaceManager);
                         } else {
-                            origin.sendMessage(target + " doesn't have permission to use: " + identifier);
+                            origin.warn(target + " doesn't have permission to use: " + identifier);
                         }
                     } else {
-                        origin.sendMessage("You don't have permission to send: " + identifier);
+                        origin.warn("You don't have permission to send: " + identifier);
                     }
                 })
                 .build()

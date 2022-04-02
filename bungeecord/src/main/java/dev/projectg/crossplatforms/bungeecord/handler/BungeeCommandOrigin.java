@@ -1,9 +1,10 @@
 package dev.projectg.crossplatforms.bungeecord.handler;
 
+import dev.projectg.crossplatforms.bungeecord.CrossplatFormsBungeeCord;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
+import net.kyori.adventure.text.TextComponent;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.annotation.Nonnull;
@@ -22,8 +23,8 @@ public class BungeeCommandOrigin implements CommandOrigin {
     }
 
     @Override
-    public void sendRaw(String message) {
-        sender.sendMessage(TextComponent.fromLegacyText(message));
+    public void sendRaw(TextComponent message) {
+        sender.sendMessage(CrossplatFormsBungeeCord.COMPONENT_SERIALIZER.serialize(message));
     }
 
     @Override

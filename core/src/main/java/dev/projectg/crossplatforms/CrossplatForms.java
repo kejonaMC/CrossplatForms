@@ -36,6 +36,7 @@ import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bstats.charts.SimplePie;
 import org.geysermc.cumulus.util.FormImage;
 
@@ -48,6 +49,7 @@ import java.util.concurrent.ExecutionException;
 public class CrossplatForms {
     private static CrossplatForms INSTANCE;
 
+    public static final PlainTextComponentSerializer PLAIN_SERIALIZER = PlainTextComponentSerializer.plainText();
     public static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
 
     private final ConfigManager configManager;
@@ -169,7 +171,7 @@ public class CrossplatForms {
                         } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
                             minecraftHelp.queryCommands("", context.getSender());
                         } else {
-                            origin.sendMessage(Logger.Level.INFO, "Please specify a sub command");
+                            origin.warn("Please specify a sub command");
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();

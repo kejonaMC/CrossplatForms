@@ -2,10 +2,10 @@ package dev.projectg.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
 import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import javax.annotation.Nonnull;
@@ -33,17 +33,59 @@ public interface CommandOrigin {
     boolean hasPermission(String permission);
 
     /**
-     * Send a raw message without any plugin name prefix
-     * @param message The message to send
+     * Sends the origin the message without any processing or plugin prefix appended.
      */
-    void sendRaw(String message);
+    void sendRaw(TextComponent message);
 
     /**
-     * Send a message with the plugin name prefix
-     * @param message The message to send
+     * Legacy text chars should NOT be passed to this. Sends an origin a message with the plugin prefix.
+     * {@link #sendMessage(Logger.Level, String)}, {@link #warn(String)}, or {@link #severe(String)} is more preferable to use
+     * if the message is a warning or severe message.
      */
     default void sendMessage(String message) {
-        sendRaw(Constants.MESSAGE_PREFIX + message);
+        sendMessage(Component.text(message));
+    }
+
+    /**
+     * Legacy text chars should NOT be passed to this. Sends an origin a message with the plugin prefix.
+     * {@link #sendMessage(Logger.Level, String)}, {@link #warn(String)}, or {@link #severe(String)} is more preferable to use
+     * if the message is a warning or severe message.
+     */
+    default void sendMessage(TextComponent component) {
+        sendRaw(Component.text().append(Constants.MESSAGE_PREFIX).append(component).build());
+    }
+
+    /**
+     * Legacy text chars should NOT be passed to this. Sends an origin a coloured warning with the plugin prefix.
+     * This is essentially shortcut for {@link #sendMessage(Logger.Level, String)}, with warn level.
+     */
+    default void warn(String message) {
+        sendMessage(Logger.Level.WARN, message);
+    }
+
+    /**
+     * Legacy text chars should NOT be passed to this. Sends an origin a coloured severe message with the plugin prefix.
+     * This is essentially shortcut for {@link #sendMessage(Logger.Level, String)}, with severe level.
+     */
+    default void severe(String message) {
+        sendMessage(Logger.Level.SEVERE, message);
+    }
+
+
+    /**
+     * Send a message with the plugin prefix, and colour.
+     * @param level The Logger level (mapped to a colour if the origin is a player)
+     * @param message The message to send
+     */
+    default void sendMessage(@Nonnull Logger.Level level, @Nonnull String message) {
+        Objects.requireNonNull(level);
+        Objects.requireNonNull(message);
+
+        if (isConsole()) {
+            Logger.getLogger().log(level, message);
+        } else {
+            sendMessage(Component.text(message, LOGGER_COLORS.getOrDefault(level, NamedTextColor.WHITE)));
+        }
     }
 
     /**
@@ -66,23 +108,6 @@ public interface CommandOrigin {
      * Is only guaranteed to return an Optional with a present value if the CommandOrigin represents a Player
      */
     Optional<UUID> getUUID();
-
-    /**
-     * Send a message with the plugin prefix, and colour.
-     * @param level The Logger level (mapped to a colour if the origin is a player)
-     * @param message The message to send
-     */
-    default void sendMessage(@Nonnull Logger.Level level, @Nonnull String message) {
-        Objects.requireNonNull(level);
-        Objects.requireNonNull(message);
-
-        if (isConsole()) {
-            Logger.getLogger().log(level, message);
-        } else {
-            // todo: fully use adventure
-            sendMessage(CrossplatForms.LEGACY_SERIALIZER.serialize(Component.text(message, LOGGER_COLORS.getOrDefault(level, NamedTextColor.WHITE))));
-        }
-    }
 
     /**
      * Checks if this CommandOrigin is a bedrock player through the given {@link BedrockHandler}

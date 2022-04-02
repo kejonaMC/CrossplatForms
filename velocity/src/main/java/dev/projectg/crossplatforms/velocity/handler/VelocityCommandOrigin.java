@@ -5,7 +5,7 @@ import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -23,8 +23,8 @@ public class VelocityCommandOrigin implements CommandOrigin {
     }
 
     @Override
-    public void sendRaw(String message) {
-        source.sendMessage(Component.text(message));
+    public void sendRaw(TextComponent message) {
+        source.sendMessage(message);
     }
 
     @Override

@@ -145,12 +145,12 @@ public class CustomCommandManager implements Reloadable {
         RegisteredCommand latest = registeredCommands.get(command);
         if (latest == null) {
             String message = "Unexpected state: command " + Arrays.toString(command.source()) + " no longer exists internally";
-            target.sendMessage(message);
+            target.warn(message);
             logger.warn(message);
         } else if (latest.isEnabled()) {
             latest.run(target, interfaceManager, bedrockHandler);
         } else {
-            target.sendMessage("That command is no longer available");
+            target.warn("That command is no longer available");
         }
     }
 

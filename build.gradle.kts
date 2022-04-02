@@ -62,8 +62,6 @@ subprojects {
     }
 }
 
-// todo: process resources / token replacement
-
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
