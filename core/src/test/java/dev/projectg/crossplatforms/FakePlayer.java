@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import net.kyori.adventure.text.TextComponent;
 
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class FakePlayer implements FormPlayer {
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendRaw(TextComponent component) {
         // no-op
     }
 
