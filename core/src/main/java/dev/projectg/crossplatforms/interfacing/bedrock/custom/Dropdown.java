@@ -25,7 +25,7 @@ public class Dropdown extends CustomComponent {
     public static final String TYPE = "dropdown";
 
     private List<String> options = new ArrayList<>();
-    private int defaultOption = 0;
+    private String defaultOption = "0";
 
     /**
      * Whether or not the parsing of the Dropdown should return the index of the selection or the text of the button.
@@ -43,14 +43,15 @@ public class Dropdown extends CustomComponent {
     }
 
     @Override
-    public Component cumulusComponent() {
-        return DropdownComponent.of(text, options, defaultOption);
+    public Component cumulusComponent() throws IllegalValueException {
+        return DropdownComponent.of(text, options, getUnsignedInt(defaultOption, "default-option"));
     }
 
     @Override
     public void placeholders(@Nonnull Resolver resolver) {
         super.placeholders(resolver);
         options = options.stream().map(resolver).collect(Collectors.toList());
+        defaultOption = resolver.apply(defaultOption);
     }
 
     @Override

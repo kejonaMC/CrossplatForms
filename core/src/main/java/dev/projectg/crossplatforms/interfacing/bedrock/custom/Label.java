@@ -8,8 +8,6 @@ import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import javax.annotation.Nonnull;
-
 @ToString(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
@@ -27,11 +25,6 @@ public class Label extends CustomComponent {
     @Override
     public Component cumulusComponent() {
         return LabelComponent.of(text);
-    }
-
-    @Override
-    public void placeholders(@Nonnull Resolver resolver) {
-        super.placeholders(resolver);
     }
 
     @Override

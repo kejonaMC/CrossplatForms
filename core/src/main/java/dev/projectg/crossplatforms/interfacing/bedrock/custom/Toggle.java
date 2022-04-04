@@ -8,6 +8,9 @@ import lombok.ToString;
 import org.geysermc.cumulus.component.ToggleComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
+import java.util.Locale;
+
 @ToString(callSuper = true)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,11 +20,22 @@ public class Toggle extends CustomComponent {
 
     public static final String TYPE = "toggle";
 
-    private boolean defaultValue = false;
+    private String defaultValue = "false";
 
     @Override
-    public ToggleComponent cumulusComponent() {
-        return ToggleComponent.of(text, defaultValue);
+    public ToggleComponent cumulusComponent() throws IllegalValueException {
+        String lower = defaultValue.toLowerCase(Locale.ROOT);
+        if (lower.equals("true") || lower.equals("false")) {
+            return ToggleComponent.of(text, Boolean.parseBoolean(lower));
+        } else {
+            throw new IllegalValueException(lower, "boolean", "default-value");
+        }
+    }
+
+    @Override
+    public void placeholders(@Nonnull Resolver resolver) {
+        super.placeholders(resolver);
+        defaultValue = resolver.apply(defaultValue);
     }
 
     @Override

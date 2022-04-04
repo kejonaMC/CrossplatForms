@@ -24,7 +24,7 @@ public class StepSlider extends CustomComponent {
     public static final String TYPE = "step_slider";
 
     private List<String> steps = new ArrayList<>();
-    private int defaultStep = 0;
+    private String defaultStep = "0";
 
     /**
      * Whether or not the parsing of the Dropdown should return the index of the selection or the text of the button.
@@ -42,14 +42,15 @@ public class StepSlider extends CustomComponent {
     }
 
     @Override
-    public StepSliderComponent cumulusComponent() {
-        return StepSliderComponent.of(text, steps, defaultStep);
+    public StepSliderComponent cumulusComponent() throws IllegalValueException {
+        return StepSliderComponent.of(text, steps, getUnsignedInt(defaultStep, "default-step"));
     }
 
     @Override
     public void placeholders(@Nonnull Resolver resolver) {
         super.placeholders(resolver);
         steps = steps.stream().map(resolver).collect(Collectors.toList());
+        defaultStep = resolver.apply(defaultStep);
     }
 
     @Override

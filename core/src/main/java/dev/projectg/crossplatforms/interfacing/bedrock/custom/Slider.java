@@ -20,10 +20,10 @@ public class Slider extends CustomComponent {
 
     public static final String TYPE = "slider";
 
-    private float min = 0;
-    private float max = 10;
-    private int step = 1;
-    private float defaultValue = 0;
+    private String min = "0";
+    private String max = "10";
+    private String step = "1";
+    private String defaultValue = "0";
 
     @Override
     public Slider copy() {
@@ -37,13 +37,23 @@ public class Slider extends CustomComponent {
     }
 
     @Override
-    public Component cumulusComponent() {
-        return SliderComponent.of(text, min, max, step, defaultValue);
+    public Component cumulusComponent() throws IllegalValueException {
+        return SliderComponent.of(
+            text,
+            getFloat(min, "min"),
+            getFloat(max, "max"),
+            getUnsignedInt("step", "step"),
+            getFloat(defaultValue, "default-value")
+        );
     }
 
     @Override
     public void placeholders(@Nonnull Resolver resolver) {
         super.placeholders(resolver);
+        min = resolver.apply(min);
+        max = resolver.apply(max);
+        step = resolver.apply(step);
+        defaultValue = resolver.apply(defaultValue);
     }
 
     @Override

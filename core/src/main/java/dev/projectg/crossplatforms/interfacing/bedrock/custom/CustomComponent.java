@@ -44,7 +44,7 @@ public abstract class CustomComponent implements ValuedType {
 
     public abstract CustomComponent copy();
 
-    public abstract Component cumulusComponent();
+    public abstract Component cumulusComponent() throws IllegalValueException;
 
     /**
      * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
@@ -83,5 +83,29 @@ public abstract class CustomComponent implements ValuedType {
 
     public void parser(Parser parser) {
         parsers.add(parser);
+    }
+
+    public static int getInt(String value, String identifier) throws IllegalValueException {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalValueException(value, "integer", identifier);
+        }
+    }
+
+    public static int getUnsignedInt(String value, String identifier) throws IllegalValueException {
+        try {
+            return Integer.parseUnsignedInt(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalValueException(value, "non-negative integer", identifier);
+        }
+    }
+
+    public static float getFloat(String value, String identifier) throws IllegalValueException {
+        try {
+            return Float.parseFloat(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalValueException(value, "decimal number", identifier);
+        }
     }
 }

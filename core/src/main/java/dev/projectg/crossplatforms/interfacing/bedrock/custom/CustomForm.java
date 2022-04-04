@@ -58,10 +58,16 @@ public class CustomForm extends BedrockForm implements ValuedType {
 
         List<CustomComponent> customComponents = new ArrayList<>(); // as our custom components
         List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
-        for (CustomComponent component : this.components) {
-            CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
-            customComponents.add(resolved);
-            components.add(resolved.cumulusComponent());
+        try {
+            for (CustomComponent component : this.components) {
+                CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
+                customComponents.add(resolved);
+                components.add(resolved.cumulusComponent());
+            }
+        } catch (IllegalValueException e) {
+            player.warn("There was an error sending a form to you.");
+            logger.severe("Failed to send form " + identifier + " to " + player.getName() + " because the " + e.identifier() + " of component " + components.size() + " was '" + e.value() + "' and could not be converted to a " + e.expectedType());
+            return;
         }
 
         org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
