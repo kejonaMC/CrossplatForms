@@ -52,6 +52,7 @@ public abstract class CustomComponent implements ValuedType {
     protected final void copyBasics(CustomComponent source) {
         this.type = source.type;
         this.text = source.text;
+        this.parsers = new ArrayList<>(source.parsers);
     }
 
     /**
