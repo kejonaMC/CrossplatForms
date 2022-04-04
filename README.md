@@ -29,7 +29,7 @@ See the [wiki](https://github.com/ProjectG-Plugins/CrossplatForms/wiki) for conf
 
 ## Supported Platforms:
 
-#### If you both have Geyser and Velocity installed on BungeeCord or Velocity, you'll need to either:  
+#### If you have both Geyser and Floodgate installed on BungeeCord or Velocity, you'll need to either:  
 A: Use [Geyser-Standalone](https://wiki.geysermc.org/geyser/setup/#standalone-setup) instead  
 B: Use our [fork](https://github.com/ProjectG-Plugins/Floodgate) of Floodgate that allows using the [Floodgate API](https://wiki.geysermc.org/floodgate/api/) on BungeeCord/Velocity while Geyser is also installed. It does not contain any other changes.
 
