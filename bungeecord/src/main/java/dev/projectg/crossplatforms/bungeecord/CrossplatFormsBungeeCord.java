@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.bungeecord;
 
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
-import dev.projectg.crossplatforms.BasicPlaceholders;
+import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBoostrap;

@@ -15,9 +15,9 @@ import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.response.CustomFormResponse;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,11 +33,10 @@ public class CustomForm extends BedrockForm implements ValuedType {
 
     public static final String TYPE = "custom_form";
 
+    @Nullable
     private FormImage image = null;
     private List<CustomComponent> components = Collections.emptyList();
-
-    @Required
-    private List<Action> actions = null;
+    private List<Action> actions = Collections.emptyList();
 
     @Override
     public String type() {
@@ -60,7 +59,7 @@ public class CustomForm extends BedrockForm implements ValuedType {
         List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
         try {
             for (CustomComponent component : this.components) {
-                CustomComponent resolved = component.withPlaceholders((text) -> placeholders.setPlaceholders(player, text));
+                CustomComponent resolved = component.withPlaceholders(placeholders.resolver(player));
                 customComponents.add(resolved);
                 components.add(resolved.cumulusComponent());
             }

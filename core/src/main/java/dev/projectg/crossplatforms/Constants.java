@@ -13,7 +13,7 @@ public final class Constants {
     private static String ID = "crossplatforms";
     public static final TextComponent MESSAGE_PREFIX = Component.text()
         .append(Component.text("[C", TextColor.color(128, 184, 224)))
-        .append(Component.text("Forms ]", TextColor.color(203, 93, 128)))
+        .append(Component.text("Forms] ", TextColor.color(203, 93, 128)))
         .build();
 
     private static String VERSION = "UNKNOWN";

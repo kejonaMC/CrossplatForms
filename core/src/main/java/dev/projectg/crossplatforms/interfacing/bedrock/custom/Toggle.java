@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,6 @@ import org.geysermc.cumulus.component.ToggleComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import java.util.Locale;
 
 @ToString(callSuper = true)
 @Getter
@@ -24,12 +24,7 @@ public class Toggle extends CustomComponent {
 
     @Override
     public ToggleComponent cumulusComponent() throws IllegalValueException {
-        String lower = defaultValue.toLowerCase(Locale.ROOT);
-        if (lower.equals("true") || lower.equals("false")) {
-            return ToggleComponent.of(text, Boolean.parseBoolean(lower));
-        } else {
-            throw new IllegalValueException(lower, "boolean", "default-value");
-        }
+        return ToggleComponent.of(text, ParseUtils.getBoolean(defaultValue, "default-value"));
     }
 
     @Override

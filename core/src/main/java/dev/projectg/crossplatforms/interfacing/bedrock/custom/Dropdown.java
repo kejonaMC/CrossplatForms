@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import dev.projectg.crossplatforms.Resolver;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,7 @@ public class Dropdown extends CustomComponent {
 
     @Override
     public Component cumulusComponent() throws IllegalValueException {
-        return DropdownComponent.of(text, options, getUnsignedInt(defaultOption, "default-option"));
+        return DropdownComponent.of(text, options, ParseUtils.getUnsignedInt(defaultOption, "default-option"));
     }
 
     @Override

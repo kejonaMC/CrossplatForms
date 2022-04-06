@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import dev.projectg.crossplatforms.Resolver;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,7 +44,7 @@ public class StepSlider extends CustomComponent {
 
     @Override
     public StepSliderComponent cumulusComponent() throws IllegalValueException {
-        return StepSliderComponent.of(text, steps, getUnsignedInt(defaultStep, "default-step"));
+        return StepSliderComponent.of(text, steps, ParseUtils.getUnsignedInt(defaultStep, "default-step"));
     }
 
     @Override

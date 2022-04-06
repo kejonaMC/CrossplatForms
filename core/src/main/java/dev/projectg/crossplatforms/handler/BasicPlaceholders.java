@@ -1,7 +1,4 @@
-package dev.projectg.crossplatforms;
-
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+package dev.projectg.crossplatforms.handler;
 
 import javax.annotation.Nonnull;
 

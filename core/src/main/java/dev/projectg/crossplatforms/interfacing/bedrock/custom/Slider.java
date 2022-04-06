@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import dev.projectg.crossplatforms.Resolver;
+import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,10 +41,10 @@ public class Slider extends CustomComponent {
     public Component cumulusComponent() throws IllegalValueException {
         return SliderComponent.of(
             text,
-            getFloat(min, "min"),
-            getFloat(max, "max"),
-            getUnsignedInt("step", "step"),
-            getFloat(defaultValue, "default-value")
+            ParseUtils.getFloat(min, "min"),
+            ParseUtils.getFloat(max, "max"),
+            ParseUtils.getUnsignedInt(step, "step"),
+            ParseUtils.getFloat(defaultValue, "default-value")
         );
     }
 

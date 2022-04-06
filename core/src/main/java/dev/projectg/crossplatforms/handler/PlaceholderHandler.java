@@ -1,5 +1,7 @@
 package dev.projectg.crossplatforms.handler;
 
+import dev.projectg.crossplatforms.Resolver;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,10 @@ import java.util.Map;
 public interface PlaceholderHandler {
 
     String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text);
+
+    default Resolver resolver(FormPlayer player) {
+        return text -> setPlaceholders(player, text);
+    }
 
     /**
      * Returns the inputted text with placeholders set, if PlaceholderAPI is loaded. If not, it returns the same text.
