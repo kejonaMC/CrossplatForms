@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.serializer;
+package dev.projectg.crossplatforms.serialize;
 
 import org.spongepowered.configurate.ConfigurationNode;
 

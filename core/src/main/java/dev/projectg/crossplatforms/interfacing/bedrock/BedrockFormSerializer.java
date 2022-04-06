@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
-import dev.projectg.crossplatforms.config.serializer.ValuedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.modal.ModalForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.simple.SimpleForm;

@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.parser;
 
-import dev.projectg.crossplatforms.config.serializer.ValuedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
 
 public class ParserSerializer extends ValuedTypeSerializer<Parser> {
 

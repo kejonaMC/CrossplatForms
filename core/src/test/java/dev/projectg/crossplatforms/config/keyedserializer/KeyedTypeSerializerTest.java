@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.config.keyedserializer;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import dev.projectg.crossplatforms.config.serializer.KeyedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.utils.ConfigurateUtils;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;

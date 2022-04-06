@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.interfacing.bedrock;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.config.serializer.ValuedType;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;

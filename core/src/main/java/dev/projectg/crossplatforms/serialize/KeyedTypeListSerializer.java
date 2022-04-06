@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.serializer;
+package dev.projectg.crossplatforms.serialize;
 
 import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;

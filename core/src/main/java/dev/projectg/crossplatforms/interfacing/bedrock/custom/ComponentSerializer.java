@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
-import dev.projectg.crossplatforms.config.serializer.ValuedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
 
 /**
  * This serializer must be registered exact.

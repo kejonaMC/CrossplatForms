@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.command.custom;
 
-import dev.projectg.crossplatforms.config.serializer.ValuedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
 
 public class CustomCommandSerializer extends ValuedTypeSerializer<CustomCommand> {
 

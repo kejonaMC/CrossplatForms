@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.command.custom;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.config.serializer.ValuedType;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;

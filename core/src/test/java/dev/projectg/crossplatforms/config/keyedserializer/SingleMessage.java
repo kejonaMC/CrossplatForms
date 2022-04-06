@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.config.keyedserializer;
 
-import dev.projectg.crossplatforms.config.serializer.SimpleType;
+import dev.projectg.crossplatforms.serialize.SimpleType;
 import org.jetbrains.annotations.NotNull;
 
 public class SingleMessage extends SimpleType<String> implements Message {

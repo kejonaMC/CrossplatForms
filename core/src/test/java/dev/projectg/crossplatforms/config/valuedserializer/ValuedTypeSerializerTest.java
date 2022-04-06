@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.config.valuedserializer;
 
 import com.google.common.collect.ImmutableList;
-import dev.projectg.crossplatforms.config.serializer.ValuedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
 import dev.projectg.crossplatforms.utils.ConfigurateUtils;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;

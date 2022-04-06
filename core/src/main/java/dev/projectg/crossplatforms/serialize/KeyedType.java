@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.serializer;
+package dev.projectg.crossplatforms.serialize;
 
 /**
  * For use with {@link KeyedTypeSerializer}

@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.action;
 
-import dev.projectg.crossplatforms.config.serializer.KeyedType;
+import dev.projectg.crossplatforms.serialize.KeyedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;

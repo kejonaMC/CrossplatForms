@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.Resolver;
-import dev.projectg.crossplatforms.config.serializer.ValuedType;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.parser.Parser;
 import lombok.Getter;

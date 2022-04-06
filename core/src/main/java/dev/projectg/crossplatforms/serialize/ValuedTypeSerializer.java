@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.serializer;
+package dev.projectg.crossplatforms.serialize;
 
 import lombok.Getter;
 import org.checkerframework.checker.nullness.qual.Nullable;
