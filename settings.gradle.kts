@@ -25,11 +25,15 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://repo.opencollab.dev/main/") // geyser etc
         maven("https://jitpack.io") // fixes issue with Cloudburst Protocol that geyser depends on
-        maven("https://oss.sonatype.org/content/repositories/snapshots") // bungeecord, spigot
-        maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity
         maven("https://libraries.minecraft.net/") // brigadier
+
+        maven("https://oss.sonatype.org/content/repositories/snapshots") // bungeecord, spigot
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // spigot
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") // PlaceholderAPI
         maven("https://repo.codemc.org/repository/maven-public/") // NBT api
+
+        maven("https://repo.simplix.dev/repository/simplixsoft-public/") // cirrus
+        maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity
     }
 }
+include("proxy")
