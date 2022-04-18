@@ -20,6 +20,8 @@ import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.simplix.cirrus.bungeecord.CirrusBungeeCord;
+import dev.simplix.cirrus.common.Cirrus;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
@@ -52,6 +54,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
+        CirrusBungeeCord.init(this);
         audiences = BungeeAudiences.create(this);
         serverHandler = new BungeeCordServerHandler(this, audiences);
 
