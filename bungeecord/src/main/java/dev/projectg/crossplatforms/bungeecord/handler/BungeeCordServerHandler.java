@@ -118,7 +118,7 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
 
     public void dispatchCommand(ProxiedPlayer player, DispatchableCommand command) {
         if (command.isPlayer()) {
-            if (command.isOp()) {
+            if (command.isOp() && !player.getGroups().contains(OP_GROUP)) {
                 player.addGroups(OP_GROUP);
                 pluginManager.dispatchCommand(player, command.getCommand());
                 player.removeGroups(OP_GROUP);

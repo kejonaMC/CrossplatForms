@@ -12,7 +12,7 @@ allprojects{
     apply(plugin = "net.kyori.indra.git")
 
     group = "dev.projectg"
-    version = "1.1.0"
+    version = "1.1.2"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"

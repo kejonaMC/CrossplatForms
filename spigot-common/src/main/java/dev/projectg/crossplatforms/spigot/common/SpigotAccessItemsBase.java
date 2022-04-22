@@ -31,6 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -198,10 +199,11 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         }
 
         Player player = event.getEntity();
-        for (ItemStack item : event.getDrops()) {
-            AccessItem access = getItem(item);
+        Iterator<ItemStack> iterator = event.getDrops().iterator();
+        while (iterator.hasNext()) {
+            AccessItem access = getItem(iterator.next());
             if (access != null && !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                event.getDrops().remove(item);
+                iterator.remove();
             }
         }
     }

@@ -135,7 +135,8 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
      */
     private void dispatchCommand(Player player, DispatchableCommand command) {
         if (command.isPlayer()) {
-            if (command.isOp()) {
+            if (command.isOp() && !player.isOp()) {
+                // only temporarily op the player if the command requires op and the player is not opped
                 player.setOp(true);
                 server.dispatchCommand(player, command.getCommand());
                 player.setOp(false);
@@ -143,7 +144,7 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
                 server.dispatchCommand(player, command.getCommand());
             }
         } else {
-            server.dispatchCommand(server.getConsoleSender(), command.getCommand());
+            server.dispatchCommand(console, command.getCommand());
         }
     }
 
