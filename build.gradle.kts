@@ -51,7 +51,7 @@ allprojects{
 
 subprojects {
     dependencies {
-        testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
         testCompileOnly("org.projectlombok:lombok:1.18.22")
         testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
         testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
