@@ -56,7 +56,7 @@ public class CrossplatForms {
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
 
-    private final boolean cumulusAvailable;
+    private final boolean bedrockSupport;
 
     private final InterfaceManager interfaceManager;
 
@@ -85,24 +85,24 @@ public class CrossplatForms {
         // Decide on which implementation to deal with bedrock players
         if (serverHandler.isFloodgateEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreFloodgate")) {
             bedrockHandler = new FloodgateHandler();
-            cumulusAvailable = true;
+            bedrockSupport = true;
         } else if (serverHandler.isGeyserEnabled() && !Boolean.getBoolean("CrossplatForms.IgnoreGeyser")) {
             // java 16 GeyserHandler should always be instantiated here since Geyser can only run on java 16+
             logger.warn("Floodgate is recommended and less likely to break with new updates!");
             if (GeyserHandler.supported()) {
                 bedrockHandler = new GeyserHandler();
-                cumulusAvailable = true;
+                bedrockSupport = true;
             } else {
                 logger.warn("This platform does not appear to support multi release jars, add '-Djdk.util.jar.enableMultiRelease=force' to your JVM flags in order to use Geyser.");
                 bedrockHandler = BedrockHandler.empty();
-                cumulusAvailable = false;
+                bedrockSupport = false;
             }
         } else {
             bedrockHandler = BedrockHandler.empty();
-            cumulusAvailable = false;
+            bedrockSupport = false;
         }
 
-        if (!cumulusAvailable) {
+        if (!bedrockSupport) {
             logger.warn("No Bedrock Handler being used! There may be issues.");
         }
 
@@ -110,7 +110,7 @@ public class CrossplatForms {
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger);
         configManager.register(ConfigId.GENERAL);
-        if (cumulusAvailable) {
+        if (bedrockSupport) {
             // Only register bedrock form features and only references cumulus classes if cumulus is available
             configManager.register(ConfigId.BEDROCK_FORMS);
             configManager.serializers(builder -> {
@@ -118,6 +118,7 @@ public class CrossplatForms {
                 builder.registerExact(FormImage.class, new FormImageSerializer());
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
+            configManager.getActionSerializer().registerType(BedrockTransferAction.TYPE, BedrockTransferAction.class);
         }
         registerDefaultActions(configManager); // actions that are available on any implementation
         bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
@@ -202,6 +203,5 @@ public class CrossplatForms {
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(InterfaceAction.TYPE, String.class, InterfaceAction::new);
         actionSerializer.registerSimpleType(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
-        actionSerializer.registerType(BedrockTransferAction.TYPE, BedrockTransferAction.class);
     }
 }

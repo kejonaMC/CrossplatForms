@@ -10,6 +10,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
@@ -18,6 +19,8 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
@@ -25,7 +28,6 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
-import dev.projectg.crossplatforms.velocity.handler.VelocityInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
 import lombok.Getter;
 import org.bstats.charts.CustomChart;
@@ -51,10 +53,10 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     private final Logger logger;
     private final Metrics.Factory metricsFactory;
 
-    private final VelocityServerHandler serverHandler;
-
     private CrossplatForms crossplatForms;
+    private final VelocityServerHandler serverHandler;
     private Metrics metrics;
+    private boolean protocolizePresent;
 
     @Inject
     public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, org.slf4j.Logger logger, Metrics.Factory metricsFactory) {
@@ -93,6 +95,8 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
         logger.warn("CrossplatForms-Velocity does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
         PlaceholderHandler placeholders = new BasicPlaceholders();
 
+        protocolizePresent = server.getPluginManager().isLoaded("protocolize");
+
         crossplatForms = new CrossplatForms(
                 logger,
                 dataFolder,
@@ -112,7 +116,9 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
     @Override
     public void preConfigLoad(ConfigManager configManager) {
-        // register java menu config once java menus are supported
+        if (protocolizePresent) {
+            configManager.register(ConfigId.JAVA_MENUS);
+        }
 
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
@@ -120,7 +126,11 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
     @Override
     public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
-        return new VelocityInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+        if (protocolizePresent) {
+            return new ProtocolizeInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+        } else {
+            return new NoMenusInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+        }
     }
 
     @Override

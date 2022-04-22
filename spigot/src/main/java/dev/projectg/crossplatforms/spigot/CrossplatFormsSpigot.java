@@ -47,8 +47,8 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
         Constants.fetch();
     }
 
-    private BukkitAudiences audiences;
     private CrossplatForms crossplatForms;
+    private BukkitAudiences audiences;
     private ServerHandler serverHandler;
     private Metrics metrics;
 

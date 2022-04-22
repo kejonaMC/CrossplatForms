@@ -6,3 +6,4 @@ author: Konicai, Jens
 softdepends:
   - Geyser-BungeeCord
   - floodgate
+  - Protocolize

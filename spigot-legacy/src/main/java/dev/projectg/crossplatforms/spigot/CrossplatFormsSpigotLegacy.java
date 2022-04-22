@@ -46,8 +46,8 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         Constants.fetch();
     }
 
-    private BukkitAudiences audiences;
     private CrossplatForms crossplatForms;
+    private BukkitAudiences audiences;
     private ServerHandler serverHandler;
     private Metrics metrics;
 

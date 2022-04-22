@@ -134,4 +134,6 @@ public abstract class InterfaceManager {
     }
 
     public abstract void sendMenu(FormPlayer player, JavaMenu menu);
+
+    public abstract boolean supportsMenus();
 }

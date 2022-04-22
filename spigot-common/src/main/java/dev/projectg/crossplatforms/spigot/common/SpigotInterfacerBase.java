@@ -29,8 +29,6 @@ import java.util.Objects;
 
 public abstract class SpigotInterfacerBase extends InterfaceManager implements Listener {
 
-    protected static final int HOPPER_SIZE = 5;
-
     public SpigotInterfacerBase(ServerHandler serverHandler, BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry javaRegistry) {
         super(serverHandler, bedrockHandler, bedrockRegistry, javaRegistry);
     }
@@ -60,13 +58,18 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
         }
     }
 
+    @Override
+    public boolean supportsMenus() {
+        return true;
+    }
+
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
         Logger logger = Logger.getLogger();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
 
         Inventory selectorGUI; // todo: better size validation?
-        if (menu.getSize() == HOPPER_SIZE) {
+        if (menu.getSize() == JavaMenu.HOPPER_SIZE) {
             selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, placeholders.setPlaceholders(formPlayer, menu.getTitle()));
         } else {
             selectorGUI = Bukkit.createInventory(player, menu.getSize(), placeholders.setPlaceholders(formPlayer, menu.getTitle()));

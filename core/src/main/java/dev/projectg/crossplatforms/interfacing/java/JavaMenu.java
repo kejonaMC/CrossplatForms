@@ -23,14 +23,14 @@ public class JavaMenu extends Interface {
 
     public static final String TYPE = "java_menu";
 
-    public static final int MAX_SIZE = 54;
+    public static final int MAX_SIZE = 54; // todo: size validation
     public static final int HOPPER_SIZE = 5;
 
     protected transient final String permissionBase = Constants.Id() + ".menu.";
 
     private boolean allowBedrock = false;
 
-    private int size = 5; // Hopper size
+    private int size = 5; // Hopper size by default
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
     /**

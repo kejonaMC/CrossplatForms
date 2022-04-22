@@ -1,8 +1,9 @@
 rootProject.name = "CrossplatForms"
 
 include(":core")
+include(":proxy")
 include(":bungeecord")
-include("velocity")
+include(":velocity")
 include(":access-item")
 include("spigot-common")
 include(":spigot")
@@ -32,8 +33,7 @@ dependencyResolutionManagement {
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") // PlaceholderAPI
         maven("https://repo.codemc.org/repository/maven-public/") // NBT api
 
-        maven("https://repo.simplix.dev/repository/simplixsoft-public/") // cirrus
+        maven("https://mvn.exceptionflug.de/repository/exceptionflug-public/") // protocolize for proxies
         maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity
     }
 }
-include("proxy")

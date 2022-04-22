@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 @Getter
 public class IllegalValueException extends Exception {
+    private static final long serialVersionUID = 0L;
 
     private final String value;
     private final String expectedType;

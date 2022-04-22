@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.bungeecord;
 
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
@@ -10,18 +11,17 @@ import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
-import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordInterfacer;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordServerHandler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.simplix.cirrus.bungeecord.CirrusBungeeCord;
-import dev.simplix.cirrus.common.Cirrus;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
@@ -41,10 +41,11 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         Constants.setId("crossplatformsbungee");
     }
 
-    private BungeeAudiences audiences;
     private CrossplatForms crossplatForms;
+    private BungeeAudiences audiences;
     private BungeeCordServerHandler serverHandler;
     private Metrics metrics;
+    private boolean protocolizePresent;
 
     @Override
     public void onEnable() {
@@ -54,7 +55,6 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
-        CirrusBungeeCord.init(this);
         audiences = BungeeAudiences.create(this);
         serverHandler = new BungeeCordServerHandler(this, audiences);
 
@@ -75,6 +75,8 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         logger.warn("CrossplatForms-BungeeCord does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
         PlaceholderHandler placeholders = new BasicPlaceholders();
 
+        protocolizePresent = getProxy().getPluginManager().getPlugin("Protocolize") != null;
+
         crossplatForms = new CrossplatForms(
                 logger,
                 getDataFolder().toPath(),
@@ -94,7 +96,9 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
     @Override
     public void preConfigLoad(ConfigManager configManager) {
-        // register java menu config once java menus are supported
+        if (protocolizePresent) {
+            configManager.register(ConfigId.JAVA_MENUS);
+        }
 
         KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
         actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
@@ -102,7 +106,11 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
     @Override
     public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
-        return new BungeeCordInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+        if (protocolizePresent) {
+            return new ProtocolizeInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+        } else {
+            return new NoMenusInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.0.1")
     api("cloud.commandframework:cloud-velocity:1.6.2")
     api("org.bstats:bstats-velocity:3.0.0")
+    api(project(":proxy"))
     api(project(":core"))
 }
 
