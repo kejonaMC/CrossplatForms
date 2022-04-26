@@ -6,7 +6,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.accessitem.AccessItemConfig;
@@ -37,7 +37,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatFormsBoostrap {
+public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatFormsBootstrap {
 
     private static CrossplatFormsSpigotLegacy INSTANCE;
 

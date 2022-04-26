@@ -6,7 +6,7 @@ import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
@@ -29,7 +29,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.CustomChart;
 
-public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBoostrap {
+public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBootstrap {
 
     private static final int BSTATS_ID = 14706;
     private static CrossplatFormsBungeeCord INSTANCE;

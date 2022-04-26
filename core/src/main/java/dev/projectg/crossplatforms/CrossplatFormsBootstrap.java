@@ -8,7 +8,7 @@ import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import org.bstats.charts.CustomChart;
 
-public interface CrossplatFormsBoostrap {
+public interface CrossplatFormsBootstrap {
 
     /**
      * Perform any operations on the {@link ConfigManager} before {@link ConfigManager#load()} is called. For example, register

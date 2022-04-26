@@ -73,7 +73,7 @@ public class CrossplatForms {
                           String defaultCommand,
                           CommandManager<CommandOrigin> commandManager,
                           PlaceholderHandler placeholders,
-                          CrossplatFormsBoostrap bootstrap) {
+                          CrossplatFormsBootstrap bootstrap) {
         long start = System.currentTimeMillis();
         INSTANCE = this;
         this.serverHandler = serverHandler;

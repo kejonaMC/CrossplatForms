@@ -14,7 +14,7 @@ import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandOrigin;
@@ -35,7 +35,7 @@ import org.bstats.velocity.Metrics;
 
 import java.nio.file.Path;
 
-public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
+public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
 
     private static final int BSTATS_ID = 14708;
     private static CrossplatFormsVelocity INSTANCE;
