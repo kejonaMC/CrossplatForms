@@ -29,6 +29,7 @@ public class JavaMenu extends Interface {
     protected transient final String permissionBase = Constants.Id() + ".menu.";
 
     private boolean allowBedrock = false;
+    private boolean autoClose = false;
 
     private int size = 5; // Hopper size by default
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
@@ -53,8 +54,8 @@ public class JavaMenu extends Interface {
      * @param player the Player who clicked on the button.
      */
     public void process(int slot, boolean rightClick, @Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
-        if (isButton(slot)) {
-            ItemButton button = buttons.get(slot);
+        ItemButton button = buttons.get(slot);
+        if (button != null) {
             List<Action> any = button.getAnyClick();
 
             Action.affectPlayer(player, any, interfaceManager, BedrockHandler.empty());

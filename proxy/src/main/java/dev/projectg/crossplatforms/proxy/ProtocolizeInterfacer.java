@@ -12,6 +12,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
+import dev.simplix.protocolize.api.player.ProtocolizePlayer;
 import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 import dev.simplix.protocolize.data.ItemType;
 import dev.simplix.protocolize.data.inventory.InventoryType;
@@ -36,7 +37,7 @@ public class ProtocolizeInterfacer extends InterfaceManager {
     @Override
     public void sendMenu(FormPlayer player, JavaMenu source) {
         // construct the inventory. todo: validate size
-        final InventoryType inventoryType;
+        InventoryType inventoryType;
         int size = source.getSize();
         if (size == 5) {
             inventoryType = InventoryType.HOPPER;
@@ -44,15 +45,15 @@ public class ProtocolizeInterfacer extends InterfaceManager {
             inventoryType = InventoryType.chestInventoryWithSize(size);
         }
 
-        final Inventory inventory = new Inventory(inventoryType);
+        Inventory inventory = new Inventory(inventoryType);
         inventory.title(source.getTitle());
 
         Map<Integer, ItemButton> buttons = source.getButtons();
         for (Map.Entry<Integer, ItemButton> entry : buttons.entrySet()) {
-            final Integer slot = entry.getKey();
-            final ItemButton button = entry.getValue();
+            Integer slot = entry.getKey();
+            ItemButton button = entry.getValue();
             // determine the material for this button
-            final String material = button.getMaterial().toUpperCase(Locale.ROOT).trim();
+            String material = button.getMaterial().toUpperCase(Locale.ROOT).trim();
             ItemType type;
             try {
                 type = ItemType.valueOf(material);
@@ -66,6 +67,8 @@ public class ProtocolizeInterfacer extends InterfaceManager {
             button.getLore().forEach(item::addToLore);
             inventory.item(slot, item); // add itemstack to inventory
         }
+
+        ProtocolizePlayer protocolizePlayer = playerProvider.player(player.getUuid());
 
         inventory.onClick(click -> {
             final boolean rightClick;
@@ -84,10 +87,17 @@ public class ProtocolizeInterfacer extends InterfaceManager {
                     return;
             }
             // delegate action handling
-            source.process(click.slot(), rightClick, player, this);
+            int slot = click.slot();
+            if (source.isButton(slot)) {
+                if (source.isAutoClose()) {
+                    // only close the inventory if the slot was a button and the menu is set to auto close
+                    protocolizePlayer.closeInventory();
+                }
+                source.process(slot, rightClick, player, this);
+            }
         });
 
-        playerProvider.player(player.getUuid()).openInventory(inventory);
+        protocolizePlayer.openInventory(inventory);
     }
 
     @Override

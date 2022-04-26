@@ -106,17 +106,26 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         // This is used for processing inventory clicks WITHIN the java menu GUI
+        if (!javaRegistry.isEnabled()) {
+            return;
+        }
 
-        if (javaRegistry.isEnabled()) {
-            if (event.getWhoClicked() instanceof Player) {
-                Player player = (Player) event.getWhoClicked();
-                ItemStack item = event.getCurrentItem();
+        if (event.getWhoClicked() instanceof Player) {
+            Player player = (Player) event.getWhoClicked();
+            ItemStack item = event.getCurrentItem();
 
-                if (item != null) {
-                    JavaMenu menu = getMenu(item, javaRegistry);
-                    if (menu != null) {
-                        event.setCancelled(true);
-                        menu.process(event.getSlot(), event.isRightClick(), new SpigotPlayer(player), this);
+            if (item != null) {
+                JavaMenu menu = getMenu(item, javaRegistry);
+                if (menu != null) {
+                    event.setCancelled(true);
+                    // delegate action handling
+                    int slot = event.getSlot();
+                    if (menu.isButton(slot)) {
+                        if (menu.isAutoClose()) {
+                            // only close the inventory if the slot was a button and the menu is set to auto close
+                            player.closeInventory();
+                        }
+                        menu.process(slot, event.isRightClick(), new SpigotPlayer(player), this);
                     }
                 }
             }
