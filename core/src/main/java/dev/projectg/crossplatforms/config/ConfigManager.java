@@ -1,19 +1,16 @@
 package dev.projectg.crossplatforms.config;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.command.custom.Arguments;
 import dev.projectg.crossplatforms.command.custom.ArgumentsSerializer;
 import dev.projectg.crossplatforms.command.custom.CustomCommand;
 import dev.projectg.crossplatforms.command.custom.CustomCommandSerializer;
-import dev.projectg.crossplatforms.serialize.KeyedTypeListSerializer;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.parser.Parser;
 import dev.projectg.crossplatforms.parser.ParserSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
-import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
@@ -28,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -47,7 +43,7 @@ public class ConfigManager {
     private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
     @Getter
-    private final KeyedTypeSerializer<Action> actionSerializer = new KeyedTypeSerializer<>();
+    private final ActionSerializer actionSerializer = new ActionSerializer();
 
     public ConfigManager(Path directory, Logger logger) {
         this.directory = directory;
@@ -58,9 +54,8 @@ public class ConfigManager {
             builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
             builder.registerExact(Arguments.class, new ArgumentsSerializer());
             builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.registerExact(Action.class, actionSerializer);
-            builder.register(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(actionSerializer));
             builder.registerExact(Parser.class, new ParserSerializer());
+            actionSerializer.registrator().accept(builder);
         })));
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node

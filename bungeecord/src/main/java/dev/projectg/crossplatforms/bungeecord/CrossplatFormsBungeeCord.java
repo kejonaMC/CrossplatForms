@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.bungeecord;
 
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
@@ -9,14 +10,13 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordServerHandler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.projectg.crossplatforms.proxy.CloseMenuAction;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
@@ -100,8 +100,9 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
             configManager.register(ConfigId.JAVA_MENUS);
         }
 
-        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
+        ActionSerializer actionSerializer = configManager.getActionSerializer();
+        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction::new);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction::new);
     }
 
     @Override

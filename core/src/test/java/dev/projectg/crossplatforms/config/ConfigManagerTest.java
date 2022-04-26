@@ -38,7 +38,7 @@ public class ConfigManagerTest {
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         });
         CrossplatForms.registerDefaultActions(manager);
-        manager.getActionSerializer().registerSimpleType("server", String.class, FakeServer::new);
+        manager.getActionSerializer().simpleGenericAction("server", String.class, FakeServer::new);
 
         manager.register(config);
         Assertions.assertTrue(manager.load());

@@ -45,7 +45,7 @@ public class FormConfigUpdaterTest {
         manager = new ConfigManager(directory, logger);
         // serializers
         CrossplatForms.registerDefaultActions(manager);
-        manager.getActionSerializer().registerSimpleType("server", String.class, ConfigManagerTest.FakeServer::new);
+        manager.getActionSerializer().simpleGenericAction("server", String.class, ConfigManagerTest.FakeServer::new);
         manager.serializers(builder -> {
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());

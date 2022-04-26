@@ -1,17 +1,17 @@
 package dev.projectg.crossplatforms.action;
 
+import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.projectg.crossplatforms.interfacing.java.MenuAction;
 import dev.projectg.crossplatforms.serialize.KeyedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 
-@ConfigSerializable
-public interface Action extends KeyedType {
+public interface Action extends KeyedType, MenuAction {
 
     /**
      * Affects a player
@@ -34,6 +34,11 @@ public interface Action extends KeyedType {
                       @Nonnull Map<String, String> additionalPlaceholders,
                       @Nonnull InterfaceManager interfaceManager,
                       @Nonnull BedrockHandler bedrockHandler);
+
+    @Override
+    default void affectPlayer(@Nonnull FormPlayer player, @Nonnull JavaMenu menu, @Nonnull InterfaceManager interfaceManager) {
+        affectPlayer(player, interfaceManager, BedrockHandler.empty());
+    }
 
     // Static methods for batching multiple actions together:
 

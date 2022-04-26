@@ -4,7 +4,7 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.action.BedrockTransferAction;
 import dev.projectg.crossplatforms.action.CommandsAction;
 import dev.projectg.crossplatforms.action.InterfaceAction;
@@ -18,7 +18,6 @@ import dev.projectg.crossplatforms.command.custom.CustomCommandManager;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.GeneralConfig;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
@@ -118,7 +117,7 @@ public class CrossplatForms {
                 builder.registerExact(FormImage.class, new FormImageSerializer());
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
-            configManager.getActionSerializer().registerType(BedrockTransferAction.TYPE, BedrockTransferAction.class);
+            configManager.getActionSerializer().genericAction(BedrockTransferAction.TYPE, BedrockTransferAction.class);
         }
         registerDefaultActions(configManager); // actions that are available on any implementation
         bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
@@ -200,8 +199,8 @@ public class CrossplatForms {
     }
 
     public static void registerDefaultActions(ConfigManager configManager) {
-        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimpleType(InterfaceAction.TYPE, String.class, InterfaceAction::new);
-        actionSerializer.registerSimpleType(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
+        ActionSerializer actionSerializer = configManager.getActionSerializer();
+        actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction::new);
+        actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
     }
 }
