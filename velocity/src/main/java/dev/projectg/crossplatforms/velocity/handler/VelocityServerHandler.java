@@ -12,8 +12,8 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
+import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
@@ -132,11 +132,7 @@ public class VelocityServerHandler extends InterceptCommandCache implements Serv
             if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
                 String permission = command.getPermission();
                 if (permission == null || player.hasPermission(permission)) {
-                    command.run(
-                        new VelocityPlayer(player),
-                        CrossplatForms.getInstance().getInterfaceManager(),
-                        bedrockHandler
-                    );
+                    command.run(new VelocityPlayer(player));
 
                     if (type == CommandType.INTERCEPT_CANCEL) {
                         event.setResult(CommandExecuteEvent.CommandResult.denied()); // todo: if this sends a message about denial we might have to replace the common with a dummy

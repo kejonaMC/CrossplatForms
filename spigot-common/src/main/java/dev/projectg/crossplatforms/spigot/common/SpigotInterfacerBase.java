@@ -2,12 +2,9 @@ package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
@@ -28,10 +25,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class SpigotInterfacerBase extends InterfaceManager implements Listener {
-
-    public SpigotInterfacerBase(ServerHandler serverHandler, BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry javaRegistry) {
-        super(serverHandler, bedrockHandler, bedrockRegistry, javaRegistry);
-    }
 
     public abstract void setMenuName(@Nonnull ItemStack stack, @Nonnull String identifier);
 
@@ -56,11 +49,6 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
         } else {
             return menuRegistry.getMenu(menuName);
         }
-    }
-
-    @Override
-    public boolean supportsMenus() {
-        return true;
     }
 
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
@@ -125,7 +113,7 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
                             // only close the inventory if the slot was a button and the menu is set to auto close
                             player.closeInventory();
                         }
-                        menu.process(slot, event.isRightClick(), new SpigotPlayer(player), this);
+                        menu.process(slot, event.isRightClick(), new SpigotPlayer(player));
                     }
                 }
             }

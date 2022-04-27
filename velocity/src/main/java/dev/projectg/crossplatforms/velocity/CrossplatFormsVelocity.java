@@ -10,23 +10,20 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.projectg.crossplatforms.action.ActionSerializer;
-import dev.projectg.crossplatforms.config.ConfigId;
-import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.handler.BasicPlaceholders;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
 import dev.projectg.crossplatforms.proxy.CloseMenuAction;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
 import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
 import lombok.Getter;
@@ -121,16 +118,16 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction::new);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction::new);
+        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction.class);
     }
 
     @Override
-    public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
+    public InterfaceManager interfaceManager() {
         if (protocolizePresent) {
-            return new ProtocolizeInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+            return new ProtocolizeInterfacer();
         } else {
-            return new NoMenusInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+            return new NoMenusInterfacer();
         }
     }
 

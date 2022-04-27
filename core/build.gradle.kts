@@ -28,6 +28,8 @@ dependencies {
     api("net.kyori:adventure-api:4.10.1")
     api("net.kyori:adventure-text-serializer-legacy:4.10.1")
     api("org.spongepowered:configurate-yaml:4.1.2")
+    api("org.spongepowered:configurate-extra-guice:4.1.2")
+    api("com.google.inject:guice:5.1.0")
     api("org.bstats:bstats-base:3.0.0")
 
     // dependencies for java16 sources (optionally used at runtime)

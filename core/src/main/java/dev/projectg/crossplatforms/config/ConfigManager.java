@@ -1,7 +1,10 @@
 package dev.projectg.crossplatforms.config;
 
+import com.google.inject.Injector;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.action.CommandsAction;
+import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.command.custom.Arguments;
@@ -11,8 +14,11 @@ import dev.projectg.crossplatforms.command.custom.CustomCommandSerializer;
 import dev.projectg.crossplatforms.parser.Parser;
 import dev.projectg.crossplatforms.parser.ParserSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
+import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.objectmapping.ObjectMapper;
+import org.spongepowered.configurate.objectmapping.guice.GuiceObjectMapperProvider;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 import org.spongepowered.configurate.yaml.NodeStyle;
@@ -25,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -43,18 +50,25 @@ public class ConfigManager {
     private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
     @Getter
-    private final ActionSerializer actionSerializer = new ActionSerializer();
+    private final ActionSerializer actionSerializer;
 
-    public ConfigManager(Path directory, Logger logger) {
+    public ConfigManager(Path directory, Logger logger, Injector injector) {
         this.directory = directory;
         this.logger = logger;
-        // type serializers for abstract classes and external library classes
+        actionSerializer = new ActionSerializer(injector);
+
+        ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
+            // register our Guice ObjectMapper
+            builder.registerAnnotatedObjects(mapperFactory);
             builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
+            // type serializers for abstract classes and external library classes
             builder.registerExact(Arguments.class, new ArgumentsSerializer());
             builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(Parser.class, new ParserSerializer());
+            actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
+            actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
             actionSerializer.registrator().accept(builder);
         })));
         // don't initialize default values for object values

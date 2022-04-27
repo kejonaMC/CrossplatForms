@@ -2,10 +2,8 @@ package dev.projectg.crossplatforms.interfacing.java;
 
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -43,7 +41,7 @@ public class JavaMenu extends Interface {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager) {
+    public void send(@Nonnull FormPlayer recipient) {
         interfaceManager.sendMenu(recipient, this);
     }
 
@@ -53,16 +51,16 @@ public class JavaMenu extends Interface {
      * @param rightClick True if it was a right click, false if a left click.
      * @param player the Player who clicked on the button.
      */
-    public void process(int slot, boolean rightClick, @Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
+    public void process(int slot, boolean rightClick, @Nonnull FormPlayer player) {
         ItemButton button = buttons.get(slot);
         if (button != null) {
             List<Action> any = button.getAnyClick();
 
-            Action.affectPlayer(player, any, interfaceManager, BedrockHandler.empty());
+            Action.affectPlayer(player, any);
             if (rightClick) {
-                Action.affectPlayer(player, button.getRightClick(), interfaceManager, BedrockHandler.empty());
+                Action.affectPlayer(player, button.getRightClick());
             } else {
-                Action.affectPlayer(player, button.getLeftClick(), interfaceManager, BedrockHandler.empty());
+                Action.affectPlayer(player, button.getLeftClick());
             }
         }
     }

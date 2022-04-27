@@ -148,7 +148,7 @@ public class CustomCommandManager implements Reloadable {
             target.warn(message);
             logger.warn(message);
         } else if (latest.isEnabled()) {
-            latest.run(target, interfaceManager, bedrockHandler);
+            latest.run(target);
         } else {
             target.warn("That command is no longer available");
         }

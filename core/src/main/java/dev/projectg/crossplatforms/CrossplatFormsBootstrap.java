@@ -2,10 +2,7 @@ package dev.projectg.crossplatforms;
 
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import org.bstats.charts.CustomChart;
 
 public interface CrossplatFormsBootstrap {
@@ -20,7 +17,7 @@ public interface CrossplatFormsBootstrap {
      * Construct an {@link InterfaceManager} implementation with the given parameters. This method will be called only once
      * during the construction of {@link CrossplatForms}. This method exists
      */
-    InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry);
+    InterfaceManager interfaceManager();
 
     void addCustomChart(CustomChart chart);
 }

@@ -3,8 +3,6 @@ package dev.projectg.crossplatforms.spigot;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
-import dev.projectg.crossplatforms.action.ActionSerializer;
-import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
@@ -13,15 +11,14 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.accessitem.AccessItemConfig;
 import dev.projectg.crossplatforms.accessitem.GiveCommand;
 import dev.projectg.crossplatforms.accessitem.InspectItemCommand;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.spigot.common.CloseMenuAction;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
@@ -137,13 +134,13 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
         configManager.register(AccessItemConfig.asConfigId());
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction::new);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction::new);
+        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction.class);
     }
 
     @Override
-    public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
-        SpigotInterfacerBase dispatcher = new SpigotInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+    public InterfaceManager interfaceManager() {
+        SpigotInterfacerBase dispatcher = new SpigotInterfacer();
         Bukkit.getServer().getPluginManager().registerEvents(dispatcher, this);
         return dispatcher;
     }

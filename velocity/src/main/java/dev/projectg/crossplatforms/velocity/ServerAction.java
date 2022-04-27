@@ -5,9 +5,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +22,7 @@ public class ServerAction extends SimpleAction<String> {
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer formPlayer, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
+    public void affectPlayer(@NotNull FormPlayer formPlayer, @NotNull Map<String, String> additionalPlaceholders) {
         Player player = (Player) formPlayer.getHandle();
         String serverName = value();
         RegisteredServer server = PROXY.getServer(serverName).orElse(null);

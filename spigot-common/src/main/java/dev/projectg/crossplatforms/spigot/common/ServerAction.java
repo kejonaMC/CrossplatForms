@@ -1,12 +1,10 @@
 package dev.projectg.crossplatforms.spigot.common;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -24,13 +22,16 @@ public class ServerAction extends SimpleAction<String> {
 
     public static final String IDENTIFIER = "server";
 
+    @Inject
+    private transient PlaceholderHandler placeholders;
+
+    @Inject
     public ServerAction(String value) {
         super(IDENTIFIER, value);
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {

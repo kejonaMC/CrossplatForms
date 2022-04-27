@@ -1,11 +1,10 @@
 package dev.projectg.crossplatforms.action;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -18,18 +17,24 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
     public static final String TYPE = "commands";
 
+    @Inject
+    private transient ServerHandler serverHandler;
+
+    @Inject
+    private transient PlaceholderHandler placeholders;
+
+    @Inject
     public CommandsAction(List<DispatchableCommand> commands) {
         super(TYPE, commands);
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
         List<DispatchableCommand> resolved = value().stream()
                 .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.getCommand(), additionalPlaceholders)))
                 .collect(Collectors.toList());
 
-        CrossplatForms.getInstance().getServerHandler().dispatchCommands(player.getUuid(), resolved);
+        serverHandler.dispatchCommands(player.getUuid(), resolved);
     }
 }
 

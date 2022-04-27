@@ -1,14 +1,10 @@
 package dev.projectg.crossplatforms.proxy;
 
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
@@ -25,11 +21,7 @@ public class ProtocolizeInterfacer extends InterfaceManager {
     private final Logger logger;
     private final ProtocolizePlayerProvider playerProvider;
 
-    public ProtocolizeInterfacer(ServerHandler serverHandler,
-                                 BedrockHandler bedrockHandler,
-                                 BedrockFormRegistry bedrockRegistry,
-                                 JavaMenuRegistry javaRegistry) {
-        super(serverHandler, bedrockHandler, bedrockRegistry, javaRegistry);
+    public ProtocolizeInterfacer() {
         this.logger = Logger.getLogger();
         this.playerProvider = Protocolize.playerProvider();
     }
@@ -93,15 +85,10 @@ public class ProtocolizeInterfacer extends InterfaceManager {
                     // only close the inventory if the slot was a button and the menu is set to auto close
                     protocolizePlayer.closeInventory();
                 }
-                source.process(slot, rightClick, player, this);
+                source.process(slot, rightClick, player);
             }
         });
 
         protocolizePlayer.openInventory(inventory);
-    }
-
-    @Override
-    public boolean supportsMenus() {
-        return true;
     }
 }

@@ -2,26 +2,23 @@ package dev.projectg.crossplatforms.bungeecord;
 
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
-import dev.projectg.crossplatforms.action.ActionSerializer;
-import dev.projectg.crossplatforms.config.ConfigId;
-import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordServerHandler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.handler.BasicPlaceholders;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
 import dev.projectg.crossplatforms.proxy.CloseMenuAction;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
@@ -101,16 +98,16 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         }
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction::new);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction::new);
+        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction.class);
     }
 
     @Override
-    public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
+    public InterfaceManager interfaceManager() {
         if (protocolizePresent) {
-            return new ProtocolizeInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+            return new ProtocolizeInterfacer();
         } else {
-            return new NoMenusInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+            return new NoMenusInterfacer();
         }
     }
 

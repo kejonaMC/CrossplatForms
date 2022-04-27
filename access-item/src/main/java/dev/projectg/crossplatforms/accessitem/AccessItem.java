@@ -1,12 +1,12 @@
 package dev.projectg.crossplatforms.accessitem;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
@@ -29,6 +29,9 @@ public class AccessItem {
 
     public static final String STATIC_IDENTIFIER = "crossplatformsaccessitem"; // changing this will break existing setups
     private static final String PERMISSION_BASE = Constants.Id() + ".item";
+
+    @Inject
+    private transient BedrockHandler bedrockHandler;
 
     /**
      * The reliable identifier of the access item
@@ -89,13 +92,13 @@ public class AccessItem {
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Limit, Permission> permissions;
 
-    public void trigger(FormPlayer player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
+    public void trigger(FormPlayer player) {
+        Action.affectPlayer(player, actions);
 
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            Action.affectPlayer(player, bedrockActions, interfaceManager, bedrockHandler);
+            Action.affectPlayer(player, bedrockActions);
         } else {
-            Action.affectPlayer(player, javaActions, interfaceManager, BedrockHandler.empty());
+            Action.affectPlayer(player, javaActions);
         }
     }
 

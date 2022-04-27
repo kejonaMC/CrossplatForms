@@ -1,12 +1,8 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.simple;
 
-import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;
@@ -36,12 +32,10 @@ public class SimpleForm extends BedrockForm {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+    public void send(@Nonnull FormPlayer player) {
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();
 
-        BedrockHandler bedrockHandler = interfaceManager.getBedrockHandler();
         if (!bedrockHandler.isBedrockPlayer(uuid)) {
             logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
             return;
@@ -66,16 +60,16 @@ public class SimpleForm extends BedrockForm {
         Consumer<String> handler = (responseData) -> {
             SimpleFormResponse response = form.parseResponse(responseData);
             if (!response.isCorrect()) {
-                handleIncorrect(player, interfaceManager, bedrockHandler);
+                handleIncorrect(player);
                 return;
             }
             // Handle effects of pressing the button
             List<Action> actions = formattedButtons.get(response.getClickedButtonId()).getActions();
-            Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
+            Action.affectPlayer(player, actions);
         };
 
         // Set the response handler
-        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
+        setResponseHandler(form, handler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

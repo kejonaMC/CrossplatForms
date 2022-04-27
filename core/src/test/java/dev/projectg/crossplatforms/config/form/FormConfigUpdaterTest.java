@@ -1,7 +1,10 @@
 package dev.projectg.crossplatforms.config.form;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Guice;
 import dev.projectg.crossplatforms.TestLogger;
+import dev.projectg.crossplatforms.TestModule;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
+import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.ConfigManagerTest;
@@ -42,11 +45,11 @@ public class FormConfigUpdaterTest {
 
     @BeforeEach
     public void setupManager() {
-        manager = new ConfigManager(directory, logger);
+        manager = new ConfigManager(directory, logger, Guice.createInjector(new TestModule()));
         // serializers
-        CrossplatForms.registerDefaultActions(manager);
-        manager.getActionSerializer().simpleGenericAction("server", String.class, ConfigManagerTest.FakeServer::new);
+        manager.getActionSerializer().simpleGenericAction("server", String.class, ConfigManagerTest.FakeServer.class);
         manager.serializers(builder -> {
+            builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());

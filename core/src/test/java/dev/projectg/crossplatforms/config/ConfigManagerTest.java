@@ -1,11 +1,13 @@
 package dev.projectg.crossplatforms.config;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.TestLogger;
+import dev.projectg.crossplatforms.TestModule;
 import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
+import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.FormConfig;
@@ -31,28 +33,31 @@ public class ConfigManagerTest {
         TestLogger logger = new TestLogger();
         ConfigId config = new ConfigId("configs/forms/bedrock-forms-" + FormConfig.VERSION + ".yml", FormConfig.VERSION, FormConfig.class);
 
-        ConfigManager manager = new ConfigManager(directory, logger);
+        ConfigManager manager = new ConfigManager(directory, logger, Guice.createInjector(new TestModule()));
         manager.serializers(builder -> {
+            builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         });
-        CrossplatForms.registerDefaultActions(manager);
-        manager.getActionSerializer().simpleGenericAction("server", String.class, FakeServer::new);
+        manager.getActionSerializer().simpleGenericAction("server", String.class, FakeServer.class);
 
         manager.register(config);
         Assertions.assertTrue(manager.load());
-        Assertions.assertFalse(logger.failed());
+        //Assertions.assertFalse(logger.failed());
+        Assertions.assertEquals("", logger.dump());
     }
 
+    @SuppressWarnings("unused")
     public static class FakeServer extends SimpleAction<String> {
 
+        @Inject
         public FakeServer(@NotNull String value) {
             super("server", value);
         }
 
         @Override
-        public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
+        public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders) {
             //no-op
         }
     }

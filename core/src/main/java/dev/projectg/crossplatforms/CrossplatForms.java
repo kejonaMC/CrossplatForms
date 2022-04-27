@@ -4,19 +4,18 @@ import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import dev.projectg.crossplatforms.action.ActionSerializer;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import dev.projectg.crossplatforms.action.BedrockTransferAction;
-import dev.projectg.crossplatforms.action.CommandsAction;
-import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.FormsCommand;
+import dev.projectg.crossplatforms.command.custom.CustomCommandManager;
 import dev.projectg.crossplatforms.command.defaults.DefaultCommands;
 import dev.projectg.crossplatforms.command.defaults.HelpCommand;
 import dev.projectg.crossplatforms.command.defaults.ListCommand;
-import dev.projectg.crossplatforms.command.custom.CustomCommandManager;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
+import dev.projectg.crossplatforms.config.ConfigurationModule;
 import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
@@ -32,7 +31,6 @@ import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerialize
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
-import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -40,7 +38,6 @@ import org.bstats.charts.SimplePie;
 import org.geysermc.cumulus.util.FormImage;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -105,9 +102,19 @@ public class CrossplatForms {
             logger.warn("No Bedrock Handler being used! There may be issues.");
         }
 
+        interfaceManager = bootstrap.interfaceManager();
+        Injector injector = Guice.createInjector(
+            new ConfigurationModule(
+                interfaceManager,
+                bedrockHandler,
+                serverHandler,
+                placeholders
+            )
+        );
+
         // Load all configs
         long configTime = System.currentTimeMillis();
-        configManager = new ConfigManager(dataFolder, logger);
+        configManager = new ConfigManager(dataFolder, logger, injector);
         configManager.register(ConfigId.GENERAL);
         if (bedrockSupport) {
             // Only register bedrock form features and only references cumulus classes if cumulus is available
@@ -119,7 +126,6 @@ public class CrossplatForms {
             });
             configManager.getActionSerializer().genericAction(BedrockTransferAction.TYPE, BedrockTransferAction.class);
         }
-        registerDefaultActions(configManager); // actions that are available on any implementation
         bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
@@ -130,10 +136,9 @@ public class CrossplatForms {
 
         // Load forms and menus from the configs into registries
         long registryTime = System.currentTimeMillis();
-        interfaceManager = bootstrap.interfaceManager(
-                bedrockHandler,
-                new BedrockFormRegistry(configManager, serverHandler),
-                new JavaMenuRegistry(configManager, serverHandler)
+        interfaceManager.load(
+            new BedrockFormRegistry(configManager, serverHandler),
+            new JavaMenuRegistry(configManager, serverHandler)
         );
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
@@ -196,11 +201,5 @@ public class CrossplatForms {
 
     public static CrossplatForms getInstance() {
         return INSTANCE;
-    }
-
-    public static void registerDefaultActions(ConfigManager configManager) {
-        ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction::new);
-        actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction::new);
     }
 }

@@ -2,6 +2,8 @@ package dev.projectg.crossplatforms.config.keyedserializer;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Guice;
+import dev.projectg.crossplatforms.TestModule;
 import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.utils.ConfigurateUtils;
 import dev.projectg.crossplatforms.utils.FileUtils;
@@ -26,11 +28,11 @@ public class KeyedTypeSerializerTest {
     @TempDir
     private static File directory;
 
-    private final KeyedTypeSerializer<Message> messageSerializer = new KeyedTypeSerializer<>();
+    private final KeyedTypeSerializer<Message> messageSerializer = new KeyedTypeSerializer<>(Guice.createInjector(new TestModule()));
     private final YamlConfigurationLoader loader;
 
     public KeyedTypeSerializerTest() throws IOException {
-        messageSerializer.registerSimpleType("message", String.class, SingleMessage::new);
+        messageSerializer.registerSimpleType("message", String.class, SingleMessage.class);
         messageSerializer.registerType("messages", MultiMessage.class);
 
         File config = FileUtils.fileOrCopiedFromResource(new File(directory, "KeyedTypeConfig.yml"));

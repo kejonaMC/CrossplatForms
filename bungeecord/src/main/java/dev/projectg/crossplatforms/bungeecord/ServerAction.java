@@ -2,9 +2,7 @@ package dev.projectg.crossplatforms.bungeecord;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -24,7 +22,7 @@ public class ServerAction extends SimpleAction<String> {
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer formPlayer, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
+    public void affectPlayer(@NotNull FormPlayer formPlayer, @NotNull Map<String, String> additionalPlaceholders) {
         ProxiedPlayer player = (ProxiedPlayer) formPlayer.getHandle();
         String serverName = value();
         ServerInfo downstream = ProxyServer.getInstance().getServerInfo(serverName); // find target

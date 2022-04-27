@@ -5,8 +5,8 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
+import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
@@ -158,11 +158,7 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
             if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
                 String permission = command.getPermission();
                 if (permission == null || player.hasPermission(permission)) {
-                    command.run(
-                        new SpigotPlayer(player),
-                        CrossplatForms.getInstance().getInterfaceManager(),
-                        bedrockHandler
-                    );
+                    command.run(new SpigotPlayer(player));
 
                     if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
                         event.setCancelled(true);
