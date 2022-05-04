@@ -1,6 +1,8 @@
 
 plugins {
     id("net.kyori.indra")
+    id("crossplatforms.shadow-conventions")
+    id("com.github.johnrengelman.shadow")
 }
 
 sourceSets {
@@ -39,5 +41,7 @@ dependencies {
         isTransitive = false
     }
 }
+
+relocate("org.bstats")
 
 description = "core"

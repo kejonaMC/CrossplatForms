@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("com.github.johnrengelman.shadow")
+    id("crossplatforms.shadow-conventions")
 }
 
 dependencies {
@@ -24,7 +25,6 @@ tasks.withType<ShadowJar> {
         }
         exclude {
                 e -> e.name.startsWith("org.yaml") // Available on Spigot
-                || e.name.startsWith("com.google")
         }
     }
 
