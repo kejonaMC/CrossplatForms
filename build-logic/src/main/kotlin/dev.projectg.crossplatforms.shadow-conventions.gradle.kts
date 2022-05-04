@@ -11,10 +11,9 @@ tasks {
 
         val sJar: ShadowJar = this
         doFirst {
-            providedDependencies[project.name]?.forEach { string ->
+            excludedDependencies[project.name]?.forEach { spec ->
                 sJar.dependencies {
-                    println("Excluding $string from ${project.name}")
-                    exclude(dependency(string))
+                    exclude(spec)
                 }
             }
 
@@ -45,25 +44,3 @@ fun callAddRelocations(configuration: Configuration, shadowJar: ShadowJar) =
             if (it is ProjectDependency)
                 addRelocations(it.dependencyProject, shadowJar)
         }
-
-val providedDependencies = mutableMapOf<String, MutableSet<String>>()
-val relocatedPackages = mutableMapOf<String, MutableSet<String>>()
-
-fun Project.provided(pattern: String, name: String, version: String, excludedOn: Int = 0b110) {
-    providedDependencies.getOrPut(project.name) { mutableSetOf() }
-            .add("${calcExclusion(pattern, 0b100, excludedOn)}:" +
-                    "${calcExclusion(name, 0b10, excludedOn)}:" +
-                    calcExclusion(version, 0b1, excludedOn))
-    dependencies.add("compileOnlyApi", "$pattern:$name:$version")
-}
-
-fun Project.provided(dependency: ProjectDependency) =
-        provided(dependency.group!!, dependency.name, dependency.version!!)
-
-
-fun Project.relocate(pattern: String) =
-        relocatedPackages.getOrPut(project.name) { mutableSetOf() }
-                .add(pattern)
-
-fun calcExclusion(section: String, bit: Int, excludedOn: Int): String =
-        if (excludedOn and bit > 0) section else ""

@@ -2,7 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("com.github.johnrengelman.shadow")
-    id("crossplatforms.shadow-conventions")
+    id("dev.projectg.crossplatforms.shadow-conventions")
 }
 
 dependencies {
@@ -14,25 +14,9 @@ dependencies {
 }
 
 tasks.withType<ShadowJar> {
-    dependencies {
-        shadow {
-            relocate("cloud.commandframework", "dev.projectg.crossplatforms.shaded.cloud")
-            relocate("me.lucko.commodore", "dev.projectg.crossplatforms.shaded.commodore")
-            relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
-            relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
-            relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
-            relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
-        }
-        exclude {
-                e -> e.name.startsWith("org.yaml") // Available on Spigot
-        }
-    }
-
     archiveFileName.set("CrossplatForms-Spigot.jar")
 }
 
-tasks.named("build") {
-    dependsOn(tasks.named("shadowJar"))
-}
+exclude("org.yaml", "snakeyaml") // available on newer versions of spigot
 
 description = "spigot"

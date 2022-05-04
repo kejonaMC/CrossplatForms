@@ -1,4 +1,8 @@
 
+plugins {
+    id("dev.projectg.crossplatforms.shadow-conventions")
+}
+
 dependencies {
     // 1.8.8 is supported but we target 1.9.4 to use PlayerSwapItemEvent if necessary
     compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
@@ -10,5 +14,12 @@ dependencies {
     api("net.kyori:adventure-platform-bukkit:4.1.0")
     api("org.bstats:bstats-bukkit:3.0.0")
 }
+
+relocate("cloud.commandframework")
+relocate("com.google.inject")
+relocate("me.lucko.commodore")
+relocate("net.kyori")
+relocate("org.spongepowered.configurate")
+relocate("io.leangen.geantyref") // used by configurate and cloud
 
 description = "spigot-common"
