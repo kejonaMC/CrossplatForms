@@ -10,8 +10,8 @@ dependencies {
     api("cloud.commandframework:cloud-bungee:1.6.2")
     api("net.kyori:adventure-platform-bungeecord:4.1.0")
     implementation("org.bstats:bstats-bungeecord:3.0.0")
-    api(project(":proxy"))
-    api(project(":core"))
+    api(projects.proxy)
+    api(projects.core)
 }
 
 tasks.withType<ShadowJar> {
