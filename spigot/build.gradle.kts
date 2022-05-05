@@ -17,6 +17,8 @@ tasks.withType<ShadowJar> {
     archiveFileName.set("CrossplatForms-Spigot.jar")
 }
 
+exclude("com.mojang", "brigadier")
+exclude("com.google.guava")
 exclude("org.yaml", "snakeyaml") // available on newer versions of spigot
 
 description = "spigot"

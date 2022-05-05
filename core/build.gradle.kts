@@ -42,6 +42,6 @@ dependencies {
     }
 }
 
-exclude("com.mojang", "brigadier")
+relocate("org.bstats")
 
 description = "core"

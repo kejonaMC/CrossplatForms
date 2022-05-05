@@ -24,4 +24,6 @@ relocate("org.yaml.snakeyaml")
 relocate("de.tr7zw.changeme.nbtapi")
 relocate("de.tr7zw.annotations")
 
+exclude("com.mojang", "brigadier")
+
 description = "spigot-legacy"

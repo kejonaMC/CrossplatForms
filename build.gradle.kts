@@ -21,7 +21,7 @@ allprojects{
 
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
-        // Disable creating of test report files
+        // Disable creation of test report files
         reports.html.required.set(false)
         reports.junitXml.required.set(false)
     }
@@ -47,6 +47,9 @@ allprojects{
             "build_number" to (System.getenv("BUILD_NUMBER") ?: "UNKNOWN")
         )
     }
+
+    // disable javadocs
+    tasks.withType<Javadoc>().all { enabled = false }
 }
 
 subprojects {

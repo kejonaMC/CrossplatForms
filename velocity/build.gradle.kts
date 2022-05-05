@@ -22,6 +22,7 @@ relocate("cloud.commandframework")
 relocate("org.spongepowered.configurate")
 relocate("io.leangen.geantyref") // used by cloud and configurate
 
+exclude("com.mojang", "brigadier")
 exclude("com.google.code.gson")
 exclude("com.google.guava")
 exclude("com.google.inject")
