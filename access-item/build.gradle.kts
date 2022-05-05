@@ -2,5 +2,5 @@
 description = "access-item"
 
 dependencies {
-    compileOnly(project(":core"))
+    compileOnly(projects.core)
 }
