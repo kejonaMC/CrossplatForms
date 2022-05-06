@@ -15,6 +15,7 @@ dependencies {
 tasks.withType<ShadowJar> {
     dependencies {
         shadow {
+            relocate("com.google.inject", "dev.projectg.crossplatforms.shaded.guice")
             relocate("cloud.commandframework", "dev.projectg.crossplatforms.shaded.cloud")
             relocate("me.lucko.commodore", "dev.projectg.crossplatforms.shaded.commodore")
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
@@ -23,8 +24,11 @@ tasks.withType<ShadowJar> {
             relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
         }
         exclude {
-                e -> e.name.startsWith("org.yaml") // Available on Spigot
-                || e.name.startsWith("com.google")
+                e ->
+            val name = e.name
+            name.startsWith("org.yaml") // Available on Spigot
+            || (name.startsWith("com.google") && !name.startsWith("com.google.inject"))
+            || name.startsWith("javax.inject")
         }
     }
 
