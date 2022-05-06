@@ -13,6 +13,9 @@ dependencies {
 tasks.withType<ShadowJar> {
     dependencies {
         shadow {
+            relocate("com.google.inject", "dev.projectg.crossplatforms.shaded.guice")
+            // older versions of Spigot have a Guava that is too old for the used Guice
+            relocate("com.google.common", "dev.projectg.crossplatforms.shaded.google.common") // i.e. Guava
             relocate("cloud.commandframework", "dev.projectg.crossplatforms.shaded.cloud")
             relocate("me.lucko.commodore", "dev.projectg.crossplatforms.shaded.commodore")
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
@@ -25,7 +28,12 @@ tasks.withType<ShadowJar> {
             relocate("de.tr7zw.annotations", "dev.projectg.crossplatforms.shaded.tr7zw.annotations")
         }
         exclude {
-                e -> e.name.startsWith("com.google")
+                e ->
+            val name = e.name
+            (name.startsWith("com.google")
+            && !name.startsWith("com.google.inject")
+            && !name.startsWith("com.google.guava")) // contains package name of com.google.common
+            || name.startsWith("javax.inject")
         }
     }
 

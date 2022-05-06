@@ -16,6 +16,7 @@ dependencies {
 tasks.withType<ShadowJar> {
     dependencies {
         shadow {
+            relocate("com.google.inject", "dev.projectg.crossplatforms.shaded.guice")
             relocate("cloud.commandframework", "dev.projectg.crossplatforms.shaded.cloud")
             relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
             relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
@@ -24,9 +25,14 @@ tasks.withType<ShadowJar> {
             relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
         }
         exclude {
-                e -> e.name.startsWith("com.mojang") // all available on bungee
-                || e.name.startsWith("org.yaml")
-                || e.name.startsWith("com.google")
+                e ->
+            val name = e.name
+            if (name.contains("javax")) println(name)
+            name.startsWith("com.mojang") // all available on bungee
+            || name.startsWith("org.yaml")
+            // Guice must be relocated, everything else is available
+            || (name.startsWith("com.google") && !name.startsWith("com.google.inject"))
+            || name.startsWith("javax.inject")
         }
     }
 
