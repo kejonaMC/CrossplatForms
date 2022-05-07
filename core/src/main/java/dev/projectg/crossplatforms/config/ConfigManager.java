@@ -117,7 +117,8 @@ public class ConfigManager {
             } catch (IOException e) {
                 logger.severe("Failed to load configuration " + configId.file);
                 String message = e.getMessage();
-                if (logger.isDebug() || message.contains("Unknown error")) {
+                if (logger.isDebug() ||  configId == ConfigId.GENERAL|| message.contains("Unknown error")) {
+                    // if the config failing to load is config.yml, then its impossible to enable debug and see the full error.
                     // message is useless on its own if unknown
                     e.printStackTrace();
                 } else {
