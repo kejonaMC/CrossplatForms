@@ -5,7 +5,7 @@ include(":proxy")
 include(":bungeecord")
 include(":velocity")
 include(":access-item")
-include("spigot-common")
+include(":spigot-common")
 include(":spigot")
 include(":spigot-legacy")
 

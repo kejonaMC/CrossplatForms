@@ -27,7 +27,6 @@ tasks.withType<ShadowJar> {
         exclude {
                 e ->
             val name = e.name
-            if (name.contains("javax")) println(name)
             name.startsWith("com.mojang") // all available on bungee
             || name.startsWith("org.yaml")
             // Guice must be relocated, everything else is available
