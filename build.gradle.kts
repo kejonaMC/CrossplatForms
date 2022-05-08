@@ -47,6 +47,9 @@ allprojects{
             "build_number" to (System.getenv("BUILD_NUMBER") ?: "UNKNOWN")
         )
     }
+
+    // disable javadocs
+    tasks.withType<Javadoc>().all { enabled = false }
 }
 
 subprojects {

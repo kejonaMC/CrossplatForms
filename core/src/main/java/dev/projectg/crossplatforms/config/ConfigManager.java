@@ -29,12 +29,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class ConfigManager {
@@ -43,7 +42,7 @@ public class ConfigManager {
     private final Logger logger;
 
     private final YamlConfigurationLoader.Builder loaderBuilder;
-    private final Set<ConfigId> identifiers = new HashSet<>();
+    private final List<ConfigId> identifiers = new ArrayList<>();
 
     // todo: support using the same config class for two different configs
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
@@ -80,6 +79,10 @@ public class ConfigManager {
 
     public void register(ConfigId id) {
         identifiers.add(id);
+    }
+
+    public void registerPriority(ConfigId id) {
+        identifiers.add(0, id);
     }
 
     public void serializers(Consumer<TypeSerializerCollection.Builder> builder) {

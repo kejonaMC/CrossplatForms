@@ -115,7 +115,7 @@ public class CrossplatForms {
         // Load all configs
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger, injector);
-        configManager.register(ConfigId.GENERAL);
+        configManager.registerPriority(ConfigId.GENERAL);
         if (bedrockSupport) {
             // Only register bedrock form features and only references cumulus classes if cumulus is available
             configManager.register(ConfigId.BEDROCK_FORMS);
