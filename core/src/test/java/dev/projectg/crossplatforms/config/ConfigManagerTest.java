@@ -45,7 +45,7 @@ public class ConfigManagerTest {
         manager.register(config);
         Assertions.assertTrue(manager.load());
         //Assertions.assertFalse(logger.failed());
-        Assertions.assertEquals("", logger.dump());
+        Assertions.assertEquals("", logger.warningDump());
     }
 
     @SuppressWarnings("unused")

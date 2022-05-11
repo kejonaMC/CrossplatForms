@@ -58,18 +58,22 @@ public class ConfigManager {
 
         ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
         loaderBuilder = YamlConfigurationLoader.builder();
-        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
-            // register our Guice ObjectMapper
-            builder.registerAnnotatedObjects(mapperFactory);
-            builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
-            // type serializers for abstract classes and external library classes
-            builder.registerExact(Arguments.class, new ArgumentsSerializer());
-            builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.registerExact(Parser.class, new ParserSerializer());
-            actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
-            actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
-            actionSerializer.registrator().accept(builder);
-        })));
+        loaderBuilder.defaultOptions(opts -> {
+            opts = opts.serializers(builder -> builder.registerAnnotatedObjects(mapperFactory));
+            // factory is registered first separately so that is added to a TypeSerializerCollection that is a parent of
+            // the collection of the serializers below. serializers in the children are checked first when object mapping
+            // occurs. our custom serializers MUST be checked first before the object mapper.
+            return opts.serializers(builder -> {
+                builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
+                // type serializers for abstract classes and external library classes
+                builder.registerExact(Arguments.class, new ArgumentsSerializer());
+                builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
+                builder.registerExact(Parser.class, new ParserSerializer());
+                actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
+                actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
+                actionSerializer.registrator().accept(builder);
+            });
+        });
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node
         loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false).shouldCopyDefaults(false));
@@ -112,6 +116,7 @@ public class ConfigManager {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean load() {
+        identifiers.forEach(id -> logger.info(id.file));
         for (ConfigId configId : identifiers) {
             try {
                 if (!loadConfig(configId)) {
