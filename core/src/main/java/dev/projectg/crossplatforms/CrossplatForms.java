@@ -131,7 +131,6 @@ public class CrossplatForms {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }
         Optional<GeneralConfig> generalConfig = configManager.getConfig(GeneralConfig.class);
-        logger.setDebug(generalConfig.map(GeneralConfig::isEnableDebug).orElse(false));
         logger.debug("Took " + (System.currentTimeMillis() - configTime) + "ms to load config files.");
 
         // Load forms and menus from the configs into registries

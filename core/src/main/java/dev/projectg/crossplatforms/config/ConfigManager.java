@@ -137,6 +137,13 @@ public class ConfigManager {
                     return false;
                 }
             }
+
+            if (configId.postProcessor != null) {
+                Configuration config = configurations.get(configId.clazz);
+                if (config != null) {
+                    configId.postProcessor.accept(config);
+                }
+            }
         }
         return true;
     }

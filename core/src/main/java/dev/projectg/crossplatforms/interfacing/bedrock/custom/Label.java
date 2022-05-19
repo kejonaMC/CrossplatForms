@@ -1,19 +1,22 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Resolver;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ToString(callSuper = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 public class Label extends CustomComponent {
 
     public static final String TYPE = "label";
+
+    @Inject
+    private Label() {
+        // for guice
+    }
 
     @Override
     public Label copy() {
