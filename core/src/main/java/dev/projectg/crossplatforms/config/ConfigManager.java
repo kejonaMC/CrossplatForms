@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.config;
 
+import com.google.inject.ConfigurationException;
 import com.google.inject.Injector;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.ActionSerializer;
@@ -116,13 +117,12 @@ public class ConfigManager {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean load() {
-        identifiers.forEach(id -> logger.info(id.file));
         for (ConfigId configId : identifiers) {
             try {
                 if (!loadConfig(configId)) {
                     return false;
                 }
-            } catch (IOException e) {
+            } catch (IOException | ConfigurationException e) {
                 logger.severe("Failed to load configuration " + configId.file);
                 String message = e.getMessage();
                 if (logger.isDebug() ||  configId == ConfigId.GENERAL|| message.contains("Unknown error")) {
@@ -153,7 +153,7 @@ public class ConfigManager {
      * @param config The configuration to load
      * @return The success state
      */
-    private boolean loadConfig(ConfigId config) throws IOException {
+    private boolean loadConfig(ConfigId config) throws IOException, ConfigurationException {
         String name = config.file;
         File file = FileUtils.fileOrCopiedFromResource(directory.resolve(config.file).toFile(), config.file);
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();

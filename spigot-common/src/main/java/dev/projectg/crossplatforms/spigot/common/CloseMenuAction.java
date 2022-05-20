@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.spigot.common;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.MenuAction;
@@ -8,12 +9,13 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 
-public class CloseMenuAction extends SimpleType<Boolean> implements MenuAction {
+public class CloseMenuAction extends SimpleType<String> implements MenuAction {
 
     public static final String TYPE = "close";
 
-    public CloseMenuAction(@Nonnull Boolean value) {
-        super(TYPE, value);
+    @Inject
+    public CloseMenuAction() {
+        super(TYPE, "");
     }
 
     @Override

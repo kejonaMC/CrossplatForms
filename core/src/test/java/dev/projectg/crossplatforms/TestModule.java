@@ -13,9 +13,9 @@ import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,7 +50,7 @@ public class TestModule extends AbstractModule {
                 return null;
             }
 
-            @NotNull
+            @Nonnull
             @Override
             public Audience asAudience(CommandOrigin origin) {
                 return Audience.empty();

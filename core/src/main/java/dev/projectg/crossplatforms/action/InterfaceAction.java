@@ -7,28 +7,33 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-@ConfigSerializable
 public class InterfaceAction extends SimpleAction<String> {
-
-    @Inject
-    private transient BedrockHandler bedrockHandler;
-
-    @Inject
-    private transient InterfaceManager interfaceManager;
-
-    @Inject
-    private transient PlaceholderHandler placeholders;
 
     public static final String TYPE = "form";
 
-    @Inject
-    public InterfaceAction(@Nonnull String value) {
+    private transient final BedrockHandler bedrockHandler;
+    private transient final InterfaceManager interfaceManager;
+    private transient final PlaceholderHandler placeholders;
+
+    public InterfaceAction(@Nonnull String value,
+                           BedrockHandler bedrockHandler,
+                           InterfaceManager interfaceManager,
+                           PlaceholderHandler placeholders) {
         super(TYPE, value);
+        this.bedrockHandler = bedrockHandler;
+        this.interfaceManager = interfaceManager;
+        this.placeholders = placeholders;
+    }
+
+    @Inject
+    private InterfaceAction(BedrockHandler bedrockHandler,
+                            InterfaceManager interfaceManager,
+                            PlaceholderHandler placeholders) {
+        this("", bedrockHandler, interfaceManager, placeholders);
     }
 
     @Override

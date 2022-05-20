@@ -17,11 +17,8 @@ public class BedrockTransferAction implements Action {
 
     public static final String TYPE = "transfer_packet";
 
-    @Inject
-    private transient BedrockHandler bedrockHandler;
-
-    @Inject
-    private transient PlaceholderHandler placeholders;
+    private final transient BedrockHandler bedrockHandler;
+    private final transient PlaceholderHandler placeholders;
 
     @Required
     private String address;
@@ -35,6 +32,12 @@ public class BedrockTransferAction implements Action {
     private transient int staticPort = -1;
 
     private transient boolean checkedForStatic = false;
+
+    @Inject
+    private BedrockTransferAction(BedrockHandler bedrockHandler, PlaceholderHandler placeholders) {
+        this.bedrockHandler = bedrockHandler;
+        this.placeholders = placeholders;
+    }
 
     @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {

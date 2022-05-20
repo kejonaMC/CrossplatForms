@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.bungeecord;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
 import dev.projectg.crossplatforms.handler.FormPlayer;
@@ -9,20 +10,25 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
     public static final String IDENTIFIER = "server";
 
-    public ServerAction(@NotNull String value) {
+    public ServerAction(@Nonnull String value) {
         super(IDENTIFIER, value);
     }
 
+    @Inject
+    private ServerAction() {
+        this("");
+    }
+
     @Override
-    public void affectPlayer(@NotNull FormPlayer formPlayer, @NotNull Map<String, String> additionalPlaceholders) {
+    public void affectPlayer(@Nonnull FormPlayer formPlayer, @Nonnull Map<String, String> additionalPlaceholders) {
         ProxiedPlayer player = (ProxiedPlayer) formPlayer.getHandle();
         String serverName = value();
         ServerInfo downstream = ProxyServer.getInstance().getServerInfo(serverName); // find target

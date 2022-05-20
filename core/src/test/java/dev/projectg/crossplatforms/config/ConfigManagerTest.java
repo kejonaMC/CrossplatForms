@@ -15,11 +15,11 @@ import dev.projectg.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import org.geysermc.cumulus.util.FormImage;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
 
@@ -52,16 +52,15 @@ public class ConfigManagerTest {
         Assertions.assertEquals("", logger.warningDump());
     }
 
-    @SuppressWarnings("unused")
     public static class FakeServer extends SimpleAction<String> {
 
         @Inject
-        public FakeServer(@NotNull String value) {
-            super("server", value);
+        private FakeServer() {
+            super("server", "");
         }
 
         @Override
-        public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders) {
+        public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
             //no-op
         }
     }
