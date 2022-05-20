@@ -22,13 +22,13 @@ public class PrettyPrinter {
      */
     public PrettyPrinter() {
         this.singleIndent = "  ";
-        this.indexLists = true;
+        this.indexLists = false;
     }
 
     /**
      * Creates a PrettyPrinter
      * @param indent The indent level to use for indentation. 2 by default.
-     * @param indexLists If lists should be indexed like maps or lke lists with dashes. True by default.
+     * @param indexLists If lists should be indexed like maps or like lists with dashes. True by default.
      */
     public PrettyPrinter(int indent, boolean indexLists) {
         this.singleIndent = StringUtils.repeatChar(' ', indent);
@@ -67,7 +67,7 @@ public class PrettyPrinter {
     private void addPretty(StringBuilder builder, ConfigurationNode node, int indent, boolean showKey) {
         String prefix;
         ConfigurationNode parent = node.parent();
-        if (indexLists && parent != null && parent.isList()) {
+        if (!indexLists && parent != null && parent.isList()) {
             prefix = "- ";
         } else if (showKey) {
             prefix = node.key() + ": ";
@@ -94,13 +94,17 @@ public class PrettyPrinter {
      * @param node The node to generate text from
      * @param children The children of the node
      * @param indent The indent level to print at
-     * @param key Whether or not to include the key of the node in the text. If the key is included, it is included at
+     * @param showKey Whether or not to include the key of the node in the text. If the key is included, it is included at
      *            the provided indentation level, and the children are listed a level lower. If not, the children are
      *            directly listed at the given indentation level.
      */
-    private void addCollection(StringBuilder builder, ConfigurationNode node, Collection<? extends ConfigurationNode> children, int indent, boolean key) {
+    private void addCollection(StringBuilder builder,
+                               ConfigurationNode node,
+                               Collection<? extends ConfigurationNode> children,
+                               int indent,
+                               boolean showKey) {
         int childIndent;
-        if (key) {
+        if (showKey) {
             childIndent = indent + 1;
             // indentation for this has already been handled when adding indentation before each child
             builder.append(node.key()).append(":\n");
