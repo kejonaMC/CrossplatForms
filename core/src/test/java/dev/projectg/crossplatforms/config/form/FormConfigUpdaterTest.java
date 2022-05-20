@@ -71,9 +71,12 @@ public class FormConfigUpdaterTest {
     }
 
     private static ConfigId id(int version) {
-        return new ConfigId("configs/forms/bedrock-forms-" + version + ".yml",
-            CURRENT_VERSION, OLD_VERSION,
-            FormConfig.class,
-            FormConfig::updater);
+        return ConfigId.builder()
+            .file("configs/forms/bedrock-forms-" + version + ".yml")
+            .version(CURRENT_VERSION)
+            .minimumVersion(OLD_VERSION)
+            .clazz(FormConfig.class)
+            .updater(FormConfig::updater)
+            .build();
     }
 }

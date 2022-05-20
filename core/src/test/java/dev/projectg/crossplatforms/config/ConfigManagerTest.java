@@ -31,7 +31,11 @@ public class ConfigManagerTest {
     @Test
     public void testBasicConfig() {
         TestLogger logger = new TestLogger();
-        ConfigId config = new ConfigId("configs/forms/bedrock-forms-" + FormConfig.VERSION + ".yml", FormConfig.VERSION, FormConfig.class);
+        ConfigId config = ConfigId.builder()
+            .file("configs/forms/bedrock-forms-" + FormConfig.VERSION + ".yml")
+            .version(FormConfig.VERSION)
+            .clazz(FormConfig.class)
+            .build();
 
         ConfigManager manager = new ConfigManager(directory, logger, Guice.createInjector(new TestModule()));
         manager.serializers(builder -> {
