@@ -69,7 +69,7 @@ public class PrettyPrintTest {
 
     @Test
     public void testShowKey() {
-        PrettyPrinter printer = new PrettyPrinter(4, false);
+        PrettyPrinter printer = new PrettyPrinter(4, true);
 
         Assertions.assertEquals(ALL, printer.pretty(node, true));
         Assertions.assertEquals(ALL_NO_KEY, printer.pretty(node));
@@ -82,8 +82,8 @@ public class PrettyPrintTest {
     }
 
     @Test
-    public void testIndexLists() {
-        PrettyPrinter printer = new PrettyPrinter(4, true);
+    public void testNoIndexList() {
+        PrettyPrinter printer = new PrettyPrinter(4, false);
 
         Assertions.assertEquals(LIST_NOTATION, printer.pretty(node));
     }

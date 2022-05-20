@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import dev.projectg.crossplatforms.interfacing.java.MenuAction;
 import dev.projectg.crossplatforms.serialize.KeyedTypeListSerializer;
 import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
+import dev.projectg.crossplatforms.serialize.SimpleType;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
@@ -20,12 +21,12 @@ public class ActionSerializer {
         menuActionSerializer = new KeyedTypeSerializer<>(injector);
     }
 
-    public <V> void simpleGenericAction(String typeId, TypeToken<V> valueType, Class<? extends Action> actionType) {
+    public <V, T extends SimpleType<V> & Action> void simpleGenericAction(String typeId, TypeToken<V> valueType, Class<? extends T> actionType) {
         genericActionSerializer.registerSimpleType(typeId, valueType, actionType);
         menuActionSerializer.registerSimpleType(typeId, valueType, actionType);
     }
 
-    public <V> void simpleGenericAction(String typeId, Class<V> valueType, Class<? extends Action> actionType) {
+    public <V, T extends SimpleType<V> & Action> void simpleGenericAction(String typeId, Class<V> valueType, Class<? extends T> actionType) {
         simpleGenericAction(typeId, TypeToken.get(valueType), actionType);
     }
 
@@ -34,11 +35,11 @@ public class ActionSerializer {
         menuActionSerializer.registerType(typeId, type);
     }
 
-    public <V> void simpleMenuAction(String typeId, TypeToken<V> valueType, Class<? extends MenuAction> actionType) {
+    public <V, T extends SimpleType<V> & MenuAction> void simpleMenuAction(String typeId, TypeToken<V> valueType, Class<? extends T> actionType) {
         menuActionSerializer.registerSimpleType(typeId, valueType, actionType);
     }
 
-    public <V> void simpleMenuAction(String typeId, Class<V> valueType, Class<? extends MenuAction> actionType) {
+    public <V, T extends SimpleType<V> & MenuAction> void simpleMenuAction(String typeId, Class<V> valueType, Class<? extends T> actionType) {
         simpleMenuAction(typeId, TypeToken.get(valueType), actionType);
     }
 

@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.proxy;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.interfacing.java.MenuAction;
@@ -9,13 +10,14 @@ import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 
 import javax.annotation.Nonnull;
 
-public class CloseMenuAction extends SimpleType<Boolean> implements MenuAction {
+public class CloseMenuAction extends SimpleType<String> implements MenuAction {
 
     public static final String TYPE = "close";
     private static final ProtocolizePlayerProvider PLAYER_PROVIDER = Protocolize.playerProvider();
 
-    public CloseMenuAction(@Nonnull Boolean value) {
-        super(TYPE, value);
+    @Inject
+    public CloseMenuAction() {
+        super(TYPE, "");
     }
 
     @Override

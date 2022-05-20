@@ -9,11 +9,9 @@ import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Getter
 public class BedrockFormRegistry implements Reloadable {
@@ -80,8 +78,7 @@ public class BedrockFormRegistry implements Reloadable {
      * @return the BedrockForm, null if it doesn't exist.
      */
     @Nullable
-    public BedrockForm getForm(@Nonnull String formName) {
-        Objects.requireNonNull(formName);
+    public BedrockForm getForm(@Nullable String formName) {
         return forms.get(formName);
     }
 }

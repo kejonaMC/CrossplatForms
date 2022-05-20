@@ -9,11 +9,9 @@ import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Getter
 public class JavaMenuRegistry implements Reloadable {
@@ -79,8 +77,7 @@ public class JavaMenuRegistry implements Reloadable {
      * @return the JavaMenu, null if it doesn't exist.
      */
     @Nullable
-    public JavaMenu getMenu(@Nonnull String menuName) {
-        Objects.requireNonNull(menuName);
+    public JavaMenu getMenu(@Nullable String menuName) {
         return menus.get(menuName);
     }
 }

@@ -7,28 +7,27 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-@ConfigSerializable
 public class InterfaceAction extends SimpleAction<String> {
-
-    @Inject
-    private transient BedrockHandler bedrockHandler;
-
-    @Inject
-    private transient InterfaceManager interfaceManager;
-
-    @Inject
-    private transient PlaceholderHandler placeholders;
 
     public static final String TYPE = "form";
 
+    private transient final BedrockHandler bedrockHandler;
+    private transient final InterfaceManager interfaceManager;
+    private transient final PlaceholderHandler placeholders;
+
     @Inject
-    public InterfaceAction(@Nonnull String value) {
+    public InterfaceAction(String value,
+                           BedrockHandler bedrockHandler,
+                           InterfaceManager interfaceManager,
+                           PlaceholderHandler placeholders) {
         super(TYPE, value);
+        this.bedrockHandler = bedrockHandler;
+        this.interfaceManager = interfaceManager;
+        this.placeholders = placeholders;
     }
 
     @Override
@@ -38,9 +37,6 @@ public class InterfaceAction extends SimpleAction<String> {
         if (ui == null) {
             Logger logger = Logger.getLogger();
             logger.severe("Attempted to make a player open a form or menu '" + resolved + "', but it does not exist. This is a configuration error!");
-            if (logger.isDebug()) {
-                Thread.dumpStack();
-            }
         } else {
             ui.send(player);
         }

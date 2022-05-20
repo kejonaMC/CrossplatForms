@@ -32,7 +32,6 @@ public class GeneralConfig extends Configuration {
 
     private boolean unsafeCommandRegistration = false;
 
-    @Setting("enable-debug")
     private boolean enableDebug = false;
 
     public static ConfigurationTransformation.Versioned updater() {

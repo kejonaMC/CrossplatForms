@@ -12,11 +12,10 @@ public class Integer implements Number {
     public static final String TYPE = "integer";
 
     @Required
-    private final int integer;
+    private int integer;
 
     @SuppressWarnings("unused") // configurate
     private Integer() {
-        integer = 0;
     }
 
     public Integer(int i) {

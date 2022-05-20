@@ -22,9 +22,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.event.EventHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -72,7 +72,7 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
         return server.getPlayers().stream().map(BungeeCordPlayer::new).collect(Collectors.toList());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Audience asAudience(CommandOrigin origin) {
         return audiences.sender((CommandSender) origin.getHandle());

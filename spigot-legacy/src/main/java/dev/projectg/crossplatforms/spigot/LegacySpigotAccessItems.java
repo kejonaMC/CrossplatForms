@@ -12,8 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nonnull;
 
 public class LegacySpigotAccessItems extends SpigotAccessItemsBase {
 
@@ -29,13 +30,13 @@ public class LegacySpigotAccessItems extends SpigotAccessItemsBase {
     }
 
     @Override
-    public void setItemId(@NotNull ItemStack itemStack, @NotNull String identifier) {
+    public void setItemId(@Nonnull ItemStack itemStack, @Nonnull String identifier) {
         NbtUtils.setCustomString(itemStack, ITEM_IDENTIFIER, identifier);
     }
 
     @Nullable
     @Override
-    public String getItemId(@NotNull ItemStack itemStack) {
+    public String getItemId(@Nonnull ItemStack itemStack) {
         return NbtUtils.getString(itemStack, ITEM_IDENTIFIER);
     }
 

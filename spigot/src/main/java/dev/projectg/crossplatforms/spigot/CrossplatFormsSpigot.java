@@ -135,7 +135,7 @@ public class CrossplatFormsSpigot extends JavaPlugin implements CrossplatFormsBo
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
         actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction.class);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
     }
 
     @Override

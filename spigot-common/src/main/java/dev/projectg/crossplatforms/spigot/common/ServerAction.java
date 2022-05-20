@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
@@ -15,19 +14,18 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
-@ConfigSerializable
 public class ServerAction extends SimpleAction<String> {
 
     public static JavaPlugin SENDER = null;
 
     public static final String IDENTIFIER = "server";
 
-    @Inject
-    private transient PlaceholderHandler placeholders;
+    private transient final PlaceholderHandler placeholders;
 
     @Inject
-    public ServerAction(String value) {
+    public ServerAction(String value, PlaceholderHandler placeholders) {
         super(IDENTIFIER, value);
+        this.placeholders = placeholders;
     }
 
     @Override

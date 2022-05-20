@@ -29,6 +29,15 @@ public abstract class Logger {
         }
     }
 
+    /**
+     * Dumps the current stack if debug mode is enabled.
+     */
+    public void debugStack() {
+        if (isDebug()) {
+            Thread.dumpStack();
+        }
+    }
+
     public abstract void info(String message);
     public abstract void warn(String message);
     public abstract void severe(String message);

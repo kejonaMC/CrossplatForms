@@ -2,7 +2,6 @@ package dev.projectg.crossplatforms.action;
 
 
 import dev.projectg.crossplatforms.serialize.SimpleType;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
@@ -13,7 +12,8 @@ import javax.annotation.Nonnull;
  */
 public abstract class SimpleAction<V> extends SimpleType<V> implements Action {
 
-    public SimpleAction(@Nonnull String type, @NotNull V value) {
+    public SimpleAction(@Nonnull String type, @Nonnull V value) {
         super(type, value);
+        // no other logic may be present here, to facilitate Guice/Configurate
     }
 }

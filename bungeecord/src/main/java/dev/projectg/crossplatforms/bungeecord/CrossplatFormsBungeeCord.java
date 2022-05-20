@@ -40,7 +40,6 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
     private CrossplatForms crossplatForms;
     private BungeeAudiences audiences;
-    private BungeeCordServerHandler serverHandler;
     private Metrics metrics;
     private boolean protocolizePresent;
 
@@ -53,7 +52,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
             logger.warn("Bukkit reloading is NOT supported!");
         }
         audiences = BungeeAudiences.create(this);
-        serverHandler = new BungeeCordServerHandler(this, audiences);
+        BungeeCordServerHandler serverHandler = new BungeeCordServerHandler(this, audiences);
 
         BungeeCommandManager<CommandOrigin> commandManager;
         try {
@@ -98,8 +97,8 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         }
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction.class);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, Boolean.class, CloseMenuAction.class);
+        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
     }
 
     @Override

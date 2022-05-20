@@ -1,7 +1,6 @@
 package dev.projectg.crossplatforms.permission;
 
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
@@ -24,7 +23,7 @@ public class Permission {
     @Nonnull
     private PermissionDefault defaultPermission;
 
-    public Permission(@NotNull String key, @NotNull String description, @NotNull PermissionDefault permissionDefault) {
+    public Permission(@Nonnull String key, @Nonnull String description, @Nonnull PermissionDefault permissionDefault) {
         this.key = key;
         this.description = description;
         this.defaultPermission = permissionDefault;
