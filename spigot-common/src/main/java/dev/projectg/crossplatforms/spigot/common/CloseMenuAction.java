@@ -20,7 +20,7 @@ public class CloseMenuAction extends SimpleType<String> implements MenuAction {
 
     @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull JavaMenu menu) {
-        Player spigotPlayer = (Player) player;
+        Player spigotPlayer = (Player) player.getHandle();
         spigotPlayer.closeInventory();
     }
 }

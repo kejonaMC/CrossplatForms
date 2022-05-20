@@ -1,7 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
 import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 @ToString
@@ -53,14 +51,17 @@ public class JavaMenu extends Interface {
     public void process(int slot, boolean rightClick, @Nonnull FormPlayer player) {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
-            List<Action> any = button.getAnyClick();
 
-            Action.affectPlayer(player, any);
+            affectPlayer(player, button.getAnyClick());
             if (rightClick) {
-                Action.affectPlayer(player, button.getRightClick());
+                affectPlayer(player, button.getRightClick());
             } else {
-                Action.affectPlayer(player, button.getLeftClick());
+                affectPlayer(player, button.getLeftClick());
             }
         }
+    }
+
+    private void affectPlayer(FormPlayer player, Iterable<MenuAction> actions) {
+        actions.forEach(a -> a.affectPlayer(player, this));
     }
 }

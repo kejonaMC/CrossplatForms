@@ -49,7 +49,7 @@ public class ActionSerializer {
 
     public Consumer<TypeSerializerCollection.Builder> registrator() {
         return builder -> {
-            builder.register(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(genericActionSerializer));
+            builder.registerExact(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(genericActionSerializer));
             builder.registerExact(new TypeToken<List<MenuAction>>() {}, new KeyedTypeListSerializer<>(menuActionSerializer));
         };
     }
