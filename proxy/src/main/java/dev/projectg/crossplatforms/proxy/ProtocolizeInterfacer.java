@@ -8,7 +8,6 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
-import dev.simplix.protocolize.api.player.ProtocolizePlayer;
 import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 import dev.simplix.protocolize.data.ItemType;
 import dev.simplix.protocolize.data.inventory.InventoryType;
@@ -60,8 +59,6 @@ public class ProtocolizeInterfacer extends InterfaceManager {
             inventory.item(slot, item); // add itemstack to inventory
         }
 
-        ProtocolizePlayer protocolizePlayer = playerProvider.player(player.getUuid());
-
         inventory.onClick(click -> {
             final boolean rightClick;
             switch (click.clickType()) {
@@ -79,16 +76,9 @@ public class ProtocolizeInterfacer extends InterfaceManager {
                     return;
             }
             // delegate action handling
-            int slot = click.slot();
-            if (source.isButton(slot)) {
-                if (source.isAutoClose()) {
-                    // only close the inventory if the slot was a button and the menu is set to auto close
-                    protocolizePlayer.closeInventory();
-                }
-                source.process(slot, rightClick, player);
-            }
+            source.process(click.slot(), rightClick, player);
         });
 
-        protocolizePlayer.openInventory(inventory);
+        playerProvider.player(player.getUuid()).openInventory(inventory);
     }
 }
