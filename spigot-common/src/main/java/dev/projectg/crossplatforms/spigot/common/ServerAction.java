@@ -20,16 +20,12 @@ public class ServerAction extends SimpleAction<String> {
 
     public static final String IDENTIFIER = "server";
 
-    @Inject
-    private transient PlaceholderHandler placeholders;
+    private transient final PlaceholderHandler placeholders;
 
-    public ServerAction(String value) {
+    @Inject
+    public ServerAction(String value, PlaceholderHandler placeholders) {
         super(IDENTIFIER, value);
-    }
-
-    @Inject
-    private ServerAction() {
-        this("");
+        this.placeholders = placeholders;
     }
 
     @Override

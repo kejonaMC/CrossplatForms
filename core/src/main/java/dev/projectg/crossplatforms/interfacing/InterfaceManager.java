@@ -32,7 +32,7 @@ public abstract class InterfaceManager {
      * JavaMenus.
      */
     @Nullable
-    public Interface getInterface(String name, boolean bedrock) {
+    public Interface getInterface(@Nullable String name, boolean bedrock) {
         if (bedrockRegistry == null || javaRegistry == null) {
             return null;
         }

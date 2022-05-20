@@ -57,7 +57,6 @@ public abstract class Interface {
     }
 
     public void generatePermissions(InterfaceConfig registry) {
-        // todo: this can be moved to constructor
         if (permissions != null) {
             Logger.getLogger().severe("Permissions in menu or form '" + identifier + "' have already been generated!");
         }

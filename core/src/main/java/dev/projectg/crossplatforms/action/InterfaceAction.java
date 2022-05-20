@@ -19,7 +19,8 @@ public class InterfaceAction extends SimpleAction<String> {
     private transient final InterfaceManager interfaceManager;
     private transient final PlaceholderHandler placeholders;
 
-    public InterfaceAction(@Nonnull String value,
+    @Inject
+    public InterfaceAction(String value,
                            BedrockHandler bedrockHandler,
                            InterfaceManager interfaceManager,
                            PlaceholderHandler placeholders) {
@@ -29,13 +30,6 @@ public class InterfaceAction extends SimpleAction<String> {
         this.placeholders = placeholders;
     }
 
-    @Inject
-    private InterfaceAction(BedrockHandler bedrockHandler,
-                            InterfaceManager interfaceManager,
-                            PlaceholderHandler placeholders) {
-        this("", bedrockHandler, interfaceManager, placeholders);
-    }
-
     @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
@@ -43,9 +37,6 @@ public class InterfaceAction extends SimpleAction<String> {
         if (ui == null) {
             Logger logger = Logger.getLogger();
             logger.severe("Attempted to make a player open a form or menu '" + resolved + "', but it does not exist. This is a configuration error!");
-            if (logger.isDebug()) {
-                Thread.dumpStack();
-            }
         } else {
             ui.send(player);
         }

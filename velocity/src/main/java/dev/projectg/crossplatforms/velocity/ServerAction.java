@@ -18,13 +18,9 @@ public class ServerAction extends SimpleAction<String> {
     public static final String IDENTIFIER = "server";
     private static final ProxyServer PROXY = CrossplatFormsVelocity.getInstance().getServer();
 
-    public ServerAction(@Nonnull String value) {
-        super(IDENTIFIER, value);
-    }
-
     @Inject
-    private ServerAction() {
-        this("");
+    public ServerAction(String value) {
+        super(IDENTIFIER, value);
     }
 
     @Override

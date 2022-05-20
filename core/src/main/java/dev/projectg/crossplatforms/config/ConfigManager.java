@@ -125,7 +125,7 @@ public class ConfigManager {
             } catch (IOException | ConfigurationException e) {
                 logger.severe("Failed to load configuration " + configId.file);
                 String message = e.getMessage();
-                if (logger.isDebug() ||  configId == ConfigId.GENERAL|| message.contains("Unknown error")) {
+                if (logger.isDebug() ||  configId.equals(ConfigId.GENERAL) || message.contains("Unknown error")) {
                     // if the config failing to load is config.yml, then its impossible to enable debug and see the full error.
                     // message is useless on its own if unknown
                     e.printStackTrace();
@@ -140,7 +140,11 @@ public class ConfigManager {
 
             if (configId.postProcessor != null) {
                 Configuration config = configurations.get(configId.clazz);
-                if (config != null) {
+                if (config == null) {
+                    logger.severe("Expected " + configId.file + " to be loaded but it was not present");
+                    logger.debugStack();
+                    return false;
+                } else {
                     configId.postProcessor.accept(config);
                 }
             }

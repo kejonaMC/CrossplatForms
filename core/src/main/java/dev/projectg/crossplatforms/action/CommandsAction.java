@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,15 +18,11 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
     private transient final ServerHandler serverHandler;
     private transient final PlaceholderHandler placeholders;
 
+    @Inject
     public CommandsAction(List<DispatchableCommand> commands, ServerHandler serverHandler, PlaceholderHandler placeholders) {
         super(TYPE, commands);
         this.serverHandler = serverHandler;
         this.placeholders = placeholders;
-    }
-
-    @Inject
-    private CommandsAction(ServerHandler serverHandler, PlaceholderHandler placeholders) {
-        this(Collections.emptyList(), serverHandler, placeholders);
     }
 
     @Override

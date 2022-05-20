@@ -93,27 +93,22 @@ public class ConfigId {
             this.file = file;
             return this;
         }
-
         public Builder version(int version) {
             this.version = version;
             return this;
         }
-
         public Builder minimumVersion(int minimumVersion) {
             this.minimumVersion = minimumVersion;
             return this;
         }
-
         public Builder clazz(@Nonnull Class<? extends Configuration> clazz) {
             this.clazz = clazz;
             return this;
         }
-
         public Builder updater(@Nullable Supplier<ConfigurationTransformation.Versioned> updater) {
             this.updater = updater;
             return this;
         }
-
         public Builder postProcessor(@Nullable Consumer<Configuration> postProcessor) {
             this.postProcessor = postProcessor;
             return this;

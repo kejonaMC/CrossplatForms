@@ -16,10 +16,10 @@ import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
-    public static final String IDENTIFIER = "server";
+    public static final String TYPE = "server";
 
-    public ServerAction(@Nonnull String value) {
-        super(IDENTIFIER, value);
+    public ServerAction(String value) {
+        super(TYPE, value);
     }
 
     @Inject
