@@ -7,7 +7,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -43,10 +45,13 @@ public class ConfigId {
     /**
      * File name or file path relative to the parent directory that all configs registered to a {@link ConfigManager} share.
      */
+    @Nonnull
     public final String file;
 
     public final int version;
     public final int minimumVersion;
+
+    @Nonnull
     public final Class<? extends Configuration> clazz;
 
     @Nullable
@@ -55,26 +60,21 @@ public class ConfigId {
     @Nullable
     public final Consumer<Configuration> postProcessor;
 
-    public ConfigId(String file, int version, int minimumVersion, Class<? extends Configuration> clazz, @Nullable Supplier<ConfigurationTransformation.Versioned> updater) {
-        this.file = file;
-        this.version = version;
-        this.minimumVersion = minimumVersion;
-        this.clazz = clazz;
-        this.updater = updater;
-        this.postProcessor = null;
-    }
-
-    public ConfigId(String file, int version, Class<? extends Configuration> clazz) {
-        this.file = file;
-        this.version = version;
-        this.minimumVersion = version;
-        this.clazz = clazz;
-        this.updater = null;
-        this.postProcessor = null;
-    }
-
     public static Builder builder() {
         return new Builder();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConfigId configId = (ConfigId) o;
+        return version == configId.version && minimumVersion == configId.minimumVersion && Objects.equals(file, configId.file) && Objects.equals(clazz, configId.clazz) && Objects.equals(updater, configId.updater) && Objects.equals(postProcessor, configId.postProcessor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(file, version, minimumVersion, clazz, updater, postProcessor);
     }
 
     public static class Builder {
