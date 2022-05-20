@@ -82,18 +82,14 @@ public class ConfigId {
         private int version = -1;
         private int minimumVersion = -1;
         private Class<? extends Configuration> clazz;
-
-        @Nullable
         private Supplier<ConfigurationTransformation.Versioned> updater;
-
-        @Nullable
         private Consumer<Configuration> postProcessor;
 
         private Builder() {
 
         }
 
-        public Builder file(String file) {
+        public Builder file(@Nonnull String file) {
             this.file = file;
             return this;
         }
@@ -108,17 +104,17 @@ public class ConfigId {
             return this;
         }
 
-        public Builder clazz(Class<? extends Configuration> clazz) {
+        public Builder clazz(@Nonnull Class<? extends Configuration> clazz) {
             this.clazz = clazz;
             return this;
         }
 
-        public Builder updater(Supplier<ConfigurationTransformation.Versioned> updater) {
+        public Builder updater(@Nullable Supplier<ConfigurationTransformation.Versioned> updater) {
             this.updater = updater;
             return this;
         }
 
-        public Builder postProcessor(Consumer<Configuration> postProcessor) {
+        public Builder postProcessor(@Nullable Consumer<Configuration> postProcessor) {
             this.postProcessor = postProcessor;
             return this;
         }
