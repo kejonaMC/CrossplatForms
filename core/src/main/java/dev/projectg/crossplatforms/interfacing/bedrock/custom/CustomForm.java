@@ -1,6 +1,7 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
+import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.handler.FormPlayer;

@@ -78,7 +78,11 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        commandManager.executeAsync(console, command.getCommand());
+        commandManager.executeAsync(console, command.getCommand()).thenAccept(success -> {
+            if (!success) {
+                Logger.getLogger().severe("Failed to run command: " + command.getCommand());
+            }
+        });
     }
 
     @Override
@@ -98,7 +102,11 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
                 // todo: op commands on velocity
                 Logger.getLogger().warn("Not executing [" + command.getCommand() + "] as operator because it isn't currently supported on velocity!");
             }
-            commandManager.executeAsync(player, command.getCommand());
+            commandManager.executeAsync(player, command.getCommand()).thenAccept(success -> {
+                if (!success) {
+                    Logger.getLogger().severe("Failed to run command: " + command.getCommand());
+                }
+            });
         } else {
             dispatchCommand(command);
         }

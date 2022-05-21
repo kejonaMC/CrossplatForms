@@ -66,6 +66,7 @@ public class ProtocolizeInterfacer extends InterfaceManager {
         inventory.onClick(click -> {
             int realSize = inventory.type().getTypicalSize(protocolizePlayer.protocolVersion());
 
+            // Clicks are cancelled by default, so we don't have to do it explicitly.
             ClickType clickType = click.clickType();
             if (click.slot() >= 0 && click.slot() < realSize) {
                 switch (clickType) {

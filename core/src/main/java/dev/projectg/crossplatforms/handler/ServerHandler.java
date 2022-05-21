@@ -39,6 +39,7 @@ public interface ServerHandler {
     boolean isGeyserEnabled();
     boolean isFloodgateEnabled();
 
+    // todo: move permission stuff to a separate interface. easier for hooking into plugins such as LuckPerms
     void registerPermission(String key, @Nullable String description, PermissionDefault def);
 
     default void registerPermission(Permission permission) {
