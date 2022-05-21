@@ -8,6 +8,7 @@ import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
+import dev.simplix.protocolize.api.player.ProtocolizePlayer;
 import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 import dev.simplix.protocolize.data.ItemType;
 import dev.simplix.protocolize.data.inventory.InventoryType;
@@ -59,26 +60,28 @@ public class ProtocolizeInterfacer extends InterfaceManager {
             inventory.item(slot, item); // add itemstack to inventory
         }
 
+        ProtocolizePlayer protocolizePlayer = playerProvider.player(player.getUuid());
+        /**
         inventory.onClick(click -> {
-            final boolean rightClick;
-            switch (click.clickType()) {
-                case RIGHT_CLICK:
-                case SHIFT_RIGHT_CLICK:
-                    rightClick = true;
-                    break;
-                case LEFT_CLICK:
-                case SHIFT_LEFT_CLICK:
-                    rightClick = false;
-                    break;
-                default:
-                    // not an appropriate click, cancel it
-                    click.cancelled(true);
-                    return;
-            }
-            // delegate action handling
-            source.process(click.slot(), rightClick, player);
-        });
+            int realSize = inventory.type().getTypicalSize(protocolizePlayer.protocolVersion());
 
-        playerProvider.player(player.getUuid()).openInventory(inventory);
+            ClickType clickType = click.clickType();
+            if (click.slot() >= 0 && click.slot() < realSize) {
+                // click is within our menu
+                boolean rightClick;
+                switch (clickType) {
+                    case RIGHT_CLICK:
+                    case SHIFT_RIGHT_CLICK:
+                        source.process(click.slot(), true, player);
+                        break;
+                    case LEFT_CLICK:
+                    case SHIFT_LEFT_CLICK:
+                        source.process(click.slot(), false, player);
+                        break;
+                }
+            }
+        });
+        */
+        protocolizePlayer.openInventory(inventory);
     }
 }
