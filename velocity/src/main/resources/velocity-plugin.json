@@ -18,6 +18,10 @@
     {
       "id": "protocolize",
       "optional": true
+    },
+    {
+      "id": "luckperms",
+      "optional": true
     }
   ]
 }

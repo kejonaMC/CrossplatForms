@@ -7,3 +7,4 @@ softdepends:
   - Geyser-BungeeCord
   - floodgate
   - Protocolize
+  - LuckPerms

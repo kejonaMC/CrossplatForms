@@ -18,6 +18,8 @@ import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
 import dev.projectg.crossplatforms.proxy.CloseMenuAction;
+import dev.projectg.crossplatforms.proxy.LuckPermsHook;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
@@ -29,7 +31,6 @@ import org.bstats.charts.CustomChart;
 public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBootstrap {
 
     private static final int BSTATS_ID = 14706;
-    private static CrossplatFormsBungeeCord INSTANCE;
     public static final BungeeComponentSerializer COMPONENT_SERIALIZER = BungeeComponentSerializer.get();
 
     static {
@@ -45,14 +46,18 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
-        metrics = new Metrics(this, BSTATS_ID);
         Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
+        metrics = new Metrics(this, BSTATS_ID);
         audiences = BungeeAudiences.create(this);
-        BungeeCordServerHandler serverHandler = new BungeeCordServerHandler(this, audiences);
+
+        BungeeCordServerHandler serverHandler = new BungeeCordServerHandler(
+            this,
+            audiences,
+            pluginPresent("LuckPerms") ? new LuckPermsHook() : PermissionHook.empty()
+        );
 
         BungeeCommandManager<CommandOrigin> commandManager;
         try {
@@ -124,7 +129,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         metrics.addCustomChart(chart);
     }
 
-    public static CrossplatFormsBungeeCord getInstance() {
-        return INSTANCE;
+    public boolean pluginPresent(String id) {
+        return getProxy().getPluginManager().getPlugin(id) != null;
     }
 }

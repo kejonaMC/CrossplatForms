@@ -20,9 +20,12 @@ import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
 import dev.projectg.crossplatforms.proxy.CloseMenuAction;
+import dev.projectg.crossplatforms.proxy.LuckPermsHook;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
 import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
@@ -51,7 +54,6 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
     private final Metrics.Factory metricsFactory;
 
     private CrossplatForms crossplatForms;
-    private final VelocityServerHandler serverHandler;
     private Metrics metrics;
     private boolean protocolizePresent;
 
@@ -63,8 +65,6 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         this.dataFolder = dataFolder;
         this.logger = new SLF4JLogger(logger);
         this.metricsFactory = metricsFactory;
-
-        serverHandler = new VelocityServerHandler(server);
     }
 
     @Subscribe
@@ -73,6 +73,11 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
             logger.warn("Initializing already occurred");
         }
         metrics = metricsFactory.make(this, BSTATS_ID);
+
+        ServerHandler serverHandler = new VelocityServerHandler(
+            server,
+            pluginPresent("luckperms") ? new LuckPermsHook() : PermissionHook.empty()
+        );
 
         VelocityCommandManager<CommandOrigin> commandManager;
         try {
@@ -139,6 +144,10 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
     @Subscribe
     public void onDisable(ProxyShutdownEvent event) {
         server.getEventManager().unregisterListeners(this);
+    }
+
+    public boolean pluginPresent(String id) {
+        return server.getPluginManager().isLoaded(id);
     }
 
     public static CrossplatFormsVelocity getInstance() {

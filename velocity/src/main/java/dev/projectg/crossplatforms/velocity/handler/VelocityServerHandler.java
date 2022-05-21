@@ -13,11 +13,11 @@ import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
+import dev.projectg.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
 
 import javax.annotation.Nonnull;
@@ -26,13 +26,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class VelocityServerHandler extends InterceptCommandCache implements ServerHandler {
+public class VelocityServerHandler extends ProxyHandler implements ServerHandler {
 
     private final ProxyServer server;
     private final CommandManager commandManager;
     private final ConsoleCommandSource console;
 
-    public VelocityServerHandler(@Nonnull ProxyServer server) {
+    public VelocityServerHandler(ProxyServer server, PermissionHook permissionHook) {
+        super(permissionHook);
         this.server = server;
         this.commandManager = server.getCommandManager();
         this.console = server.getConsoleCommandSource();
@@ -73,18 +74,6 @@ public class VelocityServerHandler extends InterceptCommandCache implements Serv
     @Override
     public boolean isFloodgateEnabled() {
         return server.getPluginManager().isLoaded("floodgate");
-    }
-
-    @Override
-    public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
-        if (def != PermissionDefault.FALSE) {
-            Logger.getLogger().warn("Registering permissions is currently not supported on Velocity! Remove permission default settings in configs to stop attempting.");
-        }
-    }
-
-    @Override
-    public void unregisterPermission(String key) {
-        Logger.getLogger().debug("Not unregistered permission because registering is currently unsupported on Velocity");
     }
 
     @Override
