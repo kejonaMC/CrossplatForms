@@ -5,6 +5,7 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.simplix.protocolize.api.ClickType;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
@@ -61,14 +62,12 @@ public class ProtocolizeInterfacer extends InterfaceManager {
         }
 
         ProtocolizePlayer protocolizePlayer = playerProvider.player(player.getUuid());
-        /**
+
         inventory.onClick(click -> {
             int realSize = inventory.type().getTypicalSize(protocolizePlayer.protocolVersion());
 
             ClickType clickType = click.clickType();
             if (click.slot() >= 0 && click.slot() < realSize) {
-                // click is within our menu
-                boolean rightClick;
                 switch (clickType) {
                     case RIGHT_CLICK:
                     case SHIFT_RIGHT_CLICK:
@@ -81,7 +80,7 @@ public class ProtocolizeInterfacer extends InterfaceManager {
                 }
             }
         });
-        */
+
         protocolizePlayer.openInventory(inventory);
     }
 }
