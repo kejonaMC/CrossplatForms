@@ -24,7 +24,7 @@ import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommon;
-import dev.projectg.crossplatforms.spigot.common.SpigotInterfacerBase;
+import dev.projectg.crossplatforms.spigot.common.SpigotInterfacer;
 import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
@@ -45,7 +45,6 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
 
     private CrossplatForms crossplatForms;
     private BukkitAudiences audiences;
-    private ServerHandler serverHandler;
     private Metrics metrics;
 
     @Override
@@ -58,7 +57,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
             logger.warn("Bukkit reloading is NOT supported!");
         }
         audiences = BukkitAudiences.create(this);
-        serverHandler = new SpigotServerHandler(this, audiences);
+        ServerHandler serverHandler = new SpigotServerHandler(this, audiences);
 
         // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         PaperCommandManager<CommandOrigin> commandManager;
@@ -140,9 +139,9 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
 
     @Override
     public InterfaceManager interfaceManager() {
-        SpigotInterfacerBase dispatcher = new LegacySpigotInterfacer();
-        Bukkit.getServer().getPluginManager().registerEvents(dispatcher, this);
-        return dispatcher;
+        SpigotInterfacer manager = new SpigotInterfacer();
+        Bukkit.getServer().getPluginManager().registerEvents(manager, this);
+        return manager;
     }
 
     @Override

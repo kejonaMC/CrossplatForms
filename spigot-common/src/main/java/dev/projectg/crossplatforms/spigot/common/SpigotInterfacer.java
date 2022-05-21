@@ -7,50 +7,27 @@ import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class SpigotInterfacerBase extends InterfaceManager implements Listener {
+public class SpigotInterfacer extends InterfaceManager implements Listener {
 
-    public abstract void setMenuName(@Nonnull ItemStack stack, @Nonnull String identifier);
+    private final Map<Inventory, JavaMenu> menuCache = new HashMap<>();
 
-    /**
-     * Attempt to retrieve the menu name that an ItemStack is contained in
-     * @param stack The ItemStack to check
-     * @return The menu name if the ItemStack contained the menu name, null if not. ItemStacks with null ItemMeta will always return null.
-     */
-    @Nullable
-    public abstract String getMenuName(@Nonnull ItemStack stack);
-
-    /**
-     * Attempt to retrieve the menu that an ItemStack points to
-     * @param itemStack The ItemStack to check. If it contains null ItemMeta, this will return null.
-     * @return The menu if the ItemStack contained the menu name and the menu exists. If no menu name was contained or the menu contained doesn't exist, this will return null.
-     */
-    @Nullable
-    public JavaMenu getMenu(@Nonnull ItemStack itemStack, @Nonnull JavaMenuRegistry menuRegistry) {
-        String menuName = getMenuName(itemStack);
-        if (menuName == null) {
-            return null;
-        } else {
-            return menuRegistry.getMenu(menuName);
-        }
-    }
-
+    @Override
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
         Logger logger = Logger.getLogger();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
@@ -83,12 +60,12 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
                 meta.setDisplayName(placeholders.setPlaceholders(formPlayer, button.getDisplayName()));
                 meta.setLore(placeholders.setPlaceholders(formPlayer, button.getLore()));
                 item.setItemMeta(meta);
-                setMenuName(item, menu.getIdentifier());
                 selectorGUI.setItem(slot, item);
             }
         }
 
         player.openInventory(selectorGUI);
+        menuCache.put(selectorGUI, menu);
     }
 
     @EventHandler
@@ -97,17 +74,27 @@ public abstract class SpigotInterfacerBase extends InterfaceManager implements L
 
         if (javaRegistry.isEnabled()) {
             if (event.getWhoClicked() instanceof Player) {
-                Player player = (Player) event.getWhoClicked();
-                ItemStack item = event.getCurrentItem();
+                Inventory inventory = event.getClickedInventory(); // inventory that was clicked in
+                if (inventory == null) {
+                    // clicked outside of window
+                    return;
+                }
 
-                if (item != null) {
-                    JavaMenu menu = getMenu(item, javaRegistry);
-                    if (menu != null) {
-                        event.setCancelled(true);
-                        menu.process(event.getSlot(), event.isRightClick(), new SpigotPlayer(player));
-                    }
+                if (menuCache.containsKey(inventory)) {
+                    // handle clicking in the menu inventory
+                    event.setCancelled(true);
+                    menuCache.get(inventory).process(event.getSlot(), event.isRightClick(), new SpigotPlayer((Player) event.getWhoClicked()));
+                } else if (event.isShiftClick()) {
+                    // stop players from shift-clicking items into the menu's inventory.
+                    Inventory upper = event.getInventory();
+                    event.setCancelled(menuCache.containsKey(upper));
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        menuCache.remove(event.getInventory());
     }
 }
