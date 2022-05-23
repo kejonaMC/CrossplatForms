@@ -51,7 +51,7 @@ public class KeyedTypeSerializerTest {
 
         SingleMessage single = new SingleMessage("[WARN] Hello");
         MultiMessage list = new MultiMessage("[INFO]", ImmutableList.of("One", "Two", "Three"));
-        Map<String, Message> expectedMessages = ImmutableMap.of(SingleMessage.IDENTIFIER, single, MultiMessage.IDENTIFIER, list);
+        Map<String, Message> expectedMessages = ImmutableMap.of(SingleMessage.TYPE, single, MultiMessage.TYPE, list);
 
         Assertions.assertEquals(expectedMessages, actualMessages);
     }
@@ -67,7 +67,7 @@ public class KeyedTypeSerializerTest {
         Assertions.assertEquals(actions, copy);
 
         Map<String, Message> modifiedMessages = new HashMap<>(actualMessages);
-        modifiedMessages.put(SingleMessage.IDENTIFIER, new SingleMessage("greetings"));
+        modifiedMessages.put(SingleMessage.TYPE, new SingleMessage("greetings"));
         copy.set(messagesType, modifiedMessages);
         Assertions.assertNotEquals(actions, copy);
     }

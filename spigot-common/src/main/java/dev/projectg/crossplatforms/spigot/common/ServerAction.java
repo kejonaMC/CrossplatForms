@@ -18,13 +18,13 @@ public class ServerAction extends SimpleAction<String> {
 
     public static JavaPlugin SENDER = null;
 
-    public static final String IDENTIFIER = "server";
+    public static final String TYPE = "server";
 
     private transient final PlaceholderHandler placeholders;
 
     @Inject
     public ServerAction(String value, PlaceholderHandler placeholders) {
-        super(IDENTIFIER, value);
+        super(TYPE, value);
         this.placeholders = placeholders;
     }
 

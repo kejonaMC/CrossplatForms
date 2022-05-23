@@ -7,11 +7,11 @@ import javax.annotation.Nonnull;
 
 public class SingleMessage extends SimpleType<String> implements Message {
 
-    public static final String IDENTIFIER = "message";
+    public static final String TYPE = "message";
 
     @Inject
     public SingleMessage(@Nonnull String value) {
-        super(IDENTIFIER, value);
+        super(TYPE, value);
     }
 
     @Override

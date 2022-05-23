@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
-    public static final String IDENTIFIER = "server";
+    public static final String TYPE = "server";
     private static final ProxyServer PROXY = CrossplatFormsVelocity.getInstance().getServer();
 
     @Inject
     public ServerAction(String value) {
-        super(IDENTIFIER, value);
+        super(TYPE, value);
     }
 
     @Override
