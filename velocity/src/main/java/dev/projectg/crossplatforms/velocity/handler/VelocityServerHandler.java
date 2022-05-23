@@ -19,6 +19,7 @@ import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.proxy.PermissionHook;
 import dev.projectg.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,11 +79,7 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        commandManager.executeAsync(console, command.getCommand()).thenAccept(success -> {
-            if (!success) {
-                Logger.getLogger().severe("Failed to run command: " + command.getCommand());
-            }
-        });
+        dispatchCommand(console, command.getCommand());
     }
 
     @Override
@@ -102,13 +99,26 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
                 // todo: op commands on velocity
                 Logger.getLogger().warn("Not executing [" + command.getCommand() + "] as operator because it isn't currently supported on velocity!");
             }
-            commandManager.executeAsync(player, command.getCommand()).thenAccept(success -> {
-                if (!success) {
-                    Logger.getLogger().severe("Failed to run command: " + command.getCommand());
-                }
-            });
+            dispatchCommand(player, command.getCommand());
         } else {
             dispatchCommand(command);
+        }
+    }
+
+    private void dispatchCommand(CommandSource source, String cmd) {
+        commandManager.executeAsync(source, cmd).thenAccept(success -> {
+            if (!success) {
+                Logger.getLogger().severe("Failed to run command '" + cmd + "' by sender: " + getName(source));
+            }
+        });
+    }
+
+    public String getName(CommandSource source)  {
+        if (source instanceof ConsoleCommandSource) {
+            // running console commands is probably more common
+            return "console";
+        } else {
+            return source.getOrDefault(Identity.NAME, source.toString());
         }
     }
 
