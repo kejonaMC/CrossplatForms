@@ -132,7 +132,7 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
                             player.getInventory().remove(item);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-                                access.trigger(new SpigotPlayer(player), interfaceManager, bedrockHandler);
+                                access.trigger(new SpigotPlayer(player));
                             }
                         } else {
                             player.sendMessage("You don't have permission to have that.");

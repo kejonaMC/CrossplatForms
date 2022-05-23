@@ -2,24 +2,25 @@ package dev.projectg.crossplatforms.bungeecord;
 
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
-import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
-import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordInterfacer;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordServerHandler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.projectg.crossplatforms.proxy.CloseMenuAction;
+import dev.projectg.crossplatforms.proxy.LuckPermsHook;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
+import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
@@ -27,10 +28,9 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.CustomChart;
 
-public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBoostrap {
+public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBootstrap {
 
     private static final int BSTATS_ID = 14706;
-    private static CrossplatFormsBungeeCord INSTANCE;
     public static final BungeeComponentSerializer COMPONENT_SERIALIZER = BungeeComponentSerializer.get();
 
     static {
@@ -39,21 +39,25 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         Constants.setId("crossplatformsbungee");
     }
 
-    private BungeeAudiences audiences;
     private CrossplatForms crossplatForms;
-    private BungeeCordServerHandler serverHandler;
+    private BungeeAudiences audiences;
     private Metrics metrics;
+    private boolean protocolizePresent;
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
-        metrics = new Metrics(this, BSTATS_ID);
         Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
+        metrics = new Metrics(this, BSTATS_ID);
         audiences = BungeeAudiences.create(this);
-        serverHandler = new BungeeCordServerHandler(this, audiences);
+
+        BungeeCordServerHandler serverHandler = new BungeeCordServerHandler(
+            this,
+            audiences,
+            pluginPresent("LuckPerms") ? new LuckPermsHook() : PermissionHook.empty()
+        );
 
         BungeeCommandManager<CommandOrigin> commandManager;
         try {
@@ -71,6 +75,8 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
         logger.warn("CrossplatForms-BungeeCord does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
         PlaceholderHandler placeholders = new BasicPlaceholders();
+
+        protocolizePresent = getProxy().getPluginManager().getPlugin("Protocolize") != null;
 
         crossplatForms = new CrossplatForms(
                 logger,
@@ -91,15 +97,22 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
 
     @Override
     public void preConfigLoad(ConfigManager configManager) {
-        // register java menu config once java menus are supported
+        if (protocolizePresent) {
+            configManager.register(ConfigId.JAVA_MENUS);
+        }
 
-        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
+        ActionSerializer actionSerializer = configManager.getActionSerializer();
+        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
     }
 
     @Override
-    public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
-        return new BungeeCordInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+    public InterfaceManager interfaceManager() {
+        if (protocolizePresent) {
+            return new ProtocolizeInterfacer();
+        } else {
+            return new NoMenusInterfacer();
+        }
     }
 
     @Override
@@ -116,7 +129,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         metrics.addCustomChart(chart);
     }
 
-    public static CrossplatFormsBungeeCord getInstance() {
-        return INSTANCE;
+    public boolean pluginPresent(String id) {
+        return getProxy().getPluginManager().getPlugin(id) != null;
     }
 }

@@ -30,10 +30,6 @@ public class InterceptCommand extends CustomCommand {
         return super.getPermission();
     }
 
-    private InterceptCommand() {
-
-    }
-
     @Override
     public String type() {
         return getMethod().name().toLowerCase(Locale.ROOT);

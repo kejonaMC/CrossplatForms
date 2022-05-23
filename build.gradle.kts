@@ -12,7 +12,7 @@ allprojects{
     apply(plugin = "net.kyori.indra.git")
 
     group = "dev.projectg"
-    version = "1.1.2"
+    version = "1.2.0"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -47,11 +47,14 @@ allprojects{
             "build_number" to (System.getenv("BUILD_NUMBER") ?: "UNKNOWN")
         )
     }
+
+    // disable javadocs
+    tasks.withType<Javadoc>().all { enabled = false }
 }
 
 subprojects {
     dependencies {
-        testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
         testCompileOnly("org.projectlombok:lombok:1.18.22")
         testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
         testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")

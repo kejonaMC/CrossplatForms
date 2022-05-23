@@ -12,7 +12,6 @@ import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.reloadable.Reloadable;
 import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
 
@@ -30,7 +29,6 @@ public class CustomCommandManager implements Reloadable {
     private final ConfigManager configManager;
     private final CommandManager<CommandOrigin> commandManager;
     private final ServerHandler serverHandler;
-    private final InterfaceManager interfaceManager;
     private final BedrockHandler bedrockHandler;
     private final Logger logger;
 
@@ -40,7 +38,6 @@ public class CustomCommandManager implements Reloadable {
         this.configManager = forms.getConfigManager();
         this.commandManager = commandManager;
         this.serverHandler = forms.getServerHandler();
-        this.interfaceManager = forms.getInterfaceManager();
         this.bedrockHandler = forms.getBedrockHandler();
         this.logger = Logger.getLogger();
 
@@ -148,7 +145,7 @@ public class CustomCommandManager implements Reloadable {
             target.warn(message);
             logger.warn(message);
         } else if (latest.isEnabled()) {
-            latest.run(target, interfaceManager, bedrockHandler);
+            latest.run(target);
         } else {
             target.warn("That command is no longer available");
         }

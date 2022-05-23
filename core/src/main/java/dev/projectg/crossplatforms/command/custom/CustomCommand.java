@@ -1,12 +1,12 @@
 package dev.projectg.crossplatforms.command.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Platform;
 import dev.projectg.crossplatforms.action.Action;
 import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,6 +22,9 @@ import java.util.List;
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class CustomCommand implements ValuedType {
+
+    @Inject
+    private transient BedrockHandler bedrockHandler;
 
     @Required
     @NodeKey
@@ -39,13 +42,13 @@ public abstract class CustomCommand implements ValuedType {
     @Setter
     private String permission;
 
-    public void run(FormPlayer player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        Action.affectPlayer(player, actions, interfaceManager, bedrockHandler);
+    public void run(FormPlayer player) {
+        Action.affectPlayer(player, actions);
 
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            Action.affectPlayer(player, bedrockActions, interfaceManager, bedrockHandler);
+            Action.affectPlayer(player, bedrockActions);
         } else {
-            Action.affectPlayer(player, javaActions, interfaceManager, bedrockHandler);
+            Action.affectPlayer(player, javaActions);
         }
     }
 }

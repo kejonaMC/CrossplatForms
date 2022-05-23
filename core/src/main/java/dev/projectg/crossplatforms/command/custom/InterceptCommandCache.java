@@ -12,11 +12,12 @@ import java.util.Objects;
 /**
  * Small map-wrapper class to facilitate {@link ServerHandler} implementations if desired
  */
-public abstract class InterceptCommandCache {
+public abstract class InterceptCommandCache implements ServerHandler {
 
     private final Map<String, InterceptCommand> exactCommands = new HashMap<>();
     private final List<InterceptCommand> patternCommands = new ArrayList<>();
 
+    @Override
     public void registerInterceptCommand(InterceptCommand proxyCommand) {
         String exact = proxyCommand.getExact();
         if (exact != null) {
@@ -27,6 +28,7 @@ public abstract class InterceptCommandCache {
         }
     }
 
+    @Override
     public void clearInterceptCommands() {
         exactCommands.clear();
         patternCommands.clear();

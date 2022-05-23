@@ -12,13 +12,14 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
+import dev.projectg.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,13 +27,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class VelocityServerHandler extends InterceptCommandCache implements ServerHandler {
+public class VelocityServerHandler extends ProxyHandler implements ServerHandler {
 
     private final ProxyServer server;
     private final CommandManager commandManager;
     private final ConsoleCommandSource console;
 
-    public VelocityServerHandler(@Nonnull ProxyServer server) {
+    public VelocityServerHandler(ProxyServer server, PermissionHook permissionHook) {
+        super(permissionHook);
         this.server = server;
         this.commandManager = server.getCommandManager();
         this.console = server.getConsoleCommandSource();
@@ -76,20 +78,8 @@ public class VelocityServerHandler extends InterceptCommandCache implements Serv
     }
 
     @Override
-    public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
-        if (def != PermissionDefault.FALSE) {
-            Logger.getLogger().warn("Registering permissions is currently not supported on Velocity! Remove permission default settings in configs to stop attempting.");
-        }
-    }
-
-    @Override
-    public void unregisterPermission(String key) {
-        Logger.getLogger().debug("Not unregistered permission because registering is currently unsupported on Velocity");
-    }
-
-    @Override
     public void dispatchCommand(DispatchableCommand command) {
-        commandManager.executeAsync(console, command.getCommand());
+        dispatchCommand(console, command.getCommand());
     }
 
     @Override
@@ -109,9 +99,26 @@ public class VelocityServerHandler extends InterceptCommandCache implements Serv
                 // todo: op commands on velocity
                 Logger.getLogger().warn("Not executing [" + command.getCommand() + "] as operator because it isn't currently supported on velocity!");
             }
-            commandManager.executeAsync(player, command.getCommand());
+            dispatchCommand(player, command.getCommand());
         } else {
             dispatchCommand(command);
+        }
+    }
+
+    private void dispatchCommand(CommandSource source, String cmd) {
+        commandManager.executeAsync(source, cmd).thenAccept(success -> {
+            if (!success) {
+                Logger.getLogger().severe("Failed to run command '" + cmd + "' by sender: " + getName(source));
+            }
+        });
+    }
+
+    public String getName(CommandSource source)  {
+        if (source instanceof ConsoleCommandSource) {
+            // running console commands is probably more common
+            return "console";
+        } else {
+            return source.getOrDefault(Identity.NAME, source.toString());
         }
     }
 
@@ -132,11 +139,7 @@ public class VelocityServerHandler extends InterceptCommandCache implements Serv
             if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
                 String permission = command.getPermission();
                 if (permission == null || player.hasPermission(permission)) {
-                    command.run(
-                        new VelocityPlayer(player),
-                        CrossplatForms.getInstance().getInterfaceManager(),
-                        bedrockHandler
-                    );
+                    command.run(new VelocityPlayer(player));
 
                     if (type == CommandType.INTERCEPT_CANCEL) {
                         event.setResult(CommandExecuteEvent.CommandResult.denied()); // todo: if this sends a message about denial we might have to replace the common with a dummy

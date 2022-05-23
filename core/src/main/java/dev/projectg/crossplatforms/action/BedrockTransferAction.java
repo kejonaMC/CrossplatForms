@@ -1,11 +1,10 @@
 package dev.projectg.crossplatforms.action;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
@@ -17,6 +16,9 @@ import java.util.Map;
 public class BedrockTransferAction implements Action {
 
     public static final String TYPE = "transfer_packet";
+
+    private final transient BedrockHandler bedrockHandler;
+    private final transient PlaceholderHandler placeholders;
 
     @Required
     private String address;
@@ -31,10 +33,14 @@ public class BedrockTransferAction implements Action {
 
     private transient boolean checkedForStatic = false;
 
-    private transient final PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+    @Inject
+    private BedrockTransferAction(BedrockHandler bedrockHandler, PlaceholderHandler placeholders) {
+        this.bedrockHandler = bedrockHandler;
+        this.placeholders = placeholders;
+    }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
         String actualAddress = placeholders.setPlaceholders(player, address, additionalPlaceholders);
 
         Integer actualPort = getPort(actualAddress, player, additionalPlaceholders);
@@ -62,7 +68,7 @@ public class BedrockTransferAction implements Action {
         } else {
             if (checkedForStatic) {
                 // Already checked for static port and it is not
-                String resolved = CrossplatForms.getInstance().getPlaceholders().setPlaceholders(player, port, additionalPlaceholders);
+                String resolved = placeholders.setPlaceholders(player, port, additionalPlaceholders);
                 try {
                     actualPort = Integer.parseUnsignedInt(resolved);
                 } catch (NumberFormatException e) {

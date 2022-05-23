@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.utils;
 
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.IllegalValueException;
+import dev.projectg.crossplatforms.IllegalValueException;
 
 import java.util.Locale;
 

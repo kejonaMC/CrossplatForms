@@ -10,22 +10,24 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.CrossplatFormsBoostrap;
+import dev.projectg.crossplatforms.CrossplatFormsBootstrap;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.InterfaceManager;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.projectg.crossplatforms.proxy.CloseMenuAction;
+import dev.projectg.crossplatforms.proxy.LuckPermsHook;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
+import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
-import dev.projectg.crossplatforms.velocity.handler.VelocityInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
 import lombok.Getter;
 import org.bstats.charts.CustomChart;
@@ -33,7 +35,7 @@ import org.bstats.velocity.Metrics;
 
 import java.nio.file.Path;
 
-public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
+public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
 
     private static final int BSTATS_ID = 14708;
     private static CrossplatFormsVelocity INSTANCE;
@@ -51,10 +53,9 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     private final Logger logger;
     private final Metrics.Factory metricsFactory;
 
-    private final VelocityServerHandler serverHandler;
-
     private CrossplatForms crossplatForms;
     private Metrics metrics;
+    private boolean protocolizePresent;
 
     @Inject
     public CrossplatFormsVelocity(ProxyServer server, PluginContainer container, @DataDirectory Path dataFolder, org.slf4j.Logger logger, Metrics.Factory metricsFactory) {
@@ -64,8 +65,6 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
         this.dataFolder = dataFolder;
         this.logger = new SLF4JLogger(logger);
         this.metricsFactory = metricsFactory;
-
-        serverHandler = new VelocityServerHandler(server);
     }
 
     @Subscribe
@@ -74,6 +73,11 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
             logger.warn("Initializing already occurred");
         }
         metrics = metricsFactory.make(this, BSTATS_ID);
+
+        ServerHandler serverHandler = new VelocityServerHandler(
+            server,
+            pluginPresent("luckperms") ? new LuckPermsHook() : PermissionHook.empty()
+        );
 
         VelocityCommandManager<CommandOrigin> commandManager;
         try {
@@ -92,6 +96,8 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
         logger.warn("CrossplatForms-Velocity does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
         PlaceholderHandler placeholders = new BasicPlaceholders();
+
+        protocolizePresent = server.getPluginManager().isLoaded("protocolize");
 
         crossplatForms = new CrossplatForms(
                 logger,
@@ -112,15 +118,22 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
 
     @Override
     public void preConfigLoad(ConfigManager configManager) {
-        // register java menu config once java menus are supported
+        if (protocolizePresent) {
+            configManager.register(ConfigId.JAVA_MENUS);
+        }
 
-        KeyedTypeSerializer<Action> actionSerializer = configManager.getActionSerializer();
-        actionSerializer.registerSimpleType(ServerAction.IDENTIFIER, String.class, ServerAction::new);
+        ActionSerializer actionSerializer = configManager.getActionSerializer();
+        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
+        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
     }
 
     @Override
-    public InterfaceManager interfaceManager(BedrockHandler bedrockHandler, BedrockFormRegistry bedrockRegistry, JavaMenuRegistry menuRegistry) {
-        return new VelocityInterfacer(serverHandler, bedrockHandler, bedrockRegistry, menuRegistry);
+    public InterfaceManager interfaceManager() {
+        if (protocolizePresent) {
+            return new ProtocolizeInterfacer();
+        } else {
+            return new NoMenusInterfacer();
+        }
     }
 
     @Override
@@ -131,6 +144,10 @@ public class CrossplatFormsVelocity implements CrossplatFormsBoostrap {
     @Subscribe
     public void onDisable(ProxyShutdownEvent event) {
         server.getEventManager().unregisterListeners(this);
+    }
+
+    public boolean pluginPresent(String id) {
+        return server.getPluginManager().isLoaded(id);
     }
 
     public static CrossplatFormsVelocity getInstance() {

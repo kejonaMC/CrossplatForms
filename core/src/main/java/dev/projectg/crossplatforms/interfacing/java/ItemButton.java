@@ -1,7 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.java;
 
 
-import dev.projectg.crossplatforms.action.Action;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -20,12 +19,13 @@ public class ItemButton {
 
     @Required
     private String displayName;
+
     @Required
     private String material;
 
     private List<String> lore = Collections.emptyList();
 
-    private List<Action> anyClick = Collections.emptyList();
-    private List<Action> leftClick = Collections.emptyList();
-    private List<Action> rightClick = Collections.emptyList();
+    private List<MenuAction> anyClick = Collections.emptyList();
+    private List<MenuAction> leftClick = Collections.emptyList();
+    private List<MenuAction> rightClick = Collections.emptyList();
 }

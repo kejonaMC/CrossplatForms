@@ -1,35 +1,37 @@
 package dev.projectg.crossplatforms.action;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ConfigSerializable
 public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
     public static final String TYPE = "commands";
 
-    public CommandsAction(List<DispatchableCommand> commands) {
+    private transient final ServerHandler serverHandler;
+    private transient final PlaceholderHandler placeholders;
+
+    @Inject
+    public CommandsAction(List<DispatchableCommand> commands, ServerHandler serverHandler, PlaceholderHandler placeholders) {
         super(TYPE, commands);
+        this.serverHandler = serverHandler;
+        this.placeholders = placeholders;
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders, @Nonnull InterfaceManager interfaceManager, @Nonnull BedrockHandler bedrockHandler) {
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
         List<DispatchableCommand> resolved = value().stream()
                 .map(command -> command.withCommand(placeholders.setPlaceholders(player, command.getCommand(), additionalPlaceholders)))
                 .collect(Collectors.toList());
 
-        CrossplatForms.getInstance().getServerHandler().dispatchCommands(player.getUuid(), resolved);
+        serverHandler.dispatchCommands(player.getUuid(), resolved);
     }
 }
 

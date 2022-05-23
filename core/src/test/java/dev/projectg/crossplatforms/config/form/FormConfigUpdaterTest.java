@@ -1,7 +1,10 @@
 package dev.projectg.crossplatforms.config.form;
 
-import dev.projectg.crossplatforms.CrossplatForms;
+import com.google.inject.Guice;
 import dev.projectg.crossplatforms.TestLogger;
+import dev.projectg.crossplatforms.TestModule;
+import dev.projectg.crossplatforms.command.DispatchableCommand;
+import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.config.ConfigManagerTest;
@@ -42,11 +45,11 @@ public class FormConfigUpdaterTest {
 
     @BeforeEach
     public void setupManager() {
-        manager = new ConfigManager(directory, logger);
+        manager = new ConfigManager(directory, logger, Guice.createInjector(new TestModule()));
         // serializers
-        CrossplatForms.registerDefaultActions(manager);
-        manager.getActionSerializer().registerSimpleType("server", String.class, ConfigManagerTest.FakeServer::new);
+        manager.getActionSerializer().simpleGenericAction("server", String.class, ConfigManagerTest.FakeServer.class);
         manager.serializers(builder -> {
+            builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
             builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
@@ -68,9 +71,12 @@ public class FormConfigUpdaterTest {
     }
 
     private static ConfigId id(int version) {
-        return new ConfigId("configs/forms/bedrock-forms-" + version + ".yml",
-            CURRENT_VERSION, OLD_VERSION,
-            FormConfig.class,
-            FormConfig::updater);
+        return ConfigId.builder()
+            .file("configs/forms/bedrock-forms-" + version + ".yml")
+            .version(CURRENT_VERSION)
+            .minimumVersion(OLD_VERSION)
+            .clazz(FormConfig.class)
+            .updater(FormConfig::updater)
+            .build();
     }
 }

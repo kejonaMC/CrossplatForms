@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Resolver;
 import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.AccessLevel;

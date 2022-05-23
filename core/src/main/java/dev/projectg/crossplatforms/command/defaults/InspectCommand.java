@@ -69,7 +69,7 @@ public class InspectCommand extends FormsCommand {
                         origin.warn("That menu doesn't exist!");
                     } else {
                         origin.sendMessage("Inspection of menu: " + name);
-                        origin.sendMessage(menu.toString());
+                        origin.sendMessage(CrossplatForms.PLAIN_SERIALIZER.deserialize(menu.toString()));
                     }
                 })
         );

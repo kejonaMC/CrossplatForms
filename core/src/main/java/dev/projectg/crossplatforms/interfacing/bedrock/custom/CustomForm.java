@@ -1,15 +1,12 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
-import dev.projectg.crossplatforms.CrossplatForms;
+import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.serialize.ValuedType;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.response.CustomFormResponse;
@@ -44,12 +41,10 @@ public class CustomForm extends BedrockForm implements ValuedType {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer player, @Nonnull InterfaceManager interfaceManager) {
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+    public void send(@Nonnull FormPlayer player) {
         Logger logger = Logger.getLogger();
         UUID uuid = player.getUuid();
 
-        BedrockHandler bedrockHandler = CrossplatForms.getInstance().getBedrockHandler();
         if (!bedrockHandler.isBedrockPlayer(uuid)) {
             logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
             return;
@@ -79,7 +74,7 @@ public class CustomForm extends BedrockForm implements ValuedType {
         Consumer<String> handler = (responseData) -> {
             CustomFormResponse response = form.parseResponse(responseData);
             if (!response.isCorrect()) {
-                handleIncorrect(player, interfaceManager, bedrockHandler);
+                handleIncorrect(player);
                 return;
             }
             Map<String, String> resultPlaceholders = new HashMap<>();
@@ -111,10 +106,10 @@ public class CustomForm extends BedrockForm implements ValuedType {
             }
 
             // Handle effects of pressing the button
-            Action.affectPlayer(player, actions, resultPlaceholders, interfaceManager, bedrockHandler);
+            Action.affectPlayer(player, actions, resultPlaceholders);
         };
 
-        setResponseHandler(form, handler, interfaceManager.getServerHandler(), bedrockHandler);
+        setResponseHandler(form, handler);
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form);

@@ -1,21 +1,25 @@
 package dev.projectg.crossplatforms.config;
 
+import com.google.inject.ConfigurationException;
+import com.google.inject.Injector;
 import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
+import dev.projectg.crossplatforms.action.ActionSerializer;
+import dev.projectg.crossplatforms.action.CommandsAction;
+import dev.projectg.crossplatforms.action.InterfaceAction;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.command.DispatchableCommandSerializer;
 import dev.projectg.crossplatforms.command.custom.Arguments;
 import dev.projectg.crossplatforms.command.custom.ArgumentsSerializer;
 import dev.projectg.crossplatforms.command.custom.CustomCommand;
 import dev.projectg.crossplatforms.command.custom.CustomCommandSerializer;
-import dev.projectg.crossplatforms.serialize.KeyedTypeListSerializer;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.projectg.crossplatforms.parser.Parser;
 import dev.projectg.crossplatforms.parser.ParserSerializer;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.objectmapping.ObjectMapper;
+import org.spongepowered.configurate.objectmapping.guice.GuiceObjectMapperProvider;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 import org.spongepowered.configurate.yaml.NodeStyle;
@@ -26,12 +30,11 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class ConfigManager {
@@ -40,28 +43,38 @@ public class ConfigManager {
     private final Logger logger;
 
     private final YamlConfigurationLoader.Builder loaderBuilder;
-    private final Set<ConfigId> identifiers = new HashSet<>();
+    private final List<ConfigId> identifiers = new ArrayList<>();
 
     // todo: support using the same config class for two different configs
     private final Map<Class<? extends Configuration>, Configuration> configurations = new HashMap<>();
     private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
     @Getter
-    private final KeyedTypeSerializer<Action> actionSerializer = new KeyedTypeSerializer<>();
+    private final ActionSerializer actionSerializer;
 
-    public ConfigManager(Path directory, Logger logger) {
+    public ConfigManager(Path directory, Logger logger, Injector injector) {
         this.directory = directory;
         this.logger = logger;
-        // type serializers for abstract classes and external library classes
+        actionSerializer = new ActionSerializer(injector);
+
+        ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
         loaderBuilder = YamlConfigurationLoader.builder();
-        loaderBuilder.defaultOptions(opts -> (opts.serializers(builder -> {
-            builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
-            builder.registerExact(Arguments.class, new ArgumentsSerializer());
-            builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
-            builder.registerExact(Action.class, actionSerializer);
-            builder.register(new TypeToken<List<Action>>() {}, new KeyedTypeListSerializer<>(actionSerializer));
-            builder.registerExact(Parser.class, new ParserSerializer());
-        })));
+        loaderBuilder.defaultOptions(opts -> {
+            opts = opts.serializers(builder -> builder.registerAnnotatedObjects(mapperFactory));
+            // factory is registered first separately so that is added to a TypeSerializerCollection that is a parent of
+            // the collection of the serializers below. serializers in the children are checked first when object mapping
+            // occurs. our custom serializers MUST be checked first before the object mapper.
+            return opts.serializers(builder -> {
+                builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
+                // type serializers for abstract classes and external library classes
+                builder.registerExact(Arguments.class, new ArgumentsSerializer());
+                builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
+                builder.registerExact(Parser.class, new ParserSerializer());
+                actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
+                actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
+                actionSerializer.registrator().accept(builder);
+            });
+        });
         // don't initialize default values for object values
         // default parameters provided to ConfigurationNode getter methods should not be set to the node
         loaderBuilder.defaultOptions(opts -> opts.implicitInitialization(false).shouldCopyDefaults(false));
@@ -71,6 +84,10 @@ public class ConfigManager {
 
     public void register(ConfigId id) {
         identifiers.add(id);
+    }
+
+    public void registerPriority(ConfigId id) {
+        identifiers.add(0, id);
     }
 
     public void serializers(Consumer<TypeSerializerCollection.Builder> builder) {
@@ -105,10 +122,11 @@ public class ConfigManager {
                 if (!loadConfig(configId)) {
                     return false;
                 }
-            } catch (IOException e) {
+            } catch (IOException | ConfigurationException e) {
                 logger.severe("Failed to load configuration " + configId.file);
                 String message = e.getMessage();
-                if (logger.isDebug() || message.contains("Unknown error")) {
+                if (logger.isDebug() ||  configId.equals(ConfigId.GENERAL) || message.contains("Unknown error")) {
+                    // if the config failing to load is config.yml, then its impossible to enable debug and see the full error.
                     // message is useless on its own if unknown
                     e.printStackTrace();
                 } else {
@@ -117,6 +135,17 @@ public class ConfigManager {
                 }
                 if (!useMinimalDefaults(configId)) {
                     return false;
+                }
+            }
+
+            if (configId.postProcessor != null) {
+                Configuration config = configurations.get(configId.clazz);
+                if (config == null) {
+                    logger.severe("Expected " + configId.file + " to be loaded but it was not present");
+                    logger.debugStack();
+                    return false;
+                } else {
+                    configId.postProcessor.accept(config);
                 }
             }
         }
@@ -128,7 +157,7 @@ public class ConfigManager {
      * @param config The configuration to load
      * @return The success state
      */
-    private boolean loadConfig(ConfigId config) throws IOException {
+    private boolean loadConfig(ConfigId config) throws IOException, ConfigurationException {
         String name = config.file;
         File file = FileUtils.fileOrCopiedFromResource(directory.resolve(config.file).toFile(), config.file);
         YamlConfigurationLoader loader = loaderBuilder.file(file).build();

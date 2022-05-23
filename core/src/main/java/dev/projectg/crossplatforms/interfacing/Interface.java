@@ -1,8 +1,11 @@
 package dev.projectg.crossplatforms.interfacing;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
@@ -22,6 +25,18 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class Interface {
 
+    @Inject
+    protected transient InterfaceManager interfaceManager;
+
+    @Inject
+    protected transient ServerHandler serverHandler;
+
+    @Inject
+    protected transient PlaceholderHandler placeholders;
+
+    // Stuff that is generated after deserialization, once the identifier has been loaded
+    private transient Map<Interface.Limit, Permission> permissions;
+
     @NodeKey
     @Required
     protected String identifier;
@@ -30,10 +45,7 @@ public abstract class Interface {
 
     private Map<Interface.Limit, PermissionDefault> permissionDefaults = Collections.emptyMap();
 
-    // Stuff that is generated after deserialization, once the identifier has been loaded
-    private transient Map<Interface.Limit, Permission> permissions;
-
-    public abstract void send(@Nonnull FormPlayer recipient, @Nonnull InterfaceManager interfaceManager);
+    public abstract void send(@Nonnull FormPlayer recipient);
 
     /**
      * e.g. "crossplatforms.form."

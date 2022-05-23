@@ -60,12 +60,12 @@ public class AccessItemConfig extends Configuration {
     }
 
     public static ConfigId asConfigId() {
-        return new ConfigId(
-                "access-items.yml",
-                VERSION,
-                MINIMUM_VERSION,
-                AccessItemConfig.class,
-                AccessItemConfig::updater
-        );
+        return ConfigId.builder()
+            .file("access-items.yml")
+            .version(VERSION)
+            .minimumVersion(MINIMUM_VERSION)
+            .clazz(AccessItemConfig.class)
+            .updater(AccessItemConfig::updater)
+            .build();
     }
 }

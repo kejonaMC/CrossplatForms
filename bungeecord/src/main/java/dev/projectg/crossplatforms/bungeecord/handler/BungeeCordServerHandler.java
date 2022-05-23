@@ -5,12 +5,12 @@ import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.command.CommandType;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
 import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.projectg.crossplatforms.proxy.PermissionHook;
+import dev.projectg.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.CommandSender;
@@ -22,14 +22,14 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.event.EventHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BungeeCordServerHandler extends InterceptCommandCache implements ServerHandler, Listener {
+public class BungeeCordServerHandler extends ProxyHandler implements ServerHandler, Listener {
 
     private static final String OP_GROUP = "op";
 
@@ -38,7 +38,8 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
     private final BungeeAudiences audiences;
     private final CommandSender console;
 
-    public BungeeCordServerHandler(Plugin plugin, BungeeAudiences audiences) {
+    public BungeeCordServerHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
+        super(permissionHook);
         this.server = plugin.getProxy();
         this.pluginManager = server.getPluginManager();
         this.audiences = audiences;
@@ -72,7 +73,7 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
         return server.getPlayers().stream().map(BungeeCordPlayer::new).collect(Collectors.toList());
     }
 
-    @NotNull
+    @Nonnull
     @Override
     public Audience asAudience(CommandOrigin origin) {
         return audiences.sender((CommandSender) origin.getHandle());
@@ -89,20 +90,8 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
     }
 
     @Override
-    public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
-        if (def != PermissionDefault.FALSE) {
-            Logger.getLogger().warn("Registering permissions is currently not supported on BungeeCord! Remove permission default settings in configs to stop attempting.");
-        }
-    }
-
-    @Override
-    public void unregisterPermission(String key) {
-        Logger.getLogger().debug("Not unregistered permission because registering is currently unsupported on BungeeCord");
-    }
-
-    @Override
     public void dispatchCommand(DispatchableCommand command) {
-        pluginManager.dispatchCommand(console, command.getCommand());
+        dispatchCommand(console, command.getCommand());
     }
 
     @Override
@@ -120,13 +109,19 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
         if (command.isPlayer()) {
             if (command.isOp() && !player.getGroups().contains(OP_GROUP)) {
                 player.addGroups(OP_GROUP);
-                pluginManager.dispatchCommand(player, command.getCommand());
+                dispatchCommand(player, command.getCommand());
                 player.removeGroups(OP_GROUP);
             } else {
-                pluginManager.dispatchCommand(player, command.getCommand());
+                dispatchCommand(player, command.getCommand());
             }
         } else {
             dispatchCommand(command);
+        }
+    }
+
+    private void dispatchCommand(CommandSender sender, String commandLine) {
+        if (!pluginManager.dispatchCommand(sender, commandLine)) {
+            Logger.getLogger().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
         }
     }
 
@@ -147,11 +142,7 @@ public class BungeeCordServerHandler extends InterceptCommandCache implements Se
             if (command.getPlatform().matches(player.getUniqueId(), bedrockHandler)) {
                 String permission = command.getPermission();
                 if (permission == null || player.hasPermission(permission)) {
-                    command.run(
-                        new BungeeCordPlayer(player),
-                        CrossplatForms.getInstance().getInterfaceManager(),
-                        bedrockHandler
-                    );
+                    command.run(new BungeeCordPlayer(player));
 
                     if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
                         event.setCancelled(true);

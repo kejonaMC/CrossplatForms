@@ -1,11 +1,9 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.custom;
-
-import lombok.Getter;
+package dev.projectg.crossplatforms;
 
 import javax.annotation.Nullable;
 
-@Getter
 public class IllegalValueException extends Exception {
+    private static final long serialVersionUID = 0L;
 
     private final String value;
     private final String expectedType;
@@ -16,5 +14,17 @@ public class IllegalValueException extends Exception {
         this.value = value;
         this.expectedType = expectedType;
         this.identifier = identifier;
+    }
+
+    public String value() {
+        return value;
+    }
+
+    public String expectedType() {
+        return expectedType;
+    }
+
+    public String identifier() {
+        return identifier;
     }
 }

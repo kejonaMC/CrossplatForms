@@ -6,6 +6,9 @@ public abstract class Logger {
 
     public Logger() {
         INSTANCE = this;
+        if (Boolean.getBoolean("CrossplatForms.Debug")) {
+            setDebug(true);
+        }
     }
 
     public static Logger getLogger() {
@@ -26,6 +29,15 @@ public abstract class Logger {
             default:
                 info(message);
                 break;
+        }
+    }
+
+    /**
+     * Dumps the current stack if debug mode is enabled.
+     */
+    public void debugStack() {
+        if (isDebug()) {
+            Thread.dumpStack();
         }
     }
 

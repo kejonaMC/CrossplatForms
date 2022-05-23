@@ -1,30 +1,30 @@
 package dev.projectg.crossplatforms.velocity;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
-    public static final String IDENTIFIER = "server";
+    public static final String TYPE = "server";
     private static final ProxyServer PROXY = CrossplatFormsVelocity.getInstance().getServer();
 
-    public ServerAction(@NotNull String value) {
-        super(IDENTIFIER, value);
+    @Inject
+    public ServerAction(String value) {
+        super(TYPE, value);
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer formPlayer, @NotNull Map<String, String> additionalPlaceholders, @NotNull InterfaceManager interfaceManager, @NotNull BedrockHandler bedrockHandler) {
+    public void affectPlayer(@Nonnull FormPlayer formPlayer, @Nonnull Map<String, String> additionalPlaceholders) {
         Player player = (Player) formPlayer.getHandle();
         String serverName = value();
         RegisteredServer server = PROXY.getServer(serverName).orElse(null);

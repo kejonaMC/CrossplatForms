@@ -1,14 +1,13 @@
 package dev.projectg.crossplatforms.interfacing.bedrock;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Constants;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.Form;
@@ -24,6 +23,9 @@ import java.util.function.Consumer;
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class BedrockForm extends Interface implements ValuedType {
 
+    @Inject
+    protected transient BedrockHandler bedrockHandler;
+
     protected transient final String permissionBase = Constants.Id() + ".form.";
 
     private final List<Action> incorrectActions = Collections.emptyList();
@@ -31,10 +33,7 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     /**
      * Determines a way to safely execute the given response handler, and sets it on the given form.
      */
-    protected final void setResponseHandler(Form form,
-                                            Consumer<String> responseHandler,
-                                            ServerHandler serverHandler,
-                                            BedrockHandler bedrockHandler) {
+    protected final void setResponseHandler(Form form, Consumer<String> responseHandler) {
         if (bedrockHandler.executesResponseHandlersSafely()) {
             form.setResponseHandler(responseHandler);
             Logger.getLogger().debug("Executing (1) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
@@ -46,7 +45,7 @@ public abstract class BedrockForm extends Interface implements ValuedType {
         }
     }
 
-    protected void handleIncorrect(FormPlayer player, InterfaceManager interfaceManager, BedrockHandler bedrockHandler) {
-        Action.affectPlayer(player, incorrectActions, interfaceManager, bedrockHandler);
+    protected void handleIncorrect(FormPlayer player) {
+        Action.affectPlayer(player, incorrectActions);
     }
 }

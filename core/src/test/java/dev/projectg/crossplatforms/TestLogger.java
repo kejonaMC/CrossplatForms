@@ -11,7 +11,7 @@ public class TestLogger extends Logger {
 
     @Override
     public void info(String message) {
-        messages.add("[INFO] " + message);
+
     }
 
     @Override
@@ -47,7 +47,7 @@ public class TestLogger extends Logger {
         return failed;
     }
 
-    public String dump() {
+    public String warningDump() {
         return String.join("\n", messages);
     }
 }

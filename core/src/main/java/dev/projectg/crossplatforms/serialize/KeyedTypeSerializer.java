@@ -1,7 +1,10 @@
 package dev.projectg.crossplatforms.serialize;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Injector;
+import dev.projectg.crossplatforms.Entry;
+import dev.projectg.crossplatforms.utils.TypeUtils;
 import io.leangen.geantyref.TypeToken;
-import lombok.AllArgsConstructor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -15,7 +18,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Deserializes a value node into {@link T} depending on the key of the node. This serializer must be registered using
@@ -25,7 +27,12 @@ import java.util.function.Function;
  */
 public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> implements TypeSerializer<T> {
 
-    private final Map<String, SimpleTypeRegistration<?>> simpleTypes = new HashMap<>();
+    private final Injector injector;
+    private final Map<String, Entry<TypeToken<?>, Class<? extends T>>> simpleTypes = new HashMap<>();
+
+    public KeyedTypeSerializer(Injector injector) {
+        this.injector = injector;
+    }
 
     @Override
     @Nonnull
@@ -35,32 +42,16 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         return types;
     }
 
-    /**
-     * Register a simple type to be deserialized.
-     *
-     * @param typeId    The string identifier of the type, used as the map key
-     * @param valueType The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
-     * @param creator   A function that provides an instance of T given the map value.
-     * @param <V>       The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
-     */
-    public <V> void registerSimpleType(String typeId, TypeToken<V> valueType, Function<V, T> creator) {
+    public <V> void registerSimpleType(String typeId, TypeToken<V> valueType, Class<? extends T> simpleType) {
         String lowerCase = typeId.toLowerCase(Locale.ROOT);
         if (simpleTypes.get(lowerCase) != null) {
             throw new IllegalArgumentException("Simple Type " + lowerCase + " is already registered");
         }
-        simpleTypes.put(lowerCase, new SimpleTypeRegistration<>(valueType, creator));
+        simpleTypes.put(lowerCase, Entry.of(valueType, simpleType));
     }
 
-    /**
-     * Register a simple type to be deserialized.
-     *
-     * @param typeId    The string identifier of the type, used as the map key
-     * @param valueType The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
-     * @param creator   A function that provides an instance of T given the map value.
-     * @param <V>       The type of the map value. There are no restrictions on this type, although it must be serializable by Configurate.
-     */
-    public <V> void registerSimpleType(String typeId, Class<V> valueType, Function<V, T> creator) {
-        registerSimpleType(typeId, TypeToken.get(valueType), creator);
+    public <V> void registerSimpleType(String typeId, Class<V> valueType, Class<? extends T> simpleType) {
+        registerSimpleType(typeId, TypeToken.get(valueType), simpleType);
     }
 
     @Override
@@ -74,11 +65,11 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
 
         T instance;
         if (type == null) {
-            SimpleTypeRegistration<?> simpleType = simpleTypes.get(typeId.toLowerCase(Locale.ROOT));
+            Entry<TypeToken<?>, Class<? extends T>> simpleType = simpleTypes.get(typeId.toLowerCase(Locale.ROOT));
             if (simpleType == null) {
                 throw new SerializationException("Unsupported type (not registered) '" + typeId + "'. Possible options are: " + getTypes());
             } else {
-                instance = simpleType.deserialize(node);
+                instance = deserializeSimple(simpleType.getKey(), simpleType.getValue(), node);
             }
         } else {
             instance = node.get(type);
@@ -99,16 +90,15 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         }
     }
 
-    @AllArgsConstructor
-    private class SimpleTypeRegistration<V> {
-        private final TypeToken<V> valueType;
-        private final Function<V, T> factory;
+    private <V> T deserializeSimple(TypeToken<V> valueType, Class<? extends T> simpleType, ConfigurationNode node) throws SerializationException {
+        final V value = node.get(valueType);
+        Injector childInjector = injector.createChildInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(TypeUtils.keyFromToken(valueType)).toInstance(value);
+            }
+        });
 
-        private T deserialize(ConfigurationNode node) throws SerializationException {
-            // unfortunately a new TypeToken with type inference cannot be used to determine the type to deserialize with. the following seem to be related:
-            // https://bugs.openjdk.java.net/browse/JDK-8267439
-            // https://bugs.openjdk.java.net/browse/JDK-8262095
-            return factory.apply(node.get(valueType));
-        }
+        return childInjector.getInstance(simpleType);
     }
 }
