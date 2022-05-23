@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 
@@ -17,13 +17,13 @@ public class InterfaceAction extends SimpleAction<String> {
 
     private transient final BedrockHandler bedrockHandler;
     private transient final Interfacer interfacer;
-    private transient final PlaceholderHandler placeholders;
+    private transient final Placeholders placeholders;
 
     @Inject
     public InterfaceAction(String value,
                            BedrockHandler bedrockHandler,
                            Interfacer interfacer,
-                           PlaceholderHandler placeholders) {
+                           Placeholders placeholders) {
         super(TYPE, value);
         this.bedrockHandler = bedrockHandler;
         this.interfacer = interfacer;

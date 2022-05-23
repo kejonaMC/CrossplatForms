@@ -7,7 +7,7 @@ import dev.projectg.crossplatforms.command.custom.InterceptCommand;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
@@ -97,6 +97,6 @@ public class TestModule extends AbstractModule {
             }
         });
 
-        bind(PlaceholderHandler.class).toInstance(new BasicPlaceholders());
+        bind(Placeholders.class).toInstance(new BasicPlaceholders());
     }
 }

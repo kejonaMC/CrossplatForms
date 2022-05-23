@@ -19,7 +19,7 @@ import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
@@ -95,7 +95,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
 
         logger.warn("CrossplatForms-Velocity does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
-        PlaceholderHandler placeholders = new BasicPlaceholders();
+        Placeholders placeholders = new BasicPlaceholders();
 
         protocolizePresent = server.getPluginManager().isLoaded("protocolize");
 

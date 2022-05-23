@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,10 +20,10 @@ public class ServerAction extends SimpleAction<String> {
 
     public static final String TYPE = "server";
 
-    private transient final PlaceholderHandler placeholders;
+    private transient final Placeholders placeholders;
 
     @Inject
-    public ServerAction(String value, PlaceholderHandler placeholders) {
+    public ServerAction(String value, Placeholders placeholders) {
         super(TYPE, value);
         this.placeholders = placeholders;
     }

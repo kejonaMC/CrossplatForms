@@ -6,7 +6,7 @@ import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import org.bukkit.Bukkit;
@@ -45,13 +45,13 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
     private final Logger logger = Logger.get();
     protected final Interfacer interfacer;
     protected final BedrockHandler bedrockHandler;
-    protected final PlaceholderHandler placeholders;
+    protected final Placeholders placeholders;
 
     public SpigotAccessItemsBase(JavaPlugin plugin, ConfigManager configManager,
                                  ServerHandler serverHandler,
                                  Interfacer interfacer,
                                  BedrockHandler bedrockHandler,
-                                 PlaceholderHandler placeholders) {
+                                 Placeholders placeholders) {
         super(configManager, serverHandler);
         this.interfacer = interfacer;
         this.bedrockHandler = bedrockHandler;

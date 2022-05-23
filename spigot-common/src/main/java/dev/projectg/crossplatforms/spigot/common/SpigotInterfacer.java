@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.spigot.common;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
@@ -30,7 +30,7 @@ public class SpigotInterfacer extends Interfacer implements Listener {
     @Override
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
         Logger logger = Logger.get();
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+        Placeholders placeholders = CrossplatForms.getInstance().getPlaceholders();
         Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
 
         Inventory selectorGUI; // todo: better size validation?

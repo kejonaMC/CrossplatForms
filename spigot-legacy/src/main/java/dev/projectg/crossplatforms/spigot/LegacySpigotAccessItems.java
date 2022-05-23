@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.spigot;
 import dev.projectg.crossplatforms.accessitem.AccessItem;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.spigot.common.SpigotAccessItemsBase;
@@ -25,7 +25,7 @@ public class LegacySpigotAccessItems extends SpigotAccessItemsBase {
                                    ServerHandler serverHandler,
                                    Interfacer interfacer,
                                    BedrockHandler bedrockHandler,
-                                   PlaceholderHandler placeholders) {
+                                   Placeholders placeholders) {
         super(plugin, configManager, serverHandler, interfacer, bedrockHandler, placeholders);
     }
 

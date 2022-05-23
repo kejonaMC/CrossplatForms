@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.events.ExpansionsLoadedEvent;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 
-public class PlaceholderAPIHandler implements PlaceholderHandler, Listener {
+public class PlaceholderAPIHandler implements Placeholders, Listener {
 
     public PlaceholderAPIHandler(JavaPlugin plugin) {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);

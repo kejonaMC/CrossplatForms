@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
@@ -18,7 +18,7 @@ public class BedrockTransferAction implements Action {
     public static final String TYPE = "transfer_packet";
 
     private final transient BedrockHandler bedrockHandler;
-    private final transient PlaceholderHandler placeholders;
+    private final transient Placeholders placeholders;
 
     @Required
     private String address;
@@ -34,7 +34,7 @@ public class BedrockTransferAction implements Action {
     private transient boolean checkedForStatic = false;
 
     @Inject
-    private BedrockTransferAction(BedrockHandler bedrockHandler, PlaceholderHandler placeholders) {
+    private BedrockTransferAction(BedrockHandler bedrockHandler, Placeholders placeholders) {
         this.bedrockHandler = bedrockHandler;
         this.placeholders = placeholders;
     }

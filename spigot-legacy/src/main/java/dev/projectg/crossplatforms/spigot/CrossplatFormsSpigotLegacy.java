@@ -16,7 +16,7 @@ import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.spigot.common.CloseMenuAction;
@@ -86,7 +86,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         // For ServerAction
         server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        PlaceholderHandler placeholders;
+        Placeholders placeholders;
         if (server.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholders = new PlaceholderAPIHandler(this);
         } else {

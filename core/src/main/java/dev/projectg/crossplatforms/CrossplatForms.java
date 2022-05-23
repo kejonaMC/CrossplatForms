@@ -20,7 +20,7 @@ import dev.projectg.crossplatforms.config.GeneralConfig;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -59,7 +59,7 @@ public class CrossplatForms {
     private final CommandManager<CommandOrigin> commandManager;
     private final Command.Builder<CommandOrigin> commandBuilder;
 
-    private final PlaceholderHandler placeholders;
+    private final Placeholders placeholders;
 
     private final boolean success = true;
 
@@ -68,7 +68,7 @@ public class CrossplatForms {
                           ServerHandler serverHandler,
                           String defaultCommand,
                           CommandManager<CommandOrigin> commandManager,
-                          PlaceholderHandler placeholders,
+                          Placeholders placeholders,
                           CrossplatFormsBootstrap bootstrap) {
         long start = System.currentTimeMillis();
         INSTANCE = this;
