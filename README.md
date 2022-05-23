@@ -9,7 +9,7 @@
 
 CrossplatForms is a Java Edition plugin aimed at creating Bedrock Edition Forms for [Geyser](https://github.com/GeyserMC/Geyser) players through flexible configurations. Bedrock Forms allow servers to provide players with abritrary choices in a styled menu, which the server then handles in any way desired. This allows you to customize forms specifically for your server, plugins, etc.
 
-Inventory menus for Java Edition players can also be created. Forms and menus are together referred to as interfaces.
+Inventory menus for Java Edition players can also be created, on all platforms.
 
 See the [gallery](images/README.md) for visual examples.
 
@@ -33,7 +33,7 @@ See the [wiki](https://github.com/ProjectG-Plugins/CrossplatForms/wiki) for conf
 A: Use [Geyser-Standalone](https://wiki.geysermc.org/geyser/setup/#standalone-setup) instead  
 B: Use our [fork](https://github.com/ProjectG-Plugins/Floodgate) of Floodgate that allows using the [Floodgate API](https://wiki.geysermc.org/floodgate/api/) on BungeeCord/Velocity while Geyser is also installed. It does not contain any other changes.
 
-BungeeCord and Velocity do not support Access Items. BungeeCord and Velocity don't support inventory menus yet, but they will in the future.
+BungeeCord and Velocity do not support Access Items.
 
 * [`CrossplatForms-Spigot.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; Spigot 1.14.4 - 1.18.2
 * [`CrossplatForms-SpigotLegacy.jar`](https://ci.projectg.dev/job/CrossplatForms/job/main/) :&ensp; Spigot 1.8.8 - 1.13.2
