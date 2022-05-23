@@ -30,13 +30,11 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
 import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatFormsBootstrap {
-
-    private static CrossplatFormsSpigotLegacy INSTANCE;
 
     static {
         // load information from build.properties
@@ -44,18 +42,19 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
     }
 
     private CrossplatForms crossplatForms;
+    private Server server;
     private BukkitAudiences audiences;
     private Metrics metrics;
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
         metrics = new Metrics(this, SpigotCommon.METRICS_ID);
         ServerAction.SENDER = this; // hack to have ServerAction in common module
         Logger logger = new JavaUtilLogger(getLogger());
         if (crossplatForms != null) {
             logger.warn("Bukkit reloading is NOT supported!");
         }
+        server = getServer();
         audiences = BukkitAudiences.create(this);
         ServerHandler serverHandler = new SpigotServerHandler(this, audiences);
 
@@ -76,16 +75,19 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
 
         try {
             // Brigadier is ideal if possible. Allows for much more readable command options, especially on BE.
+            // spigot legacy supports 1.13 and brigadier was introduced in 1.13
             commandManager.registerBrigadier();
         } catch (BukkitCommandManager.BrigadierFailureException e) {
-            logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
+            if (logger.isDebug() || server.getVersion().contains("1.13")) {
+                logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
+            }
         }
 
         // For ServerAction
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         PlaceholderHandler placeholders;
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        if (server.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholders = new PlaceholderAPIHandler(this);
         } else {
             logger.warn("This plugin works best with PlaceholderAPI! Since you don't have it installed, only %player_name% and %player_uuid% will work (typically).");
@@ -116,7 +118,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         );
 
         // Registering events required to manage access items
-        Bukkit.getServer().getPluginManager().registerEvents(accessItemRegistry, this);
+        server.getPluginManager().registerEvents(accessItemRegistry, this);
 
         // Commands added by access items
         new GiveCommand(crossplatForms, accessItemRegistry).register(commandManager, crossplatForms.getCommandBuilder());
@@ -140,7 +142,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
     @Override
     public InterfaceManager interfaceManager() {
         SpigotInterfacer manager = new SpigotInterfacer();
-        Bukkit.getServer().getPluginManager().registerEvents(manager, this);
+        server.getPluginManager().registerEvents(manager, this);
         return manager;
     }
 
@@ -150,15 +152,11 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
             audiences.close();
         }
 
-        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+        server.getMessenger().unregisterOutgoingPluginChannel(this);
     }
 
     @Override
     public void addCustomChart(CustomChart chart) {
         metrics.addCustomChart(chart);
-    }
-
-    public static CrossplatFormsSpigotLegacy getInstance() {
-        return INSTANCE;
     }
 }
