@@ -29,12 +29,14 @@ import java.util.stream.Collectors;
 
 public class VelocityServerHandler extends ProxyHandler implements ServerHandler {
 
+    private final PermissionHook permissionHook;
     private final ProxyServer server;
     private final CommandManager commandManager;
     private final ConsoleCommandSource console;
 
     public VelocityServerHandler(ProxyServer server, PermissionHook permissionHook) {
         super(permissionHook);
+        this.permissionHook = permissionHook;
         this.server = server;
         this.commandManager = server.getCommandManager();
         this.console = server.getConsoleCommandSource();
@@ -79,33 +81,33 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        dispatchCommand(console, command.getCommand());
+        executeCommand(console, command.getCommand());
     }
 
     @Override
     public void dispatchCommand(UUID uuid, DispatchableCommand command) {
-        dispatchCommand(getPlayerOrThrow(uuid), command);
+        handleCommand(getPlayerOrThrow(uuid), command);
     }
 
     @Override
     public void dispatchCommands(UUID uuid, List<DispatchableCommand> commands) {
         Player player = getPlayerOrThrow(uuid);
-        commands.forEach(c -> dispatchCommand(player, c));
+        commands.forEach(c -> handleCommand(player, c));
     }
 
-    private void dispatchCommand(Player player, DispatchableCommand command) {
+    private void handleCommand(Player player, DispatchableCommand command) {
         if (command.isPlayer()) {
             if (command.isOp()) {
-                // todo: op commands on velocity
-                Logger.getLogger().warn("Not executing [" + command.getCommand() + "] as operator because it isn't currently supported on velocity!");
+                permissionHook.executeWithOperator(player.getUniqueId(), () -> executeCommand(player, command.getCommand()));
+            } else {
+                executeCommand(player, command.getCommand());
             }
-            dispatchCommand(player, command.getCommand());
         } else {
-            dispatchCommand(command);
+            dispatchCommand(command); // console
         }
     }
 
-    private void dispatchCommand(CommandSource source, String cmd) {
+    private void executeCommand(CommandSource source, String cmd) {
         commandManager.executeAsync(source, cmd).thenAccept(success -> {
             if (!success) {
                 Logger.getLogger().severe("Failed to run command '" + cmd + "' by sender: " + getName(source));

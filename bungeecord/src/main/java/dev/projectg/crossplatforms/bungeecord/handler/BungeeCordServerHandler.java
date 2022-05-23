@@ -33,6 +33,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
 
     private static final String OP_GROUP = "op";
 
+    private final PermissionHook permissionHook;
     private final ProxyServer server;
     private final PluginManager pluginManager;
     private final BungeeAudiences audiences;
@@ -40,6 +41,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
 
     public BungeeCordServerHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
         super(permissionHook);
+        this.permissionHook = permissionHook;
         this.server = plugin.getProxy();
         this.pluginManager = server.getPluginManager();
         this.audiences = audiences;
@@ -91,35 +93,33 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        dispatchCommand(console, command.getCommand());
+        executeCommand(console, command.getCommand());
     }
 
     @Override
     public void dispatchCommand(UUID uuid, DispatchableCommand command) {
-        dispatchCommand(getPlayerOrThrow(uuid), command);
+        handleCommand(getPlayerOrThrow(uuid), command);
     }
 
     @Override
     public void dispatchCommands(UUID uuid, List<DispatchableCommand> commands) {
         ProxiedPlayer player = getPlayerOrThrow(uuid);
-        commands.forEach(c -> dispatchCommand(player, c));
+        commands.forEach(c -> handleCommand(player, c));
     }
 
-    public void dispatchCommand(ProxiedPlayer player, DispatchableCommand command) {
+    public void handleCommand(ProxiedPlayer player, DispatchableCommand command) {
         if (command.isPlayer()) {
-            if (command.isOp() && !player.getGroups().contains(OP_GROUP)) {
-                player.addGroups(OP_GROUP);
-                dispatchCommand(player, command.getCommand());
-                player.removeGroups(OP_GROUP);
+            if (command.isOp()) {
+                permissionHook.executeWithOperator(player.getUniqueId(), () -> executeCommand(player, command.getCommand()));
             } else {
-                dispatchCommand(player, command.getCommand());
+                executeCommand(player, command.getCommand());
             }
         } else {
             dispatchCommand(command);
         }
     }
 
-    private void dispatchCommand(CommandSender sender, String commandLine) {
+    private void executeCommand(CommandSender sender, String commandLine) {
         if (!pluginManager.dispatchCommand(sender, commandLine)) {
             Logger.getLogger().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
         }
