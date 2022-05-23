@@ -9,7 +9,7 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
@@ -23,7 +23,7 @@ public class TestModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(InterfaceManager.class).toInstance(new InterfaceManager() {
+        bind(Interfacer.class).toInstance(new Interfacer() {
             @Override
             public void sendMenu(FormPlayer player, JavaMenu menu) {
 

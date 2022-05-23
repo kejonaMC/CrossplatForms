@@ -22,7 +22,7 @@ import dev.projectg.crossplatforms.handler.FloodgateHandler;
 import dev.projectg.crossplatforms.handler.GeyserHandler;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
@@ -54,7 +54,7 @@ public class CrossplatForms {
 
     private final boolean bedrockSupport;
 
-    private final InterfaceManager interfaceManager;
+    private final Interfacer interfacer;
 
     private final CommandManager<CommandOrigin> commandManager;
     private final Command.Builder<CommandOrigin> commandBuilder;
@@ -102,10 +102,10 @@ public class CrossplatForms {
             logger.warn("No Bedrock Handler being used! There may be issues.");
         }
 
-        interfaceManager = bootstrap.interfaceManager();
+        interfacer = bootstrap.interfaceManager();
         Injector injector = Guice.createInjector(
             new ConfigurationModule(
-                interfaceManager,
+                interfacer,
                 bedrockHandler,
                 serverHandler,
                 placeholders
@@ -135,7 +135,7 @@ public class CrossplatForms {
 
         // Load forms and menus from the configs into registries
         long registryTime = System.currentTimeMillis();
-        interfaceManager.load(
+        interfacer.load(
             new BedrockFormRegistry(configManager, serverHandler),
             new JavaMenuRegistry(configManager, serverHandler)
         );

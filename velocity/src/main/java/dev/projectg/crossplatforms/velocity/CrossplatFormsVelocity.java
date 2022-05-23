@@ -21,7 +21,7 @@ import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
 import dev.projectg.crossplatforms.proxy.CloseMenuAction;
 import dev.projectg.crossplatforms.proxy.LuckPermsHook;
@@ -128,7 +128,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
     }
 
     @Override
-    public InterfaceManager interfaceManager() {
+    public Interfacer interfaceManager() {
         if (protocolizePresent) {
             return new ProtocolizeInterfacer();
         } else {

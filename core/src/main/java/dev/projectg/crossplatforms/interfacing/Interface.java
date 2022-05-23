@@ -26,7 +26,7 @@ import java.util.Map;
 public abstract class Interface {
 
     @Inject
-    protected transient InterfaceManager interfaceManager;
+    protected transient Interfacer interfacer;
 
     @Inject
     protected transient ServerHandler serverHandler;

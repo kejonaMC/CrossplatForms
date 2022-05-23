@@ -18,7 +18,7 @@ import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.spigot.common.CloseMenuAction;
 import dev.projectg.crossplatforms.spigot.common.PlaceholderAPIHandler;
 import dev.projectg.crossplatforms.spigot.common.ServerAction;
@@ -112,7 +112,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
                 this,
                 crossplatForms.getConfigManager(),
                 serverHandler,
-                crossplatForms.getInterfaceManager(),
+                crossplatForms.getInterfacer(),
                 crossplatForms.getBedrockHandler(),
                 placeholders
         );
@@ -140,7 +140,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
 
 
     @Override
-    public InterfaceManager interfaceManager() {
+    public Interfacer interfaceManager() {
         SpigotInterfacer manager = new SpigotInterfacer();
         server.getPluginManager().registerEvents(manager, this);
         return manager;

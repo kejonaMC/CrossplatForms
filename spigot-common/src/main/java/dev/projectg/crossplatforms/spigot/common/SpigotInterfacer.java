@@ -4,7 +4,7 @@ import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import org.bukkit.Bukkit;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class SpigotInterfacer extends InterfaceManager implements Listener {
+public class SpigotInterfacer extends Interfacer implements Listener {
 
     private final Map<Inventory, JavaMenu> menuCache = new HashMap<>();
 
