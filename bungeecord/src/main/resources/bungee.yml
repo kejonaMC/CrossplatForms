@@ -3,7 +3,7 @@ main: dev.projectg.crossplatforms.bungeecord.CrossplatFormsBungeeCord
 version: ${project_version}
 description: ${project_description}
 author: Konicai, Jens
-softdepends:
+softDepends:
   - Geyser-BungeeCord
   - floodgate
   - Protocolize

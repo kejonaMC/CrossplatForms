@@ -91,7 +91,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        pluginManager.dispatchCommand(console, command.getCommand());
+        dispatchCommand(console, command.getCommand());
     }
 
     @Override
@@ -109,13 +109,19 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
         if (command.isPlayer()) {
             if (command.isOp() && !player.getGroups().contains(OP_GROUP)) {
                 player.addGroups(OP_GROUP);
-                pluginManager.dispatchCommand(player, command.getCommand());
+                dispatchCommand(player, command.getCommand());
                 player.removeGroups(OP_GROUP);
             } else {
-                pluginManager.dispatchCommand(player, command.getCommand());
+                dispatchCommand(player, command.getCommand());
             }
         } else {
             dispatchCommand(command);
+        }
+    }
+
+    private void dispatchCommand(CommandSender sender, String commandLine) {
+        if (!pluginManager.dispatchCommand(sender, commandLine)) {
+            Logger.getLogger().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
         }
     }
 

@@ -18,13 +18,9 @@ public class ServerAction extends SimpleAction<String> {
 
     public static final String TYPE = "server";
 
+    @Inject
     public ServerAction(String value) {
         super(TYPE, value);
-    }
-
-    @Inject
-    private ServerAction() {
-        this("");
     }
 
     @Override
