@@ -42,7 +42,7 @@ public class CustomForm extends BedrockForm implements ValuedType {
 
     @Override
     public void send(@Nonnull FormPlayer player) {
-        Logger logger = Logger.getLogger();
+        Logger logger = Logger.get();
         UUID uuid = player.getUuid();
 
         if (!bedrockHandler.isBedrockPlayer(uuid)) {

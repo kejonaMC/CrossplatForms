@@ -23,7 +23,7 @@ public class ProtocolizeInterfacer extends InterfaceManager {
     private final ProtocolizePlayerProvider playerProvider;
 
     public ProtocolizeInterfacer() {
-        this.logger = Logger.getLogger();
+        this.logger = Logger.get();
         this.playerProvider = Protocolize.playerProvider();
     }
 

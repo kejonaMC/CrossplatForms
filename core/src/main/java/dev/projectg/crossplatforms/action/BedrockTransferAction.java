@@ -54,7 +54,7 @@ public class BedrockTransferAction implements Action {
             }
         } else {
             player.warn("Attempted to transfer you to a server that supports Bedrock Edition but you aren't a Bedrock player.");
-            Logger.getLogger().warn("Can't use transfer_packet " + actualAddress + ":" + actualPort + " on JE player " + player.getName());
+            Logger.get().warn("Can't use transfer_packet " + actualAddress + ":" + actualPort + " on JE player " + player.getName());
         }
     }
 
@@ -73,7 +73,7 @@ public class BedrockTransferAction implements Action {
                     actualPort = Integer.parseUnsignedInt(resolved);
                 } catch (NumberFormatException e) {
                     player.warn("Failed to transfer you to a server because " + resolved + " is not a valid port");
-                    Logger.getLogger().warn("Failed to send " + player.getName() + " to " + address + " because " + resolved + " is not a valid port");
+                    Logger.get().warn("Failed to send " + player.getName() + " to " + address + " because " + resolved + " is not a valid port");
                     return null;
                 }
             } else {

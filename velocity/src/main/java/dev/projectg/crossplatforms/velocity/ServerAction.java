@@ -29,7 +29,7 @@ public class ServerAction extends SimpleAction<String> {
         String serverName = value();
         RegisteredServer server = PROXY.getServer(serverName).orElse(null);
         if (server == null) {
-            Logger.getLogger().warn("Server '" + serverName + "' does not exist! Not transferring " + formPlayer.getName());
+            Logger.get().warn("Server '" + serverName + "' does not exist! Not transferring " + formPlayer.getName());
             player.sendMessage(Component.text("Server ", NamedTextColor.RED)
                     .append(Component.text(serverName))
                     .append(Component.text(" doesn't exist.", NamedTextColor.RED)));

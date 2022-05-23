@@ -37,7 +37,7 @@ public class BedrockFormRegistry implements Reloadable {
 
         if (!configManager.getConfig(FormConfig.class).isPresent()) {
             enabled = false;
-            Logger.getLogger().warn("Form config is not present, not enabling forms.");
+            Logger.get().warn("Form config is not present, not enabling forms.");
             return;
         }
 

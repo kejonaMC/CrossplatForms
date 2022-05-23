@@ -22,7 +22,7 @@ public class PlaceholderAPIHandler implements PlaceholderHandler, Listener {
     @EventHandler
     public void onExpansionsLoaded(ExpansionsLoadedEvent event) {
         if (!PlaceholderAPI.isRegistered("Player")) {
-            Logger.getLogger().warn("PlaceholderAPI is installed but the Player extension is not installed! %player_name% and %player_uuid% will NOT be resolved. Please install the Player extension.");
+            Logger.get().warn("PlaceholderAPI is installed but the Player extension is not installed! %player_name% and %player_uuid% will NOT be resolved. Please install the Player extension.");
         }
     }
 

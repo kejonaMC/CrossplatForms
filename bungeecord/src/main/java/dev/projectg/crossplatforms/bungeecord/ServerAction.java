@@ -29,7 +29,7 @@ public class ServerAction extends SimpleAction<String> {
         String serverName = value();
         ServerInfo downstream = ProxyServer.getInstance().getServerInfo(serverName); // find target
         if (downstream == null) {
-            Logger.getLogger().warn("Server '" + serverName + "' does not exist!");
+            Logger.get().warn("Server '" + serverName + "' does not exist!");
             TextComponent start = new TextComponent("Server ");
             start.setColor(ChatColor.RED);
             TextComponent middle = new TextComponent(serverName);

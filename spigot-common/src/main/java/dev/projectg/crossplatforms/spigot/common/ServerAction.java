@@ -33,12 +33,12 @@ public class ServerAction extends SimpleAction<String> {
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
-            Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + value());
+            Logger.get().debug("Attempting to send " + player.getName() + " to BungeeCord server " + value());
             out.writeUTF("Connect");
             out.writeUTF(resolved);
             ((Player) player.getHandle()).sendPluginMessage(SENDER, "BungeeCord", stream.toByteArray());
         } catch (IOException e) {
-            Logger.getLogger().severe("Failed to send a plugin message to BungeeCord!");
+            Logger.get().severe("Failed to send a plugin message to BungeeCord!");
             e.printStackTrace();
         }
     }

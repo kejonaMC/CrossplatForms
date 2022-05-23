@@ -25,7 +25,7 @@ public class ConfigId {
         .minimumVersion(GeneralConfig.MINIMUM_VERSION)
         .clazz(GeneralConfig.class)
         .updater(GeneralConfig::updater)
-        .postProcessor(config -> Logger.getLogger().setDebug(((GeneralConfig) config).isEnableDebug()))
+        .postProcessor(config -> Logger.get().setDebug(((GeneralConfig) config).isEnableDebug()))
         .build();
 
     public static final ConfigId BEDROCK_FORMS = ConfigId.builder()

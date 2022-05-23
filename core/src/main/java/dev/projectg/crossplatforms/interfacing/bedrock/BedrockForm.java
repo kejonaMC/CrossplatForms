@@ -36,10 +36,10 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     protected final void setResponseHandler(Form form, Consumer<String> responseHandler) {
         if (bedrockHandler.executesResponseHandlersSafely()) {
             form.setResponseHandler(responseHandler);
-            Logger.getLogger().debug("Executing (1) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
+            Logger.get().debug("Executing (1) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
         } else {
             form.setResponseHandler((data) -> serverHandler.executeSafely(() -> {
-                Logger.getLogger().debug("Executing (2) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
+                Logger.get().debug("Executing (2) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
                 responseHandler.accept(data);
             }));
         }

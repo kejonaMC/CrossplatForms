@@ -100,7 +100,7 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
                 break;
         }
 
-        Logger.getLogger().debug("Registering permission " + key + " : " + perm);
+        Logger.get().debug("Registering permission " + key + " : " + perm);
         server.getPluginManager().addPermission(new Permission(key, description, perm));
     }
 
@@ -111,7 +111,7 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        Logger.getLogger().debug("Executing [" + command + "] as console");
+        Logger.get().debug("Executing [" + command + "] as console");
         server.dispatchCommand(console, command.getCommand());
     }
 

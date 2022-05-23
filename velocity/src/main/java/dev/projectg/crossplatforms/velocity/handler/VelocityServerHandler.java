@@ -97,7 +97,7 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
         if (command.isPlayer()) {
             if (command.isOp()) {
                 // todo: op commands on velocity
-                Logger.getLogger().warn("Not executing [" + command.getCommand() + "] as operator because it isn't currently supported on velocity!");
+                Logger.get().warn("Not executing [" + command.getCommand() + "] as operator because it isn't currently supported on velocity!");
             }
             dispatchCommand(player, command.getCommand());
         } else {
@@ -108,7 +108,7 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
     private void dispatchCommand(CommandSource source, String cmd) {
         commandManager.executeAsync(source, cmd).thenAccept(success -> {
             if (!success) {
-                Logger.getLogger().severe("Failed to run command '" + cmd + "' by sender: " + getName(source));
+                Logger.get().severe("Failed to run command '" + cmd + "' by sender: " + getName(source));
             }
         });
     }
@@ -130,7 +130,7 @@ public class VelocityServerHandler extends ProxyHandler implements ServerHandler
         }
 
         String input = event.getCommand();
-        Logger.getLogger().debug("preprocess command: [" + event.getCommand() + "] -> [" + input + "]");
+        Logger.get().debug("preprocess command: [" + event.getCommand() + "] -> [" + input + "]");
         InterceptCommand command = findCommand(input);
         if (command != null) {
             Player player = (Player) source;

@@ -29,7 +29,7 @@ public class SpigotInterfacer extends InterfaceManager implements Listener {
 
     @Override
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
-        Logger logger = Logger.getLogger();
+        Logger logger = Logger.get();
         PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
         Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
 

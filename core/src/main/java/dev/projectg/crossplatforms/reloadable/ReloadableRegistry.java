@@ -29,7 +29,7 @@ public class ReloadableRegistry {
     }
 
     public static boolean reloadAll() {
-        Logger logger = Logger.getLogger();
+        Logger logger = Logger.get();
 
         boolean success = true;
 

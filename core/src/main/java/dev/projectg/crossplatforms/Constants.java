@@ -46,7 +46,7 @@ public final class Constants {
         try {
             properties = FileUtils.getProperties("build.properties");
         } catch (IOException e) {
-            Logger.getLogger().warn("Failed to get build properties");
+            Logger.get().warn("Failed to get build properties");
             e.printStackTrace();
             return;
         }

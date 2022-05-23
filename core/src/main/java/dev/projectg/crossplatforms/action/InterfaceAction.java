@@ -35,7 +35,7 @@ public class InterfaceAction extends SimpleAction<String> {
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
         Interface ui = interfaceManager.getInterface(resolved, bedrockHandler.isBedrockPlayer(player.getUuid()));
         if (ui == null) {
-            Logger logger = Logger.getLogger();
+            Logger logger = Logger.get();
             logger.severe("Attempted to make a player open a form or menu '" + resolved + "', but it does not exist. This is a configuration error!");
         } else {
             ui.send(player);

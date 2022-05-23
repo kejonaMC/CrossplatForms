@@ -42,7 +42,7 @@ import java.util.function.Predicate;
  */
 public abstract class SpigotAccessItemsBase extends AccessItemRegistry implements Listener {
 
-    private final Logger logger = Logger.getLogger();
+    private final Logger logger = Logger.get();
     protected final InterfaceManager interfaceManager;
     protected final BedrockHandler bedrockHandler;
     protected final PlaceholderHandler placeholders;

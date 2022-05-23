@@ -13,7 +13,7 @@ public abstract class ProxyHandler extends InterceptCommandCache implements Serv
     public ProxyHandler(PermissionHook permissionHook) {
         this.permissionHook = permissionHook;
         if (permissionHook instanceof PermissionHook.Empty) {
-            Logger.getLogger().warn("Install LuckPerms in order for permission defaults to take effect.");
+            Logger.get().warn("Install LuckPerms in order for permission defaults to take effect.");
         }
     }
 

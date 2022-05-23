@@ -11,7 +11,7 @@ public abstract class Logger {
         }
     }
 
-    public static Logger getLogger() {
+    public static Logger get() {
         return INSTANCE;
     }
 

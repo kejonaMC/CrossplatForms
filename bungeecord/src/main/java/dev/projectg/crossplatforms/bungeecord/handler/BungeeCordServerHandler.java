@@ -121,7 +121,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
 
     private void dispatchCommand(CommandSender sender, String commandLine) {
         if (!pluginManager.dispatchCommand(sender, commandLine)) {
-            Logger.getLogger().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
+            Logger.get().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
         }
     }
 
@@ -133,7 +133,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
         }
 
         String input = event.getMessage().substring(1);
-        Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + input + "]");
+        Logger.get().debug("preprocess command: [" + event.getMessage() + "] -> [" + input + "]");
         // attempt to find an exact match
         InterceptCommand command = findCommand(input);
         if (command != null) {
