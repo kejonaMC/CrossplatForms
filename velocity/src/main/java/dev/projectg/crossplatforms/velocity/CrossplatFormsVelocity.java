@@ -28,7 +28,7 @@ import dev.projectg.crossplatforms.proxy.LuckPermsHook;
 import dev.projectg.crossplatforms.proxy.PermissionHook;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
-import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
+import dev.projectg.crossplatforms.velocity.handler.VelocityHandler;
 import lombok.Getter;
 import org.bstats.charts.CustomChart;
 import org.bstats.velocity.Metrics;
@@ -74,7 +74,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
         metrics = metricsFactory.make(this, BSTATS_ID);
 
-        ServerHandler serverHandler = new VelocityServerHandler(
+        ServerHandler serverHandler = new VelocityHandler(
             server,
             pluginPresent("luckperms") ? new LuckPermsHook() : PermissionHook.empty()
         );

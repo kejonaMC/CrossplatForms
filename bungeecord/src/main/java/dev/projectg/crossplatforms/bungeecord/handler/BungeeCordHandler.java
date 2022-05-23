@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BungeeCordServerHandler extends ProxyHandler implements ServerHandler, Listener {
+public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Listener {
 
     private static final String OP_GROUP = "op";
 
@@ -38,7 +38,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
     private final BungeeAudiences audiences;
     private final CommandSender console;
 
-    public BungeeCordServerHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
+    public BungeeCordHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
         super(permissionHook);
         this.server = plugin.getProxy();
         this.pluginManager = server.getPluginManager();

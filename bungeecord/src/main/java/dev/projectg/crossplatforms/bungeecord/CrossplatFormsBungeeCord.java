@@ -9,7 +9,7 @@ import dev.projectg.crossplatforms.JavaUtilLogger;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.ActionSerializer;
 import dev.projectg.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
-import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordServerHandler;
+import dev.projectg.crossplatforms.bungeecord.handler.BungeeCordHandler;
 import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
@@ -53,7 +53,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         metrics = new Metrics(this, BSTATS_ID);
         audiences = BungeeAudiences.create(this);
 
-        BungeeCordServerHandler serverHandler = new BungeeCordServerHandler(
+        BungeeCordHandler serverHandler = new BungeeCordHandler(
             this,
             audiences,
             pluginPresent("LuckPerms") ? new LuckPermsHook() : PermissionHook.empty()

@@ -27,13 +27,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class VelocityServerHandler extends ProxyHandler implements ServerHandler {
+public class VelocityHandler extends ProxyHandler implements ServerHandler {
 
     private final ProxyServer server;
     private final CommandManager commandManager;
     private final ConsoleCommandSource console;
 
-    public VelocityServerHandler(ProxyServer server, PermissionHook permissionHook) {
+    public VelocityHandler(ProxyServer server, PermissionHook permissionHook) {
         super(permissionHook);
         this.server = server;
         this.commandManager = server.getCommandManager();

@@ -37,7 +37,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
- * Abstract AccessItemRegistry for spigot platforms. Automatically registers {@link PlayerSwapHandItemsListener} if
+ * Abstract AccessItemRegistry for spigot platforms. Automatically registers {@link SwapHandItemsListener} if
  * the class is event is available on the current server version.
  */
 public abstract class SpigotAccessItemsBase extends AccessItemRegistry implements Listener {
@@ -58,7 +58,7 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         this.placeholders = placeholders;
 
         if (!Bukkit.getVersion().contains("1.8")) { // Older versions not supported, 1.9 and newer has offhand
-            Bukkit.getPluginManager().registerEvents(new PlayerSwapHandItemsListener(this), plugin);
+            Bukkit.getPluginManager().registerEvents(new SwapHandItemsListener(this), plugin);
         }
     }
 

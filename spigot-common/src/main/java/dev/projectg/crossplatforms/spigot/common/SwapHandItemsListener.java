@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 
 @AllArgsConstructor
-public class PlayerSwapHandItemsListener implements Listener {
+public class SwapHandItemsListener implements Listener {
 
     @Nonnull
     private final SpigotAccessItemsBase accessItems;

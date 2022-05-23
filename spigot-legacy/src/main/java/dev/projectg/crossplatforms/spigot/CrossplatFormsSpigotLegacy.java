@@ -25,7 +25,7 @@ import dev.projectg.crossplatforms.spigot.common.ServerAction;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommandOrigin;
 import dev.projectg.crossplatforms.spigot.common.SpigotCommon;
 import dev.projectg.crossplatforms.spigot.common.SpigotInterfacer;
-import dev.projectg.crossplatforms.spigot.common.SpigotServerHandler;
+import dev.projectg.crossplatforms.spigot.common.SpigotHandler;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
@@ -56,7 +56,7 @@ public class CrossplatFormsSpigotLegacy extends JavaPlugin implements CrossplatF
         }
         server = getServer();
         audiences = BukkitAudiences.create(this);
-        ServerHandler serverHandler = new SpigotServerHandler(this, audiences);
+        ServerHandler serverHandler = new SpigotHandler(this, audiences);
 
         // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         PaperCommandManager<CommandOrigin> commandManager;
