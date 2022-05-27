@@ -1,14 +1,14 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Resolver;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.utils.ParseUtils;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.geysermc.cumulus.component.StepSliderComponent;
+import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 @ToString(callSuper = true)
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class StepSlider extends CustomComponent {
@@ -32,6 +31,11 @@ public class StepSlider extends CustomComponent {
      * Whether or not the parsing of the Dropdown should return the index of the selection or the text of the button.
      */
     private boolean returnText = true;
+
+    @Inject
+    private StepSlider() {
+        super(ComponentType.STEP_SLIDER, "");
+    }
 
     @Override
     public StepSlider copy() {

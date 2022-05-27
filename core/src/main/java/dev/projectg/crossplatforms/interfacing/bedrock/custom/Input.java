@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Resolver;
 import lombok.Getter;
 import lombok.ToString;
@@ -28,7 +29,8 @@ public class Input extends CustomComponent {
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
-    public Input() {
+    @Inject
+    public Input() { // todo: make private, fix tests that use it
         super(ComponentType.INPUT, "");
     }
 
