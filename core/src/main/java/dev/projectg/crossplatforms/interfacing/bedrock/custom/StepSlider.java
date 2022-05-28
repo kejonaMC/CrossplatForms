@@ -8,7 +8,6 @@ import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.StepSliderComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -34,7 +33,7 @@ public class StepSlider extends CustomComponent {
 
     @Inject
     private StepSlider() {
-        super(ComponentType.STEP_SLIDER, "");
+        super("");
     }
 
     @Override
@@ -73,5 +72,10 @@ public class StepSlider extends CustomComponent {
         } else {
             return super.parse(player, result);
         }
+    }
+
+    @Override
+    public String type() {
+        return TYPE;
     }
 }

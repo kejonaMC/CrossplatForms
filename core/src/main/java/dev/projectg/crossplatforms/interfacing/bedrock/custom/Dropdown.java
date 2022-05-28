@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.DropdownComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -35,7 +34,7 @@ public class Dropdown extends CustomComponent {
 
     @Inject
     private Dropdown() {
-        super(ComponentType.DROPDOWN, "");
+        super("");
     }
 
     @Override
@@ -74,5 +73,10 @@ public class Dropdown extends CustomComponent {
         } else {
             return super.parse(player, result);
         }
+    }
+
+    @Override
+    public String type() {
+        return TYPE;
     }
 }

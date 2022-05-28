@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.InputComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -24,14 +23,14 @@ public class Input extends CustomComponent {
     private String defaultText = "";
 
     public Input(String text, String placeholder, String defaultText) {
-        super(ComponentType.INPUT, text);
+        super(text);
         this.placeholder = Objects.requireNonNull(placeholder);
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
     @Inject
     public Input() { // todo: make private, fix tests that use it
-        super(ComponentType.INPUT, "");
+        super("");
     }
 
     @Override
@@ -62,16 +61,17 @@ public class Input extends CustomComponent {
         return copy;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String type() {
+        return TYPE;
     }
 
+    @Override
     public boolean equals(final Object o) {
         if (o == this) return true;
         if (!(o.getClass().equals(getClass()))) return false;
         final Input other = (Input) o;
-        return other.type.equals(type)
-                && other.text.equals(text)
+        return other.text.equals(text)
                 && other.placeholder.equals(placeholder)
                 && other.defaultText.equals(defaultText);
     }
@@ -79,6 +79,10 @@ public class Input extends CustomComponent {
     @Override
     public int hashCode() {
         return Objects.hash(placeholder, defaultText);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
