@@ -29,7 +29,7 @@ public class Input extends CustomComponent {
     }
 
     @Inject
-    public Input() { // todo: make private, fix tests that use it
+    private Input() {
         super("");
     }
 
