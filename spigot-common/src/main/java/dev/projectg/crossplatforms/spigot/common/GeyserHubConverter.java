@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.spigot.common;
 
+import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -33,6 +34,11 @@ public final class GeyserHubConverter {
             .build()
             .load();
 
+        ConfigurationNode version = source.node("Config-Version");
+        if (version.virtual() || version.getInt(-1) != 2) {
+            Logger.get().warn("Failed to convert " + selectorConfig.getFileName() + " from GeyserHub because its Config-Version is not 2. Update it within the latest version of GeyserHub.");
+        }
+
         YamlConfigurationLoader itemLoader = loader(converted, "access-items.yml");
         ConfigurationNode items = itemLoader.load();
         convertItems(source, items);
@@ -48,6 +54,7 @@ public final class GeyserHubConverter {
         convertForms(source, forms);
         formLoader.save(forms);
 
+        Logger.get().info("Converted " + selectorConfig + " from GeyserHub into configs compatible with CrossplatForms in " + converted.toAbsolutePath());
         return converted;
     }
 
@@ -61,7 +68,7 @@ public final class GeyserHubConverter {
 
             copy(item, "Material", String.class, targetItem, "material", "COMPASS");
             copy(item, "Name", String.class, targetItem, "display-name", "");
-            copy(item, "Lore", new TypeToken<List<String>>() {}, targetItem, "lore", null);
+            copy(item, "Lore", new TypeToken<List<String>>() {}, targetItem, "lore");
             copy(item, "Slot", int.class, targetItem, "slot", 0);
             copy(item, "Join", boolean.class, targetItem, "on-join", true);
             copy(item, "Respawn", boolean.class, targetItem, "on-respawn", true);
@@ -99,27 +106,27 @@ public final class GeyserHubConverter {
 
                 copy(button, "Display-Name", String.class, targetButton, "display-name", "");
                 copy(button, "Material", String.class, targetButton, "material", "STONE");
-                copy(button, "Lore", new TypeToken<List<String>>() {}, targetButton, "lore", null);
+                copy(button, "Lore", new TypeToken<List<String>>() {}, targetButton, "lore");
 
                 ConfigurationNode rightClick = button.node("Right-Click");
                 if (!rightClick.virtual()) {
                     ConfigurationNode targetRight = targetButton.node("right-click");
-                    copy(rightClick, "Commands", new TypeToken<List<String>>() {}, targetRight, "commands", null);
-                    copy(rightClick, "Server", String.class, targetRight, "server", null);
+                    copy(rightClick, "Commands", new TypeToken<List<String>>() {}, targetRight, "commands");
+                    copy(rightClick, "Server", String.class, targetRight, "server");
                 }
 
                 ConfigurationNode leftClick = button.node("Left-Click");
                 if (!leftClick.virtual()) {
                     ConfigurationNode targetLeft = targetButton.node("left-click");
-                    copy(leftClick, "Commands", new TypeToken<List<String>>() {}, targetLeft, "commands", null);
-                    copy(leftClick, "Server", String.class, targetLeft, "server", null);
+                    copy(leftClick, "Commands", new TypeToken<List<String>>() {}, targetLeft, "commands");
+                    copy(leftClick, "Server", String.class, targetLeft, "server");
                 }
 
                 ConfigurationNode anyClick = button.node("Any-Click");
                 if (!anyClick.virtual()) {
                     ConfigurationNode targetAny = targetButton.node("any-click");
-                    copy(anyClick, "Commands", new TypeToken<List<String>>() {}, targetAny, "commands", null);
-                    copy(anyClick, "Server", String.class, targetAny, "server", null);
+                    copy(anyClick, "Commands", new TypeToken<List<String>>() {}, targetAny, "commands");
+                    copy(anyClick, "Server", String.class, targetAny, "server");
                 }
             }
         }
@@ -136,8 +143,8 @@ public final class GeyserHubConverter {
             ConfigurationNode targetForm = targetForms.node(form.key());
 
             targetForm.node("type").set("simple_form");
-            copy(form, "Title", String.class, targetForm, "title", null);
-            copy(form, "Content", String.class, targetForm, "content", null);
+            copy(form, "Title", String.class, targetForm, "title");
+            copy(form, "Content", String.class, targetForm, "content");
 
             ConfigurationNode buttons = form.node("Buttons");
             ConfigurationNode targetButtons = targetForm.node("buttons");
@@ -146,7 +153,7 @@ public final class GeyserHubConverter {
                 ConfigurationNode targetButton = targetButtons.appendListNode();
 
                 copy(button, "Button-Text", String.class, targetButton, "text", "");
-                copy(button, "ImageURL", String.class, targetButton, "image", null);
+                copy(button, "ImageURL", String.class, targetButton, "image");
 
                 ConfigurationNode targetActions = targetButton.node("actions");
 
@@ -164,7 +171,7 @@ public final class GeyserHubConverter {
         target.node("config-version").set(int.class, 4);
     }
 
-    private static YamlConfigurationLoader loader(Path folder, String fileName) {
+    public static YamlConfigurationLoader loader(Path folder, String fileName) {
         return LOADER_BUILDER.file(folder.resolve(fileName).toFile()).build();
     }
 
@@ -180,12 +187,30 @@ public final class GeyserHubConverter {
 
     private static <T> void copy(ConfigurationNode source,
                                  String sKey,
+                                 Class<T> type,
+                                 ConfigurationNode target,
+                                 String tKey) throws SerializationException {
+
+        target.node(tKey).set(source.node(sKey).get(type));
+    }
+
+    private static <T> void copy(ConfigurationNode source,
+                                 String sKey,
                                  TypeToken<T> type,
                                  ConfigurationNode target,
                                  String tKey,
                                  @Nullable T def) throws SerializationException {
 
         target.node(tKey).set(source.node(sKey).get(type, def));
+    }
+
+    private static <T> void copy(ConfigurationNode source,
+                                 String sKey,
+                                 TypeToken<T> type,
+                                 ConfigurationNode target,
+                                 String tKey) throws SerializationException {
+
+        target.node(tKey).set(source.node(sKey).get(type));
     }
 
     private GeyserHubConverter() {

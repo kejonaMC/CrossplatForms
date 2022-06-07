@@ -1,0 +1,30 @@
+enable: true
+items:
+  default:
+    material: COMPASS
+    name: §6Server Selector
+    lore:
+      - Right click me!
+    slot: 4
+    form: default
+    on-join: true
+    on-respawn: true
+    permission-defaults:
+      DROP: false
+      PRESERVE: false
+      MOVE: false
+
+  minigamesShortcut:
+    material: CARROT_ON_A_STICK
+    name: §6Minigames Shortcut
+    slot: 5
+    form: minigames
+    on-join: true
+    on-respawn: true
+    permission-defaults:
+      DROP: true
+      PRESERVE: false
+      MOVE: false
+
+config-version: 3
+
