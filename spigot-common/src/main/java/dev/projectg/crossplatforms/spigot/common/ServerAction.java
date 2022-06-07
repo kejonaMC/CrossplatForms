@@ -16,15 +16,15 @@ import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
-    public static JavaPlugin SENDER = null;
-
     public static final String TYPE = "server";
 
+    private transient final JavaPlugin sender;
     private transient final Placeholders placeholders;
 
     @Inject
     public ServerAction(String value, Placeholders placeholders) {
         super(TYPE, value);
+        this.sender = SpigotBase.getInstance();
         this.placeholders = placeholders;
     }
 
@@ -36,7 +36,7 @@ public class ServerAction extends SimpleAction<String> {
             Logger.get().debug("Attempting to send " + player.getName() + " to BungeeCord server " + value());
             out.writeUTF("Connect");
             out.writeUTF(resolved);
-            ((Player) player.getHandle()).sendPluginMessage(SENDER, "BungeeCord", stream.toByteArray());
+            ((Player) player.getHandle()).sendPluginMessage(sender, "BungeeCord", stream.toByteArray());
         } catch (IOException e) {
             Logger.get().severe("Failed to send a plugin message to BungeeCord!");
             e.printStackTrace();
