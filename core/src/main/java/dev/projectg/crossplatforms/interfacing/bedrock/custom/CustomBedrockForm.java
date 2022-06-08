@@ -1,6 +1,5 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
-import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.Action;
@@ -8,8 +7,7 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.projectg.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
-import org.geysermc.cumulus.component.Component;
-import org.geysermc.cumulus.response.CustomFormResponse;
+import org.geysermc.cumulus.form.CustomForm;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -21,12 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 @ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class CustomForm extends BedrockForm implements ValuedType {
+public class CustomBedrockForm extends BedrockForm implements ValuedType {
 
     public static final String TYPE = "custom_form";
 
@@ -50,13 +47,24 @@ public class CustomForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        List<CustomComponent> customComponents = new ArrayList<>(); // as our custom components
-        List<Component> components = new ArrayList<>(); // as "vanilla" cumulus
+        CustomForm.Builder form = CustomForm.builder()
+            .title(placeholders.setPlaceholders(player, super.getTitle()));
+
+        if (image != null) {
+            // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
+            form.icon(image.type(), image.data());
+        }
+
+        // Setup and add components
+        List<CustomComponent> formatted = new ArrayList<>();
         try {
             for (CustomComponent component : this.components) {
+                // resolve placeholders
                 CustomComponent resolved = component.withPlaceholders(placeholders.resolver(player));
-                customComponents.add(resolved);
-                components.add(resolved.cumulusComponent());
+                formatted.add(resolved);
+
+                // add component to form
+                form.component(resolved.cumulusComponent());
             }
         } catch (IllegalValueException e) {
             player.warn("There was an error sending a form to you.");
@@ -64,38 +72,24 @@ public class CustomForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        org.geysermc.cumulus.CustomForm form = org.geysermc.cumulus.CustomForm.of(
-                placeholders.setPlaceholders(player, super.getTitle()),
-                image,
-                components
-        );
+        form.closedOrInvalidResultHandler(() -> handleIncorrect(player));
 
-        // Set the response handler
-        Consumer<String> handler = (responseData) -> {
-            CustomFormResponse response = form.parseResponse(responseData);
-            if (!response.isCorrect()) {
-                handleIncorrect(player);
-                return;
-            }
+        form.validResultHandler(response -> executeHandler(() -> {
+            response.includeLabels(true); // allow label to be used as result placeholder
+
             Map<String, String> resultPlaceholders = new HashMap<>();
-            for (int i = 0; i < customComponents.size(); i++) {
-                CustomComponent component = customComponents.get(i);
-                if (component instanceof Label) {
-                    Label label = (Label) component;
-                    // label components aren't included in the response
-                    resultPlaceholders.put(placeholder(i), label.text());
-                    continue;
-                }
+            for (int i = 0; i < formatted.size(); i++) {
+                CustomComponent component = formatted.get(i);
 
-                JsonPrimitive result = response.get(i);
+                Object result = response.valueAt(i);
                 if (result == null) {
-                    logger.severe("Failed to get response " + i + " from custom form " + super.getTitle());
+                    logger.severe("Failed to get response " + i + " from custom form " + getTitle());
                     logger.severe("Full response data:");
-                    logger.severe(responseData);
+                    logger.severe(response.toString());
                     return;
                 }
 
-                resultPlaceholders.put(placeholder(i), component.parse(player, result.getAsString()));
+                resultPlaceholders.put(placeholder(i), component.parse(player, result.toString()));
             }
 
             if (logger.isDebug()) {
@@ -107,15 +101,13 @@ public class CustomForm extends BedrockForm implements ValuedType {
 
             // Handle effects of pressing the button
             Action.affectPlayer(player, actions, resultPlaceholders);
-        };
-
-        setResponseHandler(form, handler);
+        }));
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(uuid, form);
+        bedrockHandler.sendForm(uuid, form.build());
     }
 
-    private String placeholder(int i) {
+    private static String placeholder(int i) {
         return "%result_" + i + "%";
     }
 }

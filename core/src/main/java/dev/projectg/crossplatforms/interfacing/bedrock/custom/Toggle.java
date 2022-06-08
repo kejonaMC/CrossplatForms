@@ -7,7 +7,6 @@ import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ToggleComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -24,7 +23,7 @@ public class Toggle extends CustomComponent {
 
     @Inject
     private Toggle() {
-        super(ComponentType.TOGGLE, "");
+        super(TYPE, "");
     }
 
     @Override

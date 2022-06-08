@@ -3,14 +3,13 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Resolver;
-import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.parser.Parser;
+import dev.projectg.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -38,8 +37,8 @@ public abstract class CustomComponent implements ValuedType {
         //no-op
     }
 
-    public CustomComponent(ComponentType type, @Nonnull String text) {
-        this.type = Objects.requireNonNull(type.getName()); // lowercase it for serialization to work in cumulus
+    public CustomComponent(@Nonnull String type, @Nonnull String text) {
+        this.type = Objects.requireNonNull(type);
         this.text = Objects.requireNonNull(text);
     }
 

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.InputComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -24,14 +23,14 @@ public class Input extends CustomComponent {
     private String defaultText = "";
 
     public Input(String text, String placeholder, String defaultText) {
-        super(ComponentType.INPUT, text);
+        super(TYPE, text);
         this.placeholder = Objects.requireNonNull(placeholder);
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
     @Inject
     public Input() { // todo: make private, fix tests that use it
-        super(ComponentType.INPUT, "");
+        super(TYPE, "");
     }
 
     @Override

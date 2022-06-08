@@ -33,7 +33,7 @@ public class FormImageSerializer implements TypeSerializer<FormImage> {
             node.raw(null);
             return;
         }
-        node.set(FormImage.Type.class, image.getType());
-        node.set(String.class, image.getData());
+        node.set(FormImage.Type.class, image.type());
+        node.set(String.class, image.data());
     }
 }

@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.handler;
 
 import org.geysermc.api.session.Connection;
-import org.geysermc.cumulus.Form;
+import org.geysermc.cumulus.form.Form;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.GeyserSession;
 

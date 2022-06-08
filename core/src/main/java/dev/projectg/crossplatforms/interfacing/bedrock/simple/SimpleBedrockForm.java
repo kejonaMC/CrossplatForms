@@ -6,7 +6,7 @@ import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;
-import org.geysermc.cumulus.response.SimpleFormResponse;
+import org.geysermc.cumulus.form.SimpleForm;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class SimpleForm extends BedrockForm {
+public class SimpleBedrockForm extends BedrockForm {
 
     public static final String TYPE = "simple_form";
 
@@ -41,37 +41,30 @@ public class SimpleForm extends BedrockForm {
             return;
         }
 
-        // Resolve any placeholders in the button text
+        SimpleForm.Builder form = SimpleForm.builder()
+            .title(placeholders.setPlaceholders(player, super.getTitle()))
+            .content(placeholders.setPlaceholders(player, content));
+
+        // setup and add buttons
         List<SimpleButton> formattedButtons = new ArrayList<>(); // as our custom buttons
-        List<ButtonComponent> components = new ArrayList<>(); // as "vanilla" cumulus
-        for (SimpleButton rawButton : buttons) {
-            SimpleButton resolved = rawButton.withText(placeholders.setPlaceholders(player, rawButton.getText()));
+        for (SimpleButton button : buttons) {
+            SimpleButton resolved = button.withPlaceholders(placeholders.resolver(player));
             formattedButtons.add(resolved);
-            components.add(resolved.cumulusComponent());
+
+            form.button(resolved.getText(), resolved.getImage());
         }
 
-        // Create the form
-        org.geysermc.cumulus.SimpleForm form = org.geysermc.cumulus.SimpleForm.of(
-                placeholders.setPlaceholders(player, super.getTitle()),
-                placeholders.setPlaceholders(player, content),
-                components
-        );
+        // actions for incorrect response (closed or invalid response)
+        form.closedOrInvalidResultHandler(() -> handleIncorrect(player));
 
-        Consumer<String> handler = (responseData) -> {
-            SimpleFormResponse response = form.parseResponse(responseData);
-            if (!response.isCorrect()) {
-                handleIncorrect(player);
-                return;
-            }
+        // actions for correct response
+        form.validResultHandler(response -> executeHandler(() -> {
             // Handle effects of pressing the button
-            List<Action> actions = formattedButtons.get(response.getClickedButtonId()).getActions();
+            List<Action> actions = formattedButtons.get(response.clickedButtonId()).getActions();
             Action.affectPlayer(player, actions);
-        };
-
-        // Set the response handler
-        setResponseHandler(form, handler);
+        }));
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(uuid, form);
+        bedrockHandler.sendForm(uuid, form.build());
     }
 }

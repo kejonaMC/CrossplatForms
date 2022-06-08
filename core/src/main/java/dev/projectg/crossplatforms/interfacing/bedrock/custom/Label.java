@@ -5,7 +5,6 @@ import dev.projectg.crossplatforms.Resolver;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ToString(callSuper = true)
@@ -16,7 +15,7 @@ public class Label extends CustomComponent {
 
     @Inject
     private Label() {
-        super(ComponentType.LABEL, "");
+        super(TYPE, "");
     }
 
     @Override
