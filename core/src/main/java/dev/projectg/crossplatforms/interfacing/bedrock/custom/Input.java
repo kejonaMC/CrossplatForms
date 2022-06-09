@@ -41,7 +41,7 @@ public class Input extends CustomComponent {
     }
 
     @Inject
-    private Input() { // todo: make private, fix tests that use it
+    private Input() {
         super(TYPE);
     }
 

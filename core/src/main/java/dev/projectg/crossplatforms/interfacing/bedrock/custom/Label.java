@@ -42,6 +42,6 @@ public class Label extends CustomComponent {
     @Nonnull
     @Override
     public String resultIfHidden() {
-        return "";
+        return text;
     }
 }
