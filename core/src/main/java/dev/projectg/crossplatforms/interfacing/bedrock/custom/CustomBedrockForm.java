@@ -47,8 +47,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        CustomForm.Builder form = CustomForm.builder()
-            .title(placeholders.setPlaceholders(player, super.getTitle()));
+        CustomForm.Builder form = CustomForm.builder().title(placeholders.setPlaceholders(player, super.getTitle()));
 
         if (image != null) {
             // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
@@ -64,7 +63,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
                 formatted.add(resolved);
 
                 // add component to form
-                form.component(resolved.cumulusComponent());
+                form.optionalComponent(resolved.cumulusComponent(), resolved.show());
             }
         } catch (IllegalValueException e) {
             player.warn("There was an error sending a form to you.");
@@ -83,13 +82,11 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
 
                 Object result = response.valueAt(i);
                 if (result == null) {
-                    logger.severe("Failed to get response " + i + " from custom form " + getTitle());
-                    logger.severe("Full response data:");
-                    logger.severe(response.toString());
-                    return;
+                    // component was not added to the form
+                    resultPlaceholders.put(placeholder(i), component.resultIfHidden());
+                } else {
+                    resultPlaceholders.put(placeholder(i), component.parse(player, result.toString()));
                 }
-
-                resultPlaceholders.put(placeholder(i), component.parse(player, result.toString()));
             }
 
             if (logger.isDebug()) {

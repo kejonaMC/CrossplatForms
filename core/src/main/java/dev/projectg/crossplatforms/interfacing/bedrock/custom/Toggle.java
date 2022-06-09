@@ -7,6 +7,7 @@ import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ToggleComponent;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -23,7 +24,7 @@ public class Toggle extends CustomComponent {
 
     @Inject
     private Toggle() {
-        super(TYPE, "");
+        super(TYPE);
     }
 
     @Override
@@ -50,5 +51,11 @@ public class Toggle extends CustomComponent {
         Toggle copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultValue;
     }
 }

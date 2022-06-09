@@ -31,15 +31,15 @@ public class InputComponentTest {
 
     @Test
     public void testReplacements() {
-        Input withDashes = new Input();
+        Input withDashes = new Input("");
         withDashes.parser(new ReplacementParser(ImmutableMap.of(" ", "-")));
         Assertions.assertEquals("marshy-waters", withDashes.parse(player, "marshy waters"));
 
-        Input useless = new Input();
+        Input useless = new Input("");
         useless.parser(new ReplacementParser(ImmutableMap.of(" ", "-", "-", " ")));
         Assertions.assertEquals("Big Green Hill", useless.parse(player, "Big Green Hill"));
 
-        Input cascading = new Input();
+        Input cascading = new Input("");
         cascading.parser(new ReplacementParser(ImmutableMap.of("a", "b", "bb", "aa")));
         Assertions.assertEquals("aa aa", cascading.parse(player, "ab ba"));
     }

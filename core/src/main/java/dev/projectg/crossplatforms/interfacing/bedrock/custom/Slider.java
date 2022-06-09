@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.SliderComponent;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -27,7 +28,7 @@ public class Slider extends CustomComponent {
 
     @Inject
     private Slider() {
-        super(TYPE, "");
+        super(TYPE);
     }
 
     @Override
@@ -66,5 +67,11 @@ public class Slider extends CustomComponent {
         Slider copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultValue;
     }
 }
