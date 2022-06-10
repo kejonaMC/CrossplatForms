@@ -38,7 +38,7 @@ public abstract class CustomComponent implements ValuedType {
      * Implementing classes should provide a zero arg constructor that calls super the constructor below
      */
     @SuppressWarnings("unused")
-    private CustomComponent() {
+    protected CustomComponent() {
         //no-op
     }
 
@@ -64,6 +64,7 @@ public abstract class CustomComponent implements ValuedType {
      */
     protected final void copyBasics(CustomComponent source) {
         this.text = source.text;
+        this.shouldShow = source.shouldShow;
         this.parsers = new ArrayList<>(source.parsers);
     }
 
@@ -103,4 +104,17 @@ public abstract class CustomComponent implements ValuedType {
 
     @Nonnull
     public abstract String resultIfHidden();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomComponent component = (CustomComponent) o;
+        return text.equals(component.text) && Objects.equals(shouldShow, component.shouldShow) && parsers.equals(component.parsers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text, shouldShow, parsers);
+    }
 }

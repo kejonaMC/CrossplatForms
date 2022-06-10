@@ -24,7 +24,7 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     @Inject
     protected transient BedrockHandler bedrockHandler;
 
-    protected transient final String permissionBase = Constants.Id() + ".form.";
+    protected final transient String permissionBase = Constants.Id() + ".form.";
 
     private final List<Action> incorrectActions = Collections.emptyList();
 

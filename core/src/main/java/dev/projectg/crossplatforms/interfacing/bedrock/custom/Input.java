@@ -85,13 +85,11 @@ public class Input extends CustomComponent {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o.getClass().equals(getClass()))) return false;
-        final Input other = (Input) o;
-        return other.text.equals(text)
-                && other.placeholder.equals(placeholder)
-                && other.defaultText.equals(defaultText);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Input input = (Input) o;
+        return super.equals(o) && placeholder.equals(input.placeholder) && defaultText.equals(input.defaultText);
     }
 
     @Override

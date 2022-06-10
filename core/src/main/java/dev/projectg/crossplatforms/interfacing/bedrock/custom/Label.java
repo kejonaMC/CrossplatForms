@@ -7,6 +7,8 @@ import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
+
 @ToString(callSuper = true)
 @ConfigSerializable
 public class Label extends CustomComponent {

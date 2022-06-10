@@ -15,9 +15,9 @@ public class InterfaceAction extends SimpleAction<String> {
 
     public static final String TYPE = "form";
 
-    private transient final BedrockHandler bedrockHandler;
-    private transient final Interfacer interfacer;
-    private transient final Placeholders placeholders;
+    private final transient BedrockHandler bedrockHandler;
+    private final transient Interfacer interfacer;
+    private final transient Placeholders placeholders;
 
     @Inject
     public InterfaceAction(String value,

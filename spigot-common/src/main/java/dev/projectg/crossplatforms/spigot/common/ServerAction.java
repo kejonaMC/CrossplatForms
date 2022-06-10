@@ -20,7 +20,7 @@ public class ServerAction extends SimpleAction<String> {
 
     public static final String TYPE = "server";
 
-    private transient final Placeholders placeholders;
+    private final transient Placeholders placeholders;
 
     @Inject
     public ServerAction(String value, Placeholders placeholders) {

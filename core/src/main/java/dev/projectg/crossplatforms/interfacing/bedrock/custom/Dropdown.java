@@ -34,7 +34,7 @@ public class Dropdown extends CustomComponent {
 
     @Inject
     private Dropdown() {
-        super("", null);
+        super();
     }
 
     @Override
