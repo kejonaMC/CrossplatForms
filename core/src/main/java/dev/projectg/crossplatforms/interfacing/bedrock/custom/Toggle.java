@@ -23,7 +23,7 @@ public class Toggle extends CustomComponent {
 
     @Inject
     private Toggle() {
-        super("");
+        super();
     }
 
     @Override
@@ -50,6 +50,12 @@ public class Toggle extends CustomComponent {
         Toggle copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultValue;
     }
 
     @Override

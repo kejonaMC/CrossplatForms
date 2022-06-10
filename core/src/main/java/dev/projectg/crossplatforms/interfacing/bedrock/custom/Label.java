@@ -15,7 +15,7 @@ public class Label extends CustomComponent {
 
     @Inject
     private Label() {
-        super("");
+        super();
     }
 
     @Override
@@ -35,6 +35,12 @@ public class Label extends CustomComponent {
         Label copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return text;
     }
 
     @Override

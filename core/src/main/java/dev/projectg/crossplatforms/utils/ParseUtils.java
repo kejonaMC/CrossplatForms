@@ -49,4 +49,20 @@ public class ParseUtils {
                 throw new IllegalValueException(lower, "boolean", identifier);
         }
     }
+
+    public static boolean getBoolean(String value, boolean def) {
+        String lower = value.toLowerCase(Locale.ROOT);
+        switch (lower) {
+            case "true":
+            case "yes":
+            case "on":
+                return true;
+            case "false":
+            case "no":
+            case "off":
+                return false;
+            default:
+                return def;
+        }
+    }
 }

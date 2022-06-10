@@ -1,6 +1,6 @@
 package dev.projectg.crossplatforms.handler;
 
-import org.geysermc.cumulus.Form;
+import org.geysermc.cumulus.form.Form;
 
 import java.util.UUID;
 

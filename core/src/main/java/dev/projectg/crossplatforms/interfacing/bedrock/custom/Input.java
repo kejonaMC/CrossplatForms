@@ -9,6 +9,7 @@ import org.geysermc.cumulus.component.InputComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 @ToString(callSuper = true)
@@ -22,15 +23,26 @@ public class Input extends CustomComponent {
     private String placeholder = "";
     private String defaultText = "";
 
-    public Input(String text, String placeholder, String defaultText) {
-        super(text);
+    public Input(@Nonnull String text,
+                 @Nonnull String placeholder,
+                 @Nonnull String defaultText,
+                 @Nullable String shouldShow) {
+        super(text, shouldShow);
         this.placeholder = Objects.requireNonNull(placeholder);
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
+    public Input(@Nonnull String text, @Nonnull String placeholder, @Nonnull String defaultText) {
+        this(text, placeholder, defaultText, null);
+    }
+
+    public Input(@Nonnull String text) {
+        this(text, "", "", null);
+    }
+
     @Inject
     private Input() {
-        super("");
+        super();
     }
 
     @Override
@@ -64,6 +76,12 @@ public class Input extends CustomComponent {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultText;
     }
 
     @Override

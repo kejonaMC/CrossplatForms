@@ -33,7 +33,7 @@ public class StepSlider extends CustomComponent {
 
     @Inject
     private StepSlider() {
-        super("");
+        super();
     }
 
     @Override
@@ -72,6 +72,12 @@ public class StepSlider extends CustomComponent {
         } else {
             return super.parse(player, result);
         }
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultStep;
     }
 
     @Override

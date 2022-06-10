@@ -34,7 +34,7 @@ public class Dropdown extends CustomComponent {
 
     @Inject
     private Dropdown() {
-        super("");
+        super("", null);
     }
 
     @Override
@@ -73,6 +73,12 @@ public class Dropdown extends CustomComponent {
         } else {
             return super.parse(player, result);
         }
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultOption;
     }
 
     @Override

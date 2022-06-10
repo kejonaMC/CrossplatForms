@@ -27,7 +27,7 @@ public class Slider extends CustomComponent {
 
     @Inject
     private Slider() {
-        super("");
+        super();
     }
 
     @Override
@@ -66,6 +66,12 @@ public class Slider extends CustomComponent {
         Slider copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultValue;
     }
 
     @Override
