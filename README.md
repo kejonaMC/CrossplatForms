@@ -1,7 +1,7 @@
 <img alt="CrossplatForms" width="500" src="https://github.com/ProjectG-Plugins/CrossplatForms/blob/main/images/crossplatForms.svg" /> 
 
 [![Build Status](https://ci.projectg.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.projectg.dev/job/CrossplatForms/job/main/)
-[![Version](https://img.shields.io/badge/version-1.2.0-blue)](https://github.com/ProjectG-Plugins/CrossplatForms/releases)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue)](https://github.com/ProjectG-Plugins/CrossplatForms/releases)
 [![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/ProjectG-Plugins/CrossplatForms/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
 [![bStats](https://img.shields.io/badge/bStats-click%20me-yellow)](https://bstats.org/author/Konicai)
