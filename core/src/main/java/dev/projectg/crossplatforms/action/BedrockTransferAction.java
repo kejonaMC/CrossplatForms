@@ -30,7 +30,6 @@ public class BedrockTransferAction implements Action {
      * To be used if port is an integer, can't change because of placeholders.
      */
     private transient int staticPort = -1;
-    private static transient boolean postProcessed = false;
 
     @Inject
     private BedrockTransferAction(BedrockHandler bedrockHandler, Placeholders placeholders) {
@@ -40,7 +39,6 @@ public class BedrockTransferAction implements Action {
 
     @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
-        Logger.get().debug("PostProcessed BedrockTransferAction: " + postProcessed);
         String address = placeholders.setPlaceholders(player, this.address, additionalPlaceholders);
 
         int port;
@@ -70,7 +68,6 @@ public class BedrockTransferAction implements Action {
 
     @PostProcess
     private void postProcess() {
-        postProcessed = true;
         try {
             staticPort = Integer.parseUnsignedInt(this.port);
         } catch (NumberFormatException ignored) {
