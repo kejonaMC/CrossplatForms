@@ -20,7 +20,7 @@ See the [wiki](https://github.com/kejonaMC/CrossplatForms/wiki) for configuratio
 * Define [Actions](https://github.com/kejonaMCs/CrossplatForms/wiki/Common-Configuration-Elements#actions) to run commands, open interfaces, change servers, etc
 * Simple, Modal, and Custom [Forms](https://github.com/kejonaMC/CrossplatForms/wiki/bedrock-forms.yml) for Bedrock Edition players
   * Simple and Modal Forms: Trigger different Actions depending on the button pressed
-  * Custom Forms: Actions are triggered, and the response of each component is available as a placeholder
+  * Custom Forms: Actions are triggered, and the response of each component is available as a placeholder in actions
 * Inventory [menus](https://github.com/kejonaMC/CrossplatForms/wiki/java-menus.yml). Trigger different Actions depending on the button pressed
 * [Access Items](https://github.com/kejonaMC/CrossplatForms/wiki/access-items.yml) for players that trigger Actions when clicked in hand
 * Register [custom commands](https://github.com/kejonaMC/CrossplatForms/wiki/config.yml) that trigger Actions
@@ -29,11 +29,13 @@ See the [wiki](https://github.com/kejonaMC/CrossplatForms/wiki) for configuratio
 
 ## Supported Platforms:
 
-#### If you have both Geyser and Floodgate installed on BungeeCord or Velocity, you'll need to either:  
+#### For CrossplatForms on BungeeCord/Velocity: If you have both Geyser and Floodgate installed, you'll need to either:  
 A: Use [Geyser-Standalone](https://wiki.geysermc.org/geyser/setup/#standalone-setup) instead  
-B: Use our [fork](https://github.com/kejonaMC/Floodgate) of Floodgate that allows using the [Floodgate API](https://wiki.geysermc.org/floodgate/api/) on BungeeCord/Velocity while Geyser is also installed. It does not contain any other changes.
+B: Use our [fork](https://github.com/kejonaMC/Floodgate) of Floodgate that allows using the [Floodgate API](https://wiki.geysermc.org/floodgate/api/) on BungeeCord/Velocity while Geyser is also installed. Only install it on the proxy.
 
 BungeeCord and Velocity do not support Access Items.
+
+---
 
 * [`CrossplatForms-Spigot.jar`](https://ci.kejona.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; Spigot 1.14.4 - 1.18.2
 * [`CrossplatForms-SpigotLegacy.jar`](https://ci.kejona.dev/job/CrossplatForms/job/main/) :&ensp; Spigot 1.8.8 - 1.13.2
