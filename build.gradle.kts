@@ -4,12 +4,14 @@ plugins {
     `java-library`
     `maven-publish`
     id("net.kyori.indra.git")
+    id("com.adarshr.test-logger")
 }
 
 allprojects{
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "net.kyori.indra.git")
+    apply(plugin = "com.adarshr.test-logger")
 
     group = "dev.projectg"
     version = "1.2.0"

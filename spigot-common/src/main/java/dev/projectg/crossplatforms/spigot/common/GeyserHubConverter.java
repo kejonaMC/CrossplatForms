@@ -9,6 +9,7 @@ import org.spongepowered.configurate.yaml.NodeStyle;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -20,10 +21,9 @@ public final class GeyserHubConverter {
     private static final TypeToken<Map<Integer, ConfigurationNode>> INT_MAP = new TypeToken<Map<Integer, ConfigurationNode>>() {};
     private static final TypeToken<Map<String, ConfigurationNode>> STRING_MAP = new TypeToken<Map<String, ConfigurationNode>>() {};
 
-    private static final YamlConfigurationLoader.Builder LOADER_BUILDER = YamlConfigurationLoader
-        .builder()
-        .indent(2)
-        .nodeStyle(NodeStyle.BLOCK);
+    public static File convert(File selectorConfig) throws IOException {
+        return convert(selectorConfig.toPath()).toFile();
+    }
 
     public static Path convert(Path selectorConfig) throws IOException {
         Path parent = selectorConfig.getParent();
@@ -69,9 +69,9 @@ public final class GeyserHubConverter {
             copy(item, "Material", String.class, targetItem, "material", "COMPASS");
             copy(item, "Name", String.class, targetItem, "display-name", "");
             copy(item, "Lore", new TypeToken<List<String>>() {}, targetItem, "lore");
-            copy(item, "Slot", int.class, targetItem, "slot", 0);
-            copy(item, "Join", boolean.class, targetItem, "on-join", true);
-            copy(item, "Respawn", boolean.class, targetItem, "on-respawn", true);
+            copy(item, "Slot", Integer.class, targetItem, "slot", 0);
+            copy(item, "Join", Boolean.class, targetItem, "on-join", true);
+            copy(item, "Respawn", Boolean.class, targetItem, "on-respawn", true);
 
             ConfigurationNode permissions = targetItem.node("permissions");
             permissions.node("DROP").set(item.node("Allow-Drop").getBoolean(false) ? PermissionDefault.TRUE : PermissionDefault.FALSE);
@@ -84,7 +84,7 @@ public final class GeyserHubConverter {
             }
         }
 
-        target.node("config-version").set(int.class, 3);
+        target.node("config-version").set(3);
     }
 
     private static void convertMenus(ConfigurationNode selectorConfig, ConfigurationNode target) throws SerializationException {
@@ -96,7 +96,7 @@ public final class GeyserHubConverter {
             ConfigurationNode targetMenu = targetMenus.node(menu.key());
 
             copy(menu, "Title", String.class, targetMenu, "title", "");
-            copy(menu, "Size", int.class, targetMenu, "size", 5);
+            copy(menu, "Size", Integer.class, targetMenu, "size", 5);
 
             ConfigurationNode buttons = menu.node("Buttons");
             ConfigurationNode targetButtons = targetMenu.node("buttons");
@@ -131,7 +131,7 @@ public final class GeyserHubConverter {
             }
         }
 
-        target.node("config-version").set(int.class, 1);
+        target.node("config-version").set(1);
     }
 
     private static void convertForms(ConfigurationNode selectorConfig, ConfigurationNode target) throws SerializationException {
@@ -168,11 +168,26 @@ public final class GeyserHubConverter {
             }
         }
 
-        target.node("config-version").set(int.class, 4);
+        target.node("config-version").set(4);
+    }
+
+    public static YamlConfigurationLoader.Builder loaderBuilder() {
+        return YamlConfigurationLoader
+            .builder()
+            .indent(2)
+            .nodeStyle(NodeStyle.BLOCK);
     }
 
     public static YamlConfigurationLoader loader(Path folder, String fileName) {
-        return LOADER_BUILDER.file(folder.resolve(fileName).toFile()).build();
+        return loaderBuilder().file(folder.resolve(fileName).toFile()).build();
+    }
+
+    public static YamlConfigurationLoader loader(File folder, String fileName) {
+        return loaderBuilder().file(new File(folder, fileName)).build();
+    }
+
+    public static YamlConfigurationLoader loader(File file) {
+        return loaderBuilder().file(file).build();
     }
 
     private static <T> void copy(ConfigurationNode source,

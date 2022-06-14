@@ -1,15 +1,15 @@
+import dev.projectg.crossplatforms.TestLogger;
 import dev.projectg.crossplatforms.spigot.common.GeyserHubConverter;
+import dev.projectg.crossplatforms.utils.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 public class GeyserHubConvertTest {
 
@@ -21,19 +21,19 @@ public class GeyserHubConvertTest {
     private static ConfigurationNode MENUS;
 
     @BeforeAll
-    public static void setup() throws ConfigurateException {
-        // todo: need to access the TestLogger in core/src/test and instantiate it here
-        Path dir = tempDirectory.toPath();
+    public static void setup() throws IOException {
+        new TestLogger(); // setup for Logger#get()
 
         // load expected values
-        ITEMS = loader(dir, "access-items.yml").load();
-        FORMS = loader(dir, "bedrock-forms.yml").load();
-        MENUS = loader(dir, "java-menus.yml").load();
+        ITEMS = resourceLoader(tempDirectory, "access-items.yml").load();
+        FORMS = resourceLoader(tempDirectory, "bedrock-forms.yml").load();
+        MENUS = resourceLoader(tempDirectory, "java-menus.yml").load();
     }
 
     @Test
     public void testConvert() throws IOException {
-        Path converted = GeyserHubConverter.convert(tempDirectory.toPath().resolve("selector.yml"));
+        File selector = FileUtils.fileOrCopiedFromResource(new File(tempDirectory, "selector.yml"));
+        File converted = GeyserHubConverter.convert(selector);
         ConfigurationNode convertedItems = loader(converted, "access-items.yml").load();
         ConfigurationNode convertedForms = loader(converted, "bedrock-forms.yml").load();
         ConfigurationNode convertedMenus = loader(converted, "java-menus.yml").load();
@@ -43,7 +43,11 @@ public class GeyserHubConvertTest {
         Assertions.assertEquals(MENUS, convertedMenus);
     }
 
-    private static YamlConfigurationLoader loader(Path directory, String file) {
+    private static YamlConfigurationLoader loader(File directory, String file) {
         return GeyserHubConverter.loader(directory, file);
+    }
+
+    private static YamlConfigurationLoader resourceLoader(File targetDirectory, String resourceFileName) throws IOException {
+        return GeyserHubConverter.loader(FileUtils.fileOrCopiedFromResource(new File(targetDirectory, resourceFileName)));
     }
 }

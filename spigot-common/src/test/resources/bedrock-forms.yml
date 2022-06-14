@@ -26,17 +26,17 @@ menus:
           commands:
             - "console; tp %player_name% 0 80 0"
 
-      minigames:
-        title: Minigames
-        content: Click on a minigame of choice
-        buttons:
-          - text: Spleef
-            image: "https://www.digminecraft.com/materials/images/snowball.png"
-            actions:
-              server: spleef
+  minigames:
+    title: Minigames
+    content: Click on a minigame of choice
+    buttons:
+      - text: Spleef
+        image: "https://www.digminecraft.com/materials/images/snowball.png"
+        actions:
+          server: spleef
 
-          - text: Hide & Seek
-            actions:
-              server: hideseek
+      - text: Hide & Seek
+        actions:
+          server: hideseek
 
 config-version: 4

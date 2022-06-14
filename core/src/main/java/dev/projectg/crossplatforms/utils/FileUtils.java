@@ -24,17 +24,17 @@ public class FileUtils {
 
     /**
      * @param file The file location that should be checked, and where the resource should be copied to if it doesn't exist
-     * @param resourceFile The resource file as a string
+     * @param resourceFileName The resource file as a string
      * @return The file, if it already exists, or copied.
      */
-    public static File fileOrCopiedFromResource(File file, String resourceFile) throws IOException {
+    public static File fileOrCopiedFromResource(File file, String resourceFileName) throws IOException {
         if (file.exists()) {
             return file;
         }
 
-        InputStream input = getResource(resourceFile);
+        InputStream input = getResource(resourceFileName);
         if (input == null) {
-            throw new AssertionError("Resource " + resourceFile + " does not exist (" + file + ")");
+            throw new AssertionError("Resource " + resourceFileName + " does not exist (" + file + ")");
         }
 
         file.getParentFile().mkdirs();
