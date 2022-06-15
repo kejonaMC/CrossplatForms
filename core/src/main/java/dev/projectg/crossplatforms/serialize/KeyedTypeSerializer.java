@@ -54,8 +54,7 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         registerSimpleType(typeId, TypeToken.get(valueType), simpleType);
     }
 
-    @Override
-    public T deserialize(@Nullable Type returnType, ConfigurationNode node) throws SerializationException {
+    public T deserialize(ConfigurationNode node) throws SerializationException {
         Object key = node.key();
         if (key == null || key.toString().equals("")) {
             throw new SerializationException("Cannot deserialization a node into a KeyedType with a key of: " + key);
@@ -74,7 +73,11 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         } else {
             instance = node.get(type);
         }
-        return instance;
+        return instance;    }
+
+    @Override
+    public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
+        return deserialize(node);
     }
 
     @Override

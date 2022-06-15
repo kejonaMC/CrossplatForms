@@ -33,7 +33,7 @@ public class KeyedTypeListSerializer<E extends KeyedType> implements TypeSeriali
 
         List<E> mapped = new ArrayList<>();
         for (ConfigurationNode child : childMap.values()) {
-            mapped.add(elementSerializer.deserialize(null, child));
+            mapped.add(elementSerializer.deserialize(child));
         }
 
         return mapped;
