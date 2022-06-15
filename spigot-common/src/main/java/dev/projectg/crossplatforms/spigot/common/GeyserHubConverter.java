@@ -98,7 +98,7 @@ public final class GeyserHubConverter {
 
             ConfigurationNode buttons = menu.node("Buttons");
             ConfigurationNode targetButtons = targetMenu.node("buttons");
-            targetButtons.node("dummy").set("dummyvalue"); // this avoids a bug? in configurate
+            targetButtons.set(Collections.emptyMap()); // https://github.com/SpongePowered/Configurate/issues/300
             for (int slot : buttons.get(INT_MAP, Collections.emptyMap()).keySet()) {
                 ConfigurationNode button = buttons.node(slot);
                 ConfigurationNode targetButton = targetButtons.node(slot);
@@ -128,7 +128,6 @@ public final class GeyserHubConverter {
                     copy(anyClick, "Server", String.class, targetAny, "server");
                 }
             }
-            targetButtons.node("dummy").raw(null);
         }
 
         target.node("config-version").set(1);
