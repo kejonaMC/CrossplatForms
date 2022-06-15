@@ -9,10 +9,11 @@
 
 CrossplatForms is a Java Edition plugin aimed at creating Bedrock Edition Forms for [Geyser](https://github.com/GeyserMC/Geyser) players through flexible configurations. Bedrock Forms allow servers to provide players with abritrary choices in a styled menu, which the server then handles in any way desired. This allows you to customize forms specifically for your server, plugins, etc.
 
-Inventory menus for Java Edition players can also be created, on all platforms.
+Inventory menus for Java Edition players can also be created, on all platforms. Protocolize must be installed on BungeeCord/Velocity for inventory menus to be created on them.
 
-See the [gallery](images/README.md) for visual examples.
+Geyser and Floodgate are not required, and if not present, Bedrock Edition features will be simply disabled.
 
+See the [gallery](images/README.md) for visual examples.  
 See the [wiki](https://github.com/kejonaMC/CrossplatForms/wiki) for configuration information.
 
 ## Features:
