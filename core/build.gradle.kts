@@ -1,6 +1,7 @@
 
 plugins {
     id("net.kyori.indra")
+    id("java-test-fixtures")
 }
 
 sourceSets {

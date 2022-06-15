@@ -7,6 +7,7 @@ import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.projectg.crossplatforms.spigot.common.handler.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,0 +1,45 @@
+enable: true
+forms:
+  default:
+    type: simple_form
+    title: Server Selector
+    content: Click on the server button of choice.
+    buttons:
+      - text: "Server Lobby: %bungee_lobby% players"
+        image: https://www.digminecraft.com/block_recipes/images/cyan_concrete.png
+        actions:
+          commands:
+            - console; tell %player_name% Taking you to the lobby.
+          server: lobby
+
+      - text: "Survival: %bungee_survival% players"
+        image: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
+        actions:
+          server: survival
+
+      - text: Minigames
+        image: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
+        actions:
+          commands:
+            - "player; ghub form minigames"
+
+      - text: Spawn
+        actions:
+          commands:
+            - "console; tp %player_name% 0 80 0"
+
+  minigames:
+    type: simple_form
+    title: Minigames
+    content: Click on a minigame of choice.
+    buttons:
+      - text: Spleef
+        image: "https://www.digminecraft.com/materials/images/snowball.png"
+        actions:
+          server: spleef
+
+      - text: Hide & Seek
+        actions:
+          server: hideseek
+
+config-version: 4
