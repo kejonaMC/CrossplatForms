@@ -1,4 +1,5 @@
 import dev.projectg.crossplatforms.TestLogger;
+import dev.projectg.crossplatforms.config.PrettyPrinter;
 import dev.projectg.crossplatforms.spigot.common.GeyserHubConverter;
 import dev.projectg.crossplatforms.utils.FileUtils;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,8 @@ public class GeyserHubConvertTest {
 
     @TempDir
     private static File tempDirectory;
+
+    private static final PrettyPrinter PRINTER = new PrettyPrinter(2, false);
 
     private static ConfigurationNode ITEMS;
     private static ConfigurationNode FORMS;
@@ -38,9 +41,9 @@ public class GeyserHubConvertTest {
         ConfigurationNode convertedForms = loader(converted, "bedrock-forms.yml").load();
         ConfigurationNode convertedMenus = loader(converted, "java-menus.yml").load();
 
-        Assertions.assertEquals(ITEMS, convertedItems);
-        Assertions.assertEquals(FORMS, convertedForms);
-        Assertions.assertEquals(MENUS, convertedMenus);
+        Assertions.assertEquals(PRINTER.pretty(ITEMS), PRINTER.pretty(convertedItems));
+        Assertions.assertEquals(PRINTER.pretty(FORMS), PRINTER.pretty(convertedForms));
+        Assertions.assertEquals(PRINTER.pretty(MENUS), PRINTER.pretty(convertedMenus));
     }
 
     private static YamlConfigurationLoader loader(File directory, String file) {

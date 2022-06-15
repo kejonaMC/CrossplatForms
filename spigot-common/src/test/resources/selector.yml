@@ -130,7 +130,7 @@ Bedrock-Selector:
         # You can also execute commands with buttons as seen below! Use "player;" or "console;" to choose who to run the command as.
         gamesCommand:
           Button-Text: "Minigames"
-          Image-URL: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
+          ImageURL: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
           Commands:
             - "player; ghub form minigames"
 

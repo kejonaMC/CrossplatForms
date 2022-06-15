@@ -52,3 +52,5 @@ menus:
         material: DIRT
         any-click:
           server: "hideseek"
+
+config-version: 1

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public final class GeyserHubConverter {
@@ -73,15 +74,12 @@ public final class GeyserHubConverter {
             copy(item, "Join", Boolean.class, targetItem, "on-join", true);
             copy(item, "Respawn", Boolean.class, targetItem, "on-respawn", true);
 
-            ConfigurationNode permissions = targetItem.node("permissions");
-            permissions.node("DROP").set(item.node("Allow-Drop").getBoolean(false) ? PermissionDefault.TRUE : PermissionDefault.FALSE);
-            permissions.node("PRESERVE").set(item.node("Destroy-Dropped").getBoolean(true) ? PermissionDefault.FALSE : PermissionDefault.TRUE);
-            permissions.node("MOVE").set(item.node("Allow-Move").getBoolean(false) ? PermissionDefault.TRUE : PermissionDefault.FALSE);
+            ConfigurationNode permissions = targetItem.node("permission-defaults");
+            writeLowerCase(permissions, "DROP", item.node("Allow-Drop").getBoolean(false) ? PermissionDefault.TRUE : PermissionDefault.FALSE);
+            writeLowerCase(permissions, "PRESERVE", item.node("Destroy-Dropped").getBoolean(true) ? PermissionDefault.FALSE : PermissionDefault.TRUE);
+            writeLowerCase(permissions, "MOVE", item.node("Allow-Move").getBoolean(false) ? PermissionDefault.TRUE : PermissionDefault.FALSE);
 
-            ConfigurationNode form = item.node("Form");
-            if (!form.virtual()) {
-                targetItem.node("actions", "form").set(String.class, form.getString());
-            }
+            copy(item, "Form", String.class, targetItem.node("actions"), "form");
         }
 
         target.node("config-version").set(3);
@@ -100,6 +98,7 @@ public final class GeyserHubConverter {
 
             ConfigurationNode buttons = menu.node("Buttons");
             ConfigurationNode targetButtons = targetMenu.node("buttons");
+            targetButtons.node("dummy").set("dummyvalue"); // this avoids a bug? in configurate
             for (int slot : buttons.get(INT_MAP, Collections.emptyMap()).keySet()) {
                 ConfigurationNode button = buttons.node(slot);
                 ConfigurationNode targetButton = targetButtons.node(slot);
@@ -129,6 +128,7 @@ public final class GeyserHubConverter {
                     copy(anyClick, "Server", String.class, targetAny, "server");
                 }
             }
+            targetButtons.node("dummy").raw(null);
         }
 
         target.node("config-version").set(1);
@@ -156,15 +156,8 @@ public final class GeyserHubConverter {
                 copy(button, "ImageURL", String.class, targetButton, "image");
 
                 ConfigurationNode targetActions = targetButton.node("actions");
-
-                ConfigurationNode commands = button.node("Commands");
-                if (!commands.virtual()) {
-                    targetActions.node("commands").set(commands.get(new TypeToken<List<String>>() {}));
-                }
-                ConfigurationNode server = button.node("Server");
-                if (!server.virtual()) {
-                    targetActions.node("server").set(server.getString());
-                }
+                copy(button, "Commands", new TypeToken<List<String>>() {}, targetActions, "commands");
+                copy(button, "Server", String.class, targetActions, "server");
             }
         }
 
@@ -197,7 +190,7 @@ public final class GeyserHubConverter {
                                  String tKey,
                                  @Nullable T def) throws SerializationException {
 
-        target.node(tKey).set(source.node(sKey).get(type, def));
+        copy(source, sKey, TypeToken.get(type), target, tKey, def);
     }
 
     private static <T> void copy(ConfigurationNode source,
@@ -206,7 +199,7 @@ public final class GeyserHubConverter {
                                  ConfigurationNode target,
                                  String tKey) throws SerializationException {
 
-        target.node(tKey).set(source.node(sKey).get(type));
+        copy(source, sKey, type, target, tKey, null);
     }
 
     private static <T> void copy(ConfigurationNode source,
@@ -216,7 +209,10 @@ public final class GeyserHubConverter {
                                  String tKey,
                                  @Nullable T def) throws SerializationException {
 
-        target.node(tKey).set(source.node(sKey).get(type, def));
+        ConfigurationNode value = source.node(sKey);
+        if (!value.virtual()) {
+            target.node(tKey).set(value.get(type, def));
+        }
     }
 
     private static <T> void copy(ConfigurationNode source,
@@ -225,7 +221,12 @@ public final class GeyserHubConverter {
                                  ConfigurationNode target,
                                  String tKey) throws SerializationException {
 
-        target.node(tKey).set(source.node(sKey).get(type));
+        copy(source, sKey, type, target, tKey, null);
+    }
+
+    // hack to get our assertions working
+    private static void writeLowerCase(ConfigurationNode node, String key, Enum<?> value) throws SerializationException {
+        node.node(key).set(value.name().toLowerCase(Locale.ROOT));
     }
 
     private GeyserHubConverter() {

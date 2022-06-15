@@ -1,8 +1,9 @@
 enable: true
-menus:
+forms:
   default:
+    type: simple_form
     title: Server Selector
-    content: Click on the server button of choice
+    content: Click on the server button of choice.
     buttons:
       - text: "Server Lobby: %bungee_lobby% players"
         image: https://www.digminecraft.com/block_recipes/images/cyan_concrete.png
@@ -13,7 +14,8 @@ menus:
 
       - text: "Survival: %bungee_survival% players"
         image: "https://www.digminecraft.com/block_recipes/images/blue_concrete.png"
-        server: survival
+        actions:
+          server: survival
 
       - text: Minigames
         image: "https://www.digminecraft.com/weapon_recipes/images/diamond_sword.png"
@@ -27,8 +29,9 @@ menus:
             - "console; tp %player_name% 0 80 0"
 
   minigames:
+    type: simple_form
     title: Minigames
-    content: Click on a minigame of choice
+    content: Click on a minigame of choice.
     buttons:
       - text: Spleef
         image: "https://www.digminecraft.com/materials/images/snowball.png"
