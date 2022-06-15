@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public interface PlaceholderHandler {
+public interface Placeholders {
 
     String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text);
 

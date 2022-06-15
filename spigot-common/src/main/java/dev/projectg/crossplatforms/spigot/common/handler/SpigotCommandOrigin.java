@@ -1,6 +1,7 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.projectg.crossplatforms.spigot.common.handler;
 
 import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.projectg.crossplatforms.spigot.common.SpigotBase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.TextComponent;
@@ -26,7 +27,7 @@ public class SpigotCommandOrigin implements CommandOrigin {
 
     @Override
     public void sendRaw(TextComponent message) {
-        handle.sendMessage(SpigotCommon.LEGACY_SERIALIZER.serialize(message));
+        handle.sendMessage(SpigotBase.LEGACY_SERIALIZER.serialize(message));
     }
 
     @Override

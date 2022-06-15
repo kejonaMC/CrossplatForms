@@ -3,7 +3,7 @@ package dev.projectg.crossplatforms.action;
 import com.google.inject.Inject;
 import dev.projectg.crossplatforms.command.DispatchableCommand;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 
 import javax.annotation.Nonnull;
@@ -15,11 +15,11 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
     public static final String TYPE = "commands";
 
-    private transient final ServerHandler serverHandler;
-    private transient final PlaceholderHandler placeholders;
+    private final transient ServerHandler serverHandler;
+    private final transient Placeholders placeholders;
 
     @Inject
-    public CommandsAction(List<DispatchableCommand> commands, ServerHandler serverHandler, PlaceholderHandler placeholders) {
+    public CommandsAction(List<DispatchableCommand> commands, ServerHandler serverHandler, Placeholders placeholders) {
         super(TYPE, commands);
         this.serverHandler = serverHandler;
         this.placeholders = placeholders;

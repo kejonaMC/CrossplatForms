@@ -1,6 +1,7 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.projectg.crossplatforms.spigot.common.handler;
 
 import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.projectg.crossplatforms.spigot.common.SpigotBase;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 
@@ -33,7 +34,7 @@ public class SpigotPlayer implements FormPlayer {
 
     @Override
     public void sendRaw(TextComponent component) {
-        handle.sendMessage(SpigotCommon.LEGACY_SERIALIZER.serialize(component));
+        handle.sendMessage(SpigotBase.LEGACY_SERIALIZER.serialize(component));
     }
 
     @Override

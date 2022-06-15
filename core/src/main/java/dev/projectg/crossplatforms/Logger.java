@@ -6,9 +6,12 @@ public abstract class Logger {
 
     public Logger() {
         INSTANCE = this;
+        if (Boolean.getBoolean("CrossplatForms.Debug")) {
+            setDebug(true);
+        }
     }
 
-    public static Logger getLogger() {
+    public static Logger get() {
         return INSTANCE;
     }
 

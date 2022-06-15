@@ -3,10 +3,11 @@ package dev.projectg.crossplatforms.spigot.common;
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.handler.Placeholders;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.projectg.crossplatforms.spigot.common.handler.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,14 +24,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class SpigotInterfacer extends InterfaceManager implements Listener {
+public class SpigotInterfacer extends Interfacer implements Listener {
 
     private final Map<Inventory, JavaMenu> menuCache = new HashMap<>();
 
     @Override
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
-        Logger logger = Logger.getLogger();
-        PlaceholderHandler placeholders = CrossplatForms.getInstance().getPlaceholders();
+        Logger logger = Logger.get();
+        Placeholders placeholders = CrossplatForms.getInstance().getPlaceholders();
         Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
 
         Inventory selectorGUI; // todo: better size validation?

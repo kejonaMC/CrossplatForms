@@ -4,12 +4,12 @@ import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 @ConfigSerializable
@@ -18,7 +18,7 @@ public class BedrockTransferAction implements Action {
     public static final String TYPE = "transfer_packet";
 
     private final transient BedrockHandler bedrockHandler;
-    private final transient PlaceholderHandler placeholders;
+    private final transient Placeholders placeholders;
 
     @Required
     private String address;
@@ -31,64 +31,47 @@ public class BedrockTransferAction implements Action {
      */
     private transient int staticPort = -1;
 
-    private transient boolean checkedForStatic = false;
-
     @Inject
-    private BedrockTransferAction(BedrockHandler bedrockHandler, PlaceholderHandler placeholders) {
+    private BedrockTransferAction(BedrockHandler bedrockHandler, Placeholders placeholders) {
         this.bedrockHandler = bedrockHandler;
         this.placeholders = placeholders;
     }
 
     @Override
     public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
-        String actualAddress = placeholders.setPlaceholders(player, address, additionalPlaceholders);
+        String address = placeholders.setPlaceholders(player, this.address, additionalPlaceholders);
 
-        Integer actualPort = getPort(actualAddress, player, additionalPlaceholders);
-        if (actualPort == null) {
-            return; // messages handled in getPort
+        int port;
+        if (staticPort == -1) {
+            // Failed to parse as int when action was first deserialized - assume its a placeholder.
+            String resolved = placeholders.setPlaceholders(player, this.port, additionalPlaceholders);
+            try {
+                port = Integer.parseUnsignedInt(resolved);
+            } catch (NumberFormatException e) {
+                player.warn("Failed to transfer you to a server because " + resolved + " is not a valid port");
+                Logger.get().warn("Failed to send " + player.getName() + " to " + address + " because " + resolved + " is not a valid port");
+                return;
+            }
+        } else {
+            port = staticPort;
         }
 
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            if (!bedrockHandler.transfer(player, actualAddress, actualPort)) {
+            if (!bedrockHandler.transfer(player, address, port)) {
                 player.warn("Failed to transfer you to a server due to an unknown reason");
             }
         } else {
             player.warn("Attempted to transfer you to a server that supports Bedrock Edition but you aren't a Bedrock player.");
-            Logger.getLogger().warn("Can't use transfer_packet " + actualAddress + ":" + actualPort + " on JE player " + player.getName());
+            Logger.get().warn("Can't use transfer_packet " + address + ":" + port + " on JE player " + player.getName());
         }
     }
 
-    @Nullable
-    private Integer getPort(String address, FormPlayer player, Map<String, String> additionalPlaceholders) {
-        // todo: fix this sin
-        int actualPort;
-        if (staticPort != -1) {
-            // port is static integer
-            return staticPort;
-        } else {
-            if (checkedForStatic) {
-                // Already checked for static port and it is not
-                String resolved = placeholders.setPlaceholders(player, port, additionalPlaceholders);
-                try {
-                    actualPort = Integer.parseUnsignedInt(resolved);
-                } catch (NumberFormatException e) {
-                    player.warn("Failed to transfer you to a server because " + resolved + " is not a valid port");
-                    Logger.getLogger().warn("Failed to send " + player.getName() + " to " + address + " because " + resolved + " is not a valid port");
-                    return null;
-                }
-            } else {
-                // This check should only occur once (lazy init)
-                checkedForStatic = true; // set the check flag before we possibly call getPort again (to resolved placeholders)
-                try {
-                    actualPort = Integer.parseUnsignedInt(port);
-                    staticPort = actualPort;
-                } catch (NumberFormatException e) {
-                    // config port is not an integer, try parsing placeholders
-                    return getPort(address, player, additionalPlaceholders);
-                }
-            }
+    @PostProcess
+    private void postProcess() {
+        try {
+            staticPort = Integer.parseUnsignedInt(this.port);
+        } catch (NumberFormatException ignored) {
         }
-        return actualPort;
     }
 
     @Override

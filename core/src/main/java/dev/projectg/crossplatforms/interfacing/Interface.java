@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.permission.Permission;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
@@ -26,13 +26,13 @@ import java.util.Map;
 public abstract class Interface {
 
     @Inject
-    protected transient InterfaceManager interfaceManager;
+    protected transient Interfacer interfacer;
 
     @Inject
     protected transient ServerHandler serverHandler;
 
     @Inject
-    protected transient PlaceholderHandler placeholders;
+    protected transient Placeholders placeholders;
 
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Interface.Limit, Permission> permissions;
@@ -58,7 +58,7 @@ public abstract class Interface {
 
     public void generatePermissions(InterfaceConfig registry) {
         if (permissions != null) {
-            Logger.getLogger().severe("Permissions in menu or form '" + identifier + "' have already been generated!");
+            Logger.get().severe("Permissions in menu or form '" + identifier + "' have already been generated!");
         }
 
         String mainPermission = getPermissionBase() + identifier;

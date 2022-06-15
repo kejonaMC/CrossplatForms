@@ -29,7 +29,7 @@ public class LuckPermsHook implements PermissionHook {
     private final LuckPerms luckPerms = LuckPermsProvider.get();
     private final UserManager userManager = luckPerms.getUserManager();
     private final GroupManager groupManager = luckPerms.getGroupManager();
-    private final Logger logger = Logger.getLogger();
+    private final Logger logger = Logger.get();
 
     @Override
     public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
@@ -47,7 +47,7 @@ public class LuckPermsHook implements PermissionHook {
                     group.data().add(DEFAULT_WEIGHT);
                     logger.debug("Created LuckPerms group: " + DEFAULT_NAME);
                 } catch (InterruptedException | ExecutionException e) {
-                    Logger.getLogger().severe("Failed to register create and load group: " + DEFAULT_NAME);
+                    logger.severe("Failed to register create and load group: " + DEFAULT_NAME);
                     e.printStackTrace();
                     return;
                 }

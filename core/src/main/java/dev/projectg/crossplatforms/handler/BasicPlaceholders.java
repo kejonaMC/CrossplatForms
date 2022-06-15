@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.handler;
 
 import javax.annotation.Nonnull;
 
-public class BasicPlaceholders implements PlaceholderHandler {
+public class BasicPlaceholders implements Placeholders {
 
     @Override
     public String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text) {

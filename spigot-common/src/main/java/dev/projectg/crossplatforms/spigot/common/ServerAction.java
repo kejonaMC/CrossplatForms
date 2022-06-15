@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.action.SimpleAction;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,15 +16,15 @@ import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
-    public static JavaPlugin SENDER = null;
+    public static final String TYPE = "server";
 
-    public static final String IDENTIFIER = "server";
-
-    private transient final PlaceholderHandler placeholders;
+    private final transient JavaPlugin sender;
+    private final transient Placeholders placeholders;
 
     @Inject
-    public ServerAction(String value, PlaceholderHandler placeholders) {
-        super(IDENTIFIER, value);
+    public ServerAction(String value, Placeholders placeholders) {
+        super(TYPE, value);
+        this.sender = SpigotBase.getInstance();
         this.placeholders = placeholders;
     }
 
@@ -33,12 +33,12 @@ public class ServerAction extends SimpleAction<String> {
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
 
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream(); DataOutputStream out = new DataOutputStream(stream)) {
-            Logger.getLogger().debug("Attempting to send " + player.getName() + " to BungeeCord server " + value());
+            Logger.get().debug("Attempting to send " + player.getName() + " to BungeeCord server " + value());
             out.writeUTF("Connect");
             out.writeUTF(resolved);
-            ((Player) player.getHandle()).sendPluginMessage(SENDER, "BungeeCord", stream.toByteArray());
+            ((Player) player.getHandle()).sendPluginMessage(sender, "BungeeCord", stream.toByteArray());
         } catch (IOException e) {
-            Logger.getLogger().severe("Failed to send a plugin message to BungeeCord!");
+            Logger.get().severe("Failed to send a plugin message to BungeeCord!");
             e.printStackTrace();
         }
     }

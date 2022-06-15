@@ -1,14 +1,15 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.Resolver;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.InputComponent;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 @ToString(callSuper = true)
@@ -22,14 +23,26 @@ public class Input extends CustomComponent {
     private String placeholder = "";
     private String defaultText = "";
 
-    public Input(String text, String placeholder, String defaultText) {
-        super(ComponentType.INPUT, text);
+    public Input(@Nonnull String text,
+                 @Nonnull String placeholder,
+                 @Nonnull String defaultText,
+                 @Nullable String shouldShow) {
+        super(text, shouldShow);
         this.placeholder = Objects.requireNonNull(placeholder);
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
-    public Input() {
-        super(ComponentType.INPUT, "");
+    public Input(@Nonnull String text, @Nonnull String placeholder, @Nonnull String defaultText) {
+        this(text, placeholder, defaultText, null);
+    }
+
+    public Input(@Nonnull String text) {
+        this(text, "", "", null);
+    }
+
+    @Inject
+    private Input() {
+        super();
     }
 
     @Override
@@ -60,23 +73,32 @@ public class Input extends CustomComponent {
         return copy;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    @Override
+    public String type() {
+        return TYPE;
     }
 
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o.getClass().equals(getClass()))) return false;
-        final Input other = (Input) o;
-        return other.type.equals(type)
-                && other.text.equals(text)
-                && other.placeholder.equals(placeholder)
-                && other.defaultText.equals(defaultText);
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultText;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Input input = (Input) o;
+        return super.equals(o) && placeholder.equals(input.placeholder) && defaultText.equals(input.defaultText);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(placeholder, defaultText);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {

@@ -19,16 +19,16 @@ import dev.projectg.crossplatforms.command.CommandOrigin;
 import dev.projectg.crossplatforms.config.ConfigId;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BasicPlaceholders;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.NoMenusInterfacer;
 import dev.projectg.crossplatforms.proxy.CloseMenuAction;
 import dev.projectg.crossplatforms.proxy.LuckPermsHook;
 import dev.projectg.crossplatforms.proxy.PermissionHook;
 import dev.projectg.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.projectg.crossplatforms.velocity.handler.VelocityCommandOrigin;
-import dev.projectg.crossplatforms.velocity.handler.VelocityServerHandler;
+import dev.projectg.crossplatforms.velocity.handler.VelocityHandler;
 import lombok.Getter;
 import org.bstats.charts.CustomChart;
 import org.bstats.velocity.Metrics;
@@ -74,7 +74,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
         metrics = metricsFactory.make(this, BSTATS_ID);
 
-        ServerHandler serverHandler = new VelocityServerHandler(
+        ServerHandler serverHandler = new VelocityHandler(
             server,
             pluginPresent("luckperms") ? new LuckPermsHook() : PermissionHook.empty()
         );
@@ -95,7 +95,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
 
         logger.warn("CrossplatForms-Velocity does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
-        PlaceholderHandler placeholders = new BasicPlaceholders();
+        Placeholders placeholders = new BasicPlaceholders();
 
         protocolizePresent = server.getPluginManager().isLoaded("protocolize");
 
@@ -123,12 +123,12 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.IDENTIFIER, String.class, ServerAction.class);
+        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
         actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
     }
 
     @Override
-    public InterfaceManager interfaceManager() {
+    public Interfacer interfaceManager() {
         if (protocolizePresent) {
             return new ProtocolizeInterfacer();
         } else {

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public abstract class InterfaceManager {
+public abstract class Interfacer {
 
     protected BedrockFormRegistry bedrockRegistry;
     protected JavaMenuRegistry javaRegistry;

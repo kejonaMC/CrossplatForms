@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.projectg.crossplatforms.spigot.common.handler;
 
 import dev.projectg.crossplatforms.CrossplatForms;
 import dev.projectg.crossplatforms.Logger;
@@ -29,14 +29,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class SpigotServerHandler extends InterceptCommandCache implements ServerHandler, Listener {
+public class SpigotHandler extends InterceptCommandCache implements ServerHandler, Listener {
 
     private final Server server;
     private final JavaPlugin plugin;
     private final BukkitAudiences audiences;
     private final ConsoleCommandSender console;
 
-    public SpigotServerHandler(JavaPlugin plugin, BukkitAudiences audiences) {
+    public SpigotHandler(JavaPlugin plugin, BukkitAudiences audiences) {
         this.server = plugin.getServer();
         this.plugin = plugin;
         this.audiences = audiences;
@@ -100,7 +100,7 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
                 break;
         }
 
-        Logger.getLogger().debug("Registering permission " + key + " : " + perm);
+        Logger.get().debug("Registering permission " + key + " : " + perm);
         server.getPluginManager().addPermission(new Permission(key, description, perm));
     }
 
@@ -111,7 +111,7 @@ public class SpigotServerHandler extends InterceptCommandCache implements Server
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        Logger.getLogger().debug("Executing [" + command + "] as console");
+        Logger.get().debug("Executing [" + command + "] as console");
         server.dispatchCommand(console, command.getCommand());
     }
 

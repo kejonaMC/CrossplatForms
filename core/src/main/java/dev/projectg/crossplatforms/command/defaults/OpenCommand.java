@@ -11,7 +11,7 @@ import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.handler.ServerHandler;
 import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 import java.util.Collections;
@@ -31,7 +31,7 @@ public class OpenCommand extends FormsCommand {
 
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
-    private final InterfaceManager interfaceManager;
+    private final Interfacer interfacer;
     private final JavaMenuRegistry javaRegistry;
 
     public OpenCommand(CrossplatForms crossplatForms) {
@@ -39,8 +39,8 @@ public class OpenCommand extends FormsCommand {
 
         this.serverHandler = crossplatForms.getServerHandler();
         this.bedrockHandler = crossplatForms.getBedrockHandler();
-        this.interfaceManager = crossplatForms.getInterfaceManager();
-        this.javaRegistry = crossplatForms.getInterfaceManager().getJavaRegistry();
+        this.interfacer = crossplatForms.getInterfacer();
+        this.javaRegistry = crossplatForms.getInterfacer().getJavaRegistry();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class OpenCommand extends FormsCommand {
                     UUID uuid = origin.getUUID().orElseThrow(NoSuchElementException::new);
                     FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
                     String identifier = context.get(ARGUMENT);
-                    Interface ui = interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
+                    Interface ui = interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
                     if (ui == null) {
                         origin.warn("'" + identifier + "' doesn't exist.");
@@ -97,7 +97,7 @@ public class OpenCommand extends FormsCommand {
                         return;
                     }
                     String identifier = context.get(ARGUMENT);
-                    Interface ui = this.interfaceManager.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
+                    Interface ui = this.interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
                     if (ui == null) {
                         origin.warn("'" + identifier + "' doesn't exist.");
                         return;
@@ -140,7 +140,7 @@ public class OpenCommand extends FormsCommand {
             return Collections.emptyList();
         }
 
-        return interfaceManager.getInterfaces(bedrockHandler.isBedrockPlayer(target.getUuid()))
+        return interfacer.getInterfaces(bedrockHandler.isBedrockPlayer(target.getUuid()))
                 .stream()
                 .filter(ui -> origin.hasPermission(ui.permission(Interface.Limit.COMMAND)) && target.hasPermission(ui.permission(Interface.Limit.USE)))
                 .map(Interface::getIdentifier)

@@ -3,9 +3,9 @@ package dev.projectg.crossplatforms.spigot;
 import dev.projectg.crossplatforms.accessitem.AccessItem;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.spigot.common.SpigotAccessItemsBase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,10 +23,10 @@ public class LegacySpigotAccessItems extends SpigotAccessItemsBase {
     public LegacySpigotAccessItems(JavaPlugin plugin,
                                    ConfigManager configManager,
                                    ServerHandler serverHandler,
-                                   InterfaceManager interfaceManager,
+                                   Interfacer interfacer,
                                    BedrockHandler bedrockHandler,
-                                   PlaceholderHandler placeholders) {
-        super(plugin, configManager, serverHandler, interfaceManager, bedrockHandler, placeholders);
+                                   Placeholders placeholders) {
+        super(plugin, configManager, serverHandler, interfacer, bedrockHandler, placeholders);
     }
 
     @Override

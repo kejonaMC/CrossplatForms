@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.handler;
 
 import dev.projectg.crossplatforms.Logger;
-import org.geysermc.cumulus.Form;
+import org.geysermc.cumulus.form.Form;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.UUID;
@@ -36,7 +36,7 @@ public class FloodgateHandler implements BedrockHandler {
 
     @Override
     public boolean transfer(FormPlayer player, String address, int port) {
-        Logger.getLogger().debug("Sending " + player.getName() + " to " + address + ":" + port);
+        Logger.get().debug("Sending " + player.getName() + " to " + address + ":" + port);
         return api.transferPlayer(player.getUuid(), address, port);
     }
 }

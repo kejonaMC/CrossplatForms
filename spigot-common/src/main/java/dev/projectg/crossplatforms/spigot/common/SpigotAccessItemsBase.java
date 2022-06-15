@@ -6,9 +6,10 @@ import dev.projectg.crossplatforms.accessitem.AccessItemRegistry;
 import dev.projectg.crossplatforms.config.ConfigManager;
 import dev.projectg.crossplatforms.handler.BedrockHandler;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
+import dev.projectg.crossplatforms.spigot.common.handler.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -37,28 +38,28 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
- * Abstract AccessItemRegistry for spigot platforms. Automatically registers {@link PlayerSwapHandItemsListener} if
+ * Abstract AccessItemRegistry for spigot platforms. Automatically registers {@link SwapHandItemsListener} if
  * the class is event is available on the current server version.
  */
 public abstract class SpigotAccessItemsBase extends AccessItemRegistry implements Listener {
 
-    private final Logger logger = Logger.getLogger();
-    protected final InterfaceManager interfaceManager;
+    private final Logger logger = Logger.get();
+    protected final Interfacer interfacer;
     protected final BedrockHandler bedrockHandler;
-    protected final PlaceholderHandler placeholders;
+    protected final Placeholders placeholders;
 
     public SpigotAccessItemsBase(JavaPlugin plugin, ConfigManager configManager,
                                  ServerHandler serverHandler,
-                                 InterfaceManager interfaceManager,
+                                 Interfacer interfacer,
                                  BedrockHandler bedrockHandler,
-                                 PlaceholderHandler placeholders) {
+                                 Placeholders placeholders) {
         super(configManager, serverHandler);
-        this.interfaceManager = interfaceManager;
+        this.interfacer = interfacer;
         this.bedrockHandler = bedrockHandler;
         this.placeholders = placeholders;
 
         if (!Bukkit.getVersion().contains("1.8")) { // Older versions not supported, 1.9 and newer has offhand
-            Bukkit.getPluginManager().registerEvents(new PlayerSwapHandItemsListener(this), plugin);
+            Bukkit.getPluginManager().registerEvents(new SwapHandItemsListener(this), plugin);
         }
     }
 

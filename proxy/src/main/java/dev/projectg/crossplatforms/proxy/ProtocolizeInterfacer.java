@@ -2,7 +2,7 @@ package dev.projectg.crossplatforms.proxy;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.InterfaceManager;
+import dev.projectg.crossplatforms.interfacing.Interfacer;
 import dev.projectg.crossplatforms.interfacing.java.ItemButton;
 import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
 import dev.simplix.protocolize.api.ClickType;
@@ -17,13 +17,13 @@ import dev.simplix.protocolize.data.inventory.InventoryType;
 import java.util.Locale;
 import java.util.Map;
 
-public class ProtocolizeInterfacer extends InterfaceManager {
+public class ProtocolizeInterfacer extends Interfacer {
 
     private final Logger logger;
     private final ProtocolizePlayerProvider playerProvider;
 
     public ProtocolizeInterfacer() {
-        this.logger = Logger.getLogger();
+        this.logger = Logger.get();
         this.playerProvider = Protocolize.playerProvider();
     }
 

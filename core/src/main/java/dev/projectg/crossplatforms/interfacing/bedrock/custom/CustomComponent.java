@@ -3,44 +3,56 @@ package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 import com.google.gson.JsonPrimitive;
 import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Resolver;
-import dev.projectg.crossplatforms.serialize.ValuedType;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.parser.Parser;
+import dev.projectg.crossplatforms.serialize.ValuedType;
+import dev.projectg.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
-import org.geysermc.cumulus.util.ComponentType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @ToString
-@Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class CustomComponent implements ValuedType {
 
-    protected String type = "";
+    @Getter
     protected String text = "";
 
+    @Nullable
+    private String shouldShow = null;
+
+    @Getter
     @Setter
     private List<Parser> parsers = new ArrayList<>(0);
 
     /**
-     * This protected no-arg constructor should ONLY be used for object-mapping in deserialization.
-     * The zero-arg constructor in concrete child classes can be private if mapped with Configurate.
+     * Implementing classes should provide a zero arg constructor that calls super the constructor below
      */
+    @SuppressWarnings("unused")
     protected CustomComponent() {
         //no-op
     }
 
-    public CustomComponent(ComponentType type, @Nonnull String text) {
-        this.type = Objects.requireNonNull(type.getName()); // lowercase it for serialization to work in cumulus
+    protected CustomComponent(@Nonnull String text, @Nullable String shouldShow) {
         this.text = Objects.requireNonNull(text);
+        this.shouldShow = shouldShow;
+    }
+
+    public boolean show() {
+        if (shouldShow == null) {
+            return true;
+        } else {
+            return ParseUtils.getBoolean(shouldShow, true);
+        }
     }
 
     public abstract CustomComponent copy();
@@ -51,8 +63,8 @@ public abstract class CustomComponent implements ValuedType {
      * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
      */
     protected final void copyBasics(CustomComponent source) {
-        this.type = source.type;
         this.text = source.text;
+        this.shouldShow = source.shouldShow;
         this.parsers = new ArrayList<>(source.parsers);
     }
 
@@ -62,7 +74,10 @@ public abstract class CustomComponent implements ValuedType {
      */
     public void placeholders(@Nonnull Resolver resolver) {
         Objects.requireNonNull(resolver);
-        this.text = resolver.apply(text);
+        text = resolver.apply(text);
+        if (shouldShow != null) {
+            shouldShow = resolver.apply(shouldShow);
+        }
     }
 
     /**
@@ -87,4 +102,19 @@ public abstract class CustomComponent implements ValuedType {
         parsers.add(parser);
     }
 
+    @Nonnull
+    public abstract String resultIfHidden();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomComponent component = (CustomComponent) o;
+        return text.equals(component.text) && Objects.equals(shouldShow, component.shouldShow) && parsers.equals(component.parsers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text, shouldShow, parsers);
+    }
 }

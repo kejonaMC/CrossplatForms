@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.projectg.crossplatforms.spigot.common.handler;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.PlaceholderHandler;
+import dev.projectg.crossplatforms.handler.Placeholders;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.events.ExpansionsLoadedEvent;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 
-public class PlaceholderAPIHandler implements PlaceholderHandler, Listener {
+public class PlaceholderAPIHandler implements Placeholders, Listener {
 
     public PlaceholderAPIHandler(JavaPlugin plugin) {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
@@ -22,7 +22,7 @@ public class PlaceholderAPIHandler implements PlaceholderHandler, Listener {
     @EventHandler
     public void onExpansionsLoaded(ExpansionsLoadedEvent event) {
         if (!PlaceholderAPI.isRegistered("Player")) {
-            Logger.getLogger().warn("PlaceholderAPI is installed but the Player extension is not installed! %player_name% and %player_uuid% will NOT be resolved. Please install the Player extension.");
+            Logger.get().warn("PlaceholderAPI is installed but the Player extension is not installed! %player_name% and %player_uuid% will NOT be resolved. Please install the Player extension.");
         }
     }
 

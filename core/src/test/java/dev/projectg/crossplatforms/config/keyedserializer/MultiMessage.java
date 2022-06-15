@@ -10,7 +10,7 @@ import java.util.Objects;
 @ConfigSerializable
 public class MultiMessage implements Message {
 
-    public static final String IDENTIFIER = "messages";
+    public static final String TYPE = "messages";
 
     private String prefix = "";
 
@@ -29,7 +29,7 @@ public class MultiMessage implements Message {
 
     @Override
     public String type() {
-        return IDENTIFIER;
+        return TYPE;
     }
 
     @Override

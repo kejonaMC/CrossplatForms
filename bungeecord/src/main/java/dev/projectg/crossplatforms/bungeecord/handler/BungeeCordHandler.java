@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BungeeCordServerHandler extends ProxyHandler implements ServerHandler, Listener {
+public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Listener {
 
     private static final String OP_GROUP = "op";
 
@@ -39,7 +39,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
     private final BungeeAudiences audiences;
     private final CommandSender console;
 
-    public BungeeCordServerHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
+    public BungeeCordHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
         super(permissionHook);
         this.permissionHook = permissionHook;
         this.server = plugin.getProxy();
@@ -121,7 +121,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
 
     private void executeCommand(CommandSender sender, String commandLine) {
         if (!pluginManager.dispatchCommand(sender, commandLine)) {
-            Logger.getLogger().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
+            Logger.get().severe("Failed to run command '" + commandLine + "' by sender: " + sender.getName());
         }
     }
 
@@ -133,7 +133,7 @@ public class BungeeCordServerHandler extends ProxyHandler implements ServerHandl
         }
 
         String input = event.getMessage().substring(1);
-        Logger.getLogger().debug("preprocess command: [" + event.getMessage() + "] -> [" + input + "]");
+        Logger.get().debug("preprocess command: [" + event.getMessage() + "] -> [" + input + "]");
         // attempt to find an exact match
         InterceptCommand command = findCommand(input);
         if (command != null) {

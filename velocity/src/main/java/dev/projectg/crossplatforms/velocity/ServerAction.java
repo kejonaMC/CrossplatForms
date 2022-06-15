@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class ServerAction extends SimpleAction<String> {
 
-    public static final String IDENTIFIER = "server";
+    public static final String TYPE = "server";
     private static final ProxyServer PROXY = CrossplatFormsVelocity.getInstance().getServer();
 
     @Inject
     public ServerAction(String value) {
-        super(IDENTIFIER, value);
+        super(TYPE, value);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ServerAction extends SimpleAction<String> {
         String serverName = value();
         RegisteredServer server = PROXY.getServer(serverName).orElse(null);
         if (server == null) {
-            Logger.getLogger().warn("Server '" + serverName + "' does not exist! Not transferring " + formPlayer.getName());
+            Logger.get().warn("Server '" + serverName + "' does not exist! Not transferring " + formPlayer.getName());
             player.sendMessage(Component.text("Server ", NamedTextColor.RED)
                     .append(Component.text(serverName))
                     .append(Component.text(" doesn't exist.", NamedTextColor.RED)));

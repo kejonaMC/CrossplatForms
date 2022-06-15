@@ -1,5 +1,6 @@
 package dev.projectg.crossplatforms.parser;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -17,7 +18,7 @@ public class ReplacementParser implements Parser {
     @Required
     private Map<String, String> replacements = new HashMap<>(0);
 
-    @SuppressWarnings("unused")
+    @Inject
     private ReplacementParser() {
 
     }

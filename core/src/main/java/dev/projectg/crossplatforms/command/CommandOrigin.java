@@ -82,7 +82,7 @@ public interface CommandOrigin {
         Objects.requireNonNull(message);
 
         if (isConsole()) {
-            Logger.getLogger().log(level, message);
+            Logger.get().log(level, message);
         } else {
             sendMessage(Component.text(message, LOGGER_COLORS.getOrDefault(level, NamedTextColor.WHITE)));
         }

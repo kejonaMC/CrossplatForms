@@ -39,7 +39,7 @@ public class CustomCommandManager implements Reloadable {
         this.commandManager = commandManager;
         this.serverHandler = forms.getServerHandler();
         this.bedrockHandler = forms.getBedrockHandler();
-        this.logger = Logger.getLogger();
+        this.logger = Logger.get();
 
         load();
         ReloadableRegistry.register(this);
