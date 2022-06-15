@@ -7,7 +7,7 @@ plugins {
 dependencies {
     compileOnly("net.md-5:bungeecord-api:1.18-R0.1-SNAPSHOT")
     api("cloud.commandframework:cloud-bungee:1.6.2")
-    api("net.kyori:adventure-platform-bungeecord:4.1.0")
+    api("net.kyori:adventure-platform-bungeecord:4.1.1")
     implementation("org.bstats:bstats-bungeecord:3.0.0")
     api(projects.proxy)
     api(projects.core)
