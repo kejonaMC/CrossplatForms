@@ -11,6 +11,7 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class GeyserHubConvertTest {
 
@@ -37,6 +38,7 @@ public class GeyserHubConvertTest {
     public void testConvert() throws IOException {
         File selector = FileUtils.fileOrCopiedFromResource(new File(tempDirectory, "selector.yml"));
         File converted = GeyserHubConverter.convert(selector);
+        Objects.requireNonNull(converted);
         ConfigurationNode convertedItems = loader(converted, "access-items.yml").load();
         ConfigurationNode convertedForms = loader(converted, "bedrock-forms.yml").load();
         ConfigurationNode convertedMenus = loader(converted, "java-menus.yml").load();

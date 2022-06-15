@@ -31,6 +31,9 @@ import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+
 public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBootstrap {
     
     protected static final String PIE_CHART_LEGACY = "legacy";
@@ -44,7 +47,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         Constants.fetch();
     }
 
-    private CrossplatForms crossplatForms;
+    private Logger logger;
     protected Server server;
     protected BukkitAudiences audiences;
     private Metrics metrics;
@@ -55,14 +58,13 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
 
     @Override
     public void onEnable() {
-        Logger logger = new JavaUtilLogger(getLogger());
-        if (crossplatForms != null) {
-            logger.warn("Bukkit reloading is NOT supported!");
-        }
+        logger = new JavaUtilLogger(getLogger());
         metrics = new Metrics(this, METRICS_ID);
         server = getServer();
         audiences = BukkitAudiences.create(this);
         ServerHandler serverHandler = new SpigotHandler(this, audiences);
+
+        convertGeyserHubConfig();
 
         // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         PaperCommandManager<CommandOrigin> commandManager;
@@ -99,7 +101,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             placeholders = new BasicPlaceholders();
         }
 
-        crossplatForms = new CrossplatForms(
+        CrossplatForms crossplatForms = new CrossplatForms(
             logger,
             getDataFolder().toPath(),
             serverHandler,
@@ -149,6 +151,22 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
     @Override
     public void addCustomChart(CustomChart chart) {
         metrics.addCustomChart(chart);
+    }
+
+    private void convertGeyserHubConfig() {
+        File selector = new File(getDataFolder(), "selector.yml");
+        if (selector.exists()) {
+            try {
+                GeyserHubConverter.convert(selector);
+            } catch (IOException e) {
+                logger.warn("Failed to convert " + selector.getName() + ":");
+                if (logger.isDebug()) {
+                    e.printStackTrace();
+                } else {
+                    logger.warn(e.getClass().getName() + ": " + e.getMessage());
+                }
+            }
+        }
     }
     
     public abstract boolean attemptBrigadier();

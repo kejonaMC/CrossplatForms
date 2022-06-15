@@ -2,6 +2,7 @@ package dev.projectg.crossplatforms.spigot.common;
 
 import dev.projectg.crossplatforms.Logger;
 import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.projectg.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -11,7 +12,6 @@ import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -23,21 +23,19 @@ public final class GeyserHubConverter {
     private static final TypeToken<Map<String, ConfigurationNode>> STRING_MAP = new TypeToken<Map<String, ConfigurationNode>>() {};
 
     public static File convert(File selectorConfig) throws IOException {
-        return convert(selectorConfig.toPath()).toFile();
-    }
-
-    public static Path convert(Path selectorConfig) throws IOException {
-        Path parent = selectorConfig.getParent();
-        Path converted = parent.resolve("converted"); // directory to place converted files
+        File parent = selectorConfig.getParentFile();
+        File converted = new File(parent, "converted"); // directory to place converted files
+        FileUtils.recursivelyDelete(converted.toPath());
+        converted.mkdirs();
 
         ConfigurationNode source = YamlConfigurationLoader.builder() // GeyserHub config
-            .file(selectorConfig.toFile())
+            .file(selectorConfig)
             .build()
             .load();
 
         ConfigurationNode version = source.node("Config-Version");
         if (version.virtual() || version.getInt(-1) != 2) {
-            Logger.get().warn("Failed to convert " + selectorConfig.getFileName() + " from GeyserHub because its Config-Version is not 2. Update it within the latest version of GeyserHub.");
+            throw new IOException("Config-Version is not 2. Update it using the latest version of GeyserHub.");
         }
 
         YamlConfigurationLoader itemLoader = loader(converted, "access-items.yml");
@@ -55,7 +53,7 @@ public final class GeyserHubConverter {
         convertForms(source, forms);
         formLoader.save(forms);
 
-        Logger.get().info("Converted " + selectorConfig + " from GeyserHub into configs compatible with CrossplatForms in " + converted.toAbsolutePath());
+        Logger.get().info(String.format("Converted %s from GeyserHub into configs compatible with CrossplatForms in %s", selectorConfig, converted));
         return converted;
     }
 
@@ -168,10 +166,6 @@ public final class GeyserHubConverter {
             .builder()
             .indent(2)
             .nodeStyle(NodeStyle.BLOCK);
-    }
-
-    public static YamlConfigurationLoader loader(Path folder, String fileName) {
-        return loaderBuilder().file(folder.resolve(fileName).toFile()).build();
     }
 
     public static YamlConfigurationLoader loader(File folder, String fileName) {
