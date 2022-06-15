@@ -1,11 +1,10 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Resolver;
 import dev.projectg.crossplatforms.utils.ParseUtils;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.SliderComponent;
@@ -15,7 +14,6 @@ import javax.annotation.Nonnull;
 
 @ToString(callSuper = true)
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class Slider extends CustomComponent {
@@ -26,6 +24,11 @@ public class Slider extends CustomComponent {
     private String max = "10";
     private String step = "1";
     private String defaultValue = "0";
+
+    @Inject
+    private Slider() {
+        super();
+    }
 
     @Override
     public Slider copy() {
@@ -63,5 +66,16 @@ public class Slider extends CustomComponent {
         Slider copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultValue;
+    }
+
+    @Override
+    public String type() {
+        return TYPE;
     }
 }

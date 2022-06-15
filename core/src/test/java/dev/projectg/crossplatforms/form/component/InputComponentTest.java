@@ -17,7 +17,7 @@ public class InputComponentTest {
 
     @Test
     public void testFilterPlaceholders() {
-        Input input = new Input("", "", "");
+        Input input = blankInput();
         input.parsers(Collections.singletonList(new BlockPlaceholderParser()));
         Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT + " and " + BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "%player_name% and %player_uuid%"));
         Assertions.assertEquals(BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT + " and " + BlockPlaceholderParser.PLACEHOLDER_REPLACEMENT, input.parse(player, "{player_name} and {player_uuid}"));
@@ -31,16 +31,20 @@ public class InputComponentTest {
 
     @Test
     public void testReplacements() {
-        Input withDashes = new Input();
+        Input withDashes = blankInput();
         withDashes.parser(new ReplacementParser(ImmutableMap.of(" ", "-")));
         Assertions.assertEquals("marshy-waters", withDashes.parse(player, "marshy waters"));
 
-        Input useless = new Input();
+        Input useless = blankInput();
         useless.parser(new ReplacementParser(ImmutableMap.of(" ", "-", "-", " ")));
         Assertions.assertEquals("Big Green Hill", useless.parse(player, "Big Green Hill"));
 
-        Input cascading = new Input();
+        Input cascading = blankInput();
         cascading.parser(new ReplacementParser(ImmutableMap.of("a", "b", "bb", "aa")));
         Assertions.assertEquals("aa aa", cascading.parse(player, "ab ba"));
+    }
+
+    private static Input blankInput() {
+        return Input.builder().build();
     }
 }

@@ -1,12 +1,11 @@
 package dev.projectg.crossplatforms.interfacing.bedrock.custom;
 
+import com.google.inject.Inject;
 import dev.projectg.crossplatforms.IllegalValueException;
 import dev.projectg.crossplatforms.Resolver;
 import dev.projectg.crossplatforms.handler.FormPlayer;
 import dev.projectg.crossplatforms.utils.ParseUtils;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.DropdownComponent;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 
 @ToString(callSuper = true)
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class Dropdown extends CustomComponent {
@@ -33,6 +31,11 @@ public class Dropdown extends CustomComponent {
      * Whether or not the parsing of the Dropdown should return the index of the selection or the text of the button.
      */
     private boolean returnText = true;
+
+    @Inject
+    private Dropdown() {
+        super();
+    }
 
     @Override
     public Dropdown copy() {
@@ -70,5 +73,16 @@ public class Dropdown extends CustomComponent {
         } else {
             return super.parse(player, result);
         }
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return defaultOption;
+    }
+
+    @Override
+    public String type() {
+        return TYPE;
     }
 }

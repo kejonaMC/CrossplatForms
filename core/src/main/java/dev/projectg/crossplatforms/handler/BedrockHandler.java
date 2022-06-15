@@ -1,9 +1,8 @@
 package dev.projectg.crossplatforms.handler;
 
-import org.geysermc.cumulus.Form;
+import org.geysermc.cumulus.form.Form;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public interface BedrockHandler {
 
@@ -21,7 +20,6 @@ public interface BedrockHandler {
      *
      * @return true if the given BedrockHandler executes response handlers in a fashion that allows for thread safe access
      * to the current server API
-     * @see Form#setResponseHandler(Consumer)
      */
     boolean executesResponseHandlersSafely();
 

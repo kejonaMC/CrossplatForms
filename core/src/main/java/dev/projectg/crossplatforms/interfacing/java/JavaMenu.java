@@ -22,7 +22,7 @@ public class JavaMenu extends Interface {
     public static final int MAX_SIZE = 54; // todo: size validation
     public static final int HOPPER_SIZE = 5;
 
-    protected transient final String permissionBase = Constants.Id() + ".menu.";
+    protected final transient String permissionBase = Constants.Id() + ".menu.";
 
     private boolean allowBedrock = false;
 

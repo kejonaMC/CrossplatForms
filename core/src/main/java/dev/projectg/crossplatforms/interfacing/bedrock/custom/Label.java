@@ -7,6 +7,8 @@ import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
+
 @ToString(callSuper = true)
 @ConfigSerializable
 public class Label extends CustomComponent {
@@ -15,7 +17,7 @@ public class Label extends CustomComponent {
 
     @Inject
     private Label() {
-        // for guice
+        super();
     }
 
     @Override
@@ -35,5 +37,16 @@ public class Label extends CustomComponent {
         Label copy = copy();
         copy.placeholders(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String resultIfHidden() {
+        return text;
+    }
+
+    @Override
+    public String type() {
+        return TYPE;
     }
 }

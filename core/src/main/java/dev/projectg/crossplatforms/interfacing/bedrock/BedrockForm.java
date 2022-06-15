@@ -10,12 +10,10 @@ import dev.projectg.crossplatforms.interfacing.Interface;
 import dev.projectg.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
-import org.geysermc.cumulus.Form;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 @ToString
 @Getter
@@ -26,26 +24,31 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     @Inject
     protected transient BedrockHandler bedrockHandler;
 
-    protected transient final String permissionBase = Constants.Id() + ".form.";
+    protected final transient String permissionBase = Constants.Id() + ".form.";
 
     private final List<Action> incorrectActions = Collections.emptyList();
 
     /**
-     * Determines a way to safely execute the given response handler, and sets it on the given form.
+     * Properly execute the response handler of a form, taking into account thread safety
+     * @param runnable The response handler to execute
+     * @see Runnable#run()
      */
-    protected final void setResponseHandler(Form form, Consumer<String> responseHandler) {
+    protected final void executeHandler(Runnable runnable) {
         if (bedrockHandler.executesResponseHandlersSafely()) {
-            form.setResponseHandler(responseHandler);
-            Logger.get().debug("Executing (1) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
+            Logger.get().debug("Executing (1) response handler on thread: " + Thread.currentThread().getName());
+            runnable.run();
         } else {
-            form.setResponseHandler((data) -> serverHandler.executeSafely(() -> {
-                Logger.get().debug("Executing (2) response handler for " + form.getType() + " on thread: " + Thread.currentThread().getName());
-                responseHandler.accept(data);
-            }));
+            serverHandler.executeSafely(() -> {
+                Logger.get().debug("Executing (2) response handler on thread: " + Thread.currentThread().getName());
+                runnable.run();
+            });
         }
     }
 
+    /**
+     * Note: this calls {@link #executeHandler(Runnable)}, so it should not be called to execute this method.
+     */
     protected void handleIncorrect(FormPlayer player) {
-        Action.affectPlayer(player, incorrectActions);
+        executeHandler(() -> Action.affectPlayer(player, incorrectActions));
     }
 }

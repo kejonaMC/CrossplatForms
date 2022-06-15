@@ -15,8 +15,8 @@ public class CommandsAction extends SimpleAction<List<DispatchableCommand>> {
 
     public static final String TYPE = "commands";
 
-    private transient final ServerHandler serverHandler;
-    private transient final Placeholders placeholders;
+    private final transient ServerHandler serverHandler;
+    private final transient Placeholders placeholders;
 
     @Inject
     public CommandsAction(List<DispatchableCommand> commands, ServerHandler serverHandler, Placeholders placeholders) {

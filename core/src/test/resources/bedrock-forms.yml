@@ -79,5 +79,43 @@ forms:
       commands:
         - "say %result_0%"
 
+  example:
+    type: CUSTOM_FORM
+    title: "This is the form's title"
+    components:
+      - type: LABEL
+        text: "This is a label"
+
+      - type: DROPDOWN
+        text: "This is a dropdown"
+        default-option: 0
+        options:
+          - "option 1"
+          - "option 2"
+          - "option 3"
+
+      - type: INPUT
+        text: "This is an input"
+        placeholder: ""
+        default-text: ""
+
+      - type: SLIDER
+        text: "This is a slider"
+        min: 0
+        max: 10
+        step: 1
+        default-value: 0
+
+      - type: STEP_SLIDER
+        text: "This is a step slider"
+        steps:
+          - "step 1"
+          - "step 2"
+          - "step 3"
+        default-step: 0
+
+      - type: TOGGLE
+        default-value: true
+
 # Don't touch this
 config-version: 4

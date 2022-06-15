@@ -1,7 +1,7 @@
 package dev.projectg.crossplatforms.handler;
 
 import dev.projectg.crossplatforms.Logger;
-import org.geysermc.cumulus.Form;
+import org.geysermc.cumulus.form.Form;
 import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.UUID;
