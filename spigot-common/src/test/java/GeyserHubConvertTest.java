@@ -1,7 +1,7 @@
-import dev.projectg.crossplatforms.TestLogger;
-import dev.projectg.crossplatforms.config.PrettyPrinter;
-import dev.projectg.crossplatforms.spigot.common.GeyserHubConverter;
-import dev.projectg.crossplatforms.utils.FileUtils;
+import dev.kejona.crossplatforms.TestLogger;
+import dev.kejona.crossplatforms.config.PrettyPrinter;
+import dev.kejona.crossplatforms.spigot.common.GeyserHubConverter;
+import dev.kejona.crossplatforms.utils.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
