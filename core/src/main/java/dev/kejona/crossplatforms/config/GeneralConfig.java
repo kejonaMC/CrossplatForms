@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.config;
+package dev.kejona.crossplatforms.config;
 
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.command.custom.CustomCommand;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.command.custom.CustomCommand;
 import lombok.Getter;
 import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;

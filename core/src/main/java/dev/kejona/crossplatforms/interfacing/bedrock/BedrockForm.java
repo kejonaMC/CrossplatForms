@@ -1,13 +1,13 @@
-package dev.projectg.crossplatforms.interfacing.bedrock;
+package dev.kejona.crossplatforms.interfacing.bedrock;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;

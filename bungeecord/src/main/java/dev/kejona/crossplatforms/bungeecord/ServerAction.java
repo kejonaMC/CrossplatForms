@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.bungeecord;
+package dev.kejona.crossplatforms.bungeecord;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.action.SimpleAction;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;

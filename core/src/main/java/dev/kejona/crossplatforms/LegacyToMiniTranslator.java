@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
 import com.google.common.collect.ImmutableList;
 

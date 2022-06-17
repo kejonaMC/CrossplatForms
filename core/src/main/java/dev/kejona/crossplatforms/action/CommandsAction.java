@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.action;
+package dev.kejona.crossplatforms.action;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.Placeholders;
-import dev.projectg.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.command.DispatchableCommand;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.handler.ServerHandler;
 
 import javax.annotation.Nonnull;
 import java.util.List;

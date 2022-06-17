@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.action;
+package dev.kejona.crossplatforms.action;
 
 import com.google.inject.Injector;
-import dev.projectg.crossplatforms.interfacing.java.MenuAction;
-import dev.projectg.crossplatforms.serialize.KeyedTypeListSerializer;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
-import dev.projectg.crossplatforms.serialize.SimpleType;
+import dev.kejona.crossplatforms.interfacing.java.MenuAction;
+import dev.kejona.crossplatforms.serialize.KeyedTypeListSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.SimpleType;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 

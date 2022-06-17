@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.parser;
+package dev.kejona.crossplatforms.parser;
 
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomComponent;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ConfigSerializable

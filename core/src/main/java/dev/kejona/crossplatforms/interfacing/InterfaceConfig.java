@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.interfacing;
+package dev.kejona.crossplatforms.interfacing;
 
-import dev.projectg.crossplatforms.config.Configuration;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.config.Configuration;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;

@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.interfacing.java;
+package dev.kejona.crossplatforms.interfacing.java;
 
 
 import lombok.Getter;

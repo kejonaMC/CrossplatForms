@@ -1,13 +1,13 @@
-package dev.projectg.crossplatforms.interfacing;
+package dev.kejona.crossplatforms.interfacing;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.Placeholders;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.permission.Permission;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.permission.Permission;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

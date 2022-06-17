@@ -1,19 +1,19 @@
-package dev.projectg.crossplatforms.command.custom;
+package dev.kejona.crossplatforms.command.custom;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.config.GeneralConfig;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.reloadable.Reloadable;
-import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.config.ConfigManager;
+import dev.kejona.crossplatforms.config.GeneralConfig;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.reloadable.Reloadable;
+import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;

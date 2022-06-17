@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.config.valuedserializer;
+package dev.kejona.crossplatforms.config.valuedserializer;
 
 import com.google.common.collect.ImmutableList;
-import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
-import dev.projectg.crossplatforms.utils.ConfigurateUtils;
-import dev.projectg.crossplatforms.utils.FileUtils;
+import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
+import dev.kejona.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

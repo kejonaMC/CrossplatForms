@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.interfacing.java;
+package dev.kejona.crossplatforms.interfacing.java;
 
-import dev.projectg.crossplatforms.interfacing.InterfaceConfig;
+import dev.kejona.crossplatforms.interfacing.InterfaceConfig;
 import lombok.Getter;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 

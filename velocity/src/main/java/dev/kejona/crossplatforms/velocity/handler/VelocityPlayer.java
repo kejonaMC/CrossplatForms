@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.velocity.handler;
+package dev.kejona.crossplatforms.velocity.handler;
 
 import com.velocitypowered.api.proxy.Player;
-import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 

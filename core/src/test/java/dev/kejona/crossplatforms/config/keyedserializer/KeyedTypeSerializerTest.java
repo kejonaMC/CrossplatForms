@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.config.keyedserializer;
+package dev.kejona.crossplatforms.config.keyedserializer;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Guice;
-import dev.projectg.crossplatforms.TestModule;
-import dev.projectg.crossplatforms.serialize.KeyedTypeSerializer;
-import dev.projectg.crossplatforms.utils.ConfigurateUtils;
-import dev.projectg.crossplatforms.utils.FileUtils;
+import dev.kejona.crossplatforms.TestModule;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
+import dev.kejona.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

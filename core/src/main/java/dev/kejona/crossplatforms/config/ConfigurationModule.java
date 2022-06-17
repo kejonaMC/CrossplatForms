@@ -1,11 +1,11 @@
-package dev.projectg.crossplatforms.config;
+package dev.kejona.crossplatforms.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Placeholders;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.Interfacer;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

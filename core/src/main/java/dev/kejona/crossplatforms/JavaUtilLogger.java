@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
 public class JavaUtilLogger extends Logger {
 

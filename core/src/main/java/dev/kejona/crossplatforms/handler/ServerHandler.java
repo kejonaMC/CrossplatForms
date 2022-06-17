@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.handler;
+package dev.kejona.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.CustomCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommand;
-import dev.projectg.crossplatforms.permission.Permission;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.command.DispatchableCommand;
+import dev.kejona.crossplatforms.command.custom.CustomCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommand;
+import dev.kejona.crossplatforms.permission.Permission;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
 
 import javax.annotation.Nonnull;

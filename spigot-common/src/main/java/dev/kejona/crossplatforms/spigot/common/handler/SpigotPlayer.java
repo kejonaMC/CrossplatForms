@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.spigot.common.handler;
+package dev.kejona.crossplatforms.spigot.common.handler;
 
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.spigot.common.SpigotBase;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.spigot.common.SpigotBase;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 

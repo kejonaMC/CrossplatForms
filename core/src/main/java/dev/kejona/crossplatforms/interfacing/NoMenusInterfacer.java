@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.interfacing;
+package dev.kejona.crossplatforms.interfacing;
 
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 
 public class NoMenusInterfacer extends Interfacer {
 

@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.permission;
+package dev.kejona.crossplatforms.permission;
 
 import lombok.Getter;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;

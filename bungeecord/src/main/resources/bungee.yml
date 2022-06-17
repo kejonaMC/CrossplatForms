@@ -1,5 +1,5 @@
 name: CrossplatForms
-main: dev.projectg.crossplatforms.bungeecord.CrossplatFormsBungeeCord
+main: dev.kejona.crossplatforms.bungeecord.CrossplatFormsBungeeCord
 version: ${project_version}
 description: ${project_description}
 author: Konicai, Jens

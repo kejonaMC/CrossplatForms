@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.utils;
+package dev.kejona.crossplatforms.utils;
 
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;

@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.command;
+package dev.kejona.crossplatforms.command;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;

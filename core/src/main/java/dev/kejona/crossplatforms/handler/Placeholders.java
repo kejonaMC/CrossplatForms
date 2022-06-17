@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.handler;
+package dev.kejona.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.Resolver;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

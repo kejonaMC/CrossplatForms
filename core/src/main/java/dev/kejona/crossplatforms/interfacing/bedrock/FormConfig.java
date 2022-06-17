@@ -1,11 +1,11 @@
-package dev.projectg.crossplatforms.interfacing.bedrock;
+package dev.kejona.crossplatforms.interfacing.bedrock;
 
-import dev.projectg.crossplatforms.config.Configuration;
-import dev.projectg.crossplatforms.interfacing.InterfaceConfig;
-import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
-import dev.projectg.crossplatforms.parser.Parser;
-import dev.projectg.crossplatforms.parser.ReplacementParser;
-import dev.projectg.crossplatforms.utils.ConfigurateUtils;
+import dev.kejona.crossplatforms.config.Configuration;
+import dev.kejona.crossplatforms.interfacing.InterfaceConfig;
+import dev.kejona.crossplatforms.parser.BlockPlaceholderParser;
+import dev.kejona.crossplatforms.parser.Parser;
+import dev.kejona.crossplatforms.parser.ReplacementParser;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;

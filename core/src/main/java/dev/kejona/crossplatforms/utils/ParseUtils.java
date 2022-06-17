@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.utils;
+package dev.kejona.crossplatforms.utils;
 
-import dev.projectg.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.IllegalValueException;
 
 import java.util.Locale;
 

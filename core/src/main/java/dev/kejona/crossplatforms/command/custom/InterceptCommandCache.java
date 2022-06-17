@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.command.custom;
+package dev.kejona.crossplatforms.command.custom;
 
-import dev.projectg.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.handler.ServerHandler;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;

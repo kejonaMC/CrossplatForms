@@ -1,13 +1,13 @@
-package dev.projectg.crossplatforms.accessitem;
+package dev.kejona.crossplatforms.accessitem;
 
 
-import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.permission.Permission;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
-import dev.projectg.crossplatforms.reloadable.Reloadable;
-import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.kejona.crossplatforms.config.ConfigManager;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.permission.Permission;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.reloadable.Reloadable;
+import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 

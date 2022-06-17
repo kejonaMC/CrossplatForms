@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.action;
+package dev.kejona.crossplatforms.action;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.objectmapping.meta.Required;

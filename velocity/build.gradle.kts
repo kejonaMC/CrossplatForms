@@ -16,11 +16,11 @@ dependencies {
 tasks.withType<ShadowJar> {
     dependencies {
         shadow {
-            relocate("cloud.commandframework", "dev.projectg.crossplatforms.shaded.cloud")
-            relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
+            relocate("cloud.commandframework", "dev.kejona.crossplatforms.shaded.cloud")
+            relocate("org.spongepowered.configurate", "dev.kejona.crossplatforms.shaded.configurate")
             // Used by cloud and configurate
-            relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
-            relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
+            relocate("io.leangen.geantyref", "dev.kejona.crossplatforms.shaded.typetoken")
+            relocate("org.bstats", "dev.kejona.crossplatforms.shaded.bstats")
         }
         exclude {
                 e -> e.name.startsWith("com.mojang") // all available on velocity

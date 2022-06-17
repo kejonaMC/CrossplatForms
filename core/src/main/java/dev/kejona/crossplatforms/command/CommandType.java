@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.command;
+package dev.kejona.crossplatforms.command;
 
 public enum CommandType {
     REGISTER,

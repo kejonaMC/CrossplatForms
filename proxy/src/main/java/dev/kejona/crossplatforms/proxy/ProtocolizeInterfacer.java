@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.proxy;
+package dev.kejona.crossplatforms.proxy;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.Interfacer;
-import dev.projectg.crossplatforms.interfacing.java.ItemButton;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.interfacing.java.ItemButton;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 import dev.simplix.protocolize.api.ClickType;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;

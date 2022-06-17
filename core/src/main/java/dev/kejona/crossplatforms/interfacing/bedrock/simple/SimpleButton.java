@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.simple;
+package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
 
-import dev.projectg.crossplatforms.Resolver;
-import dev.projectg.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.action.Action;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;

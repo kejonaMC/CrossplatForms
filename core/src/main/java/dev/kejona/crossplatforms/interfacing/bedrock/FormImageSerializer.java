@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.interfacing.bedrock;
+package dev.kejona.crossplatforms.interfacing.bedrock;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.geysermc.cumulus.util.FormImage;

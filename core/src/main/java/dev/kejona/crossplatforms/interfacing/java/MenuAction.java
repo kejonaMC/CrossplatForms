@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.interfacing.java;
+package dev.kejona.crossplatforms.interfacing.java;
 
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.serialize.KeyedType;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 
 import javax.annotation.Nonnull;
 

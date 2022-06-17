@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.kejona.crossplatforms.spigot;
 
-import dev.projectg.crossplatforms.accessitem.AccessItem;
-import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.Placeholders;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.Interfacer;
-import dev.projectg.crossplatforms.spigot.common.SpigotAccessItemsBase;
+import dev.kejona.crossplatforms.accessitem.AccessItem;
+import dev.kejona.crossplatforms.config.ConfigManager;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.spigot.common.SpigotAccessItemsBase;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

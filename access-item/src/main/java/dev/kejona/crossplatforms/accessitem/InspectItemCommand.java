@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.accessitem;
+package dev.kejona.crossplatforms.accessitem;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.command.defaults.InspectCommand;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.FormsCommand;
+import dev.kejona.crossplatforms.command.defaults.InspectCommand;
 
 import java.util.stream.Collectors;
 

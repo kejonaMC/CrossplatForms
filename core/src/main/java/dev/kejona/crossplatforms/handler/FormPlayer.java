@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.handler;
+package dev.kejona.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.Constants;
+import dev.kejona.crossplatforms.Constants;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;

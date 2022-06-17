@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.utils;
+package dev.kejona.crossplatforms.utils;
 
 public class StringUtils {
 

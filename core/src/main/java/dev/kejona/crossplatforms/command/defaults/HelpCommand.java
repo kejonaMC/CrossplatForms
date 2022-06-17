@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.command.defaults;
+package dev.kejona.crossplatforms.command.defaults;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.FormsCommand;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.FormsCommand;
 
 public class HelpCommand extends FormsCommand {
 

@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.spigot.common.handler;
+package dev.kejona.crossplatforms.spigot.common.handler;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.events.ExpansionsLoadedEvent;
 import org.bukkit.Bukkit;

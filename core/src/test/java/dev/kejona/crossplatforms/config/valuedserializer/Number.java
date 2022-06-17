@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.config.valuedserializer;
+package dev.kejona.crossplatforms.config.valuedserializer;
 
-import dev.projectg.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.ValuedType;
 
 import java.math.BigDecimal;
 

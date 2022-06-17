@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.interfacing.java;
+package dev.kejona.crossplatforms.interfacing.java;
 
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.Interface;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;

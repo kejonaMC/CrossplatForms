@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.command.custom;
+package dev.kejona.crossplatforms.command.custom;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Platform;
-import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.Platform;
+import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.command;
+package dev.kejona.crossplatforms.command;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static dev.projectg.crossplatforms.command.DispatchableCommandSerializer.deserialize;
+import static dev.kejona.crossplatforms.command.DispatchableCommandSerializer.deserialize;
 
 public class DispatchableCommandTest {
 

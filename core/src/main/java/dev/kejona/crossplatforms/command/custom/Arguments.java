@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.command.custom;
+package dev.kejona.crossplatforms.command.custom;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;

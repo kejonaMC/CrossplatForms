@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.accessitem;
+package dev.kejona.crossplatforms.accessitem;
 
-import dev.projectg.crossplatforms.config.ConfigId;
-import dev.projectg.crossplatforms.config.Configuration;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.config.ConfigId;
+import dev.kejona.crossplatforms.config.Configuration;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.NodePath;

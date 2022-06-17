@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.reloadable;
+package dev.kejona.crossplatforms.reloadable;
 
 /**
  * Any classes that implements this interface should be able to reload their functionality.

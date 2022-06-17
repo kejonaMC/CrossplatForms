@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.custom;
+package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
-import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
 
 /**
  * This serializer must be registered exact.

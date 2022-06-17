@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.handler;
+package dev.kejona.crossplatforms.handler;
 
 import javax.annotation.Nonnull;
 

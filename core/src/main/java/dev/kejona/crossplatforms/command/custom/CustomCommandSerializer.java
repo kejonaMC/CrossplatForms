@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.command.custom;
+package dev.kejona.crossplatforms.command.custom;
 
-import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
 
 public class CustomCommandSerializer extends ValuedTypeSerializer<CustomCommand> {
 

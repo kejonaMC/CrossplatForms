@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.handler;
+package dev.kejona.crossplatforms.handler;
 
-import dev.projectg.crossplatforms.Logger;
+import dev.kejona.crossplatforms.Logger;
 import org.geysermc.cumulus.form.Form;
 import org.geysermc.floodgate.api.FloodgateApi;
 

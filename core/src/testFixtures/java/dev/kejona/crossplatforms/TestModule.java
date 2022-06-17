@@ -1,17 +1,17 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
 import com.google.inject.AbstractModule;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommand;
-import dev.projectg.crossplatforms.handler.BasicPlaceholders;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.Placeholders;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.Interfacer;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.DispatchableCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommand;
+import dev.kejona.crossplatforms.handler.BasicPlaceholders;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.velocity.handler;
+package dev.kejona.crossplatforms.velocity.handler;
 
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandSource;
@@ -7,17 +7,17 @@ import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommand;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.proxy.PermissionHook;
-import dev.projectg.crossplatforms.proxy.ProxyHandler;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.command.DispatchableCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommand;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.proxy.PermissionHook;
+import dev.kejona.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 

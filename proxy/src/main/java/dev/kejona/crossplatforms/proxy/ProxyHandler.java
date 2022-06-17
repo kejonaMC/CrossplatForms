@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.proxy;
+package dev.kejona.crossplatforms.proxy;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.command.custom.InterceptCommandCache;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class ProxyHandler extends InterceptCommandCache implements ServerHandler {

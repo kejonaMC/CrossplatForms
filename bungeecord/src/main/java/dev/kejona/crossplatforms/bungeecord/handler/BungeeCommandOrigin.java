@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.bungeecord.handler;
+package dev.kejona.crossplatforms.bungeecord.handler;
 
-import dev.projectg.crossplatforms.bungeecord.CrossplatFormsBungeeCord;
-import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.bungeecord.CrossplatFormsBungeeCord;
+import dev.kejona.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 import net.md_5.bungee.api.CommandSender;

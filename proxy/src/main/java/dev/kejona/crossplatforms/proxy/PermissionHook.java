@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.proxy;
+package dev.kejona.crossplatforms.proxy;
 
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import org.jetbrains.annotations.Nullable;
 
 public interface PermissionHook {

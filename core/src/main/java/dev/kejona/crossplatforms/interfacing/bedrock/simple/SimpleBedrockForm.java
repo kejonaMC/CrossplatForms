@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.simple;
+package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;
 import org.geysermc.cumulus.form.SimpleForm;

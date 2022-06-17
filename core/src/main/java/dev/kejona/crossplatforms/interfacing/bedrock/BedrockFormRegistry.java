@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.interfacing.bedrock;
+package dev.kejona.crossplatforms.interfacing.bedrock;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.permission.Permission;
-import dev.projectg.crossplatforms.reloadable.Reloadable;
-import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.config.ConfigManager;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.permission.Permission;
+import dev.kejona.crossplatforms.reloadable.Reloadable;
+import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
 
 import javax.annotation.Nullable;

@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.config.keyedserializer;
+package dev.kejona.crossplatforms.config.keyedserializer;
 
-import dev.projectg.crossplatforms.serialize.KeyedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 
 public interface Message extends KeyedType {
 

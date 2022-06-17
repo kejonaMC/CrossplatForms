@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.serialize;
+package dev.kejona.crossplatforms.serialize;
 
 /**
  * For use with {@link KeyedTypeSerializer}

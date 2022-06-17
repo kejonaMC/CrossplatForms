@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.command.defaults;
+package dev.kejona.crossplatforms.command.defaults;
 
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import com.google.common.collect.ImmutableList;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.FormsCommand;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.FormsCommand;
 import lombok.Getter;
 
 import java.util.List;

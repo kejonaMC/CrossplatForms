@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.velocity.handler;
+package dev.kejona.crossplatforms.velocity.handler;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
-import dev.projectg.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.CommandOrigin;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.TextComponent;
 

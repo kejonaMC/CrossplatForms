@@ -1,11 +1,11 @@
-package dev.projectg.crossplatforms.command.defaults;
+package dev.kejona.crossplatforms.command.defaults;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.reloadable.ReloadableRegistry;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.FormsCommand;
+import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 
 public class ReloadCommand extends FormsCommand {
 

@@ -1,17 +1,17 @@
-package dev.projectg.crossplatforms.command.defaults;
+package dev.kejona.crossplatforms.command.defaults;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.FormsCommand;
-import dev.projectg.crossplatforms.handler.ServerHandler;
-import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.FormsCommand;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 import java.util.stream.Collectors;
 

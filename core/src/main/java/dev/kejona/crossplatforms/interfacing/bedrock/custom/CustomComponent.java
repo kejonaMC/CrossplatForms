@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.custom;
+package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
-import dev.projectg.crossplatforms.IllegalValueException;
-import dev.projectg.crossplatforms.Resolver;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.parser.Parser;
-import dev.projectg.crossplatforms.serialize.ValuedType;
-import dev.projectg.crossplatforms.utils.ParseUtils;
+import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.parser.Parser;
+import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

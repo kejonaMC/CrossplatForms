@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.command.custom;
+package dev.kejona.crossplatforms.command.custom;
 
-import dev.projectg.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.command.CommandType;
 import lombok.Getter;
 import lombok.ToString;
 import org.checkerframework.checker.nullness.qual.Nullable;

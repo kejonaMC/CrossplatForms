@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.kejona.crossplatforms.spigot.common;
 
 import lombok.AllArgsConstructor;
 import org.bukkit.event.EventHandler;

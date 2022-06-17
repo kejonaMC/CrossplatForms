@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.config;
+package dev.kejona.crossplatforms.config;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.interfacing.bedrock.FormConfig;
-import dev.projectg.crossplatforms.interfacing.java.MenuConfig;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.interfacing.bedrock.FormConfig;
+import dev.kejona.crossplatforms.interfacing.java.MenuConfig;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;

@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.config;
+package dev.kejona.crossplatforms.config;
 
-import dev.projectg.crossplatforms.utils.ConfigurateUtils;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;

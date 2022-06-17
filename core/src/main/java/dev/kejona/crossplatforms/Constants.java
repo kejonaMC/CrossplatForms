@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
-import dev.projectg.crossplatforms.utils.FileUtils;
+import dev.kejona.crossplatforms.utils.FileUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;

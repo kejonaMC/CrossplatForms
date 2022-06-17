@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.utils;
+package dev.kejona.crossplatforms.utils;
 
 import com.google.inject.Key;
 import io.leangen.geantyref.TypeToken;

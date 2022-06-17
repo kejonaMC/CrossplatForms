@@ -1,15 +1,15 @@
-package dev.projectg.crossplatforms.spigot.common.handler;
+package dev.kejona.crossplatforms.spigot.common.handler;
 
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.command.CommandOrigin;
-import dev.projectg.crossplatforms.command.CommandType;
-import dev.projectg.crossplatforms.command.DispatchableCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommand;
-import dev.projectg.crossplatforms.command.custom.InterceptCommandCache;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.command.CommandOrigin;
+import dev.kejona.crossplatforms.command.CommandType;
+import dev.kejona.crossplatforms.command.DispatchableCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommandCache;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.ServerHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Server;
@@ -86,7 +86,7 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
     }
 
     @Override
-    public void registerPermission(String key, @Nullable String description, dev.projectg.crossplatforms.permission.PermissionDefault def) {
+    public void registerPermission(String key, @Nullable String description, dev.kejona.crossplatforms.permission.PermissionDefault def) {
         PermissionDefault perm;
         switch (def) {
             case TRUE:

@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.parser;
+package dev.kejona.crossplatforms.parser;
 
-import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
 
 public class ParserSerializer extends ValuedTypeSerializer<Parser> {
 

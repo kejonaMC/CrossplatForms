@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.action;
+package dev.kejona.crossplatforms.action;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.handler.Placeholders;
-import dev.projectg.crossplatforms.interfacing.Interface;
-import dev.projectg.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.interfacing.Interfacer;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

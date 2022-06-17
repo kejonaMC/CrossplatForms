@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.interfacing.bedrock;
+package dev.kejona.crossplatforms.interfacing.bedrock;
 
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.CustomBedrockForm;
-import dev.projectg.crossplatforms.interfacing.bedrock.modal.ModalBedrockForm;
-import dev.projectg.crossplatforms.interfacing.bedrock.simple.SimpleBedrockForm;
-import dev.projectg.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomBedrockForm;
+import dev.kejona.crossplatforms.interfacing.bedrock.modal.ModalBedrockForm;
+import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleBedrockForm;
+import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
 
 /**
  * This serializer must be registered exact.

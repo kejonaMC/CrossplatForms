@@ -1,14 +1,14 @@
-package dev.projectg.crossplatforms.accessitem;
+package dev.kejona.crossplatforms.accessitem;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.Platform;
-import dev.projectg.crossplatforms.action.Action;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.permission.Permission;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.Platform;
+import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.permission.Permission;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

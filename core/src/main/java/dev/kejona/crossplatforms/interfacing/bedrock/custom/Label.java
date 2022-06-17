@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.custom;
+package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.Resolver;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;

@@ -1,12 +1,12 @@
-package dev.projectg.crossplatforms.velocity;
+package dev.kejona.crossplatforms.velocity;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.action.SimpleAction;
-import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.action.SimpleAction;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 

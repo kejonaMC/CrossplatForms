@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
-import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import net.kyori.adventure.text.TextComponent;
 
 import java.util.UUID;

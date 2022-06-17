@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.velocity;
+package dev.kejona.crossplatforms.velocity;
 
-import dev.projectg.crossplatforms.Logger;
+import dev.kejona.crossplatforms.Logger;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;

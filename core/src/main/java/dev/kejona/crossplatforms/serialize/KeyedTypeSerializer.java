@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.serialize;
+package dev.kejona.crossplatforms.serialize;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import dev.projectg.crossplatforms.Entry;
-import dev.projectg.crossplatforms.utils.TypeUtils;
+import dev.kejona.crossplatforms.Entry;
+import dev.kejona.crossplatforms.utils.TypeUtils;
 import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;

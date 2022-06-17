@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.kejona.crossplatforms.spigot;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import dev.projectg.crossplatforms.Constants;
+import dev.kejona.crossplatforms.Constants;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;

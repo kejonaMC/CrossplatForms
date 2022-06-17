@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.config.keyedserializer;
+package dev.kejona.crossplatforms.config.keyedserializer;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.serialize.SimpleType;
+import dev.kejona.crossplatforms.serialize.SimpleType;
 
 import javax.annotation.Nonnull;
 

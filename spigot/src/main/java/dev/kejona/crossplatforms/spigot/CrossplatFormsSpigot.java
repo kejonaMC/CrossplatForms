@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.spigot;
+package dev.kejona.crossplatforms.spigot;
 
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.spigot.common.SpigotAccessItemsBase;
-import dev.projectg.crossplatforms.spigot.common.SpigotBase;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.spigot.common.SpigotAccessItemsBase;
+import dev.kejona.crossplatforms.spigot.common.SpigotBase;
 import org.bstats.charts.SimplePie;
 
 public class CrossplatFormsSpigot extends SpigotBase {

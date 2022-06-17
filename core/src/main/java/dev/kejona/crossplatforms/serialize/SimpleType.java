@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.serialize;
+package dev.kejona.crossplatforms.serialize;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;

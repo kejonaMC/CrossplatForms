@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
-import dev.projectg.crossplatforms.handler.BedrockHandler;
-import dev.projectg.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 
 import java.util.UUID;
 

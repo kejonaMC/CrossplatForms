@@ -1,11 +1,11 @@
-package dev.projectg.crossplatforms.form.component;
+package dev.kejona.crossplatforms.form.component;
 
 import com.google.common.collect.ImmutableMap;
-import dev.projectg.crossplatforms.FakePlayer;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.Input;
-import dev.projectg.crossplatforms.parser.BlockPlaceholderParser;
-import dev.projectg.crossplatforms.parser.ReplacementParser;
+import dev.kejona.crossplatforms.FakePlayer;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.bedrock.custom.Input;
+import dev.kejona.crossplatforms.parser.BlockPlaceholderParser;
+import dev.kejona.crossplatforms.parser.ReplacementParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

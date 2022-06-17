@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.kejona.crossplatforms.spigot.common;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
-import dev.projectg.crossplatforms.utils.FileUtils;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;

@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.action;
+package dev.kejona.crossplatforms.action;
 
 
-import dev.projectg.crossplatforms.serialize.SimpleType;
+import dev.kejona.crossplatforms.serialize.SimpleType;
 
 import javax.annotation.Nonnull;
 

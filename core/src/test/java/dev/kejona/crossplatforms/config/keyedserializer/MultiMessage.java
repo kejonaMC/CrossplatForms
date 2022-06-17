@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.keyedserializer;
+package dev.kejona.crossplatforms.config.keyedserializer;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;

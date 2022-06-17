@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.interfacing;
+package dev.kejona.crossplatforms.interfacing;
 
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockForm;
-import dev.projectg.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
 import lombok.Getter;
 
 import javax.annotation.Nonnull;

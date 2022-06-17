@@ -1,10 +1,10 @@
-package dev.projectg.crossplatforms.spigot.common;
+package dev.kejona.crossplatforms.spigot.common;
 
 import com.google.inject.Inject;
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.interfacing.java.MenuAction;
-import dev.projectg.crossplatforms.serialize.SimpleType;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.interfacing.java.MenuAction;
+import dev.kejona.crossplatforms.serialize.SimpleType;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;

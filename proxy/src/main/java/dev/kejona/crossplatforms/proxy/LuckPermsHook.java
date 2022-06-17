@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.proxy;
+package dev.kejona.crossplatforms.proxy;
 
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.permission.PermissionDefault;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.group.GroupManager;

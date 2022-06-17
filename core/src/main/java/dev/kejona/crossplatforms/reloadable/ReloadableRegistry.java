@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.reloadable;
+package dev.kejona.crossplatforms.reloadable;
 
-import dev.projectg.crossplatforms.CrossplatForms;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.config.GeneralConfig;
+import dev.kejona.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.config.ConfigManager;
+import dev.kejona.crossplatforms.config.GeneralConfig;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

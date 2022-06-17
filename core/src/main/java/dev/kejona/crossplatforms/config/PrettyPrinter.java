@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.config;
+package dev.kejona.crossplatforms.config;
 
-import dev.projectg.crossplatforms.utils.StringUtils;
+import dev.kejona.crossplatforms.utils.StringUtils;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.Collection;

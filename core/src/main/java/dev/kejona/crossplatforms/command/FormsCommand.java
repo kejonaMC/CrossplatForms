@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.command;
+package dev.kejona.crossplatforms.command;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.CrossplatForms;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.CrossplatForms;
 import lombok.RequiredArgsConstructor;
 
 /**

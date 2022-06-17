@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.command;
+package dev.kejona.crossplatforms.command;
 
 import com.google.common.collect.ImmutableMap;
-import dev.projectg.crossplatforms.Constants;
-import dev.projectg.crossplatforms.Logger;
-import dev.projectg.crossplatforms.handler.BedrockHandler;
+import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.handler.BedrockHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;

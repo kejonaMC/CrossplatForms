@@ -1,8 +1,8 @@
-package dev.projectg.crossplatforms;
+package dev.kejona.crossplatforms;
 
-import dev.projectg.crossplatforms.config.ConfigId;
-import dev.projectg.crossplatforms.config.ConfigManager;
-import dev.projectg.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.config.ConfigId;
+import dev.kejona.crossplatforms.config.ConfigManager;
+import dev.kejona.crossplatforms.interfacing.Interfacer;
 import org.bstats.charts.CustomChart;
 
 public interface CrossplatFormsBootstrap {

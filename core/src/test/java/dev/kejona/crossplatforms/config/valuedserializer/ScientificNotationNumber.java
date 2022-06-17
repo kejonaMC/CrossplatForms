@@ -1,4 +1,4 @@
-package dev.projectg.crossplatforms.config.valuedserializer;
+package dev.kejona.crossplatforms.config.valuedserializer;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 

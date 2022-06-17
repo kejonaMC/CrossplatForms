@@ -1,7 +1,7 @@
-package dev.projectg.crossplatforms.form.component;
+package dev.kejona.crossplatforms.form.component;
 
-import dev.projectg.crossplatforms.Resolver;
-import dev.projectg.crossplatforms.interfacing.bedrock.custom.Input;
+import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.interfacing.bedrock.custom.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

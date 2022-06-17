@@ -1,9 +1,9 @@
-package dev.projectg.crossplatforms.action;
+package dev.kejona.crossplatforms.action;
 
-import dev.projectg.crossplatforms.handler.FormPlayer;
-import dev.projectg.crossplatforms.interfacing.java.JavaMenu;
-import dev.projectg.crossplatforms.interfacing.java.MenuAction;
-import dev.projectg.crossplatforms.serialize.KeyedType;
+import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.interfacing.java.MenuAction;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

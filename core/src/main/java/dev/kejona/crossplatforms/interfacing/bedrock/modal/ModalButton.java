@@ -1,6 +1,6 @@
-package dev.projectg.crossplatforms.interfacing.bedrock.modal;
+package dev.kejona.crossplatforms.interfacing.bedrock.modal;
 
-import dev.projectg.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.action.Action;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
