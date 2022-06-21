@@ -12,6 +12,8 @@ import dev.kejona.crossplatforms.command.custom.Arguments;
 import dev.kejona.crossplatforms.command.custom.ArgumentsSerializer;
 import dev.kejona.crossplatforms.command.custom.CustomCommand;
 import dev.kejona.crossplatforms.command.custom.CustomCommandSerializer;
+import dev.kejona.crossplatforms.filler.Filler;
+import dev.kejona.crossplatforms.filler.FillerSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
 import dev.kejona.crossplatforms.utils.FileUtils;
@@ -50,12 +52,16 @@ public class ConfigManager {
     private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
     @Getter
+    private final FillerSerializer fillerSerializer;
+
+    @Getter
     private final ActionSerializer actionSerializer;
 
     public ConfigManager(Path directory, Logger logger, Injector injector) {
         this.directory = directory;
         this.logger = logger;
         actionSerializer = new ActionSerializer(injector);
+        fillerSerializer = new FillerSerializer();
 
         ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
         loaderBuilder = YamlConfigurationLoader.builder();
@@ -70,6 +76,8 @@ public class ConfigManager {
                 builder.registerExact(Arguments.class, new ArgumentsSerializer());
                 builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
                 builder.registerExact(Parser.class, new ParserSerializer());
+                builder.registerExact(Filler.class, fillerSerializer);
+
                 actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
                 actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
                 actionSerializer.registrator().accept(builder);

@@ -32,8 +32,8 @@ public class Toggle extends CustomComponent {
     }
 
     @Override
-    public void placeholders(@Nonnull Resolver resolver) {
-        super.placeholders(resolver);
+    public void prepare(@Nonnull Resolver resolver) {
+        super.prepare(resolver);
         defaultValue = resolver.apply(defaultValue);
     }
 
@@ -46,9 +46,9 @@ public class Toggle extends CustomComponent {
     }
 
     @Override
-    public Toggle withPlaceholders(Resolver resolver) {
+    public Toggle preparedCopy(Resolver resolver) {
         Toggle copy = copy();
-        copy.placeholders(resolver);
+        copy.prepare(resolver);
         return copy;
     }
 

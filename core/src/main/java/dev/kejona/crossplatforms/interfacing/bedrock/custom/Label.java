@@ -33,9 +33,9 @@ public class Label extends CustomComponent {
     }
 
     @Override
-    public Label withPlaceholders(Resolver resolver) {
+    public Label preparedCopy(Resolver resolver) {
         Label copy = copy();
-        copy.placeholders(resolver);
+        copy.prepare(resolver);
         return copy;
     }
 

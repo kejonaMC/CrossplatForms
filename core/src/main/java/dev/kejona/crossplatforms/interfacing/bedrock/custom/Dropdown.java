@@ -2,7 +2,9 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.filler.Filler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
@@ -32,6 +34,8 @@ public class Dropdown extends CustomComponent {
      */
     private boolean returnText = true;
 
+    private Filler filler = null;
+
     @Inject
     private Dropdown() {
         super();
@@ -44,6 +48,7 @@ public class Dropdown extends CustomComponent {
         dropdown.options = new ArrayList<>(this.options);
         dropdown.defaultOption = this.defaultOption;
         dropdown.returnText = this.returnText;
+        dropdown.filler = this.filler;
         return dropdown;
     }
 
@@ -53,16 +58,25 @@ public class Dropdown extends CustomComponent {
     }
 
     @Override
-    public void placeholders(@Nonnull Resolver resolver) {
-        super.placeholders(resolver);
+    public void prepare(@Nonnull Resolver resolver) {
+        super.prepare(resolver);
+        if (filler != null) {
+            List<String> generated = filler.generate();
+            if (filler.insertBefore()) {
+                options.addAll(0, generated);
+            } else {
+                options.addAll(generated);
+            }
+        }
+
         options = options.stream().map(resolver).collect(Collectors.toList());
         defaultOption = resolver.apply(defaultOption);
     }
 
     @Override
-    public Dropdown withPlaceholders(Resolver resolver) {
+    public Dropdown preparedCopy(Resolver resolver) {
         Dropdown copy = copy();
-        copy.placeholders(resolver);
+        copy.prepare(resolver);
         return copy;
     }
 

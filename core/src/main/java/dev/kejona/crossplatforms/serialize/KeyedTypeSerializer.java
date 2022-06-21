@@ -73,7 +73,8 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         } else {
             instance = node.get(type);
         }
-        return instance;    }
+        return instance;
+    }
 
     @Override
     public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
