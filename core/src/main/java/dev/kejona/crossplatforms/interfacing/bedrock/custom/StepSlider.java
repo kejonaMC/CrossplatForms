@@ -68,7 +68,7 @@ public class StepSlider extends CustomComponent {
     @Override
     public String parse(FormPlayer player, String result) {
         if (returnText) {
-            return steps.get(Integer.parseInt(result));
+            return super.parse(player, steps.get(Integer.parseInt(result)));
         } else {
             return super.parse(player, result);
         }
