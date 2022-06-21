@@ -1,5 +1,5 @@
 {
-  "main": "dev.projectg.crossplatforms.velocity.CrossplatFormsVelocity",
+  "main": "dev.kejona.crossplatforms.velocity.CrossplatFormsVelocity",
   "id": "crossplatforms",
   "name": "CrossplatForms-Velocity",
   "version": "${project_version}",

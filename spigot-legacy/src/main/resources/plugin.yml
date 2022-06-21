@@ -1,4 +1,4 @@
-main: dev.projectg.crossplatforms.spigot.CrossplatFormsSpigotLegacy
+main: dev.kejona.crossplatforms.spigot.CrossplatFormsSpigotLegacy
 name: CrossplatForms
 version: ${project_version}
 description: ${project_description}

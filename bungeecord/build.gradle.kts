@@ -16,13 +16,13 @@ dependencies {
 tasks.withType<ShadowJar> {
     dependencies {
         shadow {
-            relocate("com.google.inject", "dev.projectg.crossplatforms.shaded.guice")
-            relocate("cloud.commandframework", "dev.projectg.crossplatforms.shaded.cloud")
-            relocate("net.kyori", "dev.projectg.crossplatforms.shaded.kyori")
-            relocate("org.spongepowered.configurate", "dev.projectg.crossplatforms.shaded.configurate")
+            relocate("com.google.inject", "dev.kejona.crossplatforms.shaded.guice")
+            relocate("cloud.commandframework", "dev.kejona.crossplatforms.shaded.cloud")
+            relocate("net.kyori", "dev.kejona.crossplatforms.shaded.kyori")
+            relocate("org.spongepowered.configurate", "dev.kejona.crossplatforms.shaded.configurate")
             // Used by cloud and configurate
-            relocate("io.leangen.geantyref", "dev.projectg.crossplatforms.shaded.typetoken")
-            relocate("org.bstats", "dev.projectg.crossplatforms.shaded.bstats")
+            relocate("io.leangen.geantyref", "dev.kejona.crossplatforms.shaded.typetoken")
+            relocate("org.bstats", "dev.kejona.crossplatforms.shaded.bstats")
         }
         exclude {
                 e ->

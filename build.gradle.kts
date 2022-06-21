@@ -11,7 +11,7 @@ allprojects{
     apply(plugin = "java-library")
     apply(plugin = "net.kyori.indra.git")
 
-    group = "dev.projectg"
+    group = "dev.kejona"
     version = "1.3.1"
 
     tasks.withType<JavaCompile> {
