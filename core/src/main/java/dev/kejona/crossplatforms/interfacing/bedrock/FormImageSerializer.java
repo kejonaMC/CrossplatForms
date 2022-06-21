@@ -31,9 +31,8 @@ public class FormImageSerializer implements TypeSerializer<FormImage> {
     public void serialize(Type type, @Nullable FormImage image, ConfigurationNode node) throws SerializationException {
         if (image == null) {
             node.raw(null);
-            return;
+        } else {
+            node.set(String.class, image.data());
         }
-        node.set(FormImage.Type.class, image.type());
-        node.set(String.class, image.data());
     }
 }
