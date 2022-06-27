@@ -16,13 +16,9 @@ import java.util.stream.Stream;
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class Filler implements ValuedType {
 
-    private final String PLACEHOLDER = "%value%";
-
     @Getter
     @Setting("before")
     private boolean insertBefore = false;
-
-    private String modifier = null;
 
     @Inject
     protected Filler() {
@@ -30,11 +26,7 @@ public abstract class Filler implements ValuedType {
     }
 
     public final List<String> generate() {
-        if (modifier == null || !modifier.contains(PLACEHOLDER)) {
-            return generateRaw().collect(Collectors.toList());
-        } else {
-            return generateRaw().map(s -> modifier.replace(PLACEHOLDER, s)).collect(Collectors.toList());
-        }
+        return generateRaw().collect(Collectors.toList());
     }
 
     protected abstract Stream<String> generateRaw();
