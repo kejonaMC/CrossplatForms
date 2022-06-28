@@ -16,8 +16,8 @@ import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class TestModule extends AbstractModule {
 
@@ -46,7 +46,7 @@ public class TestModule extends AbstractModule {
             }
 
             @Override
-            public List<FormPlayer> getPlayers() {
+            public Stream<FormPlayer> getPlayers() {
                 return null;
             }
 

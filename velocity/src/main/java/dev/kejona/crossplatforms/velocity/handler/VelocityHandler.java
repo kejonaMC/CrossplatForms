@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class VelocityHandler extends ProxyHandler implements ServerHandler {
 
@@ -57,8 +57,8 @@ public class VelocityHandler extends ProxyHandler implements ServerHandler {
     }
 
     @Override
-    public List<FormPlayer> getPlayers() {
-        return server.getAllPlayers().stream().map(VelocityPlayer::new).collect(Collectors.toList());
+    public Stream<FormPlayer> getPlayers() {
+        return server.getAllPlayers().stream().map(VelocityPlayer::new);
     }
 
     @Nonnull

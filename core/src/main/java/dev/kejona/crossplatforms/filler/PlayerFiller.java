@@ -18,10 +18,7 @@ public class PlayerFiller extends Filler {
 
     @Override
     protected Stream<String> generateRaw() {
-        return serverHandler.getPlayers()
-            .stream()
-            .map(FormPlayer::getName)
-            .sorted();
+        return serverHandler.getPlayers().map(FormPlayer::getName).sorted();
     }
 
     @Override

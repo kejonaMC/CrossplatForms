@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpigotHandler extends InterceptCommandCache implements ServerHandler, Listener {
 
@@ -68,9 +68,9 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
     }
 
     @Override
-    public List<FormPlayer> getPlayers() {
+    public Stream<FormPlayer> getPlayers() {
         ensurePrimaryThread();
-        return server.getOnlinePlayers().stream().map(SpigotPlayer::new).collect(Collectors.toList());
+        return server.getOnlinePlayers().stream().map(SpigotPlayer::new);
     }
 
     @Nonnull
