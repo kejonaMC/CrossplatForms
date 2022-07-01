@@ -68,17 +68,7 @@ public class SpigotAccessItems extends SpigotAccessItemsBase {
     @EventHandler
     public void onEntityPickupItem(EntityPickupItemEvent event) { // Stop players without possession permission to pickup items
         if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            ItemStack item = event.getItem().getItemStack();
-            String id = getItemId(item);
-            if (id != null) {
-                AccessItem access = super.getItem(id);
-                if (access == null) {
-                    event.setCancelled(true);
-                } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
-                    event.setCancelled(true);
-                }
-            }
+            handlePlayerPickupItem((Player) event.getEntity(), event.getItem(), event::setCancelled);
         }
     }
 }
