@@ -87,8 +87,9 @@ public class SpigotInterfacer extends Interfacer implements Listener {
                     menuCache.get(inventory).process(event.getSlot(), event.isRightClick(), new SpigotPlayer((Player) event.getWhoClicked()));
                 } else if (event.isShiftClick()) {
                     // stop players from shift-clicking items into the menu's inventory.
-                    Inventory upper = event.getInventory();
-                    event.setCancelled(menuCache.containsKey(upper));
+                    if (menuCache.containsKey(event.getInventory())) { // the upper inventory
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

@@ -83,7 +83,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
                 Object result = response.valueAt(i);
                 if (result == null) {
                     // component was not added to the form
-                    resultPlaceholders.put(placeholder(i), component.resultIfHidden());
+                    resultPlaceholders.put(placeholder(i), component.parse(player, component.resultIfHidden()));
                 } else {
                     resultPlaceholders.put(placeholder(i), component.parse(player, result.toString()));
                 }

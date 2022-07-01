@@ -17,8 +17,7 @@ public class ItemButton {
 
     public static final String STATIC_IDENTIFIER = "crossplatformsbutton";
 
-    @Required
-    private String displayName;
+    private String displayName = "";
 
     @Required
     private String material;

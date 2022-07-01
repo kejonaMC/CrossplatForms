@@ -1,7 +1,7 @@
 <img alt="CrossplatForms" width="500" src="https://github.com/kejonaMC/CrossplatForms/blob/main/images/crossplatForms.svg" /> 
 
 [![Build Status](https://ci.kejona.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.kejona.dev/job/CrossplatForms/job/main/)
-[![Version](https://img.shields.io/badge/version-1.3.1-blue)](https://github.com/kejonaMC/CrossplatForms/releases)
+[![Version](https://img.shields.io/badge/version-1.3.2-blue)](https://github.com/kejonaMC/CrossplatForms/releases)
 [![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/kejonaMC/CrossplatForms/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
 [![bStats](https://img.shields.io/badge/bStats-click%20me-yellow)](https://bstats.org/author/Konicai)
