@@ -59,11 +59,11 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
         try {
             for (CustomComponent component : this.components) {
                 // resolve placeholders
-                CustomComponent resolved = component.withPlaceholders(placeholders.resolver(player));
-                formatted.add(resolved);
+                CustomComponent prepared = component.preparedCopy(placeholders.resolver(player));
+                formatted.add(prepared);
 
                 // add component to form
-                form.optionalComponent(resolved.cumulusComponent(), resolved.show());
+                form.optionalComponent(prepared.cumulusComponent(), prepared.show());
             }
         } catch (IllegalValueException e) {
             player.warn("There was an error sending a form to you.");

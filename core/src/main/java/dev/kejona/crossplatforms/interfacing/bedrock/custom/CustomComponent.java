@@ -72,7 +72,7 @@ public abstract class CustomComponent implements ValuedType {
      * Sets placeholders
      * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
      */
-    public void placeholders(@Nonnull Resolver resolver) {
+    public void prepare(@Nonnull Resolver resolver) {
         Objects.requireNonNull(resolver);
         text = resolver.apply(text);
         if (shouldShow != null) {
@@ -80,10 +80,7 @@ public abstract class CustomComponent implements ValuedType {
         }
     }
 
-    /**
-     * @return A new instance with placeholders set
-     */
-    public abstract CustomComponent withPlaceholders(Resolver resolver);
+    public abstract CustomComponent preparedCopy(Resolver resolver);
 
     /**
      * Parses the result of a Component.

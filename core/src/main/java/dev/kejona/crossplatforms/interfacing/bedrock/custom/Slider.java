@@ -53,8 +53,8 @@ public class Slider extends CustomComponent {
     }
 
     @Override
-    public void placeholders(@Nonnull Resolver resolver) {
-        super.placeholders(resolver);
+    public void prepare(@Nonnull Resolver resolver) {
+        super.prepare(resolver);
         min = resolver.apply(min);
         max = resolver.apply(max);
         step = resolver.apply(step);
@@ -62,9 +62,9 @@ public class Slider extends CustomComponent {
     }
 
     @Override
-    public Slider withPlaceholders(Resolver resolver) {
+    public Slider preparedCopy(Resolver resolver) {
         Slider copy = copy();
-        copy.placeholders(resolver);
+        copy.prepare(resolver);
         return copy;
     }
 

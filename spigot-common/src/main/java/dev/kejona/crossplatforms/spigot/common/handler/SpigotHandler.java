@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpigotHandler extends InterceptCommandCache implements ServerHandler, Listener {
 
@@ -45,6 +45,7 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
     }
 
     private Player getPlayerOrThrow(UUID uuid) {
+        ensurePrimaryThread();
         Player player = server.getPlayer(uuid);
         if (player == null) {
             throw new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid);
@@ -54,19 +55,22 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
 
     @Override
     public FormPlayer getPlayer(UUID uuid) {
+        ensurePrimaryThread();
         Player player = server.getPlayer(uuid);
         return (player == null) ? null : new SpigotPlayer(player);
     }
 
     @Override
     public FormPlayer getPlayer(String name) {
+        ensurePrimaryThread();
         Player player = server.getPlayer(name);
         return (player == null) ? null : new SpigotPlayer(player);
     }
 
     @Override
-    public List<FormPlayer> getPlayers() {
-        return server.getOnlinePlayers().stream().map(SpigotPlayer::new).collect(Collectors.toList());
+    public Stream<FormPlayer> getPlayers() {
+        ensurePrimaryThread();
+        return server.getOnlinePlayers().stream().map(SpigotPlayer::new);
     }
 
     @Nonnull
@@ -87,6 +91,7 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
 
     @Override
     public void registerPermission(String key, @Nullable String description, dev.kejona.crossplatforms.permission.PermissionDefault def) {
+        ensurePrimaryThread();
         PermissionDefault perm;
         switch (def) {
             case TRUE:
@@ -106,6 +111,7 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
 
     @Override
     public void unregisterPermission(String key) {
+        ensurePrimaryThread();
         server.getPluginManager().removePermission(new Permission(key));
     }
 
@@ -134,6 +140,7 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
      * this method is called on. (Does not create a new Runnable).
      */
     private void dispatchCommand(Player player, DispatchableCommand command) {
+        // don't need to ensure main thread here since spigot will throw its own exception if so, when dispatching commands.
         if (command.isPlayer()) {
             if (command.isOp() && !player.isOp()) {
                 // only temporarily op the player if the command requires op and the player is not opped
@@ -171,5 +178,11 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
     @Override
     public void executeSafely(Runnable runnable) {
         server.getScheduler().runTask(plugin, runnable);
+    }
+
+    private void ensurePrimaryThread() {
+        if (!server.isPrimaryThread()) {
+            throw new IllegalStateException("Method not called from primary thread, instead: " + Thread.currentThread());
+        }
     }
 }

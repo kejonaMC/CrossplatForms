@@ -81,7 +81,6 @@ public class OpenCommand extends FormsCommand {
                 .permission(PERMISSION_OTHER)
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
                         .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
-                                .stream()
                                 .map(FormPlayer::getName)
                                 .collect(Collectors.toList()))
                         .build())

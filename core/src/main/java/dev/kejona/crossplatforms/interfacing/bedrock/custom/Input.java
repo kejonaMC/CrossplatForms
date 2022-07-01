@@ -60,16 +60,16 @@ public class Input extends CustomComponent {
     }
 
     @Override
-    public void placeholders(@Nonnull Resolver resolver) {
-        super.placeholders(resolver);
+    public void prepare(@Nonnull Resolver resolver) {
+        super.prepare(resolver);
         placeholder = resolver.apply(placeholder);
         defaultText = resolver.apply(defaultText);
     }
 
     @Override
-    public Input withPlaceholders(Resolver resolver) {
+    public Input preparedCopy(Resolver resolver) {
         Input copy = copy();
-        copy.placeholders(resolver);
+        copy.prepare(resolver);
         return copy;
     }
 

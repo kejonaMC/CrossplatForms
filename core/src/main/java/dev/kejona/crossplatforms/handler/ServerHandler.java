@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * An abstract handle on the server implementation
@@ -31,7 +32,7 @@ public interface ServerHandler {
     @Nullable
     FormPlayer getPlayer(String name);
 
-    List<FormPlayer> getPlayers();
+    Stream<FormPlayer> getPlayers();
 
     @Nonnull
     Audience asAudience(CommandOrigin origin);

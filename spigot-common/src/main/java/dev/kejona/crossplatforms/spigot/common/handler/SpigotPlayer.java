@@ -1,5 +1,6 @@
 package dev.kejona.crossplatforms.spigot.common.handler;
 
+import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.spigot.common.SpigotBase;
 import net.kyori.adventure.text.TextComponent;
@@ -29,6 +30,10 @@ public class SpigotPlayer implements FormPlayer {
 
     @Override
     public boolean hasPermission(String permission) {
+        if (!handle.getServer().isPrimaryThread()) {
+            Logger.get().warn("Permission check off main thread, instead: " + Thread.currentThread());
+            Thread.dumpStack();
+        }
         return handle.hasPermission(permission);
     }
 
