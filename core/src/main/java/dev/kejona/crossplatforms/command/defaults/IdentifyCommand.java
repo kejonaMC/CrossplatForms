@@ -34,7 +34,7 @@ public class IdentifyCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String message;
-                    if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new))) {
+                    if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(AssertionError::new))) {
                         message = "You are a bedrock player";
                     } else {
                         message = "You are not a bedrock player";

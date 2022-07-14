@@ -115,6 +115,6 @@ public interface CommandOrigin {
      * @return True if the command origin is a bedrock player. false if it is anything else, such as a java player or console command sender.
      */
     default boolean isBedrockPlayer(BedrockHandler handler) {
-        return isPlayer() && handler.isBedrockPlayer(getUUID().orElseThrow(NoSuchElementException::new));
+        return isPlayer() && handler.isBedrockPlayer(getUUID().orElseThrow(AssertionError::new));
     }
 }

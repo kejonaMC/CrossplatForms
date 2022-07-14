@@ -138,7 +138,7 @@ public class CustomCommandManager implements Reloadable {
 
     private void executeCommand(CommandOrigin player, Arguments command) {
         logger.debug("Executing registered command on thread: " + Thread.currentThread());
-        FormPlayer target = Objects.requireNonNull(serverHandler.getPlayer(player.getUUID().orElseThrow(NoSuchElementException::new)));
+        FormPlayer target = Objects.requireNonNull(serverHandler.getPlayer(player.getUUID().orElseThrow(AssertionError::new)));
         RegisteredCommand latest = registeredCommands.get(command);
         if (latest == null) {
             String message = "Unexpected state: command " + Arrays.toString(command.source()) + " no longer exists internally";
@@ -166,7 +166,7 @@ public class CustomCommandManager implements Reloadable {
             return false;
         } else {
             if (origin.isPlayer()) {
-                UUID uuid = origin.getUUID().orElseThrow(NullPointerException::new);
+                UUID uuid = origin.getUUID().orElseThrow(AssertionError::new);
                 return target.getPlatform().matches(uuid, bedrockHandler) && origin.hasPermission(target.getPermission());
             } else {
                 return false;

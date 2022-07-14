@@ -55,7 +55,7 @@ public class OpenCommand extends FormsCommand {
                         .build())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    UUID uuid = origin.getUUID().orElseThrow(NoSuchElementException::new);
+                    UUID uuid = origin.getUUID().orElseThrow(AssertionError::new);
                     FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
                     String identifier = context.get(ARGUMENT);
                     Interface ui = interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));

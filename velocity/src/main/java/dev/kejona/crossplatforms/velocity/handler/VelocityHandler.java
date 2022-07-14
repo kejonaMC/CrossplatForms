@@ -40,7 +40,7 @@ public class VelocityHandler extends ProxyHandler implements ServerHandler {
         this.console = server.getConsoleCommandSource();
     }
 
-    private Player getPlayerOrThrow(UUID uuid) {
+    private Player getPlayerOrThrow(UUID uuid) throws IllegalArgumentException {
         return server.getPlayer(uuid).orElseThrow(() -> new IllegalArgumentException("Failed to find a player with the following UUID: " + uuid));
     }
 
