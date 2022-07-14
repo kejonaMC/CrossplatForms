@@ -8,6 +8,7 @@ import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
+import org.geysermc.cumulus.util.AbsentComponent;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -79,14 +80,18 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             Map<String, String> resultPlaceholders = new HashMap<>();
             for (int i = 0; i < formatted.size(); i++) {
                 CustomComponent component = formatted.get(i);
-
                 Object result = response.valueAt(i);
-                if (result == null) {
-                    // component was not added to the form
-                    resultPlaceholders.put(placeholder(i), component.parse(player, component.resultIfHidden()));
+
+                String value;
+                if (result == null || result instanceof AbsentComponent) {
+                    // If the result is null then the Component should be a Label
+                    // If it is an AbsentComponent then the Component was optional and was not shown
+                    // todo: optional components that were not shown will return null when https://github.com/GeyserMC/Cumulus/pull/6 is merged
+                    value = component.resultIfHidden();
                 } else {
-                    resultPlaceholders.put(placeholder(i), component.parse(player, result.toString()));
+                    value = result.toString();
                 }
+                resultPlaceholders.put(placeholder(i), component.parse(player, value));
             }
 
             if (logger.isDebug()) {

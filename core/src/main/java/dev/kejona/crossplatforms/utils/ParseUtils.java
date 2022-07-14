@@ -4,6 +4,9 @@ import dev.kejona.crossplatforms.IllegalValueException;
 
 import java.util.Locale;
 
+/**
+ * Methods designed for parsing values from placeholders.
+ */
 public class ParseUtils {
 
     private ParseUtils() {

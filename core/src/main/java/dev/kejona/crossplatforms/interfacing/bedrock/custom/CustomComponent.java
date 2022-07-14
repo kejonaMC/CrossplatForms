@@ -4,9 +4,9 @@ import com.google.gson.JsonPrimitive;
 import dev.kejona.crossplatforms.IllegalValueException;
 import dev.kejona.crossplatforms.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.serialize.ValuedType;
-import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,13 +22,10 @@ import java.util.Objects;
 @ToString
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public abstract class CustomComponent implements ValuedType {
+public abstract class CustomComponent extends OptionalElement implements ValuedType {
 
     @Getter
     protected String text = "";
-
-    @Nullable
-    private String shouldShow = null;
 
     @Getter
     @Setter
@@ -45,14 +42,6 @@ public abstract class CustomComponent implements ValuedType {
     protected CustomComponent(@Nonnull String text, @Nullable String shouldShow) {
         this.text = Objects.requireNonNull(text);
         this.shouldShow = shouldShow;
-    }
-
-    public boolean show() {
-        if (shouldShow == null) {
-            return true;
-        } else {
-            return ParseUtils.getBoolean(shouldShow, true);
-        }
     }
 
     public abstract CustomComponent copy();

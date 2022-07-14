@@ -51,7 +51,7 @@ public class SimpleBedrockForm extends BedrockForm {
             SimpleButton resolved = button.withPlaceholders(placeholders.resolver(player));
             formattedButtons.add(resolved);
 
-            form.button(resolved.getText(), resolved.getImage());
+            form.optionalButton(resolved.getText(), resolved.getImage(), resolved.show());
         }
 
         // actions for incorrect response (closed or invalid response)

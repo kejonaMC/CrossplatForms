@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
 import dev.kejona.crossplatforms.Resolver;
 import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.ButtonComponent;
@@ -20,7 +21,7 @@ import java.util.List;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class SimpleButton {
+public class SimpleButton extends OptionalElement {
 
     @Required
     private String text;
@@ -42,6 +43,9 @@ public class SimpleButton {
         button.text = resolver.apply(this.text);
         button.image = this.image; // form image is immutable
         button.actions = new ArrayList<>(this.actions);
+        if (this.shouldShow != null) {
+            button.shouldShow = resolver.apply(this.shouldShow);
+        }
         return button;
     }
 
