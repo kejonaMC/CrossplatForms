@@ -12,6 +12,9 @@ public abstract class Logger {
     }
 
     public static Logger get() {
+        if (INSTANCE == null) {
+            throw new IllegalStateException("A logger has not yet been constructed.");
+        }
         return INSTANCE;
     }
 

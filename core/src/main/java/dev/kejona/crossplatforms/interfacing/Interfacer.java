@@ -33,9 +33,7 @@ public abstract class Interfacer {
      */
     @Nullable
     public Interface getInterface(@Nullable String name, boolean bedrock) {
-        if (bedrockRegistry == null || javaRegistry == null) {
-            return null;
-        }
+        ensureLoaded();
 
         if (bedrock) {
             BedrockForm form = bedrockRegistry.getForm(name);
@@ -59,9 +57,7 @@ public abstract class Interfacer {
      */
     @Nonnull
     public List<Interface> getInterfaces(boolean bedrock) {
-        if (bedrockRegistry == null || javaRegistry == null) {
-            return new ArrayList<>();
-        }
+        ensureLoaded();
 
         List<Interface> list = new ArrayList<>();
         if (bedrock) {
@@ -76,6 +72,12 @@ public abstract class Interfacer {
         }
 
         return list;
+    }
+
+    private void ensureLoaded() {
+        if (bedrockRegistry == null || javaRegistry == null) {
+            throw new IllegalStateException("Interfacer has not yet been loaded with registries");
+        }
     }
 
     public abstract void sendMenu(FormPlayer player, JavaMenu menu);
