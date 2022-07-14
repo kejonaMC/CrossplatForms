@@ -5,20 +5,21 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import java.util.stream.Stream;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class PlayerFiller extends Filler {
 
-    public static final String TYPE = "PLAYER";
+    public static final String TYPE = "player";
 
     @Inject
     private transient ServerHandler serverHandler = null;
 
     @Override
-    protected Stream<String> generateRaw() {
-        return serverHandler.getPlayers().map(FormPlayer::getName).sorted();
+    public Collection<String> generate() {
+        return serverHandler.getPlayers().map(FormPlayer::getName).sorted().collect(Collectors.toList());
     }
 
     @Override

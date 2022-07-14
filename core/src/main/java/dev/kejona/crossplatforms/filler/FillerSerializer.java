@@ -6,5 +6,6 @@ public class FillerSerializer extends ValuedTypeSerializer<Filler> {
 
     public FillerSerializer() {
         registerType(PlayerFiller.TYPE, PlayerFiller.class);
+        registerType(SplitterFiller.TYPE, SplitterFiller.class);
     }
 }

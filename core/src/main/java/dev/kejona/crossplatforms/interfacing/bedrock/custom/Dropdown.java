@@ -2,7 +2,6 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
-import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.Resolver;
 import dev.kejona.crossplatforms.filler.Filler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
@@ -15,6 +14,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,7 +61,7 @@ public class Dropdown extends CustomComponent {
     public void prepare(@Nonnull Resolver resolver) {
         super.prepare(resolver);
         if (filler != null) {
-            List<String> generated = filler.generate();
+            Collection<String> generated = filler.generate();
             if (filler.insertBefore()) {
                 options.addAll(0, generated);
             } else {

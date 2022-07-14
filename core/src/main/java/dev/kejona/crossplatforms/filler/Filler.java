@@ -7,9 +7,7 @@ import lombok.experimental.Accessors;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Setting;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Collection;
 
 @Accessors(fluent = true)
 @ConfigSerializable
@@ -25,9 +23,5 @@ public abstract class Filler implements ValuedType {
 
     }
 
-    public final List<String> generate() {
-        return generateRaw().collect(Collectors.toList());
-    }
-
-    protected abstract Stream<String> generateRaw();
+    public abstract Collection<String> generate();
 }
