@@ -17,6 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.permissions.Permission;
@@ -155,9 +156,9 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST) // Same as DeluxeMenus
     public void onPreProcessCommand(PlayerCommandPreprocessEvent event) {
-        String input = event.getMessage().substring(1); // remove command slash and get first command
+        String input = event.getMessage().substring(1); // remove command slash
         InterceptCommand command = findCommand(input);
         if (command != null) {
             Player player = event.getPlayer();
@@ -169,6 +170,8 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
 
                     if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
                         event.setCancelled(true);
+                        // Deluxe menus ignores the fact the event is cancelled, so we must edit the message
+                        event.setMessage(" ");
                     }
                 }
             }
