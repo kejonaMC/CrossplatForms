@@ -170,8 +170,8 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
 
                     if (command.getMethod() == CommandType.INTERCEPT_CANCEL) {
                         event.setCancelled(true);
-                        // Deluxe menus ignores the fact the event is cancelled, so we must edit the message
-                        event.setMessage(" ");
+                        // Deluxe menus ignores the fact the event is cancelled, so we must edit the message :((
+                        event.setMessage("/GeyserMCIsCool");
                     }
                 }
             }
