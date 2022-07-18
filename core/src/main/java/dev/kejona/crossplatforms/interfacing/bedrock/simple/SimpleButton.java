@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -67,18 +68,15 @@ public class SimpleButton extends OptionalElement {
      */
     @Contract(pure = true)
     public SimpleButton withPlaceholders(Resolver resolver) {
-        // Lombok's with doesn't super superclass fields.
         SimpleButton button = new SimpleButton();
         if (this.text != null) {
             button.text = resolver.apply(this.text);
         }
-        if (image != null) {
+        if (this.image != null) {
             button.image = resolver.apply(this.image);
         }
         button.actions = new ArrayList<>(this.actions);
-        if (this.shouldShow != null) {
-            button.shouldShow = resolver.apply(this.shouldShow);
-        }
+        button.shouldShow = this.shouldShow.stream().map(resolver).collect(Collectors.toList());
         return button;
     }
 

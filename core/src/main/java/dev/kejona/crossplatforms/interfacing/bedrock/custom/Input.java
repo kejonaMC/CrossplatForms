@@ -25,19 +25,14 @@ public class Input extends CustomComponent {
 
     public Input(@Nonnull String text,
                  @Nonnull String placeholder,
-                 @Nonnull String defaultText,
-                 @Nullable String shouldShow) {
-        super(text, shouldShow);
+                 @Nonnull String defaultText) {
+        super(text);
         this.placeholder = Objects.requireNonNull(placeholder);
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
-    public Input(@Nonnull String text, @Nonnull String placeholder, @Nonnull String defaultText) {
-        this(text, placeholder, defaultText, null);
-    }
-
     public Input(@Nonnull String text) {
-        this(text, "", "", null);
+        this(text, "", "");
     }
 
     @Inject

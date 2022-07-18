@@ -14,11 +14,10 @@ import org.geysermc.cumulus.component.Component;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ToString
 @ConfigSerializable
@@ -30,7 +29,7 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
 
     @Getter
     @Setter
-    private List<Parser> parsers = Collections.emptyList();
+    private List<Parser> parsers = new ArrayList<>(0);
 
     /**
      * Implementing classes should provide a zero arg constructor that calls super the constructor below
@@ -40,9 +39,8 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         //no-op
     }
 
-    protected CustomComponent(@Nonnull String text, @Nullable String shouldShow) {
+    protected CustomComponent(@Nonnull String text) {
         this.text = Objects.requireNonNull(text);
-        this.shouldShow = shouldShow;
     }
 
     public abstract CustomComponent copy();
@@ -56,6 +54,7 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         this.text = source.text;
         this.shouldShow = source.shouldShow;
         this.parsers = new ArrayList<>(source.parsers);
+        this.shouldShow = new ArrayList<>(shouldShow);
     }
 
     /**
@@ -65,9 +64,7 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
     public void prepare(@Nonnull Resolver resolver) {
         Objects.requireNonNull(resolver);
         text = resolver.apply(text);
-        if (shouldShow != null) {
-            shouldShow = resolver.apply(shouldShow);
-        }
+        shouldShow = shouldShow.stream().map(resolver).collect(Collectors.toList());
     }
 
     public abstract CustomComponent preparedCopy(Resolver resolver);
