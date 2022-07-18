@@ -27,7 +27,7 @@ public class Slider extends CustomComponent {
 
     @Inject
     private Slider() {
-        super();
+
     }
 
     @Override

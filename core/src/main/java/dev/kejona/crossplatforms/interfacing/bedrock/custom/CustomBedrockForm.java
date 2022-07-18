@@ -8,6 +8,7 @@ import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
+import org.geysermc.cumulus.form.Form;
 import org.geysermc.cumulus.util.AbsentComponent;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -29,7 +30,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
     public static final String TYPE = "custom_form";
 
     @Nullable
-    private FormImage image = null;
+    private String image = null;
     private List<CustomComponent> components = Collections.emptyList();
     private List<Action> actions = Collections.emptyList();
 
@@ -50,9 +51,12 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
 
         CustomForm.Builder form = CustomForm.builder().title(placeholders.setPlaceholders(player, super.getTitle()));
 
-        if (image != null) {
-            // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
-            form.icon(image.type(), image.data());
+        if (this.image != null) {
+            FormImage image = getFormImage(this.image);
+            if (image != null) {
+                // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
+                form.icon(image.type(), image.data());
+            }
         }
 
         // Setup and add components

@@ -16,6 +16,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +30,7 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
 
     @Getter
     @Setter
-    private List<Parser> parsers = new ArrayList<>(0);
+    private List<Parser> parsers = Collections.emptyList();
 
     /**
      * Implementing classes should provide a zero arg constructor that calls super the constructor below

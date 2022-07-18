@@ -12,8 +12,11 @@ import dev.kejona.crossplatforms.command.custom.Arguments;
 import dev.kejona.crossplatforms.command.custom.ArgumentsSerializer;
 import dev.kejona.crossplatforms.command.custom.CustomCommand;
 import dev.kejona.crossplatforms.command.custom.CustomCommandSerializer;
-import dev.kejona.crossplatforms.filler.Filler;
 import dev.kejona.crossplatforms.filler.FillerSerializer;
+import dev.kejona.crossplatforms.filler.PlayerFiller;
+import dev.kejona.crossplatforms.filler.SplitterFiller;
+import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
+import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
 import dev.kejona.crossplatforms.utils.FileUtils;
@@ -52,16 +55,15 @@ public class ConfigManager {
     private final Map<Class<? extends Configuration>, ConfigurationNode> nodes = new HashMap<>();
 
     @Getter
-    private final FillerSerializer fillerSerializer;
+    private final ActionSerializer actionSerializer;
 
     @Getter
-    private final ActionSerializer actionSerializer;
+    private final FillerSerializer fillerSerializer = new FillerSerializer();
 
     public ConfigManager(Path directory, Logger logger, Injector injector) {
         this.directory = directory;
         this.logger = logger;
         actionSerializer = new ActionSerializer(injector);
-        fillerSerializer = new FillerSerializer();
 
         ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
         loaderBuilder = YamlConfigurationLoader.builder();
@@ -71,16 +73,23 @@ public class ConfigManager {
             // the collection of the serializers below. serializers in the children are checked first when object mapping
             // occurs. our custom serializers MUST be checked first before the object mapper.
             return opts.serializers(builder -> {
-                builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
-                // type serializers for abstract classes and external library classes
+                // serializers for our custom scalars
                 builder.registerExact(Arguments.class, new ArgumentsSerializer());
+                builder.registerExact(Option.class, new OptionSerializer());
+                // type serializers for abstract classes and external library classes
+                builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
                 builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
                 builder.registerExact(Parser.class, new ParserSerializer());
-                builder.registerExact(Filler.class, fillerSerializer);
 
+                // actions, composite serializer
                 actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
                 actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
                 actionSerializer.registrator().accept(builder);
+
+                // fillers (dropdown, simple form, inventory), composite serializer
+                fillerSerializer.register(PlayerFiller.TYPE, PlayerFiller.class);
+                fillerSerializer.register(SplitterFiller.TYPE, SplitterFiller.class);
+                fillerSerializer.registrator().accept(builder);
             });
         });
         // don't initialize default values for object values
