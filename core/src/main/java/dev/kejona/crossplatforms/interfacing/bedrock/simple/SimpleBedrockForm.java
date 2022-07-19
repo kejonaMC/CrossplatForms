@@ -2,7 +2,6 @@ package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.Resolver;
-import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.filler.SimpleFormFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -46,6 +45,10 @@ public class SimpleBedrockForm extends BedrockForm {
             .title(placeholders.setPlaceholders(player, getTitle()))
             .content(placeholders.setPlaceholders(player, content));
 
+        // make a copy of the buttons
+        List<SimpleButton> buttons = new ArrayList<>(this.buttons);
+
+        // fill the copy with additional buttons
         for (SimpleFormFiller filler : fillers) {
             int index = filler.insertIndex();
             if (index < 0) {
@@ -55,24 +58,16 @@ public class SimpleBedrockForm extends BedrockForm {
             }
         }
 
-        // setup and add buttons
-        List<SimpleButton> formattedButtons = new ArrayList<>(); // as our custom buttons
-        for (SimpleButton button : buttons) {
-            SimpleButton resolved = button.withPlaceholders(resolver);
-            formattedButtons.add(resolved);
-
-            form.optionalButton(resolved.getText(), BedrockForm.getFormImage(resolved.getImage()), resolved.show());
-        }
+        // resolve relevant placeholders and add it to the form
+        buttons.forEach(button -> button.addTo(form, resolver));
 
         // actions for incorrect response (closed or invalid response)
         form.closedOrInvalidResultHandler(() -> handleIncorrect(player));
 
         // actions for correct response
-        form.validResultHandler(response -> executeHandler(() -> {
-            // Handle effects of pressing the button
-            List<Action> actions = formattedButtons.get(response.clickedButtonId()).getActions();
-            Action.affectPlayer(player, actions);
-        }));
+        form.validResultHandler(response -> executeHandler(
+            () -> buttons.get(response.clickedButtonId()).click(player)
+        ));
 
         // Send the form to the floodgate player
         bedrockHandler.sendForm(uuid, form.build());

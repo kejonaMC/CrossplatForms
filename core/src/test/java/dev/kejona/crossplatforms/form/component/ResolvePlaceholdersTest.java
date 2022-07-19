@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class ResolvePlaceholdersTest {
 
-    private static final Resolver resolver = s -> s.replace("%1%", "one").replace("%two%", "2");
+    private static final Resolver resolver = Resolver.of(s -> s.replace("%1%", "one").replace("%two%", "2"));
     
     @Test
     public void copyInputTest() {

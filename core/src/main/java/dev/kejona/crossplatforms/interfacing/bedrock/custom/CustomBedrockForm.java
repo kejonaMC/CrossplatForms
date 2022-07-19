@@ -8,7 +8,6 @@ import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
-import org.geysermc.cumulus.form.Form;
 import org.geysermc.cumulus.util.AbsentComponent;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -52,7 +51,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
         CustomForm.Builder form = CustomForm.builder().title(placeholders.setPlaceholders(player, super.getTitle()));
 
         if (this.image != null) {
-            FormImage image = getFormImage(this.image);
+            FormImage image = createFormImage(this.image);
             if (image != null) {
                 // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
                 form.icon(image.type(), image.data());

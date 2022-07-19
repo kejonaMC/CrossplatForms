@@ -56,8 +56,8 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     }
 
     @Nullable
-    public static FormImage getFormImage(@Nullable String data) {
-        if (data == null || data.isEmpty()) {
+    public static FormImage createFormImage(@Nullable String data) {
+        if (data == null) {
             return null;
         } else {
             FormImage.Type type;

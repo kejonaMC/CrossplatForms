@@ -16,7 +16,7 @@ public interface SimpleFormFiller extends ValuedType {
             return rawButtons(resolver);
         }
 
-        return rawButtons(resolver).map(e -> e.format(format));
+        return rawButtons(resolver).map(format::withRaw);
     }
 
     @Nonnull
