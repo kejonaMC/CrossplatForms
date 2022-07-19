@@ -16,7 +16,6 @@ import dev.kejona.crossplatforms.filler.FillerSerializer;
 import dev.kejona.crossplatforms.filler.PlayerFiller;
 import dev.kejona.crossplatforms.filler.SplitterFiller;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
-import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
 import dev.kejona.crossplatforms.utils.FileUtils;
@@ -75,7 +74,6 @@ public class ConfigManager {
             return opts.serializers(builder -> {
                 // serializers for our custom scalars
                 builder.registerExact(Arguments.class, new ArgumentsSerializer());
-                builder.registerExact(Option.class, new OptionSerializer());
                 // type serializers for abstract classes and external library classes
                 builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
                 builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());

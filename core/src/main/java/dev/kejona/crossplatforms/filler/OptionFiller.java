@@ -1,7 +1,6 @@
 package dev.kejona.crossplatforms.filler;
 
 import dev.kejona.crossplatforms.Resolver;
-import dev.kejona.crossplatforms.interfacing.bedrock.custom.FilledOption;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 
@@ -14,9 +13,9 @@ public interface OptionFiller extends ValuedType {
     default Stream<Option> generateOptions(Resolver resolver) {
         String format = dropdownFormat();
         if (format == null) {
-            return rawOptions(resolver).map(FilledOption::new);
+            return rawOptions(resolver).map(Option::new);
         }
-        return rawOptions(resolver).map(s -> new FilledOption(FillerUtils.replace(format, s), s));
+        return rawOptions(resolver).map(s -> new Option(FillerUtils.replace(format, s), s));
     }
 
     @Nonnull
