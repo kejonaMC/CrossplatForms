@@ -26,7 +26,7 @@ public class Dropdown extends CustomComponent {
 
     public static final String TYPE = "dropdown";
 
-    private List<Option> options = Collections.emptyList();
+    private List<Option> options = new ArrayList<>();
     private String defaultOption = "0";
     private List<OptionFiller> fillers = Collections.emptyList();
 

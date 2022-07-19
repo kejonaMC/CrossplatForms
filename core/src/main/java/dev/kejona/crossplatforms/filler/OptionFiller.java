@@ -11,10 +11,11 @@ import java.util.stream.Stream;
 public interface OptionFiller extends ValuedType {
 
     default Stream<Option> generateOptions(Resolver resolver) {
-        String format = dropdownFormat();
-        if (format == null) {
+        Option optionFormat = optionFormat();
+        if (optionFormat == null) {
             return rawOptions(resolver).map(Option::new);
         }
+        String format = optionFormat.display();
         return rawOptions(resolver).map(s -> new Option(FillerUtils.replace(format, s), s));
     }
 
@@ -22,7 +23,7 @@ public interface OptionFiller extends ValuedType {
     Stream<String> rawOptions(Resolver resolver);
 
     @Nullable
-    String dropdownFormat();
+    Option optionFormat();
 
     int insertIndex();
 }

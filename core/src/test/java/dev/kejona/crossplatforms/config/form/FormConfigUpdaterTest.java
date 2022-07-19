@@ -12,11 +12,9 @@ import dev.kejona.crossplatforms.config.PrettyPrinter;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.FormConfig;
-import dev.kejona.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.kejona.crossplatforms.utils.StringUtils;
-import org.geysermc.cumulus.util.FormImage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +49,6 @@ public class FormConfigUpdaterTest {
         manager.serializers(builder -> {
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
-            builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         });
     }

@@ -27,7 +27,6 @@ public class Option {
         this.returnText = returnText;
     }
 
-
     @Contract(pure = true)
     public Option with(Resolver resolver) {
         if (returnText == null) {
