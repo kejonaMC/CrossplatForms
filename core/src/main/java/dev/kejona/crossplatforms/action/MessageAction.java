@@ -18,7 +18,6 @@ import java.util.function.Function;
 public class MessageAction implements Action {
 
     public static final String TYPE = "message";
-    private static final GsonComponentSerializer DOWNSAMPLING_GSON_SERIALIZER = GsonComponentSerializer.colorDownsamplingGson();
     private static final GsonComponentSerializer GSON_SERIALIZER = GsonComponentSerializer.gson();
 
     private Format format = Format.LEGACY;
@@ -54,8 +53,7 @@ public class MessageAction implements Action {
 
     enum Format {
         LEGACY,
-        JSON,
-        JSON_OLD
+        JSON
 
         // todo: support minimessage
     }
@@ -73,8 +71,6 @@ public class MessageAction implements Action {
             deserializer = serializer::deserialize;
         } else if (format == Format.JSON) {
             deserializer = GSON_SERIALIZER::deserialize;
-        } else if (format == Format.JSON_OLD) {
-            deserializer = DOWNSAMPLING_GSON_SERIALIZER::deserialize;
         } else {
             throw new AssertionError();
         }
