@@ -6,13 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Collections;
 import java.util.List;
-
-import static dev.kejona.crossplatforms.filler.FillerUtils.replace;
 
 @ToString
 @NoArgsConstructor
@@ -70,28 +67,5 @@ public class ItemButton {
 
     public boolean isPlayerHead() {
         return skullOwner != null;
-    }
-
-    @Contract
-    public ItemButton format(ItemButton format) {
-        ItemButton item = new ItemButton();
-        item.displayName = replace(format.displayName, this.displayName);
-        item.material = replace(format.material, this.material);
-
-        if (this.targetPlayer != null) {
-            // from filler
-            item.skullOwner = this.skullOwner;
-            item.targetPlayer = this.targetPlayer;
-        } else {
-            // from config
-            item.skullOwner = this.skullOwner;
-        }
-
-        // we don't offer filling this stuff (yet at least )
-        item.lore = format.lore;
-        item.anyClick = format.anyClick;
-        item.leftClick = format.leftClick;
-        item.rightClick = format.rightClick;
-        return item;
     }
 }

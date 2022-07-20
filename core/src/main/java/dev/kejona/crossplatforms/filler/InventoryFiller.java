@@ -18,7 +18,8 @@ public interface InventoryFiller extends ValuedType {
             return rawItems(resolver).collect(Collectors.toList());
         }
 
-        return rawItems(resolver).map(item -> item.format(format)).collect(Collectors.toList());
+        throw new IllegalStateException("Item generation not implemented yet");
+        // return rawItems(resolver).map(item -> item.format(format)).collect(Collectors.toList());
     }
 
     @Nonnull
