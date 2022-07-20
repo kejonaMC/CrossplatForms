@@ -3,7 +3,7 @@ package dev.kejona.crossplatforms.bungeecord.handler;
 import dev.kejona.crossplatforms.bungeecord.CrossplatFormsBungeeCord;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import lombok.AllArgsConstructor;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,7 @@ public class BungeeCordPlayer implements FormPlayer {
     }
 
     @Override
-    public void sendRaw(TextComponent component) {
+    public void sendRaw(Component component) {
         player.sendMessage(CrossplatFormsBungeeCord.COMPONENT_SERIALIZER.serialize(component));
     }
 

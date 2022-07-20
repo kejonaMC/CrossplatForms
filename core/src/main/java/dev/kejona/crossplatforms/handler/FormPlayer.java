@@ -29,7 +29,7 @@ public interface FormPlayer {
     /**
      * Sends a player the message without any processing or plugin prefix appended.
      */
-    void sendRaw(TextComponent component);
+    void sendRaw(Component component);
 
     /**
      * Legacy text chars should NOT be passed to this. Sends a player a message with the plugin prefix.
