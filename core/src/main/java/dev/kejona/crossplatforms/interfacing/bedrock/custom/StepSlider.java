@@ -26,7 +26,7 @@ public class StepSlider extends CustomComponent {
 
     public static final String TYPE = "step_slider";
 
-    private List<Option> steps = Collections.emptyList();
+    private List<Option> steps = new ArrayList<>();
     private String defaultStep = "0";
     private List<OptionFiller> fillers = Collections.emptyList();
 
