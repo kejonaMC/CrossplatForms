@@ -1,29 +1,24 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
-import org.spongepowered.configurate.serialize.TypeSerializer;
+import io.leangen.geantyref.TypeToken;
+import org.spongepowered.configurate.serialize.ScalarSerializer;
 
-import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Type;
+import java.util.function.Predicate;
 
-public class OptionSerializer implements TypeSerializer.Annotated<Option> {
+public class OptionSerializer extends ScalarSerializer<Option> {
 
-    @Override
-    public Option deserialize(AnnotatedType type, ConfigurationNode node) throws SerializationException {
-        String display = node.getString();
-        if (display == null) {
-            throw new SerializationException("Must be a string");
-        }
-        return new Option(display);
+    public OptionSerializer() {
+        super(new TypeToken<Option>() {});
     }
 
     @Override
-    public void serialize(AnnotatedType type, @Nullable Option option, ConfigurationNode node) throws SerializationException {
-        if (option == null) {
-            node.raw(null);
-        } else {
-            node.set(option.display());
-        }
+    public Option deserialize(Type type, Object obj) {
+        return new Option(obj.toString());
+    }
+
+    @Override
+    protected Object serialize(Option option, Predicate<Class<?>> typeSupported) {
+        return option.display();
     }
 }

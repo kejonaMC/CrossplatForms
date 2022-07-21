@@ -15,7 +15,7 @@ public abstract class OptionalElement {
     /**
      * This should only be called after placeholders have been resolved, and ideally only called once.
      */
-    public boolean show() {
+    protected boolean show() {
         return allTrue(shouldShow.stream());
     }
 

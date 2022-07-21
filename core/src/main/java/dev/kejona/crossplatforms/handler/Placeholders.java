@@ -45,7 +45,7 @@ public interface Placeholders {
      * @return the formatted text.
      */
     @Nonnull
-    default String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text, @Nonnull Map<String, @Nullable String> additional) {
+    default String setPlaceholders(@Nonnull FormPlayer player, @Nonnull String text, @Nonnull Map<String, String> additional) {
         if (text.isEmpty()) {
             return text;
         }
@@ -53,7 +53,7 @@ public interface Placeholders {
         String resolved = text;
         if (!additional.isEmpty()) {
             for (String key : additional.keySet()) {
-                resolved = resolved.replace(key, additional.getOrDefault(key, ""));
+                resolved = resolved.replace(key, additional.get(key));
             }
         }
 

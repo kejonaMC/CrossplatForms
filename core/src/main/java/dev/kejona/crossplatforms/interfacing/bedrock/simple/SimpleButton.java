@@ -34,7 +34,7 @@ public class SimpleButton extends OptionalElement {
 
     @Setting(value = "image")
     @Nullable
-    private String imageData = null;
+    private String imageData;
 
     @Nonnull
     private List<Action> actions = Collections.emptyList();
@@ -59,13 +59,21 @@ public class SimpleButton extends OptionalElement {
         return text;
     }
 
+    @Nonnull
+    private String getImage() {
+        if (imageData == null) {
+            return "";
+        }
+        return imageData;
+    }
+
     private Map<String, String> additionalPlaceholders() {
         if (raw == null) {
             return Collections.emptyMap();
         } else {
             Map<String, String> additionalPlaceholders = new HashMap<>(2);
-            additionalPlaceholders.put("%raw_text%", raw.text);
-            additionalPlaceholders.put("%raw_image%", raw.imageData);
+            additionalPlaceholders.put("%raw_text%", getText());
+            additionalPlaceholders.put("%raw_image%", getImage());
             return additionalPlaceholders;
         }
     }

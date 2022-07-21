@@ -1,7 +1,6 @@
 package dev.kejona.crossplatforms;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -16,7 +15,7 @@ public interface Resolver extends Function<String, String> {
     String apply(@Nonnull String s);
 
     @Nonnull
-    String apply(@Nonnull String s, @Nonnull Map<String, @Nullable String> additionalPlaceholders);
+    String apply(@Nonnull String s, @Nonnull Map<String, String> additionalPlaceholders);
 
     static Resolver of(Function<String, String> keyMapper) {
         return new Resolver() {
@@ -28,10 +27,10 @@ public interface Resolver extends Function<String, String> {
 
             @NotNull
             @Override
-            public String apply(@NotNull String s, @NotNull Map<String, @Nullable String> additionalPlaceholders) {
+            public String apply(@NotNull String s, @NotNull Map<String, String> additionalPlaceholders) {
                 String result = s;
                 for (String key : additionalPlaceholders.keySet()) {
-                    result = result.replace(key, additionalPlaceholders.getOrDefault(key, ""));
+                    result = result.replace(key, additionalPlaceholders.get(key));
                 }
                 return keyMapper.apply(result);
             }

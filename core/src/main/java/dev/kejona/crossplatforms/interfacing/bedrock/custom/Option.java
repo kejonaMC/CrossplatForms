@@ -2,12 +2,10 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import dev.kejona.crossplatforms.Resolver;
 import org.jetbrains.annotations.Contract;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@ConfigSerializable
 public class Option {
 
     @Nonnull
@@ -22,7 +20,7 @@ public class Option {
         this.returnText = null;
     }
 
-    public Option(@Nonnull String display, @Nonnull String returnText) {
+    public Option(@Nonnull String display, @Nullable String returnText) {
         this.display = display;
         this.returnText = returnText;
     }
@@ -36,10 +34,12 @@ public class Option {
         }
     }
 
+    @Nonnull
     public String display() {
         return display;
     }
 
+    @Nonnull
     public String returnText() {
         if (returnText == null) {
             return display;

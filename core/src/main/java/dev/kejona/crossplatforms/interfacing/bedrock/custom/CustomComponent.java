@@ -43,9 +43,19 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         this.text = Objects.requireNonNull(text);
     }
 
+    @Override
+    public boolean show() { // access widener
+        return super.show();
+    }
+
     public abstract CustomComponent copy();
 
+    public abstract CustomComponent preparedCopy(Resolver resolver);
+
     public abstract Component cumulusComponent() throws IllegalValueException;
+
+    @Nonnull
+    public abstract String resultIfHidden();
 
     /**
      * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
@@ -67,13 +77,12 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         shouldShow = shouldShow.stream().map(resolver).collect(Collectors.toList());
     }
 
-    public abstract CustomComponent preparedCopy(Resolver resolver);
-
     /**
      * Parses the result of a Component.
      * @param result The result to parse
      * @return The parsed result as a String. If not overridden, simply returns the {@link JsonPrimitive} result as a String.
      */
+    @Nonnull
     public String parse(FormPlayer player, String result) {
         String value = result;
         for (Parser parser : parsers) {
@@ -85,9 +94,6 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
     public void parser(Parser parser) {
         parsers.add(parser);
     }
-
-    @Nonnull
-    public abstract String resultIfHidden();
 
     @Override
     public boolean equals(Object o) {

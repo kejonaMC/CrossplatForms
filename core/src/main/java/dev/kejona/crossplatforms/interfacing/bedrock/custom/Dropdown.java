@@ -85,6 +85,7 @@ public class Dropdown extends CustomComponent {
         return copy;
     }
 
+    @Nonnull
     @Override
     public String parse(FormPlayer player, String result) {
         if (returnText) {

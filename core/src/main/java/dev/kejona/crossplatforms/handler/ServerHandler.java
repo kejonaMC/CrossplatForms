@@ -21,6 +21,8 @@ import java.util.stream.Stream;
  */
 public interface ServerHandler {
 
+    Comparator<FormPlayer> PLAYER_COMPARATOR = Comparator.comparing(FormPlayer::getName, String.CASE_INSENSITIVE_ORDER);
+
     /**
      * Get a player by their UUID
      */
@@ -36,11 +38,7 @@ public interface ServerHandler {
     Stream<FormPlayer> getPlayers();
 
     default Stream<FormPlayer> getPlayersSorted() {
-        return getPlayers().sorted(playerComparator());
-    }
-
-    default Comparator<FormPlayer> playerComparator() {
-        return Comparator.comparing(FormPlayer::getName, String.CASE_INSENSITIVE_ORDER);
+        return getPlayers().sorted(PLAYER_COMPARATOR);
     }
 
     @Nonnull

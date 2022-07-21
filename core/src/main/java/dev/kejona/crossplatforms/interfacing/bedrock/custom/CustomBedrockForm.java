@@ -50,12 +50,10 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
 
         CustomForm.Builder form = CustomForm.builder().title(placeholders.setPlaceholders(player, super.getTitle()));
 
-        if (this.image != null) {
-            FormImage image = createFormImage(this.image);
-            if (image != null) {
-                // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
-                form.icon(image.type(), image.data());
-            }
+        FormImage image = createFormImage(this.image);
+        if (image != null) {
+            // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
+            form.icon(image.type(), image.data());
         }
 
         // Setup and add components
