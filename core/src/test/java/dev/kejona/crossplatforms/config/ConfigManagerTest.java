@@ -11,10 +11,8 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.FormConfig;
-import dev.kejona.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomComponent;
-import org.geysermc.cumulus.util.FormImage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -41,7 +39,6 @@ public class ConfigManagerTest {
         manager.serializers(builder -> {
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
-            builder.registerExact(FormImage.class, new FormImageSerializer());
             builder.registerExact(CustomComponent.class, new ComponentSerializer());
         });
         manager.getActionSerializer().simpleGenericAction("server", String.class, FakeServer.class);

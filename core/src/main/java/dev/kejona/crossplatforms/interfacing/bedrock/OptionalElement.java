@@ -3,22 +3,23 @@ package dev.kejona.crossplatforms.interfacing.bedrock;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 
 @ConfigSerializable
 public abstract class OptionalElement {
 
-    @Nullable
-    protected String shouldShow = null;
+    protected List<String> shouldShow = Collections.emptyList();
 
     /**
      * This should only be called after placeholders have been resolved, and ideally only called once.
      */
-    public boolean show() {
-        if (shouldShow == null) {
-            return true;
-        } else {
-            return ParseUtils.getBoolean(shouldShow, true);
-        }
+    protected boolean show() {
+        return allTrue(shouldShow.stream());
+    }
+
+    public static boolean allTrue(Stream<String> booleans) {
+        return booleans.allMatch(s -> ParseUtils.getBoolean(s, false));
     }
 }

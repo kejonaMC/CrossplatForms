@@ -46,14 +46,20 @@ public class ProtocolizeInterfacer extends Interfacer {
             Integer slot = entry.getKey();
             ItemButton button = entry.getValue();
             // determine the material for this button
-            String material = button.getMaterial().toUpperCase(Locale.ROOT).trim();
+            String material = button.getMaterial();
             ItemType type;
-            try {
-                type = ItemType.valueOf(material);
-            } catch (IllegalArgumentException e) {
-                logger.severe("Java Button: " + source.getIdentifier() + "." + slot + " will be stone because '" + material + "' failed to map to a valid Spigot Material.");
+            if (material == null) {
                 type = ItemType.STONE;
+            } else {
+                material = material.toUpperCase(Locale.ROOT).trim();
+                try {
+                    type = ItemType.valueOf(material);
+                } catch (IllegalArgumentException e) {
+                    logger.severe("Java Button: " + source.getIdentifier() + "." + slot + " will be stone because '" + material + "' failed to map to a valid Spigot Material.");
+                    type = ItemType.STONE;
+                }
             }
+
             // construct itemstack
             final ItemStack item = new ItemStack(type);
             item.displayName(button.getDisplayName());

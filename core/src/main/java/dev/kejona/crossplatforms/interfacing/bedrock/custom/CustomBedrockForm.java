@@ -29,7 +29,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
     public static final String TYPE = "custom_form";
 
     @Nullable
-    private FormImage image = null;
+    private String image = null;
     private List<CustomComponent> components = Collections.emptyList();
     private List<Action> actions = Collections.emptyList();
 
@@ -50,6 +50,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
 
         CustomForm.Builder form = CustomForm.builder().title(placeholders.setPlaceholders(player, super.getTitle()));
 
+        FormImage image = createFormImage(this.image);
         if (image != null) {
             // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
             form.icon(image.type(), image.data());
