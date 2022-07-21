@@ -3,7 +3,7 @@ package dev.kejona.crossplatforms.velocity.handler;
 import com.velocitypowered.api.proxy.Player;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import lombok.AllArgsConstructor;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.Component;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class VelocityPlayer implements FormPlayer {
     }
 
     @Override
-    public void sendRaw(TextComponent component) {
+    public void sendRaw(Component component) {
         player.sendMessage(component);
     }
 

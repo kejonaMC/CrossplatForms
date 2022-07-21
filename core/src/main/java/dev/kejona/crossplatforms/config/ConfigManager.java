@@ -6,6 +6,7 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.ActionSerializer;
 import dev.kejona.crossplatforms.action.CommandsAction;
 import dev.kejona.crossplatforms.action.InterfaceAction;
+import dev.kejona.crossplatforms.action.MessageAction;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.DispatchableCommandSerializer;
 import dev.kejona.crossplatforms.command.custom.Arguments;
@@ -80,6 +81,7 @@ public class ConfigManager {
 
                 actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
                 actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
+                actionSerializer.genericAction(MessageAction.TYPE, MessageAction.class);
                 actionSerializer.registrator().accept(builder);
             });
         });

@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class FakePlayer implements FormPlayer {
     }
 
     @Override
-    public void sendRaw(TextComponent component) {
+    public void sendRaw(Component component) {
         // no-op
     }
 

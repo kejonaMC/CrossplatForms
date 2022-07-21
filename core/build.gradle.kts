@@ -28,6 +28,7 @@ dependencies {
     api("cloud.commandframework:cloud-minecraft-extras:1.7.0")
     api("net.kyori:adventure-api:4.11.0")
     api("net.kyori:adventure-text-serializer-legacy:4.11.0")
+    api("net.kyori:adventure-text-serializer-gson:4.11.0")
     api("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
     api("org.spongepowered:configurate-extra-guice:4.2.0-SNAPSHOT")
     api("com.google.inject:guice:5.1.0")

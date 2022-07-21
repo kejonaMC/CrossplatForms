@@ -3,7 +3,7 @@ package dev.kejona.crossplatforms.spigot.common.handler;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.spigot.common.SpigotBase;
-import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ public class SpigotPlayer implements FormPlayer {
     }
 
     @Override
-    public void sendRaw(TextComponent component) {
+    public void sendRaw(Component component) {
         handle.sendMessage(SpigotBase.LEGACY_SERIALIZER.serialize(component));
     }
 
