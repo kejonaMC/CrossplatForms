@@ -146,8 +146,11 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
             if (command.isOp() && !player.isOp()) {
                 // only temporarily op the player if the command requires op and the player is not opped
                 player.setOp(true);
-                server.dispatchCommand(player, command.getCommand());
-                player.setOp(false);
+                try {
+                    server.dispatchCommand(player, command.getCommand());
+                } finally {
+                    player.setOp(false); // ensure player is deopped even if the command dispatch throws an exception
+                }
             } else {
                 server.dispatchCommand(player, command.getCommand());
             }

@@ -109,8 +109,11 @@ public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Li
         if (command.isPlayer()) {
             if (command.isOp() && !player.getGroups().contains(OP_GROUP)) {
                 player.addGroups(OP_GROUP);
-                dispatchCommand(player, command.getCommand());
-                player.removeGroups(OP_GROUP);
+                try {
+                    dispatchCommand(player, command.getCommand());
+                } finally {
+                    player.removeGroups(OP_GROUP);
+                }
             } else {
                 dispatchCommand(player, command.getCommand());
             }
