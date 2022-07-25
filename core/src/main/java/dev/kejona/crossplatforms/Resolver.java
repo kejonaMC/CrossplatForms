@@ -17,7 +17,7 @@ public interface Resolver extends Function<String, String> {
     @Nonnull
     String apply(@Nonnull String s, @Nonnull Map<String, String> additionalPlaceholders);
 
-    static Resolver of(Function<String, String> keyMapper) {
+    static Resolver of(@Nonnull final Function<String, String> keyMapper) {
         return new Resolver() {
             @NotNull
             @Override

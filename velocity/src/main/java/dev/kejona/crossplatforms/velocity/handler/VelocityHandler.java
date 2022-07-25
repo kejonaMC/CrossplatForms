@@ -61,6 +61,11 @@ public class VelocityHandler extends ProxyHandler implements ServerHandler {
         return server.getAllPlayers().stream().map(VelocityPlayer::new);
     }
 
+    @Override
+    public Stream<String> getPlayerNames() {
+        return server.getAllPlayers().stream().map(Player::getUsername);
+    }
+
     @Nonnull
     @Override
     public Audience asAudience(CommandOrigin origin) {

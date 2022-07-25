@@ -74,9 +74,16 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
         return server.getOnlinePlayers().stream().map(SpigotPlayer::new);
     }
 
+    @Override
+    public Stream<String> getPlayerNames() {
+        ensurePrimaryThread();
+        return server.getOnlinePlayers().stream().map(Player::getName);
+    }
+
     @Nonnull
     @Override
     public Audience asAudience(CommandOrigin origin) {
+        // BukkitAudiences is thread safe :) https://docs.adventure.kyori.net/platform/bukkit.html
         return audiences.sender((CommandSender) origin.getHandle());
     }
 

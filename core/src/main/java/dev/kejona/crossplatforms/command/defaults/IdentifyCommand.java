@@ -10,7 +10,6 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class IdentifyCommand extends FormsCommand {
@@ -45,7 +44,7 @@ public class IdentifyCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(NAME)
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
-                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers().map(FormPlayer::getName).collect(Collectors.toList()))
+                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayerNames().collect(Collectors.toList()))
                         .build())
                 .permission(PERMISSION_OTHER)
                 .handler(context -> {

@@ -41,6 +41,13 @@ public interface ServerHandler {
         return getPlayers().sorted(PLAYER_COMPARATOR);
     }
 
+    /**
+     * Overriding the default implementation of this will likely be faster if {@link FormPlayer} is not used.
+     */
+    default Stream<String> getPlayerNames() {
+        return getPlayers().map(FormPlayer::getName);
+    }
+
     @Nonnull
     Audience asAudience(CommandOrigin origin);
 

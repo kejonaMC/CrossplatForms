@@ -13,7 +13,7 @@ public class Option {
     private String display;
 
     @Nullable
-    private transient final String returnText;
+    private final transient String returnText;
 
     public Option(@Nonnull String display) {
         this.display = display;

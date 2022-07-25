@@ -17,7 +17,6 @@ public class SplitterFiller extends UniversalFiller {
 
     @Required
     private String value;
-
     private String regex = " ";
 
     @Inject

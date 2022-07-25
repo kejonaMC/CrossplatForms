@@ -25,7 +25,7 @@ public class MessageAction implements Action {
     private String message = null;
     private List<String> messages = null;
 
-    private transient final Placeholders placeholders;
+    private final transient Placeholders placeholders;
     private transient Function<String, Component> deserializer;
 
     @Inject

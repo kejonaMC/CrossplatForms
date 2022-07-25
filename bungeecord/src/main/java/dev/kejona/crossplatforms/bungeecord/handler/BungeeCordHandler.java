@@ -73,6 +73,11 @@ public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Li
         return server.getPlayers().stream().map(BungeeCordPlayer::new);
     }
 
+    @Override
+    public Stream<String> getPlayerNames() {
+        return server.getPlayers().stream().map(ProxiedPlayer::getName);
+    }
+
     @Nonnull
     @Override
     public Audience asAudience(CommandOrigin origin) {

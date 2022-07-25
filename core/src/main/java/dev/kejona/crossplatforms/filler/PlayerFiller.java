@@ -12,23 +12,21 @@ import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 @ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public class PlayerFiller extends UniversalFiller {
 
     public static final String TYPE = "player";
 
-    @Inject
-    private transient ServerHandler serverHandler = null;
+    private final transient ServerHandler serverHandler;
 
     @Inject
-    private PlayerFiller() {
-
+    private PlayerFiller(ServerHandler serverHandler) {
+        this.serverHandler = serverHandler;
     }
 
     @Nonnull
     @Override
     public Stream<String> rawOptions(Resolver resolver) {
-        return serverHandler.getPlayers().map(FormPlayer::getName).sorted();
+        return serverHandler.getPlayerNames().sorted();
     }
 
     @Nonnull
