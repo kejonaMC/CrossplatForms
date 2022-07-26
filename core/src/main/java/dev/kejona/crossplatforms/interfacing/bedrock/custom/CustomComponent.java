@@ -62,9 +62,8 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
      */
     protected final void copyBasics(CustomComponent source) {
         this.text = source.text;
-        this.shouldShow = source.shouldShow;
         this.parsers = new ArrayList<>(source.parsers);
-        this.shouldShow = new ArrayList<>(shouldShow);
+        this.shouldShow = new ArrayList<>(source.shouldShow);
     }
 
     /**
