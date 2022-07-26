@@ -26,7 +26,6 @@ import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
-import dev.kejona.crossplatforms.interfacing.bedrock.FormImageSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
@@ -35,7 +34,6 @@ import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bstats.charts.SimplePie;
-import org.geysermc.cumulus.util.FormImage;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -121,7 +119,6 @@ public class CrossplatForms {
             configManager.register(ConfigId.BEDROCK_FORMS);
             configManager.serializers(builder -> {
                 builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
-                builder.registerExact(FormImage.class, new FormImageSerializer());
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
             configManager.getActionSerializer().genericAction(BedrockTransferAction.TYPE, BedrockTransferAction.class);

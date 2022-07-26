@@ -10,8 +10,11 @@ import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
+import org.geysermc.cumulus.util.FormImage;
+import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,5 +53,20 @@ public abstract class BedrockForm extends Interface implements ValuedType {
      */
     protected void handleIncorrect(FormPlayer player) {
         executeHandler(() -> Action.affectPlayer(player, incorrectActions));
+    }
+
+    @Nullable
+    public static FormImage createFormImage(@Nullable String data) {
+        if (data == null || data.isEmpty()) {
+            return null;
+        } else {
+            FormImage.Type type;
+            if (data.startsWith("https://") || data.startsWith("http://")) {
+                type = FormImage.Type.URL;
+            } else {
+                type = FormImage.Type.PATH;
+            }
+            return FormImage.of(type, data);
+        }
     }
 }

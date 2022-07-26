@@ -12,6 +12,10 @@ softdepend:
   - floodgate
   - PlaceholderAPI
 
+# Register our PlayerCommandPreprocessEvent listener before DM so that ours is called first (Since DM uses EventPriority.LOWEST)
+loadbefore:
+  - DeluxeMenus
+
 permissions:
   crossplatforms.command.base:
     description: Access to the base command /forms

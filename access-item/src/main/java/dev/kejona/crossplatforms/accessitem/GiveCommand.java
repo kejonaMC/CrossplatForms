@@ -47,7 +47,7 @@ public class GiveCommand extends FormsCommand {
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    FormPlayer player = serverHandler.getPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new));
+                    FormPlayer player = serverHandler.getPlayer(origin.getUUID().orElseThrow(AssertionError::new));
                     String identifier = context.get(ARGUMENT);
                     AccessItem item = itemRegistry.getItems().get(identifier);
 
@@ -132,9 +132,8 @@ public class GiveCommand extends FormsCommand {
         }
 
         return serverHandler.getPlayers()
-                .stream()
-                .filter(player -> player.hasPermission(item.permission(AccessItem.Limit.POSSESS)))
-                .map(FormPlayer::getName)
-                .collect(Collectors.toList());
+            .filter(player -> player.hasPermission(item.permission(AccessItem.Limit.POSSESS)))
+            .map(FormPlayer::getName)
+            .collect(Collectors.toList());
     }
 }

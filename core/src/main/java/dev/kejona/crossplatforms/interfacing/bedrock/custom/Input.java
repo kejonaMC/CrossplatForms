@@ -25,19 +25,14 @@ public class Input extends CustomComponent {
 
     public Input(@Nonnull String text,
                  @Nonnull String placeholder,
-                 @Nonnull String defaultText,
-                 @Nullable String shouldShow) {
-        super(text, shouldShow);
+                 @Nonnull String defaultText) {
+        super(text);
         this.placeholder = Objects.requireNonNull(placeholder);
         this.defaultText = Objects.requireNonNull(defaultText);
     }
 
-    public Input(@Nonnull String text, @Nonnull String placeholder, @Nonnull String defaultText) {
-        this(text, placeholder, defaultText, null);
-    }
-
     public Input(@Nonnull String text) {
-        this(text, "", "", null);
+        this(text, "", "");
     }
 
     @Inject
@@ -60,16 +55,16 @@ public class Input extends CustomComponent {
     }
 
     @Override
-    public void placeholders(@Nonnull Resolver resolver) {
-        super.placeholders(resolver);
+    public void prepare(@Nonnull Resolver resolver) {
+        super.prepare(resolver);
         placeholder = resolver.apply(placeholder);
         defaultText = resolver.apply(defaultText);
     }
 
     @Override
-    public Input withPlaceholders(Resolver resolver) {
+    public Input preparedCopy(Resolver resolver) {
         Input copy = copy();
-        copy.placeholders(resolver);
+        copy.prepare(resolver);
         return copy;
     }
 

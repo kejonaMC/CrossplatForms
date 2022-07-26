@@ -37,9 +37,12 @@ public class ListCommand extends FormsCommand {
                     List<Interface> interfaces = new ArrayList<>();
                     CommandOrigin origin = context.getSender();
                     if (origin.isPlayer() && !origin.hasPermission(OpenCommand.PERMISSION_OTHER)) {
-                        if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new))) {
+                        if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(AssertionError::new))) {
                             interfaces.addAll(bedrockRegistry.getForms().values());
-                            javaRegistry.getMenus().values().stream().filter(JavaMenu::isAllowBedrock).forEach(interfaces::add);
+                            javaRegistry.getMenus().values()
+                                .stream()
+                                .filter(JavaMenu::isAllowBedrock)
+                                .forEachOrdered(interfaces::add);
                         } else {
                             interfaces.addAll(javaRegistry.getMenus().values());
                         }

@@ -45,14 +45,21 @@ public class SpigotInterfacer extends Interfacer implements Listener {
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
 
-            Material material = Material.matchMaterial(button.getMaterial());
-            if (material == null) {
-                logger.severe("Java Button: " + menu.getIdentifier() + "." + slot + " will be stone because '" + button.getMaterial() +"' failed to map to a valid Spigot Material.");
-                material = Material.STONE;
+            String material = button.getMaterial();
+            Material type;
+            if (material != null) {
+                type = Material.matchMaterial(button.getMaterial());
+                if (type == null) {
+                    logger.severe("Java Button: " + menu.getIdentifier() + "." + slot + " will be stone because '" + button.getMaterial() +"' failed to map to a valid Spigot Material.");
+                    type = Material.STONE;
+                }
+            } else {
+                type = Material.STONE;
             }
+
             // todo: merge item construction logic with stuff from access items
             // Construct the item
-            ItemStack item = new ItemStack(material);
+            ItemStack item = new ItemStack(type);
 
             ItemMeta meta = item.getItemMeta();
             if (meta == null) {

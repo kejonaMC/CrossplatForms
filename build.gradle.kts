@@ -40,9 +40,11 @@ allprojects{
     tasks.processResources {
         expand(
             "project_description" to "Bedrock Edition forms, inventory menus, and more.",
-            "project_url" to "https://github.com/ProjectG-Plugins/CrossplatForms",
+            "project_url" to "https://github.com/kejonaMC/CrossplatForms",
             "project_version" to project.version,
-            "git_branch" to (indraGit.branchName() ?: "UNKNOWN"),
+
+            // indra branch works locally, environment variable should work on jenkins.
+            "git_branch" to (indraGit.branchName() ?: System.getenv("GIT_BRANCH")),
             "git_commit" to (indraGit.commit()?.abbreviate(7)?.name() ?: "UNKNOWN"),
             "build_number" to (System.getenv("BUILD_NUMBER") ?: "UNKNOWN")
         )
@@ -57,7 +59,6 @@ subprojects {
         testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
         testCompileOnly("org.projectlombok:lombok:1.18.22")
         testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
-        testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.2")
 
         annotationProcessor("org.projectlombok:lombok:1.18.22")
         compileOnly("org.projectlombok:lombok:1.18.22")

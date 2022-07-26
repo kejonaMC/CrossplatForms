@@ -33,10 +33,6 @@ public abstract class Interfacer {
      */
     @Nullable
     public Interface getInterface(@Nullable String name, boolean bedrock) {
-        if (bedrockRegistry == null || javaRegistry == null) {
-            return null;
-        }
-
         if (bedrock) {
             BedrockForm form = bedrockRegistry.getForm(name);
             if (form == null) {
@@ -59,10 +55,6 @@ public abstract class Interfacer {
      */
     @Nonnull
     public List<Interface> getInterfaces(boolean bedrock) {
-        if (bedrockRegistry == null || javaRegistry == null) {
-            return new ArrayList<>();
-        }
-
         List<Interface> list = new ArrayList<>();
         if (bedrock) {
             list.addAll(bedrockRegistry.getForms().values());

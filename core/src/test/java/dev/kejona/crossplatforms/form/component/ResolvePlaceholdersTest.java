@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class ResolvePlaceholdersTest {
 
-    private static final Resolver resolver = s -> s.replace("%1%", "one").replace("%two%", "2");
+    private static final Resolver resolver = Resolver.of(s -> s.replace("%1%", "one").replace("%two%", "2"));
     
     @Test
     public void copyInputTest() {
@@ -20,11 +20,11 @@ public class ResolvePlaceholdersTest {
     public void resolveInputTest() {
         Input expected = new Input("words","one", "2");
 
-        Input withActual = new Input("words","%1%", "%two%").withPlaceholders(resolver);
+        Input withActual = new Input("words","%1%", "%two%").preparedCopy(resolver);
         Assertions.assertEquals(withActual, expected);
 
         Input setActual = new Input("words","%1%", "%two%");
-        setActual.placeholders(resolver);
+        setActual.prepare(resolver);
         Assertions.assertEquals(setActual, expected);
     }
 }

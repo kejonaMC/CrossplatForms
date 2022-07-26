@@ -10,9 +10,11 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotPlayer;
+import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -48,7 +51,8 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
     protected final BedrockHandler bedrockHandler;
     protected final Placeholders placeholders;
 
-    public SpigotAccessItemsBase(JavaPlugin plugin, ConfigManager configManager,
+    public SpigotAccessItemsBase(JavaPlugin plugin,
+                                 ConfigManager configManager,
                                  ServerHandler serverHandler,
                                  Interfacer interfacer,
                                  BedrockHandler bedrockHandler,
@@ -73,21 +77,6 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
      */
     @Nullable
     public abstract String getItemId(@Nonnull ItemStack itemStack);
-
-    /**
-     * Attempt to retrieve the Access Item that an ItemStack points to
-     * @param itemStack The ItemStack to check. If it contains null ItemMeta, this will return null.
-     * @return The Access Item if the ItemStack contained the identifier of the Access Item, and the Access Item exists. Will return null if their conditions are false.
-     */
-    @Nullable
-    public AccessItem getItem(@Nonnull ItemStack itemStack) {
-        String identifier = getItemId(itemStack);
-        if (identifier == null) {
-            return null;
-        } else {
-            return super.getItem(identifier);
-        }
-    }
 
     public ItemStack createItemStack(AccessItem accessItem, Player player) {
         FormPlayer formPlayer = new SpigotPlayer(player);
@@ -125,20 +114,23 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
                     // If it was a right click, using the access item should be the only behaviour
                     event.setCancelled(true);
 
-                    if (super.isEnabled()) {
-                        AccessItem access = super.getItem(id);
-                        Player player = event.getPlayer();
+                    Player player = event.getPlayer();
+                    if (isEnabled()) {
+                        AccessItem access = getItem(id);
                         if (access == null) {
-                            // item is no longer registered
-                            player.getInventory().remove(item);
+                            // item not longer exists
+                            remove(player, item, RemoveReason.ITEM_REMOVED);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
                                 access.trigger(new SpigotPlayer(player));
                             }
                         } else {
-                            player.sendMessage("You don't have permission to have that.");
-                            player.getInventory().remove(item);
+                            // player no longer has permission to have the item
+                            remove(player, item, RemoveReason.IMPERMISSIBLE);
                         }
+                    } else {
+                        // item no longer exists because the registry has been disabled
+                        remove(player, item, RemoveReason.ITEMS_DISABLED);
                     }
                 }
             }
@@ -152,21 +144,24 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         if (item != null) {
             String id = getItemId(item);
             if (id != null) {
-                if (super.isEnabled()) {
-                    HumanEntity human = event.getWhoClicked();
-                    AccessItem access = super.getItem(id);
+                // the item is or was an access item
+
+                HumanEntity human = event.getWhoClicked();
+                if (isEnabled()) {
+                    AccessItem access = getItem(id);
                     if (access == null) {
-                        // restrict items that no longer exist
-                        event.setCancelled(true);
+                        remove(human, item, RemoveReason.ITEM_REMOVED);
                     } else if (!human.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
-                        human.sendMessage("You don't have permission to have that.");
-                        human.getInventory().remove(item);
+                        // doesn't have permission to have it
+                        remove(human, item, RemoveReason.IMPERMISSIBLE);
                     } else if (!human.hasPermission(access.permission(AccessItem.Limit.MOVE))) {
+                        // has permission to have it, but not move it
                         event.setCancelled(true);
                     }
+
+                    // they have permission to have it and move it - no action required
                 } else {
-                    // restrict items even if the registry is disabled
-                    event.setCancelled(true);
+                    remove(human, item, RemoveReason.ITEMS_DISABLED);
                 }
             }
         }
@@ -177,34 +172,37 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         ItemStack item = event.getItemDrop().getItemStack();
         String id = getItemId(item);
         if (id != null) {
-            AccessItem access = super.getItem(id);
+            AccessItem access = getItem(id);
+            Player player = event.getPlayer();
             if (access == null) {
-                event.setCancelled(true);
-            } else {
-                Player player = event.getPlayer();
-                if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
-                    if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                        event.getItemDrop().remove();
-                    }
-                } else {
-                    event.setCancelled(true);
+                // access item no longer exists
+                player.sendMessage(RemoveReason.ITEM_REMOVED.message);
+                event.getItemDrop().remove();
+            } else if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
+                if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                    // has permission to "drop" it but the item is destroyed
+                    event.getItemDrop().remove();
                 }
+            } else {
+                // doesn't have permission to drop it, cancel the event
+                event.setCancelled(true);
             }
         }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) { // restricting dropping
-        if (!super.isEnabled()) {
-            return;
-        }
-
         Player player = event.getEntity();
         Iterator<ItemStack> iterator = event.getDrops().iterator();
         while (iterator.hasNext()) {
-            AccessItem access = getItem(iterator.next());
-            if (access != null && !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                iterator.remove();
+            String id = getItemId(iterator.next());
+            if (id != null) {
+                AccessItem access = getItem(id);
+                if (access == null || !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
+                    // the access item no longer exists and should be removed
+                    // OR the player no longer has permission for it, so the item should be removed.
+                    iterator.remove();
+                }
             }
         }
     }
@@ -229,13 +227,38 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         Player player = event.getPlayer();
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null) {
-                AccessItem access = getItem(item);
-                if (access != null && !access.isPersist()) {
-                    player.getInventory().remove(item);
-                    logger.debug(String.format("Removing access item %s from %s", access.getIdentifier(), player.getName()));
+                String id = getItemId(item);
+                if (id != null) {
+                    AccessItem access = getItem(id);
+                    if (access == null || !access.isPersist()) {
+                        // the access item no longer exists and should be removed
+                        // OR the access item is not allowed to be persisted
+
+                        // we could check for permission to have it here, but that'll happen when they join again
+                        player.getInventory().remove(item);
+                    }
                 }
             }
         }
+    }
+
+    protected final void handlePlayerPickupItem(Player player, Item item, Consumer<Boolean> canceller) {
+        String id = getItemId(item.getItemStack());
+        if (id != null) {
+            AccessItem access = getItem(id);
+            if (access == null) {
+                // the item no longer exists, don't allow picking it up
+                canceller.accept(true);
+            } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                // they don't have permission to have it
+                canceller.accept(true);
+            }
+        }
+    }
+
+    private void remove(HumanEntity player, ItemStack item, RemoveReason reason) {
+        player.getInventory().remove(item);
+        player.sendMessage(reason.message);
     }
 
     private void regive(Player player, Predicate<AccessItem> give) {
@@ -244,14 +267,20 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         // Remove any access items that are now longer allowed
         for (ItemStack item : player.getInventory()) {
             if (item != null) {
-                AccessItem access = getItem(item);
-                if (access != null) {
-                    if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
-                        contained.add(access.getIdentifier());
-                        logger.debug(String.format("%s is keeping access item %s", player.getName(), access.getIdentifier()));
-                    } else {
+                String id = getItemId(item);
+                if (id != null) {
+                    AccessItem access = getItem(id);
+                    if (access == null) {
+                        // access item no longer exists
                         player.getInventory().remove(item);
-                        logger.debug(String.format("Removed %s from %s because they don't have permission for it", access.getIdentifier(), player.getName()));
+                    } else {
+                        if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
+                            contained.add(access.getIdentifier());
+                            logger.debug(String.format("%s is keeping access item %s", player.getName(), access.getIdentifier()));
+                        } else {
+                            player.getInventory().remove(item);
+                            logger.debug(String.format("Removed %s from %s because they don't have permission for it", access.getIdentifier(), player.getName()));
+                        }
                     }
                 }
             }
@@ -259,10 +288,10 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
 
         // Give any access items that should be given
         boolean changedHand = false; // If we have changed the item the player is holding
-        for (AccessItem access : super.getItems().values()) {
+        for (AccessItem access : getItems().values()) {
             if (give.test(access) && access.getPlatform().matches(player.getUniqueId(), bedrockHandler) && player.hasPermission(access.permission(AccessItem.Limit.EVENT))) {
                 if (!contained.contains(access.getIdentifier())) {
-                    if (super.setHeldSlot() && !changedHand) {
+                    if (setHeldSlot() && !changedHand) {
                         giveAccessItem(new SpigotPlayer(player), access, true);
                         changedHand = true;
                         logger.debug("Set held slot to " + access.getSlot());
@@ -280,7 +309,7 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
 
     @Override
     public boolean giveAccessItem(FormPlayer player, AccessItem accessItem, boolean setHeldSlot) {
-        return giveAccessItem(Bukkit.getPlayer(player.getUuid()), accessItem, setHeldSlot);
+        return giveAccessItem((Player) player.getHandle(), accessItem, setHeldSlot);
     }
 
     /**
@@ -294,9 +323,9 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
         ItemStack accessItemStack = createItemStack(accessItem, player); // todo update placeholders after the fact. but when?
 
         int desiredSlot = accessItem.getSlot();
-        ItemStack oldItem = player.getInventory().getItem(desiredSlot);
+        ItemStack blockingItem = player.getInventory().getItem(desiredSlot);
         boolean success = false;
-        if (oldItem == null || oldItem.getType() == Material.AIR) {
+        if (blockingItem == null || blockingItem.getType() == Material.AIR) {
             // put the item in the desired place
             player.getInventory().setItem(desiredSlot, accessItemStack);
             success = true;
@@ -307,7 +336,7 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
                 ItemStack otherItem = player.getInventory().getItem(i);
                 if (otherItem == null || otherItem.getType() == Material.AIR) {
                     // slot is empty, move the item that is blocking us to it
-                    player.getInventory().setItem(i, oldItem);
+                    player.getInventory().setItem(i, blockingItem);
                     // put the access item in the slot that is no longer blocked
                     player.getInventory().setItem(desiredSlot, accessItemStack);
                     success = true;
@@ -327,5 +356,14 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
             // todo: send message about no success
             return false;
         }
+    }
+
+    @AllArgsConstructor
+    private enum RemoveReason {
+        ITEMS_DISABLED("Access Items are currently disabled."),
+        ITEM_REMOVED("That Access Item doesn't exist anymore."),
+        IMPERMISSIBLE("You don't have permission to have that.");
+
+        @Nonnull String message;
     }
 }

@@ -10,7 +10,6 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class IdentifyCommand extends FormsCommand {
@@ -34,7 +33,7 @@ public class IdentifyCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String message;
-                    if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(NoSuchElementException::new))) {
+                    if (bedrockHandler.isBedrockPlayer(origin.getUUID().orElseThrow(AssertionError::new))) {
                         message = "You are a bedrock player";
                     } else {
                         message = "You are not a bedrock player";
@@ -45,7 +44,7 @@ public class IdentifyCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(NAME)
                 .argument(StringArgument.<CommandOrigin>newBuilder("player")
-                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayers().stream().map(FormPlayer::getName).collect(Collectors.toList()))
+                        .withSuggestionsProvider((context, s) -> serverHandler.getPlayerNames().collect(Collectors.toList()))
                         .build())
                 .permission(PERMISSION_OTHER)
                 .handler(context -> {

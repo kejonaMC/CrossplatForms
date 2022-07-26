@@ -14,6 +14,7 @@ import java.util.Map;
 public class InterfaceAction extends SimpleAction<String> {
 
     public static final String TYPE = "form";
+    private static final Logger LOGGER = Logger.get();
 
     private final transient BedrockHandler bedrockHandler;
     private final transient Interfacer interfacer;
@@ -35,10 +36,16 @@ public class InterfaceAction extends SimpleAction<String> {
         String resolved = placeholders.setPlaceholders(player, value(), additionalPlaceholders);
         Interface ui = interfacer.getInterface(resolved, bedrockHandler.isBedrockPlayer(player.getUuid()));
         if (ui == null) {
-            Logger logger = Logger.get();
-            logger.severe("Attempted to make a player open a form or menu '" + resolved + "', but it does not exist. This is a configuration error!");
-        } else {
+            LOGGER.severe("Attempted to make a player open a form or menu '" + resolved + "', but it does not exist. This is a configuration error!");
+            return;
+        }
+
+        String permission = ui.permission(Interface.Limit.USE);
+        if (player.hasPermission(permission)) {
             ui.send(player);
+        } else {
+            LOGGER.severe("Attempted to make a player open a form or menu '" + resolved + "', but they do not have the following permission: " + permission);
+            player.warn("You don't have permission to open: " + resolved);
         }
     }
 }

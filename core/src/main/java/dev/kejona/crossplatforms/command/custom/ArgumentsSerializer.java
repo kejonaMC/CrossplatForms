@@ -13,7 +13,7 @@ public class ArgumentsSerializer implements TypeSerializer<Arguments> {
     public Arguments deserialize(Type type, ConfigurationNode node) throws SerializationException {
         String joined = node.getString();
         if (joined == null) {
-            throw new SerializationException("Command arguments cannot be null");
+            throw new SerializationException("Command arguments must be a string");
         }
         String[] separated = joined.split(" ");
         if (separated.length < 1) {

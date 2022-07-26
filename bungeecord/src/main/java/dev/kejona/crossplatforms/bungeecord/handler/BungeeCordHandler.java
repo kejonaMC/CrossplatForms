@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Listener {
 
@@ -69,8 +69,13 @@ public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Li
     }
 
     @Override
-    public List<FormPlayer> getPlayers() {
-        return server.getPlayers().stream().map(BungeeCordPlayer::new).collect(Collectors.toList());
+    public Stream<FormPlayer> getPlayers() {
+        return server.getPlayers().stream().map(BungeeCordPlayer::new);
+    }
+
+    @Override
+    public Stream<String> getPlayerNames() {
+        return server.getPlayers().stream().map(ProxiedPlayer::getName);
     }
 
     @Nonnull

@@ -11,13 +11,17 @@ import net.kyori.adventure.audience.Audience;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * An abstract handle on the server implementation
  */
 public interface ServerHandler {
+
+    Comparator<FormPlayer> PLAYER_COMPARATOR = Comparator.comparing(FormPlayer::getName, String.CASE_INSENSITIVE_ORDER);
 
     /**
      * Get a player by their UUID
@@ -31,7 +35,18 @@ public interface ServerHandler {
     @Nullable
     FormPlayer getPlayer(String name);
 
-    List<FormPlayer> getPlayers();
+    Stream<FormPlayer> getPlayers();
+
+    default Stream<FormPlayer> getPlayersSorted() {
+        return getPlayers().sorted(PLAYER_COMPARATOR);
+    }
+
+    /**
+     * Overriding the default implementation of this will likely be faster if {@link FormPlayer} is not used.
+     */
+    default Stream<String> getPlayerNames() {
+        return getPlayers().map(FormPlayer::getName);
+    }
 
     @Nonnull
     Audience asAudience(CommandOrigin origin);
