@@ -17,7 +17,7 @@ public class DispatchableCommandTest {
         Assertions.assertEquals(op, deserialize("op; stop"));
         Assertions.assertEquals(op, deserialize("op;stop"));
 
-        DispatchableCommand console = new DispatchableCommand(false, "broadcast message", true);
+        DispatchableCommand console = new DispatchableCommand("broadcast message");
         Assertions.assertEquals(console, deserialize("console; broadcast message"));
         Assertions.assertEquals(console, deserialize("console;broadcast message"));
         Assertions.assertEquals(console, deserialize("broadcast message"));

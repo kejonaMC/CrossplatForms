@@ -17,8 +17,8 @@ forms:
       - text: "Server Lobby: %bungee_lobby% players"
         image: "https://www.digminecraft.com/block_recipes/images/cyan_concrete.png"
         actions:
-          commands:
-            - "console; tell %player_name% Taking you to the lobby."
+          message:
+            message: Taking you to the lobby.
           server: "lobby"
 
       - text: "Survival: %bungee_survival% players"
@@ -78,6 +78,76 @@ forms:
     actions:
       commands:
         - "say %result_0%"
+
+  switch:
+    type: custom_form
+    title: Server Switcher
+    components:
+      - type: label
+        text: "            Enter server details"
+
+      - type: input
+        text: Address
+        placeholder: address
+        parsers:
+          - type: block-placeholders
+
+      - type: input
+        text: Port
+        placeholder: port
+        default-text: 19132
+        parsers:
+          - type: block-placeholders
+    actions:
+      message:
+        message: "Sending you to %result_1%:%result_2%"
+      transfer_packet:
+        address: "%result_1%"
+        port: "%result_2%"
+
+  example:
+    type: custom_form
+    title: "This is the form's title"
+    components:
+      - type: label
+        text: "This is a label"
+
+      - type: dropdown
+        text: "This is a dropdown"
+        default-option: 0
+        options:
+          - "option 0"
+          - "option 1"
+          - "option 2"
+
+      - type: input
+        text: "This is an input"
+        placeholder: ""
+        default-text: ""
+        parsers:
+          - type: block-placeholders
+
+      - type: slider
+        text: "This is a slider"
+        min: 0
+        max: 10
+        step: 1
+        default-value: 0
+
+      - type: step_slider
+        text: "This is a step slider"
+        default-step: 0
+        steps:
+          - "step 0"
+          - "step 1"
+          - "step 2"
+
+      - type: toggle
+        default-value: true
+
+    actions:
+      message:
+        message: "You entered: '%result_0%' '%result_1%' '%result_2%' '%result_3%' '%result_4%' '%result_5%'"
 
 # Don't touch this
 config-version: 4

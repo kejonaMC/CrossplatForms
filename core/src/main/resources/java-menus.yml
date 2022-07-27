@@ -26,13 +26,13 @@ menus:
         right-click:
           # Both server and commands are optional; they can be removed. commands are run before the player is moved to the new server.
           close: "" # Closing the menu here isn't required, it's only here for show.
-          commands:
-            - "console; tell %player_name% Sending you to the lobby in a right click fashion..."
+          message:
+            message: "Sending you to the lobby in a right click fashion..."
           server: "lobby"
         left-click:
           close: ""
-          commands:
-            - "console; tell %player_name% Sending you to the lobby in a left click fashion..."
+          message:
+            message: "Sending you to the lobby in a left click fashion..."
           server: "lobby"
       4:
         display-name: "§6Minigames"
@@ -51,8 +51,8 @@ menus:
         # You can also only use "any-click" to specify identical behaviour for both left and right clicks.
         any-click:
           close: ""
-          commands:
-            - "console; tell %player_name% Sending you to Survival..."
+          message:
+            message: "Sending you to Survival..."
           server: "survival"
   minigames:
     title: "§0Minigames"
