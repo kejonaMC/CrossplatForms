@@ -37,6 +37,6 @@ public class PlaceholderAPIHandler implements Placeholders, Listener {
             return text;
         }
 
-        return PlaceholderAPI.setPlaceholders((Player) player.getHandle(), text);
+        return PlaceholderAPI.setPlaceholders(player.getHandle(Player.class), text);
     }
 }

@@ -52,5 +52,7 @@ public interface FormPlayer {
         sendMessage(Component.text(message).color(NamedTextColor.GOLD));
     }
 
-    Object getHandle();
+    boolean switchBackendServer(String server);
+
+    <T> T getHandle(Class<T> asType) throws ClassCastException;
 }

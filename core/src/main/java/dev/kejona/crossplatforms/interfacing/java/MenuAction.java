@@ -1,11 +1,11 @@
 package dev.kejona.crossplatforms.interfacing.java;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.serialize.KeyedType;
+import dev.kejona.crossplatforms.serialize.ValuedType;
 
 import javax.annotation.Nonnull;
 
-public interface MenuAction extends KeyedType {
+public interface MenuAction extends ValuedType {
 
     /**
      * Affects a player

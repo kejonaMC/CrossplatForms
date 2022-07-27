@@ -27,7 +27,7 @@ import static org.spongepowered.configurate.transformation.ConfigurationTransfor
 @SuppressWarnings("FieldMayBeFinal")
 public class FormConfig extends InterfaceConfig {
 
-    public static final int VERSION = 4;
+    public static final int VERSION = 5;
     public static final int MINIMUM_VERSION = 1;
 
     private Map<String, BedrockForm> forms = Collections.emptyMap();

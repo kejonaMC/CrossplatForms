@@ -8,6 +8,7 @@ import dev.kejona.crossplatforms.CrossplatFormsBootstrap;
 import dev.kejona.crossplatforms.JavaUtilLogger;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.ActionSerializer;
+import dev.kejona.crossplatforms.action.ServerAction;
 import dev.kejona.crossplatforms.bungeecord.handler.BungeeCommandOrigin;
 import dev.kejona.crossplatforms.bungeecord.handler.BungeeCordHandler;
 import dev.kejona.crossplatforms.command.CommandOrigin;
@@ -102,8 +103,8 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         }
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
+        ServerAction.register(actionSerializer);
+        CloseMenuAction.register(actionSerializer);
     }
 
     @Override

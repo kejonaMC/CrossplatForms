@@ -1,7 +1,10 @@
 package dev.kejona.crossplatforms.velocity.handler;
 
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.velocity.CrossplatFormsVelocity;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
 
@@ -10,6 +13,8 @@ import java.util.UUID;
 
 @AllArgsConstructor
 public class VelocityPlayer implements FormPlayer {
+
+    private static final ProxyServer PROXY = CrossplatFormsVelocity.getInstance().getServer();
 
     @Nonnull
     private final Player player;
@@ -35,7 +40,18 @@ public class VelocityPlayer implements FormPlayer {
     }
 
     @Override
-    public Object getHandle() {
-        return player;
+    public boolean switchBackendServer(String serverName) {
+        RegisteredServer server = PROXY.getServer(serverName).orElse(null);
+        if (server == null) {
+            return false;
+        }
+        player.createConnectionRequest(server).connectWithIndication();
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getHandle(Class<T> asType) throws ClassCastException {
+        return (T) player;
     }
 }

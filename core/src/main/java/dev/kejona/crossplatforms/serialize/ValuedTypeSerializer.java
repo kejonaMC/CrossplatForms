@@ -7,6 +7,8 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -18,6 +20,7 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
 
     @Getter
     private final String typeKey;
+    private final List<TypeResolver> typeResolvers = new ArrayList<>();
 
     /**
      * Creates a ValuedTypeSerializer with the given key to read the type at
@@ -36,21 +39,34 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
         this("type");
     }
 
-    @Override
-    public void registerType(String typeId, Class<? extends T> type) {
+    public void registerType(String typeId, Class<? extends T> type, TypeResolver typeResolver) {
         super.registerType(typeId, type);
+        typeResolvers.add(typeResolver);
     }
 
     @Override
     public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
         String typeId = node.node(typeKey).getString();
         if (typeId == null) {
-            throw new SerializationException("Entry at " + node.path() + " does not contain a 'type' value. Possible options are: " + getTypes());
+            // try to infer the type based off the nodes content
+            for (TypeResolver resolver : typeResolvers) {
+                String possibleType = resolver.getType(node);
+                if (possibleType != null) {
+                    if (typeId != null) {
+                        throw new SerializationException("Failed to infer the type because both types matched: " + typeId + " and " + possibleType);
+                    }
+                    typeId = possibleType;
+                }
+            }
+
+            if (typeId == null) {
+                throw new SerializationException("No 'type' value present and the type could not be inferred. Possible type options are: " + getTypes());
+            }
         }
 
         Class<? extends T> type = getType(typeId);
         if (type == null) {
-            throw new SerializationException("Unsupported type (not registered) '" + typeId + "'. Possible options are: " + getTypes());
+            throw new SerializationException("Unsupported type '" + typeId + "'. Possible options are: " + getTypes());
         }
 
         return node.get(type);
@@ -68,7 +84,11 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
             }
 
             node.set(value);
-            node.node(typeKey).set(typeIdentifier); // set it after to make sure its not overridden
+            if (value.serializeWithType()) {
+                // the type must be included because when this node is deserialized, the type cannot be inferred
+                node.node(typeKey).set(typeIdentifier);
+
+            }
         }
     }
 }

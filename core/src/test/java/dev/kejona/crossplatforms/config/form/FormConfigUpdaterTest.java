@@ -3,11 +3,11 @@ package dev.kejona.crossplatforms.config.form;
 import com.google.inject.Guice;
 import dev.kejona.crossplatforms.TestLogger;
 import dev.kejona.crossplatforms.TestModule;
+import dev.kejona.crossplatforms.action.ServerAction;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.DispatchableCommandSerializer;
 import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.ConfigManager;
-import dev.kejona.crossplatforms.config.ConfigManagerTest;
 import dev.kejona.crossplatforms.config.PrettyPrinter;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
@@ -45,7 +45,8 @@ public class FormConfigUpdaterTest {
     public void setupManager() {
         manager = new ConfigManager(directory, logger, Guice.createInjector(new TestModule()));
         // serializers
-        manager.getActionSerializer().simpleGenericAction("server", String.class, ConfigManagerTest.FakeServer.class);
+
+        ServerAction.register(manager.getActionSerializer());
         manager.serializers(builder -> {
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());

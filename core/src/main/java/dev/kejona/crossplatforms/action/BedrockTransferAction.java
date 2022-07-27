@@ -5,6 +5,7 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.serialize.TypeResolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.objectmapping.meta.Required;
@@ -15,7 +16,7 @@ import java.util.Map;
 @ConfigSerializable
 public class BedrockTransferAction implements Action {
 
-    public static final String TYPE = "transfer_packet";
+    private static final String TYPE = "transfer_packet";
 
     private final transient BedrockHandler bedrockHandler;
     private final transient Placeholders placeholders;
@@ -77,5 +78,19 @@ public class BedrockTransferAction implements Action {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    public static void register(ActionSerializer serializer) {
+        serializer.genericAction(TYPE, BedrockTransferAction.class, typeResolver());
+    }
+
+    private static TypeResolver typeResolver() {
+        return node -> {
+            if (node.node("address").getString() != null) {
+                return TYPE;
+            } else {
+                return null;
+            }
+        };
     }
 }

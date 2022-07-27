@@ -3,13 +3,13 @@ package dev.kejona.crossplatforms.action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 import dev.kejona.crossplatforms.interfacing.java.MenuAction;
-import dev.kejona.crossplatforms.serialize.KeyedType;
+import dev.kejona.crossplatforms.serialize.ValuedType;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Map;
 
-public interface Action extends KeyedType, MenuAction {
+public interface Action extends ValuedType, MenuAction {
 
     /**
      * Affects a player
