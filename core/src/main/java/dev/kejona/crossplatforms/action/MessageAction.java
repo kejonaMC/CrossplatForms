@@ -75,6 +75,11 @@ public class MessageAction implements Action {
         }
     }
 
+    @Override
+    public boolean serializeWithType() {
+        return false; // can infer based on message or messages node (at least one must be present)
+    }
+
     public static void register(ActionSerializer serializer) {
         serializer.genericAction(TYPE, MessageAction.class, typeResolver());
     }

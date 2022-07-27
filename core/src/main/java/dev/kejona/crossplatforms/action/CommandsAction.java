@@ -43,6 +43,11 @@ public class CommandsAction implements Action {
         return TYPE;
     }
 
+    @Override
+    public boolean serializeWithType() {
+        return false; // can infer based off commands node
+    }
+
     public static void register(ActionSerializer serializer) {
         serializer.genericAction(TYPE, CommandsAction.class, typeResolver());
     }

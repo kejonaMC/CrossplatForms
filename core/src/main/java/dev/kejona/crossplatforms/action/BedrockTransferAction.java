@@ -80,6 +80,11 @@ public class BedrockTransferAction implements Action {
         return TYPE;
     }
 
+    @Override
+    public boolean serializeWithType() {
+        return false; // can infer based off address node
+    }
+
     public static void register(ActionSerializer serializer) {
         serializer.genericAction(TYPE, BedrockTransferAction.class, typeResolver());
     }

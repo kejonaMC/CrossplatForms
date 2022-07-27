@@ -44,6 +44,11 @@ public class ServerAction implements Action {
         return TYPE;
     }
 
+    @Override
+    public boolean serializeWithType() {
+        return false; // can infer based off server node
+    }
+
     public static void register(ActionSerializer serializer) {
         serializer.genericAction(TYPE, ServerAction.class, typeResolver());
     }

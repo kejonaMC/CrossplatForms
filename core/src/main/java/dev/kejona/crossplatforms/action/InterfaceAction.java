@@ -57,6 +57,11 @@ public class InterfaceAction implements Action {
         return TYPE;
     }
 
+    @Override
+    public boolean serializeWithType() {
+        return false; // can infer based off form node
+    }
+
     public static void register(ActionSerializer serializer) {
         serializer.genericAction(TYPE, InterfaceAction.class, typeResolver());
     }
