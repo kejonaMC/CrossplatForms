@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.config.form;
 import com.google.inject.Guice;
 import dev.kejona.crossplatforms.TestLogger;
 import dev.kejona.crossplatforms.TestModule;
+import dev.kejona.crossplatforms.action.BedrockTransferAction;
 import dev.kejona.crossplatforms.action.ServerAction;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.DispatchableCommandSerializer;
@@ -47,6 +48,7 @@ public class FormConfigUpdaterTest {
         // serializers
 
         ServerAction.register(manager.getActionSerializer());
+        BedrockTransferAction.register(manager.getActionSerializer());
         manager.serializers(builder -> {
             builder.registerExact(DispatchableCommand.class, new DispatchableCommandSerializer());
             builder.registerExact(BedrockForm.class, new BedrockFormSerializer());

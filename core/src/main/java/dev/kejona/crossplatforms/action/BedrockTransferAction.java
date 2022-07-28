@@ -5,7 +5,6 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.serialize.TypeResolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.objectmapping.meta.Required;
@@ -80,22 +79,7 @@ public class BedrockTransferAction implements Action {
         return TYPE;
     }
 
-    @Override
-    public boolean serializeWithType() {
-        return false; // can infer based off address node
-    }
-
     public static void register(ActionSerializer serializer) {
-        serializer.genericAction(TYPE, BedrockTransferAction.class, typeResolver());
-    }
-
-    private static TypeResolver typeResolver() {
-        return node -> {
-            if (node.node("address").getString() != null) {
-                return TYPE;
-            } else {
-                return null;
-            }
-        };
+        serializer.genericAction(TYPE, BedrockTransferAction.class);
     }
 }

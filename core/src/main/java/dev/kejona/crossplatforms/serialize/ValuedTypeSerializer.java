@@ -69,7 +69,12 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
             throw new SerializationException("Unsupported type '" + typeId + "'. Possible options are: " + getTypes());
         }
 
-        return node.get(type);
+        T object = node.get(type);
+        if (object == null) {
+            throw new SerializationException("Failed to deserialize as '" + type.getSimpleName() + "' because deserialization returned null.");
+        }
+
+        return object;
     }
 
     @Override
@@ -87,7 +92,6 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
             if (value.serializeWithType()) {
                 // the type must be included because when this node is deserialized, the type cannot be inferred
                 node.node(typeKey).set(typeIdentifier);
-
             }
         }
     }

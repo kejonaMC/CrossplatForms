@@ -20,6 +20,7 @@ import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
+import dev.kejona.crossplatforms.serialize.PathNodeResolver;
 import dev.kejona.crossplatforms.utils.FileUtils;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -65,7 +66,11 @@ public class ConfigManager {
         this.logger = logger;
         actionSerializer = new ActionSerializer();
 
-        ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
+        ObjectMapper.Factory mapperFactory = ObjectMapper
+                .factoryBuilder()
+                .addDiscoverer(GuiceObjectMapperProvider.injectedObjectDiscoverer(injector))
+                .addNodeResolver(PathNodeResolver.nodePath())
+                .build();
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> {
             opts = opts.serializers(builder -> builder.registerAnnotatedObjects(mapperFactory));

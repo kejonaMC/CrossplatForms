@@ -99,9 +99,9 @@ forms:
           - type: block-placeholders
     actions:
       - message: "Sending you to %result_1%:%result_2%"
-      - transfer_packet:
-          address: "%result_1%"
-          port: "%result_2%"
+      - type: transfer_packet
+        address: "%result_1%"
+        port: "%result_2%"
 
   example:
     type: custom_form

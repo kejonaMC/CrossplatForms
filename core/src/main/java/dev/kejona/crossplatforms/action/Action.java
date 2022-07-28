@@ -45,4 +45,14 @@ public interface Action extends ValuedType, MenuAction {
 
         actions.forEach(a -> a.affectPlayer(player, Collections.emptyMap()));
     }
+
+    /**
+     * Native actions whose type will always be successfully inferred
+     */
+    static boolean typeInferrable(String type) {
+        return type.equals("form")
+                || type.equals("server")
+                || type.equals("message") || type.equals("messages")
+                || type.equals("commands");
+    }
 }
