@@ -39,7 +39,9 @@ public class ConfigId {
     public static final ConfigId JAVA_MENUS = ConfigId.builder()
         .file("java-menus.yml")
         .version(MenuConfig.VERSION)
+        .minimumVersion(MenuConfig.MINIMUM_VERSION)
         .clazz(MenuConfig.class)
+        .updater(MenuConfig::updater)
         .build();
 
     /**

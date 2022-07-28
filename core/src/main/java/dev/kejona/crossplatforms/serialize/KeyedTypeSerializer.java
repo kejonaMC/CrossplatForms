@@ -73,6 +73,9 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         } else {
             instance = node.get(type);
         }
+        if (instance == null) {
+            throw new SerializationException("Failed to deserialize as '" + typeId + "' because deserialization returned null.");
+        }
         return instance;
     }
 

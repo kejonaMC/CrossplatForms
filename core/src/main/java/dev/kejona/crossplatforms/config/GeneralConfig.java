@@ -3,10 +3,10 @@ package dev.kejona.crossplatforms.config;
 import dev.kejona.crossplatforms.Constants;
 import dev.kejona.crossplatforms.command.CommandType;
 import dev.kejona.crossplatforms.command.custom.CustomCommand;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import lombok.Getter;
 import org.spongepowered.configurate.NodePath;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 import org.spongepowered.configurate.transformation.ConfigurationTransformation;
 
 import javax.annotation.Nonnull;
@@ -21,8 +21,10 @@ import static org.spongepowered.configurate.transformation.ConfigurationTransfor
 @SuppressWarnings("FieldMayBeFinal")
 public class GeneralConfig extends Configuration {
 
-    public static final int VERSION = 2;
+    public static final int VERSION = 3;
     public static final int MINIMUM_VERSION = 1;
+
+    private static final NodePath WILDCARD_COMMAND = NodePath.path("commands", WILDCARD_OBJECT);
 
     @Nullable
     private String rootCommand = null;
@@ -38,12 +40,13 @@ public class GeneralConfig extends Configuration {
         return ConfigurationTransformation.versionedBuilder()
             .versionKey(Configuration.VERSION_KEY)
             .addVersion(2, update1_2())
+            .addVersion(3, update2_3())
             .build();
     }
 
-    public static ConfigurationTransformation update1_2() {
+    private static ConfigurationTransformation update1_2() {
         return ConfigurationTransformation.builder()
-            .addAction(NodePath.path("commands", WILDCARD_OBJECT), ((path, value) -> {
+            .addAction(WILDCARD_COMMAND, ((path, value) -> {
                 CommandType type = value.node("method").get(CommandType.class);
                 if (type == CommandType.INTERCEPT_CANCEL || type == CommandType.INTERCEPT_PASS) {
                     value.node("exact").set(String.class, value.key());
@@ -56,5 +59,16 @@ public class GeneralConfig extends Configuration {
                 }
                 return null;
             })).build();
+    }
+
+    private static ConfigurationTransformation update2_3() {
+        ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
+        ConfigurateUtils.transformChildren(
+                builder,
+                WILDCARD_COMMAND,
+                ConfigurateUtils.ACTION_TRANSLATOR,
+                "actions", "bedrock-actions", "java-actions");
+
+        return builder.build();
     }
 }

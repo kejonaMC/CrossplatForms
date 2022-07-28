@@ -8,7 +8,7 @@ commands:
     command: list servers
     actions:
       # Open the form or menu called "servers"
-      form: servers
+      - form: servers
 
     # The permission key to use. This will not register the permission or give it a default, so existing permissions can be used.
     # This uses the permission for the "/forms open" command.
@@ -22,8 +22,7 @@ commands:
     # Only target java players, since this form is available to bedrock players
     platform: java
     actions:
-      commands:
-        - tell %player_name% That interface is exclusive to Bedrock Edition.
+      - commands: tell %player_name% That interface is exclusive to Bedrock Edition.
     # If permissions for intercept_pass and intercept_cancel are not specified, there is no permission requirement.
 
 # Allows commands to be registered with the REGISTER method after server startup.
@@ -34,4 +33,4 @@ unsafe-command-registration: false
 enable-debug: false
 
 # Don't touch this
-config-version: 2
+config-version: 3

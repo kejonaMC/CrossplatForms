@@ -21,13 +21,15 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.spongepowered.configurate.transformation.ConfigurationTransformation.WILDCARD_OBJECT;
+import static dev.kejona.crossplatforms.utils.ConfigurateUtils.ACTION_TRANSLATOR;
+import static org.spongepowered.configurate.NodePath.path;
 
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public class FormConfig extends InterfaceConfig {
 
-    public static final int VERSION = 4;
+    public static final int VERSION = 5;
     public static final int MINIMUM_VERSION = 1;
 
     private Map<String, BedrockForm> forms = Collections.emptyMap();
@@ -38,11 +40,12 @@ public class FormConfig extends InterfaceConfig {
                 .addVersion(2, update1_2())
                 .addVersion(3, update2_3())
                 .addVersion(4, update3_4())
+                .addVersion(5, update4_5())
                 .build();
     }
 
     private static ConfigurationTransformation update1_2() {
-        NodePath wildcardForm = NodePath.path("forms", WILDCARD_OBJECT);
+        NodePath wildcardForm = path("forms", WILDCARD_OBJECT);
         ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
 
         // Custom forms
@@ -79,7 +82,7 @@ public class FormConfig extends InterfaceConfig {
 
     private static ConfigurationTransformation update2_3() {
         ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
-        NodePath wildcardForm = NodePath.path("forms", WILDCARD_OBJECT);
+        NodePath wildcardForm = path("forms", WILDCARD_OBJECT);
 
         // form types
         NodePath formType = wildcardForm.withAppendedChild("type");
@@ -92,7 +95,7 @@ public class FormConfig extends InterfaceConfig {
         }));
 
         // component types of custom forms
-        NodePath componentType = wildcardForm.plus(NodePath.path("components", WILDCARD_OBJECT, "type"));
+        NodePath componentType = wildcardForm.plus(path("components", WILDCARD_OBJECT, "type"));
         builder.addAction(componentType, ((path, value) -> {
             String type = value.getString();
             if (type != null) {
@@ -105,7 +108,7 @@ public class FormConfig extends InterfaceConfig {
     }
 
     private static ConfigurationTransformation update3_4() {
-        NodePath component = NodePath.path("forms", WILDCARD_OBJECT, "components", WILDCARD_OBJECT);
+        NodePath component = path("forms", WILDCARD_OBJECT, "components", WILDCARD_OBJECT);
         ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
         builder.addAction(component, ((path, value) -> {
             if ("input".equals(value.node("type").getString())) {
@@ -128,6 +131,24 @@ public class FormConfig extends InterfaceConfig {
             return null; // don't move value
         }));
 
+        return builder.build();
+    }
+
+    private static ConfigurationTransformation update4_5() {
+        // update actions in fillers for custom form (dropdown and step_slider components)
+        NodePath fillerFormatActions = path("forms", WILDCARD_OBJECT, "components", WILDCARD_OBJECT, "fillers", WILDCARD_OBJECT, "format", "actions");
+        ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
+        builder.addAction(fillerFormatActions, ACTION_TRANSLATOR);
+
+        // update normal actions in custom form
+        builder.addAction(path("forms", WILDCARD_OBJECT, "actions"), ACTION_TRANSLATOR);
+
+        // update actions of simple form
+        builder.addAction(path("forms", WILDCARD_OBJECT, "buttons", WILDCARD_OBJECT, "actions"), ACTION_TRANSLATOR);
+
+        // update actions of modal form
+        builder.addAction(path("forms", WILDCARD_OBJECT, "button1", "actions"), ACTION_TRANSLATOR);
+        builder.addAction(path("forms", WILDCARD_OBJECT, "button2", "actions"), ACTION_TRANSLATOR);
         return builder.build();
     }
 }

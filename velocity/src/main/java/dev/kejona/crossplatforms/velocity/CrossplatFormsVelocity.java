@@ -15,6 +15,7 @@ import dev.kejona.crossplatforms.CrossplatForms;
 import dev.kejona.crossplatforms.CrossplatFormsBootstrap;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.ActionSerializer;
+import dev.kejona.crossplatforms.action.ServerAction;
 import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.ConfigManager;
@@ -123,8 +124,8 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
+        ServerAction.register(actionSerializer);
+        CloseMenuAction.register(actionSerializer);
     }
 
     @Override

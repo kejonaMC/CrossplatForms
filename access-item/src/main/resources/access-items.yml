@@ -22,11 +22,9 @@ global-permission-defaults:
 items:
   servers:
     # "action", "bedrock-action", and "java-action" are all allowed. These should be condensed into a single "action" since they are the same.
-    bedrock-actions:
+    actions:
       # The form/menu to open
-      form: servers
-    java-actions:
-      form: servers
+      - form: servers
     material: COMPASS
     display-name: "§6Server Selector"
     lore:
@@ -56,8 +54,8 @@ items:
     display-name: "§6Minigames"
     slot: 5
     actions:
-      form: minigames
+      - form: minigames
     on-join: true
     on-respawn: true
 
-config-version: 3
+config-version: 4

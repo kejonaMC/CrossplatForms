@@ -30,7 +30,13 @@ public class FakePlayer implements FormPlayer {
     }
 
     @Override
-    public Object getHandle() {
-        return this;
+    public boolean switchBackendServer(String server) {
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getHandle(Class<T> asType) throws ClassCastException {
+        return (T) this;
     }
 }

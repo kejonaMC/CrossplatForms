@@ -121,7 +121,7 @@ public class CrossplatForms {
                 builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
-            configManager.getActionSerializer().genericAction(BedrockTransferAction.TYPE, BedrockTransferAction.class);
+            BedrockTransferAction.register(configManager.getActionSerializer());
         }
         bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
         if (!configManager.load()) {

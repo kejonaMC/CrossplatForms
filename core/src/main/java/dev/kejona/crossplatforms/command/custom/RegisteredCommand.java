@@ -4,7 +4,6 @@ import dev.kejona.crossplatforms.command.CommandType;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.util.Locale;
 

@@ -15,7 +15,7 @@ import java.util.Map;
 @ConfigSerializable
 public class BedrockTransferAction implements Action {
 
-    public static final String TYPE = "transfer_packet";
+    private static final String TYPE = "transfer_packet";
 
     private final transient BedrockHandler bedrockHandler;
     private final transient Placeholders placeholders;
@@ -77,5 +77,9 @@ public class BedrockTransferAction implements Action {
     @Override
     public String type() {
         return TYPE;
+    }
+
+    public static void register(ActionSerializer serializer) {
+        serializer.genericAction(TYPE, BedrockTransferAction.class);
     }
 }

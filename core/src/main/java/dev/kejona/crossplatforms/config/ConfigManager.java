@@ -20,8 +20,8 @@ import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
+import dev.kejona.crossplatforms.serialize.PathNodeResolver;
 import dev.kejona.crossplatforms.utils.FileUtils;
-import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.objectmapping.ObjectMapper;
@@ -64,9 +64,13 @@ public class ConfigManager {
     public ConfigManager(Path directory, Logger logger, Injector injector) {
         this.directory = directory;
         this.logger = logger;
-        actionSerializer = new ActionSerializer(injector);
+        actionSerializer = new ActionSerializer();
 
-        ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
+        ObjectMapper.Factory mapperFactory = ObjectMapper
+                .factoryBuilder()
+                .addDiscoverer(GuiceObjectMapperProvider.injectedObjectDiscoverer(injector))
+                .addNodeResolver(PathNodeResolver.nodePath())
+                .build();
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> {
             opts = opts.serializers(builder -> builder.registerAnnotatedObjects(mapperFactory));
@@ -82,16 +86,17 @@ public class ConfigManager {
                 builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
                 builder.registerExact(Parser.class, new ParserSerializer());
 
-                // actions, composite serializer
-                actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
-                actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
-                actionSerializer.genericAction(MessageAction.TYPE, MessageAction.class);
-                actionSerializer.registrator().accept(builder);
+                // register actions to the action serializer
+                InterfaceAction.register(actionSerializer);
+                CommandsAction.register(actionSerializer);
+                MessageAction.register(actionSerializer);
+                // register the serializer to the collection
+                actionSerializer.register(builder);
 
-                // fillers (dropdown, simple form, inventory), composite serializer
-                fillerSerializer.register(PlayerFiller.TYPE, PlayerFiller.class);
-                fillerSerializer.register(SplitterFiller.TYPE, SplitterFiller.class);
-                fillerSerializer.registrator().accept(builder);
+                // register fillers
+                PlayerFiller.register(fillerSerializer);
+                SplitterFiller.register(fillerSerializer);
+                fillerSerializer.register(builder);
             });
         });
         // don't initialize default values for object values
