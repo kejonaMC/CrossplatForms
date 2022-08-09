@@ -20,7 +20,6 @@ import java.util.function.Function;
 public class MessageAction implements Action {
 
     private static final String TYPE = "message";
-    private static final GsonComponentSerializer GSON_SERIALIZER = GsonComponentSerializer.gson();
 
     private final transient Placeholders placeholders;
     private transient Function<String, Component> deserializer;
@@ -57,7 +56,7 @@ public class MessageAction implements Action {
     @PostProcess
     private void postProcess() throws SerializationException {
         if (message == null && messages == null) {
-            throw new SerializationException("Both message and messages are not present");
+            throw new SerializationException("'messages' is not present.");
         }
 
         if (format == Format.LEGACY) {
@@ -69,7 +68,8 @@ public class MessageAction implements Action {
 
             deserializer = serializer::deserialize;
         } else if (format == Format.JSON) {
-            deserializer = GSON_SERIALIZER::deserialize;
+            final GsonComponentSerializer serializer = GsonComponentSerializer.gson();
+            deserializer = serializer::deserialize;
         } else {
             throw new AssertionError();
         }
