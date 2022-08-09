@@ -3,7 +3,7 @@ package dev.kejona.crossplatforms.serialize;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import dev.kejona.crossplatforms.Entry;
-import dev.kejona.crossplatforms.utils.TypeUtils;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -102,7 +102,7 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         Injector childInjector = injector.createChildInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(TypeUtils.keyFromToken(valueType)).toInstance(value);
+                bind(ConfigurateUtils.keyFromToken(valueType)).toInstance(value);
             }
         });
 

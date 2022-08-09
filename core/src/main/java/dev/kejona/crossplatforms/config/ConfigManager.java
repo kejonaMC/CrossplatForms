@@ -21,6 +21,8 @@ import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
 import dev.kejona.crossplatforms.serialize.PathNodeResolver;
+import dev.kejona.crossplatforms.serialize.StreamSerializer;
+import dev.kejona.crossplatforms.serialize.UnaryNodes;
 import dev.kejona.crossplatforms.utils.FileUtils;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -70,6 +72,7 @@ public class ConfigManager {
                 .factoryBuilder()
                 .addDiscoverer(GuiceObjectMapperProvider.injectedObjectDiscoverer(injector))
                 .addNodeResolver(PathNodeResolver.nodePath())
+                .addPostProcessor(new UnaryNodes.ProcessorFactory())
                 .build();
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> {
@@ -78,6 +81,7 @@ public class ConfigManager {
             // the collection of the serializers below. serializers in the children are checked first when object mapping
             // occurs. our custom serializers MUST be checked first before the object mapper.
             return opts.serializers(builder -> {
+                builder.register(StreamSerializer.TYPE, new StreamSerializer());
                 // serializers for our custom scalars
                 builder.registerExact(Option.class, new OptionSerializer());
                 builder.registerExact(Arguments.class, new ArgumentsSerializer());

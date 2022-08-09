@@ -1,5 +1,6 @@
 package dev.kejona.crossplatforms.utils;
 
+import com.google.inject.Key;
 import dev.kejona.crossplatforms.action.Action;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -55,6 +56,11 @@ public final class ConfigurateUtils {
         for (Object child : children) {
             builder.addAction(path.withAppendedChild(child), action);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Key<T> keyFromToken(TypeToken<T> token) {
+        return (Key<T>) Key.get(token.getType());
     }
 
     /**

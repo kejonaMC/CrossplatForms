@@ -3,7 +3,8 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    id("net.kyori.indra.git")
+    id("net.kyori.indra.git") // used for getting branch/commit info
+    id("idea") // used to download sources and documentation
 }
 
 allprojects{
@@ -69,5 +70,12 @@ subprojects {
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
+    }
+}
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
     }
 }
