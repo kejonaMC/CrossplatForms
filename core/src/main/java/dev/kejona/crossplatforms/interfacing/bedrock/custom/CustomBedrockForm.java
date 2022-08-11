@@ -73,7 +73,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        form.closedOrInvalidResultHandler(() -> handleIncorrect(player));
+        form.closedOrInvalidResultHandler((result) -> handleIncorrect(player, result));
 
         form.validResultHandler(response -> executeHandler(() -> {
             response.includeLabels(true); // allow label to be used as result placeholder

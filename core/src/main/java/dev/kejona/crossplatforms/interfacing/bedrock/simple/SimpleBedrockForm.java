@@ -62,7 +62,7 @@ public class SimpleBedrockForm extends BedrockForm {
         buttons.forEach(button -> button.addTo(form, resolver));
 
         // actions for incorrect response (closed or invalid response)
-        form.closedOrInvalidResultHandler(() -> handleIncorrect(player));
+        form.closedOrInvalidResultHandler((result) -> handleIncorrect(player, result));
 
         // actions for correct response
         form.validResultHandler(response -> executeHandler(

@@ -10,8 +10,10 @@ import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
+import org.geysermc.cumulus.response.FormResponse;
+import org.geysermc.cumulus.response.result.FormResponseResult;
+import org.geysermc.cumulus.response.result.InvalidFormResponseResult;
 import org.geysermc.cumulus.util.FormImage;
-import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nullable;
@@ -26,6 +28,7 @@ public abstract class BedrockForm extends Interface implements ValuedType {
 
     @Inject
     protected transient BedrockHandler bedrockHandler;
+    protected transient Logger logger = Logger.get();
 
     protected final transient String permissionBase = Constants.Id() + ".form.";
 
@@ -38,11 +41,11 @@ public abstract class BedrockForm extends Interface implements ValuedType {
      */
     protected final void executeHandler(Runnable runnable) {
         if (bedrockHandler.executesResponseHandlersSafely()) {
-            Logger.get().debug("Executing (1) response handler on thread: " + Thread.currentThread().getName());
+            Logger.get().debug("Executing response handler on this thread: " + Thread.currentThread().getName());
             runnable.run();
         } else {
             serverHandler.executeSafely(() -> {
-                Logger.get().debug("Executing (2) response handler on thread: " + Thread.currentThread().getName());
+                Logger.get().debug("Executing response handler on thread: " + Thread.currentThread().getName());
                 runnable.run();
             });
         }
@@ -51,7 +54,15 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     /**
      * Note: this calls {@link #executeHandler(Runnable)}, so it should not be called to execute this method.
      */
-    protected void handleIncorrect(FormPlayer player) {
+    protected void handleIncorrect(FormPlayer player, FormResponseResult<? extends FormResponse> result) {
+        if (result.isInvalid() && logger.isDebug()) {
+            logger.info("Handling invalid result from " + player.getName() + " for form " + getIdentifier());
+            if (result instanceof InvalidFormResponseResult) {
+                InvalidFormResponseResult<?> invalidResult = (InvalidFormResponseResult<?>) result;
+                logger.info("Component Index: " + invalidResult.componentIndex());
+                logger.info("Error Message: " + invalidResult.errorMessage());
+            }
+        }
         executeHandler(() -> Action.affectPlayer(player, incorrectActions));
     }
 

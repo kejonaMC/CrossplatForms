@@ -48,7 +48,7 @@ public class ModalBedrockForm extends BedrockForm {
             .content(placeholders.setPlaceholders(player, content))
             .button1(placeholders.setPlaceholders(player, button1.getText()))
             .button2(placeholders.setPlaceholders(player, button2.getText()))
-            .closedOrInvalidResultHandler(() -> handleIncorrect(player))
+            .closedOrInvalidResultHandler((result) -> handleIncorrect(player, result))
             .validResultHandler(response -> executeHandler(() -> {
                 int id = response.clickedButtonId();
                 List<Action> actions;
