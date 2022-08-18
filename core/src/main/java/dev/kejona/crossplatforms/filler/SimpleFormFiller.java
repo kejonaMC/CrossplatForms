@@ -1,6 +1,6 @@
 package dev.kejona.crossplatforms.filler;
 
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 

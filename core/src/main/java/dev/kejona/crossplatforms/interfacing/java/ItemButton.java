@@ -1,6 +1,7 @@
 package dev.kejona.crossplatforms.interfacing.java;
 
 
+import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,9 +41,9 @@ public class ItemButton {
 
     private List<String> lore = Collections.emptyList();
 
-    private List<MenuAction> anyClick = Collections.emptyList();
-    private List<MenuAction> leftClick = Collections.emptyList();
-    private List<MenuAction> rightClick = Collections.emptyList();
+    private List<Action<? super JavaMenu>> anyClick = Collections.emptyList();
+    private List<Action<? super JavaMenu>> leftClick = Collections.emptyList();
+    private List<Action<? super JavaMenu>> rightClick = Collections.emptyList();
 
     public static ItemButton fillEntry(String displayName, FormPlayer skullOwner) {
         ItemButton item = new ItemButton();

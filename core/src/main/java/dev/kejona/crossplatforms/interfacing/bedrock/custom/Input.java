@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
@@ -9,13 +9,11 @@ import org.geysermc.cumulus.component.InputComponent;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public class Input extends CustomComponent {
 
     public static final String TYPE = "input";

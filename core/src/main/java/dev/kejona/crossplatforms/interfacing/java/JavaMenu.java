@@ -1,8 +1,10 @@
 package dev.kejona.crossplatforms.interfacing.java;
 
 import dev.kejona.crossplatforms.Constants;
+import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -38,8 +40,8 @@ public class JavaMenu extends Interface {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer recipient) {
-        interfacer.sendMenu(recipient, this);
+    public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver) {
+        interfacer.sendMenu(recipient, this, resolver);
     }
 
     /**
@@ -61,7 +63,8 @@ public class JavaMenu extends Interface {
         }
     }
 
-    private void affectPlayer(FormPlayer player, Iterable<MenuAction> actions) {
-        actions.forEach(a -> a.affectPlayer(player, this));
+    private void affectPlayer(FormPlayer player, Iterable<Action<? super JavaMenu>> actions) {
+        Resolver resolver = placeholders.resolver(player);
+        actions.forEach(a -> a.affectPlayer(player, resolver, this));
     }
 }

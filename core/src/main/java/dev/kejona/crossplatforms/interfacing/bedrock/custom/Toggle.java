@@ -2,7 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,7 +14,6 @@ import javax.annotation.Nonnull;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public class Toggle extends CustomComponent {
 
     public static final String TYPE = "toggle";

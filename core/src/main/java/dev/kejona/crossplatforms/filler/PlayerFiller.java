@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;

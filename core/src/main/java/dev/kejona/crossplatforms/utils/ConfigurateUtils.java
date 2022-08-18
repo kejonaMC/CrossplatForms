@@ -15,9 +15,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class ConfigurateUtils {
 
+    public static final Pattern CLASS_NAME_PATTERN = Pattern.compile("([A-Za-z0-9_]+\\.)+([A-Z][A-Za-z0-9_]+)");
     public static final TypeToken<Map<String, ConfigurationNode>> NODE_MAP = new TypeToken<Map<String, ConfigurationNode>>() {};
 
     public static final TransformAction ACTION_TRANSLATOR = (path, node) -> {
@@ -27,6 +30,30 @@ public final class ConfigurateUtils {
 
     private ConfigurateUtils() {
         // util class
+    }
+
+    public static String stripPackageNames(String message) {
+        final Matcher matcher = CLASS_NAME_PATTERN.matcher(message);
+        final StringBuilder stripped = new StringBuilder();
+        int lastMatch = 0;
+        while (matcher.find()) {
+            // add everything from the last match to the start of this matched package name
+            stripped.append(message, lastMatch, matcher.start());
+            // update lastMatch to the end of this simple class name and then add the simple class name
+            lastMatch = matcher.end(2);
+            stripped.append(message, matcher.start(2), lastMatch);
+        }
+        stripped.append(message, lastMatch, matcher.regionEnd()); // add every trailing after the final match
+        return stripped.toString();
+    }
+
+    public static boolean isListOrScalar(ConfigurationNode node, String childKey) {
+        ConfigurationNode child = node.node(childKey);
+        if (child.isNull()) {
+            return false;
+        }
+
+        return child.isList() || !child.isMap();
     }
 
     /**

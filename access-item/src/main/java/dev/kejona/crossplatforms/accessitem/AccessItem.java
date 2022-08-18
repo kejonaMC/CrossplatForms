@@ -7,8 +7,10 @@ import dev.kejona.crossplatforms.Platform;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.permission.Permission;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -33,6 +35,9 @@ public class AccessItem {
     @Inject
     private transient BedrockHandler bedrockHandler;
 
+    @Inject
+    private transient Placeholders placeholders;
+
     /**
      * The reliable identifier of the access item
      */
@@ -40,11 +45,9 @@ public class AccessItem {
     @Required
     private String identifier = null;
 
-    private List<Action> actions = Collections.emptyList();
-
-    private List<Action> bedrockActions = Collections.emptyList();
-
-    private List<Action> javaActions = Collections.emptyList();
+    private List<Action<? super AccessItem>> actions = Collections.emptyList();
+    private List<Action<? super AccessItem>> bedrockActions = Collections.emptyList();
+    private List<Action<? super AccessItem>> javaActions = Collections.emptyList();
 
     @Required
     private String material = null;
@@ -93,12 +96,13 @@ public class AccessItem {
     private transient Map<Limit, Permission> permissions;
 
     public void trigger(FormPlayer player) {
-        Action.affectPlayer(player, actions);
+        Resolver resolver = placeholders.resolver(player);
 
+        Action.affectPlayer(player, actions, resolver, this);
         if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            Action.affectPlayer(player, bedrockActions);
+            Action.affectPlayer(player, bedrockActions, resolver, this);
         } else {
-            Action.affectPlayer(player, javaActions);
+            Action.affectPlayer(player, javaActions, resolver, this);
         }
     }
 

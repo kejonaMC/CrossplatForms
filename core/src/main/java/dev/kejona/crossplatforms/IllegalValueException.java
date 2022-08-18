@@ -1,7 +1,12 @@
 package dev.kejona.crossplatforms;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
+
 import javax.annotation.Nullable;
 
+@Accessors(fluent = true)
+@Getter
 public class IllegalValueException extends Exception {
     private static final long serialVersionUID = 0L;
 
@@ -14,17 +19,5 @@ public class IllegalValueException extends Exception {
         this.value = value;
         this.expectedType = expectedType;
         this.identifier = identifier;
-    }
-
-    public String value() {
-        return value;
-    }
-
-    public String expectedType() {
-        return expectedType;
-    }
-
-    public String identifier() {
-        return identifier;
     }
 }

@@ -18,5 +18,5 @@ public class ModalButton {
     @Required
     private String text = null;
 
-    private List<Action> actions = Collections.emptyList();
+    private List<Action<? super ModalBedrockForm>> actions = Collections.emptyList();
 }

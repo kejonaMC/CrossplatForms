@@ -2,7 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
 import dev.kejona.crossplatforms.IllegalValueException;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
 import dev.kejona.crossplatforms.parser.Parser;
@@ -20,8 +20,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ToString
-@ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public abstract class CustomComponent extends OptionalElement implements ValuedType {
 
     @Getter
@@ -73,7 +71,7 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
     public void prepare(@Nonnull Resolver resolver) {
         Objects.requireNonNull(resolver);
         text = resolver.apply(text);
-        shouldShow = shouldShow.stream().map(resolver).collect(Collectors.toList());
+        shouldShow = shouldShow.stream().map(resolver::apply).collect(Collectors.toList());
     }
 
     /**

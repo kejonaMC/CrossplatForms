@@ -1,12 +1,11 @@
 package dev.kejona.crossplatforms.spigot.common;
 
-import dev.kejona.crossplatforms.CrossplatForms;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.ItemButton;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,16 +29,15 @@ public class SpigotInterfacer extends Interfacer implements Listener {
     private final Map<Inventory, JavaMenu> menuCache = new HashMap<>();
 
     @Override
-    public void sendMenu(FormPlayer formPlayer, JavaMenu menu) {
+    public void sendMenu(FormPlayer formPlayer, JavaMenu menu, @Nonnull Resolver resolver) {
         Logger logger = Logger.get();
-        Placeholders placeholders = CrossplatForms.getInstance().getPlaceholders();
         Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
 
         Inventory selectorGUI; // todo: better size validation?
         if (menu.getSize() == JavaMenu.HOPPER_SIZE) {
-            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, placeholders.setPlaceholders(formPlayer, menu.getTitle()));
+            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, resolver.apply(menu.getTitle()));
         } else {
-            selectorGUI = Bukkit.createInventory(player, menu.getSize(), placeholders.setPlaceholders(formPlayer, menu.getTitle()));
+            selectorGUI = Bukkit.createInventory(player, menu.getSize(), resolver.apply(menu.getTitle()));
         }
 
         Map<Integer, ItemButton> buttons = menu.getButtons();
@@ -65,8 +64,8 @@ public class SpigotInterfacer extends Interfacer implements Listener {
             if (meta == null) {
                 logger.severe("Java Button: " + menu.getIdentifier() + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
             } else {
-                meta.setDisplayName(placeholders.setPlaceholders(formPlayer, button.getDisplayName()));
-                meta.setLore(placeholders.setPlaceholders(formPlayer, button.getLore()));
+                meta.setDisplayName(resolver.apply(button.getDisplayName()));
+                meta.setLore(resolver.apply(button.getLore()));
                 item.setItemMeta(meta);
                 selectorGUI.setItem(slot, item);
             }

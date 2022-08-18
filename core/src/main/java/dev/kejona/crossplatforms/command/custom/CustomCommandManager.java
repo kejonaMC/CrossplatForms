@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,7 +31,7 @@ public class CustomCommandManager implements Reloadable {
     private final BedrockHandler bedrockHandler;
     private final Logger logger;
 
-    private final Map<Arguments, RegisteredCommand> registeredCommands = new HashMap<>();
+    private final Map<Literals, RegisteredCommand> registeredCommands = new HashMap<>();
 
     public CustomCommandManager(CrossplatForms forms, CommandManager<CommandOrigin> commandManager) {
         this.configManager = forms.getConfigManager();
@@ -53,7 +52,7 @@ public class CustomCommandManager implements Reloadable {
         GeneralConfig config = configManager.getConfig(GeneralConfig.class).get();
         commandManager.setSetting(CommandManager.ManagerSettings.ALLOW_UNSAFE_REGISTRATION, config.isUnsafeCommandRegistration());
 
-        List<Arguments> currentCommands = new ArrayList<>();
+        List<Literals> currentCommands = new ArrayList<>();
         for (CustomCommand command : config.getCommands().values()) {
             if (command == null) {
                 continue;
@@ -79,7 +78,7 @@ public class CustomCommandManager implements Reloadable {
             }
         }
 
-        for (Map.Entry<Arguments, RegisteredCommand> entry : registeredCommands.entrySet()) {
+        for (Map.Entry<Literals, RegisteredCommand> entry : registeredCommands.entrySet()) {
             // enable commands that are current
             // disable commands that are no longer current
             // cannot remove old commands from the map because a double reload could result in cloud raising exceptions due to duplicate nodes/arguments
@@ -90,7 +89,7 @@ public class CustomCommandManager implements Reloadable {
     private void registerCommand(RegisteredCommand command) {
         Objects.requireNonNull(command);
         final String name = command.getIdentifier();
-        final Arguments literals = command.literals();
+        final Literals literals = command.literals();
         final String[] array = literals.source();
 
 
@@ -136,7 +135,7 @@ public class CustomCommandManager implements Reloadable {
         }
     }
 
-    private void executeCommand(CommandOrigin player, Arguments command) {
+    private void executeCommand(CommandOrigin player, Literals command) {
         logger.debug("Executing registered command on thread: " + Thread.currentThread());
         FormPlayer target = Objects.requireNonNull(serverHandler.getPlayer(player.getUUID().orElseThrow(AssertionError::new)));
         RegisteredCommand latest = registeredCommands.get(command);
@@ -159,7 +158,7 @@ public class CustomCommandManager implements Reloadable {
         }
     }
 
-    private boolean hasPermission(CommandOrigin origin, Arguments command) {
+    private boolean hasPermission(CommandOrigin origin, Literals command) {
         RegisteredCommand target = registeredCommands.get(command);
         if (target == null || !target.isEnabled()) {
             // no longer present in the config

@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
 import dev.kejona.crossplatforms.Logger;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.filler.SimpleFormFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
@@ -32,18 +32,17 @@ public class SimpleBedrockForm extends BedrockForm {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer player) {
+    public void send(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
         Logger logger = Logger.get();
         UUID uuid = player.getUuid();
         if (!bedrockHandler.isBedrockPlayer(uuid)) {
-            logger.severe("Player with UUID " + uuid + " is not a Bedrock Player!");
+            logger.severe(player.getName() + " with UUID " + uuid + " is not a Bedrock Player!");
             return;
         }
-        Resolver resolver = placeholders.resolver(player);
 
         SimpleForm.Builder form = SimpleForm.builder()
-            .title(placeholders.setPlaceholders(player, getTitle()))
-            .content(placeholders.setPlaceholders(player, content));
+            .title(resolver.apply(getTitle()))
+            .content(resolver.apply(content));
 
         // make a copy of the buttons
         List<SimpleButton> buttons = new ArrayList<>(this.buttons);
@@ -62,11 +61,11 @@ public class SimpleBedrockForm extends BedrockForm {
         buttons.forEach(button -> button.addTo(form, resolver));
 
         // actions for incorrect response (closed or invalid response)
-        form.closedOrInvalidResultHandler(() -> handleIncorrect(player));
+        form.closedOrInvalidResultHandler(() -> handleIncorrect(player, resolver));
 
         // actions for correct response
         form.validResultHandler(response -> executeHandler(
-            () -> buttons.get(response.clickedButtonId()).click(player)
+            () -> buttons.get(response.clickedButtonId()).click(player, this)
         ));
 
         // Send the form to the floodgate player

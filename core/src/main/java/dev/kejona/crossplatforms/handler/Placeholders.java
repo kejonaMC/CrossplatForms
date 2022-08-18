@@ -1,9 +1,8 @@
 package dev.kejona.crossplatforms.handler;
 
-import dev.kejona.crossplatforms.Resolver;
-import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import dev.kejona.crossplatforms.resolver.MapResolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.resolver.PlayerResolver;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -16,6 +15,10 @@ public interface Placeholders {
 
     default Resolver resolver(FormPlayer player) {
         return new PlayerResolver(player, this);
+    }
+
+    default Resolver resolver(FormPlayer player, Map<String, String> additionalPlaceholders) {
+        return new MapResolver(additionalPlaceholders).andThen(resolver(player));
     }
 
     /**
@@ -78,24 +81,5 @@ public interface Placeholders {
             processedText.add(setPlaceholders(player, line, additional));
         }
         return processedText;
-    }
-
-    @AllArgsConstructor
-    class PlayerResolver implements Resolver {
-
-        private final FormPlayer player;
-        private final Placeholders placeholders;
-
-        @NotNull
-        @Override
-        public String apply(@NotNull String s) {
-            return placeholders.setPlaceholders(player, s);
-        }
-
-        @NotNull
-        @Override
-        public String apply(@NotNull String s, @NotNull Map<String, @Nullable String> additionalPlaceholders) {
-            return placeholders.setPlaceholders(player, s, additionalPlaceholders);
-        }
     }
 }

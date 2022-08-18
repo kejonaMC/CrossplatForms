@@ -2,8 +2,9 @@ package dev.kejona.crossplatforms.action;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.TypeResolver;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -12,16 +13,16 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 @ConfigSerializable
-public class MessageAction implements Action {
+@SuppressWarnings("FieldMayBeFinal")
+public class MessageAction implements Action<Object> {
 
     private static final String TYPE = "message";
 
-    private final transient Placeholders placeholders;
     private transient Function<String, Component> deserializer;
 
     private Format format = Format.LEGACY;
@@ -30,18 +31,18 @@ public class MessageAction implements Action {
     private List<String> messages = null;
 
     @Inject
-    private MessageAction(Placeholders placeholders) {
-        this.placeholders = placeholders;
+    private MessageAction() {
+
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer player, @NotNull Map<String, String> additionalPlaceholders) {
+    public void affectPlayer(@NotNull FormPlayer player, @NotNull Resolver resolver, @Nonnull Object source) {
         if (message != null) {
-            player.sendRaw(deserializer.apply(placeholders.setPlaceholders(player, message, additionalPlaceholders)));
+            player.sendRaw(deserializer.apply(resolver.apply(message)));
         }
         if (messages != null) {
             messages.stream()
-                .map(s -> placeholders.setPlaceholders(player, s, additionalPlaceholders))
+                .map(resolver::apply)
                 .map(deserializer)
                 .forEachOrdered(player::sendRaw);
         }
@@ -81,12 +82,12 @@ public class MessageAction implements Action {
     }
 
     public static void register(ActionSerializer serializer) {
-        serializer.genericAction(TYPE, MessageAction.class, typeResolver());
+        serializer.register(TYPE, MessageAction.class, typeResolver());
     }
 
     private static TypeResolver typeResolver() {
         return node -> {
-            if (node.node("message").getString() != null || node.node("messages").isList()) {
+            if (node.node("message").getString() != null || ConfigurateUtils.isListOrScalar(node, "messages")) {
                 return TYPE;
             } else {
                 return null;

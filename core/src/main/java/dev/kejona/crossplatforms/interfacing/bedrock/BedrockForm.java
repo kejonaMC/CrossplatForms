@@ -7,11 +7,11 @@ import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.util.FormImage;
-import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nullable;
@@ -29,7 +29,8 @@ public abstract class BedrockForm extends Interface implements ValuedType {
 
     protected final transient String permissionBase = Constants.Id() + ".form.";
 
-    private final List<Action> incorrectActions = Collections.emptyList();
+    // this needs to be moved to the form implementation if form specific actions are introduced
+    private List<Action<? super BedrockForm>> incorrectActions = Collections.emptyList();
 
     /**
      * Properly execute the response handler of a form, taking into account thread safety
@@ -51,8 +52,8 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     /**
      * Note: this calls {@link #executeHandler(Runnable)}, so it should not be called to execute this method.
      */
-    protected void handleIncorrect(FormPlayer player) {
-        executeHandler(() -> Action.affectPlayer(player, incorrectActions));
+    protected void handleIncorrect(FormPlayer player, Resolver resolver) {
+        executeHandler(() -> Action.affectPlayer(player, incorrectActions, resolver, this));
     }
 
     @Nullable

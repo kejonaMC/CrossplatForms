@@ -60,18 +60,20 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
             }
 
             if (typeId == null) {
-                throw new SerializationException("No 'type' value present and the type could not be inferred. Possible type options are: " + getTypes());
+                throw new SerializationException("No 'type' value present and the type could not be inferred. Possible type options are: " + getTypes(returnType));
             }
         }
 
         Class<? extends T> type = getType(typeId);
         if (type == null) {
-            throw new SerializationException("Unsupported type '" + typeId + "'. Possible options are: " + getTypes());
+            throw new SerializationException("Unsupported type '" + typeId + "'. Not registered. Possible options are: " + getTypes(returnType));
         }
+
+        validateType(returnType, typeId, type);
 
         T object = node.get(type);
         if (object == null) {
-            throw new SerializationException("Failed to deserialize as '" + type.getSimpleName() + "' because deserialization returned null.");
+            throw new SerializationException("Failed to deserialize as '" + type + "' because deserialization returned null.");
         }
 
         return object;

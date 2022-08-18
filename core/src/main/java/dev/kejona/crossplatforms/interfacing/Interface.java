@@ -8,15 +8,20 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.permission.Permission;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.resolver.MapResolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.NodeKey;
 import org.spongepowered.configurate.objectmapping.meta.Required;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @ToString
@@ -27,10 +32,8 @@ public abstract class Interface {
 
     @Inject
     protected transient Interfacer interfacer;
-
     @Inject
     protected transient ServerHandler serverHandler;
-
     @Inject
     protected transient Placeholders placeholders;
 
@@ -45,7 +48,22 @@ public abstract class Interface {
 
     private Map<Interface.Limit, PermissionDefault> permissionDefaults = Collections.emptyMap();
 
-    public abstract void send(@Nonnull FormPlayer recipient);
+    private List<Argument> arguments = Collections.emptyList();
+
+    public boolean hasArguments() {
+        return arguments.size() != 0;
+    }
+
+    public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver, Map<String, String> args) throws ArgumentException {
+        Map<String, String> placeholders = new HashMap<>();
+        for (Argument def : arguments) {
+            placeholders.put(def.placeholder(), def.validate(args.get(def.identifier())));
+        }
+        send(recipient, new MapResolver(placeholders).andThen(resolver));
+    }
+
+    protected abstract void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver);
+
 
     /**
      * e.g. "crossplatforms.form."

@@ -18,6 +18,8 @@ public class ConfigurationModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        // remember: explicit bindings cannot be required because this module is used for creating configs
+
         bind(Interfacer.class).toInstance(interfacer);
         // Hack to stop the instance from having its members being injected
         // which causes a ClassDefNotFound error if Cumulus is not present (EmptyBedrockHandler)

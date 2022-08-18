@@ -69,6 +69,9 @@ public class CrossplatForms {
                           Placeholders placeholders,
                           CrossplatFormsBootstrap bootstrap) {
         long start = System.currentTimeMillis();
+        if (INSTANCE != null) {
+            logger.severe("CrossplatForms has already been instantiated! There may be unexpected issues.");
+        }
         INSTANCE = this;
         this.serverHandler = serverHandler;
         this.commandManager = commandManager;

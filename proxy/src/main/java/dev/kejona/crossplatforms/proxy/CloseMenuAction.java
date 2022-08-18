@@ -1,21 +1,23 @@
 package dev.kejona.crossplatforms.proxy;
 
+import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.action.ActionSerializer;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
-import dev.kejona.crossplatforms.interfacing.java.MenuAction;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 
-public class CloseMenuAction implements MenuAction {
+@ConfigSerializable
+public class CloseMenuAction implements Action<Object> {
 
     private static final String TYPE = "close";
     private static final ProtocolizePlayerProvider PLAYER_PROVIDER = Protocolize.playerProvider();
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull JavaMenu menu) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver, @Nonnull Object menu) {
         PLAYER_PROVIDER.player(player.getUuid()).closeInventory();
     }
 
@@ -25,6 +27,6 @@ public class CloseMenuAction implements MenuAction {
     }
 
     public static void register(ActionSerializer serializer) {
-        serializer.menuAction(TYPE, CloseMenuAction.class);
+        serializer.register(TYPE, CloseMenuAction.class);
     }
 }

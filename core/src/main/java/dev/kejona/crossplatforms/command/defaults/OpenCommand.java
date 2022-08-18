@@ -9,14 +9,15 @@ import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.FormsCommand;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.ArgumentException;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class OpenCommand extends FormsCommand {
     private final BedrockHandler bedrockHandler;
     private final Interfacer interfacer;
     private final JavaMenuRegistry javaRegistry;
+    private final Placeholders placeholders;
 
     public OpenCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);
@@ -41,6 +43,7 @@ public class OpenCommand extends FormsCommand {
         this.bedrockHandler = crossplatForms.getBedrockHandler();
         this.interfacer = crossplatForms.getInterfacer();
         this.javaRegistry = crossplatForms.getInterfacer().getJavaRegistry();
+        this.placeholders = crossplatForms.getPlaceholders();
     }
 
     @Override
@@ -56,7 +59,6 @@ public class OpenCommand extends FormsCommand {
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     UUID uuid = origin.getUUID().orElseThrow(AssertionError::new);
-                    FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
                     String identifier = context.get(ARGUMENT);
                     Interface ui = interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
@@ -66,7 +68,8 @@ public class OpenCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (origin.hasPermission(ui.permission(Interface.Limit.USE))) {
-                            ui.send(player);
+                            FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
+                            send(ui, origin, player);
                         } else {
                             origin.warn("You don't have permission to use: " + identifier);
                         }
@@ -103,7 +106,7 @@ public class OpenCommand extends FormsCommand {
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(ui.permission(Interface.Limit.USE))) {
-                            ui.send(targetPlayer);
+                            send(ui, origin, targetPlayer);
                         } else {
                             origin.warn(target + " doesn't have permission to use: " + identifier);
                         }
@@ -113,6 +116,19 @@ public class OpenCommand extends FormsCommand {
                 })
                 .build()
         );
+    }
+
+    private void send(Interface ui, CommandOrigin origin, FormPlayer recipient) {
+        if (ui.hasArguments()) {
+            origin.warn("Cannot open " + ui.getIdentifier() + " because it requires arguments, which isn't currently supported by commands.");
+            return;
+        }
+
+        try {
+            ui.send(recipient, placeholders.resolver(recipient), Collections.emptyMap());
+        } catch (ArgumentException e) {
+            origin.warn("Failed to open " + ui.getIdentifier() + ": " + e.getMessage());
+        }
     }
 
     private List<String> openSuggestions(CommandContext<CommandOrigin> context) {
