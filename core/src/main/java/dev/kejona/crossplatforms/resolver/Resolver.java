@@ -12,7 +12,7 @@ import java.util.function.UnaryOperator;
  * A placeholder resolver for a given player
  */
 @FunctionalInterface
-public interface Resolver {
+public interface Resolver extends UnaryOperator<String> {
 
     @Contract("!null -> !null; null -> null")
     String apply(@Nullable String s);

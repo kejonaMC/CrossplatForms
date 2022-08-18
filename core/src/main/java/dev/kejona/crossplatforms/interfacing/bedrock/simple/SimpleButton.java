@@ -126,7 +126,7 @@ public class SimpleButton extends OptionalElement {
             image = BedrockForm.createFormImage(resolver.apply(imageData));
         }
 
-        boolean show = allTrue(shouldShow.stream().map(resolver::apply));
+        boolean show = allTrue(shouldShow.stream().map(resolver));
 
         form.optionalButton(display, image, show);
     }

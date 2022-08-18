@@ -13,13 +13,12 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Function;
 
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class MessageAction implements Action<Object> {
+public class MessageAction implements GenericAction {
 
     private static final String TYPE = "message";
 
@@ -36,13 +35,13 @@ public class MessageAction implements Action<Object> {
     }
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer player, @NotNull Resolver resolver, @Nonnull Object source) {
+    public void affectPlayer(@NotNull FormPlayer player, @NotNull Resolver resolver) {
         if (message != null) {
             player.sendRaw(deserializer.apply(resolver.apply(message)));
         }
         if (messages != null) {
             messages.stream()
-                .map(resolver::apply)
+                .map(resolver)
                 .map(deserializer)
                 .forEachOrdered(player::sendRaw);
         }

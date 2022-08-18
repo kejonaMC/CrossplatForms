@@ -6,14 +6,13 @@ import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.TypeResolver;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
 
 @ConfigSerializable
-public class ServerAction implements Action<Object> {
+public class ServerAction implements GenericAction {
 
     private static final String TYPE = "server";
 
@@ -21,7 +20,7 @@ public class ServerAction implements Action<Object> {
     private String server;
 
     @Override
-    public void affectPlayer(@NotNull FormPlayer player, @NotNull Resolver resolver, @Nonnull Object source) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
         String server = resolver.apply(this.server);
         if (!player.switchBackendServer(server)) {
             Logger.get().warn("Server '" + server + "' does not exist! Not transferring " + player.getName());

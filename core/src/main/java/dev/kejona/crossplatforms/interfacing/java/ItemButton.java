@@ -36,6 +36,7 @@ public class ItemButton {
     @Nullable
     private transient FormPlayer targetPlayer;
 
+    // todo:
     //private Integer customModelData;
     //private ConfigurationNode nbt;
 

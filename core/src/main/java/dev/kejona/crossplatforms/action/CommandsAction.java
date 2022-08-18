@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ConfigSerializable
-public class CommandsAction implements Action<Object> {
+public class CommandsAction implements GenericAction {
 
     public static final String TYPE = "commands";
 
@@ -29,7 +29,7 @@ public class CommandsAction implements Action<Object> {
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver, @Nonnull Object source) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
         if (commands != null) {
             List<DispatchableCommand> resolved = commands.stream()
                     .map(cmd -> cmd.withCommand(resolver.apply(cmd.getCommand())))

@@ -71,7 +71,7 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
     public void prepare(@Nonnull Resolver resolver) {
         Objects.requireNonNull(resolver);
         text = resolver.apply(text);
-        shouldShow = shouldShow.stream().map(resolver::apply).collect(Collectors.toList());
+        shouldShow = shouldShow.stream().map(resolver).collect(Collectors.toList());
     }
 
     /**

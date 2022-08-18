@@ -47,10 +47,10 @@ public class KeyedTypeListSerializer<E extends KeyedType> implements TypeSeriali
 
     @Override
     public void serialize(Type type, @Nullable List<E> list, ConfigurationNode node) throws SerializationException {
-        if (list == null) {
-            node.raw(null);
-        } else {
-            node.set(Collections.emptyList());
+        node.raw(null);
+
+        if (list != null) {
+            node.set(Collections.emptyMap());
 
             for (E element : list) {
                 // KeyedType decides what value should be serialized. If it is a non-simple type, it is expected that

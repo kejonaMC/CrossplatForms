@@ -19,7 +19,7 @@ import java.util.Map;
 
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class InterfaceAction implements Action<Object> {
+public class InterfaceAction implements GenericAction {
 
     private static final String TYPE = "form";
     private static final Logger LOGGER = Logger.get();
@@ -41,7 +41,7 @@ public class InterfaceAction implements Action<Object> {
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver, @Nonnull Object executor) {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
         String form = resolver.apply(this.form);
         Interface ui = interfacer.getInterface(form, bedrockHandler.isBedrockPlayer(player.getUuid()));
         if (ui == null) {
@@ -55,23 +55,6 @@ public class InterfaceAction implements Action<Object> {
             player.warn("You don't have permission to open: " + form);
             return;
         }
-
-        /*
-        Map<String, String> args;
-        if (this.args == null) {
-            args = Collections.emptyMap();
-        } else {
-            args = new HashMap<>();
-            for (int i = 0; i < this.args.length; i++) {
-                args.put("%arg_" + i + "%", resolver.apply(this.args[i]));
-            }
-        }
-        Map<String, String> args = new HashMap<>();
-        for (int i = 0; i < this.args.length; i++) {
-            args.put("%arg_" + i + "%", resolver.apply(this.args[i]));
-        }
-
-         */
 
         try {
             ui.send(player, placeholders.resolver(player), args);
