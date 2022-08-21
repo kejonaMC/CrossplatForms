@@ -15,6 +15,7 @@ import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @ConfigSerializable
@@ -54,6 +55,11 @@ public class InterfaceAction implements GenericAction {
             LOGGER.severe("Attempted to make a player open a form or menu '" + form + "', but they do not have the following permission: " + permission);
             player.warn("You don't have permission to open: " + form);
             return;
+        }
+
+        Map<String, String> arguments = new HashMap<>();
+        for (Map.Entry<String, String> e : this.arguments.entrySet()) {
+            arguments.put(e.getKey(), resolver.apply(e.getValue()));
         }
 
         try {

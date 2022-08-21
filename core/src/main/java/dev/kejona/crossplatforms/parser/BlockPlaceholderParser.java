@@ -12,7 +12,7 @@ public class BlockPlaceholderParser implements Parser {
     public static final String TYPE = "block-placeholders";
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("[%{]([^\\s]+)[%}]"); // blocks % and {} placeholders
-    public static final String PLACEHOLDER_REPLACEMENT = "<blocked placeholder>";
+    public static final String PLACEHOLDER_REPLACEMENT = "<blocked-placeholder>";
 
     @Override
     public String type() {
@@ -21,6 +21,10 @@ public class BlockPlaceholderParser implements Parser {
 
     @Override
     public String parse(FormPlayer player, CustomComponent component, String primitive) {
-        return PLACEHOLDER_PATTERN.matcher(primitive).replaceAll(PLACEHOLDER_REPLACEMENT);
+        return block(primitive);
+    }
+
+    public static String block(String s) {
+        return PLACEHOLDER_PATTERN.matcher(s).replaceAll(PLACEHOLDER_REPLACEMENT);
     }
 }

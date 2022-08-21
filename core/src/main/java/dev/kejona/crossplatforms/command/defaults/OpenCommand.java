@@ -17,6 +17,7 @@ import dev.kejona.crossplatforms.interfacing.ArgumentException;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.kejona.crossplatforms.parser.BlockPlaceholderParser;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -137,18 +138,19 @@ public class OpenCommand extends FormsCommand {
         return StringArgument.optional(EXTRAS_ARG, StringArgument.StringMode.GREEDY);
     }
 
-    private void send(String command, CommandContext<CommandOrigin> cxt, Interface ui, FormPlayer recipient) {
+    private void send(String command, CommandContext<CommandOrigin> ctx, Interface ui, FormPlayer recipient) {
         List<Argument> parameters = ui.getArguments();
         if (parameters.isEmpty()) {
-            send(ui, cxt.getSender(), recipient);
+            send(ui, ctx.getSender(), recipient);
             return;
         }
 
-        CommandOrigin origin = cxt.getSender();
-        Optional<String> input = cxt.getOptional(EXTRAS_ARG);
+        CommandOrigin origin = ctx.getSender();
+        Optional<String> input = ctx.getOptional(EXTRAS_ARG);
 
         if (input.isPresent()) {
-            String[] args = input.get().split(" ");
+            // It's probably possible for placeholders to be eventually parsed, so this is a safeguard
+            String[] args = BlockPlaceholderParser.block(input.get()).split(" ");
             if (args.length != parameters.size()) {
                 badSyntax(origin, command, ui);
                 return;
