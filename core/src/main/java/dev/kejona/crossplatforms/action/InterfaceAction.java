@@ -27,7 +27,7 @@ public class InterfaceAction implements GenericAction {
     @Required
     private String form;
 
-    private Map<String, String> args = Collections.emptyMap();
+    private Map<String, String> arguments = Collections.emptyMap();
 
     private final transient BedrockHandler bedrockHandler;
     private final transient Interfacer interfacer;
@@ -57,7 +57,7 @@ public class InterfaceAction implements GenericAction {
         }
 
         try {
-            ui.send(player, placeholders.resolver(player), args);
+            ui.send(player, placeholders.resolver(player), arguments);
         } catch (ArgumentException e) {
             player.warn("A configuration error resulted in you not opening a form or menu.");
             Logger.get().severe("Failed to open '" + form + "' because: " + e.getMessage());
