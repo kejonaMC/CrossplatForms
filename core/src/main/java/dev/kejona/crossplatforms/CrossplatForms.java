@@ -56,6 +56,7 @@ public class CrossplatForms {
 
     private final CommandManager<CommandOrigin> commandManager;
     private final Command.Builder<CommandOrigin> commandBuilder;
+    private final String rootCommand;
 
     private final Placeholders placeholders;
 
@@ -142,7 +143,7 @@ public class CrossplatForms {
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
         // Command defined in config or default provided by implementation
-        String rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);
+        rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);
 
         // Makes the info messages for invalid syntax, sender, etc exceptions nicer
         new MinecraftExceptionHandler<CommandOrigin>()

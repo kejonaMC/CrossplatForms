@@ -60,7 +60,7 @@ public class InterfaceAction implements GenericAction {
             ui.send(player, placeholders.resolver(player), args);
         } catch (ArgumentException e) {
             player.warn("A configuration error resulted in you not opening a form or menu.");
-            Logger.get().severe("Failed to open '" + form + "' because the following argument was missing: " + e.getMessage());
+            Logger.get().severe("Failed to open '" + form + "' because: " + e.getMessage());
         }
     }
 

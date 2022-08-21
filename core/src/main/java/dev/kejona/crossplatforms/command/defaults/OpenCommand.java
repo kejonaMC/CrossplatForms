@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.command.defaults;
 
 import cloud.commandframework.Command;
 import cloud.commandframework.CommandManager;
+import cloud.commandframework.arguments.CommandArgument;
 import cloud.commandframework.arguments.standard.StringArgument;
 import cloud.commandframework.context.CommandContext;
 import dev.kejona.crossplatforms.CrossplatForms;
@@ -11,14 +12,17 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.interfacing.Argument;
 import dev.kejona.crossplatforms.interfacing.ArgumentException;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,13 +32,18 @@ public class OpenCommand extends FormsCommand {
     public static final String SEND_NAME = "send";
     public static final String PERMISSION = PERMISSION_BASE + OPEN_NAME;
     public static final String PERMISSION_OTHER = PERMISSION_BASE + SEND_NAME;
-    private static final String ARGUMENT = "form|menu";
+    private static final String PLAYER_ARG = "player";
+    private static final String INTERFACE_ARG = "form|menu";
+    private static final String EXTRAS_ARG = "extras";
 
     private final ServerHandler serverHandler;
     private final BedrockHandler bedrockHandler;
     private final Interfacer interfacer;
     private final JavaMenuRegistry javaRegistry;
     private final Placeholders placeholders;
+
+    private final String openCommand;
+    private final String sendCommand;
 
     public OpenCommand(CrossplatForms crossplatForms) {
         super(crossplatForms);
@@ -44,6 +53,10 @@ public class OpenCommand extends FormsCommand {
         this.interfacer = crossplatForms.getInterfacer();
         this.javaRegistry = crossplatForms.getInterfacer().getJavaRegistry();
         this.placeholders = crossplatForms.getPlaceholders();
+
+        String root = crossplatForms.getRootCommand();
+        openCommand = join(root, OPEN_NAME);
+        sendCommand = join(root, SEND_NAME, required(PLAYER_ARG));
     }
 
     @Override
@@ -53,13 +66,14 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(OPEN_NAME)
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
-                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
+                .argument(StringArgument.<CommandOrigin>newBuilder(INTERFACE_ARG)
                         .withSuggestionsProvider((context, s) -> openSuggestions(context))
                         .build())
+                .argument(extrasArgument())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     UUID uuid = origin.getUUID().orElseThrow(AssertionError::new);
-                    String identifier = context.get(ARGUMENT);
+                    String identifier = context.get(INTERFACE_ARG);
                     Interface ui = interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(uuid));
 
                     if (ui == null) {
@@ -69,14 +83,15 @@ public class OpenCommand extends FormsCommand {
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (origin.hasPermission(ui.permission(Interface.Limit.USE))) {
                             FormPlayer player = Objects.requireNonNull(serverHandler.getPlayer(uuid));
-                            send(ui, origin, player);
+                            send(openCommand, context, ui, player);
                         } else {
                             origin.warn("You don't have permission to use: " + identifier);
                         }
                     } else {
                         origin.warn("You don't have permission to send: " + identifier);
                     }
-                }));
+                })
+        );
 
         // Send command to make other players open a form or menu
         manager.command(defaultBuilder
@@ -87,9 +102,10 @@ public class OpenCommand extends FormsCommand {
                                 .map(FormPlayer::getName)
                                 .collect(Collectors.toList()))
                         .build())
-                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
+                .argument(StringArgument.<CommandOrigin>newBuilder(INTERFACE_ARG)
                         .withSuggestionsProvider((context, s) -> sendSuggestions(context))
                         .build())
+                .argument(extrasArgument())
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
                     String target = context.get("player");
@@ -98,15 +114,15 @@ public class OpenCommand extends FormsCommand {
                         origin.warn("The player " + target + " doesn't exist.");
                         return;
                     }
-                    String identifier = context.get(ARGUMENT);
-                    Interface ui = this.interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
+                    String identifier = context.get(INTERFACE_ARG);
+                    Interface ui = interfacer.getInterface(identifier, bedrockHandler.isBedrockPlayer(targetPlayer.getUuid()));
                     if (ui == null) {
                         origin.warn("'" + identifier + "' doesn't exist.");
                         return;
                     }
                     if (origin.hasPermission(ui.permission(Interface.Limit.COMMAND))) {
                         if (targetPlayer.hasPermission(ui.permission(Interface.Limit.USE))) {
-                            send(ui, origin, targetPlayer);
+                            send(sendCommand, context, ui, targetPlayer);
                         } else {
                             origin.warn(target + " doesn't have permission to use: " + identifier);
                         }
@@ -114,21 +130,47 @@ public class OpenCommand extends FormsCommand {
                         origin.warn("You don't have permission to send: " + identifier);
                     }
                 })
-                .build()
         );
     }
 
-    private void send(Interface ui, CommandOrigin origin, FormPlayer recipient) {
-        if (ui.hasArguments()) {
-            origin.warn("Cannot open " + ui.getIdentifier() + " because it requires arguments, which isn't currently supported by commands.");
+    private CommandArgument<CommandOrigin, String> extrasArgument() {
+        return StringArgument.optional(EXTRAS_ARG, StringArgument.StringMode.GREEDY);
+    }
+
+    private void send(String command, CommandContext<CommandOrigin> cxt, Interface ui, FormPlayer recipient) {
+        List<Argument> parameters = ui.getArguments();
+        if (parameters.isEmpty()) {
+            send(ui, cxt.getSender(), recipient);
             return;
         }
 
+        CommandOrigin origin = cxt.getSender();
+        Optional<String> input = cxt.getOptional(EXTRAS_ARG);
+
+        if (input.isPresent()) {
+            String[] args = input.get().split(" ");
+            if (args.length != parameters.size()) {
+                badSyntax(origin, command, ui);
+                return;
+            }
+
+            send(ui, origin, recipient, args);
+        } else {
+            badSyntax(origin, command, ui);
+        }
+    }
+
+    private void send(Interface ui, CommandOrigin origin, FormPlayer recipient, @Nullable String... args) {
         try {
-            ui.send(recipient, placeholders.resolver(recipient), Collections.emptyMap());
+            ui.send(recipient, placeholders.resolver(recipient), args);
         } catch (ArgumentException e) {
             origin.warn("Failed to open " + ui.getIdentifier() + ": " + e.getMessage());
+            badSyntax(origin, openCommand, ui);
         }
+    }
+
+    private void badSyntax(CommandOrigin origin, String command, Interface ui) {
+        origin.warn("The correct syntax is: " + command + " " + ui.getArgumentSyntax());
     }
 
     private List<String> openSuggestions(CommandContext<CommandOrigin> context) {
@@ -161,5 +203,17 @@ public class OpenCommand extends FormsCommand {
                 .map(Interface::getIdentifier)
                 .distinct() // Remove duplicates - forms and menus with the same identifier
                 .collect(Collectors.toList());
+    }
+
+    private static String join(String... args) {
+        return String.join(" ", args);
+    }
+
+    public static String required(String argument) {
+        return "<" + argument + ">";
+    }
+
+    public static String optional(String argument) {
+        return "[" + argument + "]";
     }
 }

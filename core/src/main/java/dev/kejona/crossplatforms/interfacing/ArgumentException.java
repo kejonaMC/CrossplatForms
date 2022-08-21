@@ -12,6 +12,6 @@ public class ArgumentException extends Exception {
     }
 
     public static ArgumentException missingArg(String argumentId) {
-        return new ArgumentException("Argument with id " + argumentId + " was not provided.");
+        return new ArgumentException("Argument '" + argumentId + "' was not provided.");
     }
 }

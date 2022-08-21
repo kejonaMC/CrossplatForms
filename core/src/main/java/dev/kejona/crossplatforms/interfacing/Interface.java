@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.interfacing;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.command.defaults.OpenCommand;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
@@ -15,17 +16,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.NodeKey;
+import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.objectmapping.meta.Required;
-import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 @ToString
-@Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
 public abstract class Interface {
@@ -37,27 +39,63 @@ public abstract class Interface {
     @Inject
     protected transient Placeholders placeholders;
 
+    @Getter
     // Stuff that is generated after deserialization, once the identifier has been loaded
     private transient Map<Interface.Limit, Permission> permissions;
 
+    @Getter
     @NodeKey
     @Required
     protected String identifier;
 
+    @Getter
     protected String title = "";
 
     private Map<Interface.Limit, PermissionDefault> permissionDefaults = Collections.emptyMap();
 
+    @Getter
     private List<Argument> arguments = Collections.emptyList();
 
-    public boolean hasArguments() {
-        return arguments.size() != 0;
+    @Getter
+    private transient String argumentSyntax = "";
+
+    @PostProcess
+    private void postProcess() {
+        StringJoiner joiner = new StringJoiner(" ");
+        joiner.add(identifier);
+        for (Argument arg : arguments) {
+            joiner.add(OpenCommand.required(arg.identifier()));
+        }
+        argumentSyntax = joiner.toString();
     }
 
     public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver, Map<String, String> args) throws ArgumentException {
+        if (arguments.isEmpty()) {
+            send(recipient, resolver);
+            return;
+        }
+
         Map<String, String> placeholders = new HashMap<>();
         for (Argument def : arguments) {
             placeholders.put(def.placeholder(), def.validate(args.get(def.identifier())));
+        }
+        send(recipient, new MapResolver(placeholders).andThen(resolver));
+    }
+
+    public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver, @Nullable String... args) throws ArgumentException {
+        if (arguments.isEmpty()) {
+            send(recipient, resolver);
+            return;
+        }
+        if (args == null || arguments.size() != args.length) {
+            throw new ArgumentException("Incorrect number of arguments, should be " + arguments.size());
+        }
+
+        Map<String, String> placeholders = new HashMap<>();
+        int i = 0;
+        for (Argument def : arguments) {
+            placeholders.put(def.placeholder(), def.validate(args[i]));
+            i++;
         }
         send(recipient, new MapResolver(placeholders).andThen(resolver));
     }
