@@ -25,7 +25,7 @@ dependencies {
 
     compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT")
     api("cloud.commandframework:cloud-core:1.7.1")
-    api("cloud.commandframework:cloud-minecraft-extras:1.7.0")
+    api("cloud.commandframework:cloud-minecraft-extras:1.7.1")
     api("net.kyori:adventure-api:4.11.0")
     api("net.kyori:adventure-text-serializer-legacy:4.11.0")
     api("net.kyori:adventure-text-serializer-gson:4.11.0")
