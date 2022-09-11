@@ -10,7 +10,6 @@ import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
-import org.geysermc.cumulus.util.AbsentComponent;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -75,7 +74,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        builder.closedOrInvalidResultHandler(() -> handleIncorrect(player, resolver));
+        builder.closedOrInvalidResultHandler((result) -> handleIncorrect(player, resolver, result));
 
         builder.validResultHandler((form, response) -> executeHandler(() -> {
             response.includeLabels(true); // allow label to be used as result placeholder
