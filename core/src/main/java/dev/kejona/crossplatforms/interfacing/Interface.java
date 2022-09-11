@@ -79,7 +79,7 @@ public abstract class Interface {
         for (Argument def : arguments) {
             placeholders.put(def.placeholder(), def.validate(args.get(def.identifier())));
         }
-        send(recipient, new MapResolver(placeholders).andThen(resolver));
+        send(recipient, new MapResolver(placeholders).then(resolver));
     }
 
     public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver, @Nullable String... args) throws ArgumentException {
@@ -97,7 +97,7 @@ public abstract class Interface {
             placeholders.put(def.placeholder(), def.validate(args[i]));
             i++;
         }
-        send(recipient, new MapResolver(placeholders).andThen(resolver));
+        send(recipient, new MapResolver(placeholders).then(resolver));
     }
 
     protected abstract void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver);

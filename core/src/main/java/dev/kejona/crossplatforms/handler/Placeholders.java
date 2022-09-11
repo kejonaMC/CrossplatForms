@@ -18,7 +18,7 @@ public interface Placeholders {
     }
 
     default Resolver resolver(FormPlayer player, Map<String, String> additionalPlaceholders) {
-        return new MapResolver(additionalPlaceholders).andThen(resolver(player));
+        return new MapResolver(additionalPlaceholders).then(resolver(player));
     }
 
     /**

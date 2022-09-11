@@ -101,7 +101,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
                 }
             }
 
-            Resolver subResolver = new MapResolver(resultPlaceholders).andThen(resolver);
+            Resolver subResolver = new MapResolver(resultPlaceholders).then(resolver);
 
             // Handle effects of pressing the button
             Action.affectPlayer(player, actions, subResolver, this);

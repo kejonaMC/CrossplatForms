@@ -110,7 +110,7 @@ public class SimpleButton extends OptionalElement {
 
     public void addTo(SimpleForm.Builder form, Resolver baseResolver) {
         final Map<String, String> morePlaceholders = additionalPlaceholders();
-        Resolver resolver = new MapResolver(morePlaceholders).andThen(baseResolver);
+        Resolver resolver = new MapResolver(morePlaceholders).then(baseResolver);
 
         String display;
         if (text == null || text.isEmpty()) {

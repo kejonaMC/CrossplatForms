@@ -14,6 +14,7 @@ import java.util.function.UnaryOperator;
 @FunctionalInterface
 public interface Resolver extends UnaryOperator<String> {
 
+    @Override
     @Contract("!null -> !null; null -> null")
     String apply(@Nullable String s);
 
@@ -30,7 +31,7 @@ public interface Resolver extends UnaryOperator<String> {
         return resolved;
     }
 
-    default Resolver andThen(Resolver resolver) {
+    default Resolver then(Resolver resolver) {
         return s -> resolver.apply(this.apply(s));
     }
 
