@@ -13,7 +13,6 @@ import dev.kejona.crossplatforms.handler.ServerHandler;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class GiveCommand extends FormsCommand {

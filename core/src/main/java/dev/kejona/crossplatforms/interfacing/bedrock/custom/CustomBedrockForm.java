@@ -86,10 +86,8 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
                 Object result = response.valueAt(i);
 
                 String value;
-                if (result == null || result instanceof AbsentComponent) {
-                    // If the result is null then the Component should be a Label
-                    // If it is an AbsentComponent then the Component was optional and was not shown
-                    // todo: optional components that were not shown will return null when https://github.com/GeyserMC/Cumulus/pull/6 is merged
+                if (result == null) {
+                    // If the result is null then the Component is a label or it wasn't added
                     value = component.resultIfHidden();
                 } else {
                     value = result.toString();
