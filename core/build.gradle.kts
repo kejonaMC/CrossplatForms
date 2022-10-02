@@ -20,7 +20,7 @@ val java16Implementation: Configuration by configurations.getting {
 }
 
 dependencies {
-    testImplementation("org.geysermc.cumulus:cumulus:1.1-SNAPSHOT") // needed for testing button components
+    testImplementation("org.geysermc.cumulus:cumulus:1.1.1-SNAPSHOT") // needed for testing button components
     testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
 
     compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT")
@@ -35,9 +35,9 @@ dependencies {
     api("org.bstats:bstats-base:3.0.0")
 
     // dependencies for java16 sources (optionally used at runtime)
-    java16Implementation("org.geysermc:geyser-api:2.0.4-SNAPSHOT")
-    java16Implementation("org.geysermc:base-api:2.0.4-SNAPSHOT")
-    java16Implementation("org.geysermc:core:2.0.4-SNAPSHOT") {
+    java16Implementation("org.geysermc:api:2.1.0-SNAPSHOT") // base api
+    java16Implementation("org.geysermc.geyser:api:2.1.0-SNAPSHOT") // geyser api
+    java16Implementation("org.geysermc.geyser:core:2.1.0-SNAPSHOT") {
         isTransitive = false
     }
 }
