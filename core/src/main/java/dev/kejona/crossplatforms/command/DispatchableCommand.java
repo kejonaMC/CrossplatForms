@@ -3,24 +3,15 @@ package dev.kejona.crossplatforms.command;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
 @ToString
 @EqualsAndHashCode
 @Getter
-@ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public class DispatchableCommand {
 
-    @Required
-    private boolean player;
-
-    @Required
-    private String command;
-
-    @Required
-    private boolean op;
+    private final boolean player;
+    private final String command;
+    private final boolean op;
 
     /**
      * Used for running commands as a player or as the console
@@ -30,6 +21,10 @@ public class DispatchableCommand {
      * @param op      If given a player, whether or not the player should be temporarily op'd when running the command.
      */
     public DispatchableCommand(boolean player, String command, boolean op) {
+        if (!player && op) {
+            throw new IllegalArgumentException("player is false but op is true");
+        }
+
         this.player = player;
         this.command = command;
         this.op = op;
@@ -40,7 +35,7 @@ public class DispatchableCommand {
      * @param command The command to run
      */
     public DispatchableCommand(String command) {
-        this(false, command, true);
+        this(false, command, false);
     }
 
     public DispatchableCommand withCommand(String command) {

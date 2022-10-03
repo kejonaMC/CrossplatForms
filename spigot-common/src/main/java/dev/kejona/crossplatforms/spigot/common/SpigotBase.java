@@ -12,6 +12,7 @@ import dev.kejona.crossplatforms.accessitem.AccessItemConfig;
 import dev.kejona.crossplatforms.accessitem.GiveCommand;
 import dev.kejona.crossplatforms.accessitem.InspectItemCommand;
 import dev.kejona.crossplatforms.action.ActionSerializer;
+import dev.kejona.crossplatforms.action.ServerAction;
 import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.ConfigManager;
@@ -129,8 +130,8 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         configManager.register(AccessItemConfig.asConfigId());
 
         ActionSerializer actionSerializer = configManager.getActionSerializer();
-        actionSerializer.simpleGenericAction(ServerAction.TYPE, String.class, ServerAction.class);
-        actionSerializer.simpleMenuAction(CloseMenuAction.TYPE, String.class, CloseMenuAction.class);
+        ServerAction.register(actionSerializer);
+        CloseMenuAction.register(actionSerializer);
     }
 
     @Override

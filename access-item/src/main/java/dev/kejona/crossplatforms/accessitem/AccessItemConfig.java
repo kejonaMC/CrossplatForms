@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.accessitem;
 import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.Configuration;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import lombok.Getter;
 import lombok.ToString;
 import org.spongepowered.configurate.NodePath;
@@ -19,7 +20,7 @@ import java.util.Map;
 @SuppressWarnings("FieldMayBeFinal")
 public class AccessItemConfig extends Configuration {
 
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
     public static final int MINIMUM_VERSION = 1;
 
     private static final NodePath WILDCARD_ITEM = NodePath.path("items", ConfigurationTransformation.WILDCARD_OBJECT);
@@ -32,11 +33,22 @@ public class AccessItemConfig extends Configuration {
 
     private Map<String, AccessItem> items = Collections.emptyMap();
 
+    public static ConfigId asConfigId() {
+        return ConfigId.builder()
+                .file("access-items.yml")
+                .version(VERSION)
+                .minimumVersion(MINIMUM_VERSION)
+                .clazz(AccessItemConfig.class)
+                .updater(AccessItemConfig::updater)
+                .build();
+    }
+
     public static ConfigurationTransformation.Versioned updater() {
         return ConfigurationTransformation.versionedBuilder()
                 .versionKey(Configuration.VERSION_KEY)
                 .addVersion(2, update1_2())
                 .addVersion(3, update2_3())
+                .addVersion(4, update3_4())
                 .build();
     }
 
@@ -59,13 +71,14 @@ public class AccessItemConfig extends Configuration {
                 .build();
     }
 
-    public static ConfigId asConfigId() {
-        return ConfigId.builder()
-            .file("access-items.yml")
-            .version(VERSION)
-            .minimumVersion(MINIMUM_VERSION)
-            .clazz(AccessItemConfig.class)
-            .updater(AccessItemConfig::updater)
-            .build();
+    private static ConfigurationTransformation update3_4() {
+        ConfigurationTransformation.Builder builder = ConfigurationTransformation.builder();
+        ConfigurateUtils.transformChildren(
+                builder,
+                WILDCARD_ITEM,
+                ConfigurateUtils.ACTION_TRANSLATOR,
+                "actions", "bedrock-actions", "java-actions");
+
+        return builder.build();
     }
 }

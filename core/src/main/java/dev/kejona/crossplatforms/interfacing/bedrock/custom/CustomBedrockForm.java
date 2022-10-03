@@ -5,10 +5,11 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.kejona.crossplatforms.resolver.MapResolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
-import org.geysermc.cumulus.util.AbsentComponent;
 import org.geysermc.cumulus.util.FormImage;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -31,7 +32,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
     @Nullable
     private String image = null;
     private List<CustomComponent> components = Collections.emptyList();
-    private List<Action> actions = Collections.emptyList();
+    private List<Action<? super CustomBedrockForm>> actions = Collections.emptyList();
 
     @Override
     public String type() {
@@ -39,7 +40,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer player) {
+    public void send(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
         Logger logger = Logger.get();
         UUID uuid = player.getUuid();
 
@@ -48,12 +49,12 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        CustomForm.Builder form = CustomForm.builder().title(placeholders.setPlaceholders(player, super.getTitle()));
+        CustomForm.Builder builder = CustomForm.builder().title(resolver.apply(super.getTitle()));
 
-        FormImage image = createFormImage(this.image);
+        FormImage image = createFormImage(resolver.apply(this.image));
         if (image != null) {
             // cleanup when cumulus gets CustomForm.Builder#icon(@Nullable FormImage) method
-            form.icon(image.type(), image.data());
+            builder.icon(image.type(), image.data());
         }
 
         // Setup and add components
@@ -61,11 +62,11 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
         try {
             for (CustomComponent component : this.components) {
                 // resolve placeholders
-                CustomComponent prepared = component.preparedCopy(placeholders.resolver(player));
+                CustomComponent prepared = component.preparedCopy(resolver);
                 formatted.add(prepared);
 
                 // add component to form
-                form.optionalComponent(prepared.cumulusComponent(), prepared.show());
+                builder.optionalComponent(prepared.cumulusComponent(), prepared.show());
             }
         } catch (IllegalValueException e) {
             player.warn("There was an error sending a form to you.");
@@ -73,9 +74,9 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             return;
         }
 
-        form.closedOrInvalidResultHandler((result) -> handleIncorrect(player, result));
+        builder.closedOrInvalidResultHandler((result) -> handleIncorrect(player, resolver, result));
 
-        form.validResultHandler(response -> executeHandler(() -> {
+        builder.validResultHandler((form, response) -> executeHandler(() -> {
             response.includeLabels(true); // allow label to be used as result placeholder
 
             Map<String, String> resultPlaceholders = new HashMap<>();
@@ -84,10 +85,8 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
                 Object result = response.valueAt(i);
 
                 String value;
-                if (result == null || result instanceof AbsentComponent) {
-                    // If the result is null then the Component should be a Label
-                    // If it is an AbsentComponent then the Component was optional and was not shown
-                    // todo: optional components that were not shown will return null when https://github.com/GeyserMC/Cumulus/pull/6 is merged
+                if (result == null) {
+                    // If the result is null then the Component is a label or it wasn't added
                     value = component.resultIfHidden();
                 } else {
                     value = result.toString();
@@ -102,12 +101,14 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
                 }
             }
 
+            Resolver subResolver = new MapResolver(resultPlaceholders).then(resolver);
+
             // Handle effects of pressing the button
-            Action.affectPlayer(player, actions, resultPlaceholders);
+            Action.affectPlayer(player, actions, subResolver, this);
         }));
 
         // Send the form to the floodgate player
-        bedrockHandler.sendForm(uuid, form.build());
+        bedrockHandler.sendForm(uuid, builder.build());
     }
 
     private static String placeholder(int i) {

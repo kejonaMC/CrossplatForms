@@ -9,19 +9,22 @@ import dev.kejona.crossplatforms.action.InterfaceAction;
 import dev.kejona.crossplatforms.action.MessageAction;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.DispatchableCommandSerializer;
-import dev.kejona.crossplatforms.command.custom.Arguments;
-import dev.kejona.crossplatforms.command.custom.ArgumentsSerializer;
+import dev.kejona.crossplatforms.command.custom.Literals;
 import dev.kejona.crossplatforms.command.custom.CustomCommand;
 import dev.kejona.crossplatforms.command.custom.CustomCommandSerializer;
 import dev.kejona.crossplatforms.filler.FillerSerializer;
 import dev.kejona.crossplatforms.filler.PlayerFiller;
 import dev.kejona.crossplatforms.filler.SplitterFiller;
+import dev.kejona.crossplatforms.interfacing.Argument;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
+import dev.kejona.crossplatforms.serialize.PathNodeResolver;
+import dev.kejona.crossplatforms.serialize.StreamSerializer;
+import dev.kejona.crossplatforms.serialize.UnaryNodes;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import dev.kejona.crossplatforms.utils.FileUtils;
-import io.leangen.geantyref.TypeToken;
 import lombok.Getter;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.objectmapping.ObjectMapper;
@@ -64,34 +67,47 @@ public class ConfigManager {
     public ConfigManager(Path directory, Logger logger, Injector injector) {
         this.directory = directory;
         this.logger = logger;
-        actionSerializer = new ActionSerializer(injector);
+        actionSerializer = new ActionSerializer();
 
-        ObjectMapper.Factory mapperFactory = injector.getInstance(GuiceObjectMapperProvider.class).get();
+        ObjectMapper.Factory mapperFactory = ObjectMapper
+                .factoryBuilder()
+                .addDiscoverer(GuiceObjectMapperProvider.injectedObjectDiscoverer(injector))
+                .addNodeResolver(PathNodeResolver.nodePath())
+                .addPostProcessor(new UnaryNodes.ProcessorFactory())
+                .build();
         loaderBuilder = YamlConfigurationLoader.builder();
         loaderBuilder.defaultOptions(opts -> {
-            opts = opts.serializers(builder -> builder.registerAnnotatedObjects(mapperFactory));
-            // factory is registered first separately so that is added to a TypeSerializerCollection that is a parent of
-            // the collection of the serializers below. serializers in the children are checked first when object mapping
-            // occurs. our custom serializers MUST be checked first before the object mapper.
+            // If certain type serializers should be registered with less priority, they should be registered in a new
+            // #serializers call before the normal call. They are then registered to a TypeSerializerCollection
+            // that is a parent (less priority) of the normal type serializers registered afterward. e.g:
+            //opts = opts.serializers(builder -> builder.registerAnnotatedObjects(mapperFactory));
+
             return opts.serializers(builder -> {
-                // serializers for our custom scalars
+                // register the object mapper in the same type serializer collection
+                builder.registerAnnotatedObjects(mapperFactory);
+
+                // serializers for classes not suitable for object mapping (scalars, etc)
+                builder.register(StreamSerializer.TYPE, new StreamSerializer());
+                builder.registerExact(Argument.class, new Argument.Serializer());
                 builder.registerExact(Option.class, new OptionSerializer());
-                builder.registerExact(Arguments.class, new ArgumentsSerializer());
-                // type serializers for abstract classes and external library classes
+                builder.registerExact(Literals.class, new Literals.Serializer());
+
+                // serializers for abstract classes
                 builder.registerExact(CustomCommand.class, new CustomCommandSerializer());
                 builder.register(DispatchableCommand.class, new DispatchableCommandSerializer());
                 builder.registerExact(Parser.class, new ParserSerializer());
 
-                // actions, composite serializer
-                actionSerializer.simpleGenericAction(InterfaceAction.TYPE, String.class, InterfaceAction.class);
-                actionSerializer.simpleGenericAction(CommandsAction.TYPE, new TypeToken<List<DispatchableCommand>>() {}, CommandsAction.class);
-                actionSerializer.genericAction(MessageAction.TYPE, MessageAction.class);
-                actionSerializer.registrator().accept(builder);
+                // register actions to the action serializer
+                InterfaceAction.register(actionSerializer);
+                CommandsAction.register(actionSerializer);
+                MessageAction.register(actionSerializer);
+                // register the serializer to the collection
+                actionSerializer.register(builder);
 
-                // fillers (dropdown, simple form, inventory), composite serializer
-                fillerSerializer.register(PlayerFiller.TYPE, PlayerFiller.class);
-                fillerSerializer.register(SplitterFiller.TYPE, SplitterFiller.class);
-                fillerSerializer.registrator().accept(builder);
+                // register fillers
+                PlayerFiller.register(fillerSerializer);
+                SplitterFiller.register(fillerSerializer);
+                fillerSerializer.register(builder);
             });
         });
         // don't initialize default values for object values
@@ -144,13 +160,13 @@ public class ConfigManager {
             } catch (IOException | ConfigurationException e) {
                 logger.severe("Failed to load configuration " + configId.file);
                 String message = e.getMessage();
-                if (logger.isDebug() ||  configId.equals(ConfigId.GENERAL) || message.contains("Unknown error")) {
+                if (logger.isDebug() || configId.equals(ConfigId.GENERAL) || message.contains("Unknown error")) {
                     // if the config failing to load is config.yml, then its impossible to enable debug and see the full error.
                     // message is useless on its own if unknown
                     e.printStackTrace();
                 } else {
                     logger.severe("Enable debug mode for further information.");
-                    logger.severe(message);
+                    logger.severe(ConfigurateUtils.stripPackageNames(message));
                 }
                 if (!useMinimalDefaults(configId)) {
                     return false;

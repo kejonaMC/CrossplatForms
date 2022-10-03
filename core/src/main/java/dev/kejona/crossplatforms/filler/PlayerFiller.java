@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 @ConfigSerializable
 public class PlayerFiller extends UniversalFiller {
 
-    public static final String TYPE = "player";
+    private static final String TYPE = "player";
 
     private final transient ServerHandler serverHandler;
 
@@ -48,5 +48,9 @@ public class PlayerFiller extends UniversalFiller {
 
     private static String headLink(FormPlayer player) {
         return "https://api.tydiumcraft.net/v1/players/skin?uuid=" + player.getUuid() + "&type=avatar";
+    }
+
+    public static void register(FillerSerializer serializer) {
+        serializer.filler(TYPE, PlayerFiller.class);
     }
 }

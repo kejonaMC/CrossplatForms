@@ -4,6 +4,7 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.ToString;
 import org.geysermc.cumulus.form.ModalForm;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -34,7 +35,7 @@ public class ModalBedrockForm extends BedrockForm {
     }
 
     @Override
-    public void send(@Nonnull FormPlayer player) {
+    public void send(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
         Logger logger = Logger.get();
         UUID uuid = player.getUuid();
 
@@ -44,14 +45,14 @@ public class ModalBedrockForm extends BedrockForm {
         }
 
         ModalForm form = ModalForm.builder()
-            .title(placeholders.setPlaceholders(player, getTitle()))
-            .content(placeholders.setPlaceholders(player, content))
-            .button1(placeholders.setPlaceholders(player, button1.getText()))
-            .button2(placeholders.setPlaceholders(player, button2.getText()))
-            .closedOrInvalidResultHandler((result) -> handleIncorrect(player, result))
+            .title(resolver.apply(getTitle()))
+            .content(resolver.apply(content))
+            .button1(resolver.apply(button1.getText()))
+            .button2(resolver.apply(button2.getText()))
+            .closedOrInvalidResultHandler((result) -> handleIncorrect(player, resolver, result))
             .validResultHandler(response -> executeHandler(() -> {
                 int id = response.clickedButtonId();
-                List<Action> actions;
+                List<Action<? super ModalBedrockForm>> actions;
                 if (id == 0) {
                     actions = button1.getActions();
                 } else if (id == 1) {
@@ -61,7 +62,7 @@ public class ModalBedrockForm extends BedrockForm {
                 }
 
                 // Handle effects of pressing the button
-                Action.affectPlayer(player, actions);
+                Action.affectPlayer(player, actions, resolver, this);
             }))
             .build();
 

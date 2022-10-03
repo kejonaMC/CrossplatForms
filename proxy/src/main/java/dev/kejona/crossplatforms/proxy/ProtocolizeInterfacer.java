@@ -5,6 +5,7 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.ItemButton;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.simplix.protocolize.api.ClickType;
 import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
@@ -14,6 +15,7 @@ import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 import dev.simplix.protocolize.data.ItemType;
 import dev.simplix.protocolize.data.inventory.InventoryType;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.Map;
 
@@ -28,8 +30,9 @@ public class ProtocolizeInterfacer extends Interfacer {
     }
 
     @Override
-    public void sendMenu(FormPlayer player, JavaMenu source) {
+    public void sendMenu(FormPlayer player, JavaMenu source, @Nonnull Resolver resolver) {
         // construct the inventory. todo: validate size
+        // todo: apply placeholders and use args
         InventoryType inventoryType;
         int size = source.getSize();
         if (size == 5) {

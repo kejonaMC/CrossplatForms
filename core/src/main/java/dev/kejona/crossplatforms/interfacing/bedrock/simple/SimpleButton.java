@@ -1,6 +1,8 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.resolver.MapResolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.filler.SimpleFormFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
@@ -26,7 +28,6 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @ConfigSerializable
-@SuppressWarnings("FieldMayBeFinal")
 public class SimpleButton extends OptionalElement {
 
     @Nullable
@@ -37,7 +38,7 @@ public class SimpleButton extends OptionalElement {
     private String imageData;
 
     @Nonnull
-    private List<Action> actions = Collections.emptyList();
+    private List<Action<? super SimpleBedrockForm>> actions = Collections.emptyList();
 
     @Nullable
     private transient SimpleButton raw = null;
@@ -71,7 +72,7 @@ public class SimpleButton extends OptionalElement {
         if (raw == null) {
             return Collections.emptyMap();
         } else {
-            Map<String, String> additionalPlaceholders = new HashMap<>(2);
+            Map<String, String> additionalPlaceholders = new HashMap<>(4);
             additionalPlaceholders.put("%raw_text%", getText());
             additionalPlaceholders.put("%raw_image%", getImage());
             return additionalPlaceholders;
@@ -103,33 +104,36 @@ public class SimpleButton extends OptionalElement {
         return copy;
     }
 
-    public void addTo(SimpleForm.Builder form, Resolver resolver) {
-        Map<String, String> morePlaceholders = additionalPlaceholders();
+    public void addTo(SimpleForm.Builder form, Resolver baseResolver) {
+        final Map<String, String> morePlaceholders = additionalPlaceholders();
+        Resolver resolver = new MapResolver(morePlaceholders).then(baseResolver);
 
         String display;
         if (text == null || text.isEmpty()) {
             display = "";
         } else {
-            display = resolver.apply(text, morePlaceholders);
+            display = resolver.apply(text);
         }
 
         FormImage image;
         if (imageData == null || imageData.isEmpty()) {
             image = null;
         } else {
-            image = BedrockForm.createFormImage(resolver.apply(imageData, morePlaceholders));
+            image = BedrockForm.createFormImage(resolver.apply(imageData));
         }
 
-        boolean show = allTrue(shouldShow.stream().map(s -> resolver.apply(s, morePlaceholders)));
+        boolean show = allTrue(shouldShow.stream().map(resolver));
 
         form.optionalButton(display, image, show);
     }
 
-    public void click(FormPlayer player) {
+    public void click(FormPlayer player, SimpleBedrockForm form, Placeholders placeholders) {
+        Resolver resolver;
         if (raw == null) {
-            Action.affectPlayer(player, actions);
+            resolver = placeholders.resolver(player);
         } else {
-            Action.affectPlayer(player, actions, additionalPlaceholders());
+            resolver = placeholders.resolver(player, additionalPlaceholders());
         }
+        Action.affectPlayer(player, actions, resolver, form);
     }
 }

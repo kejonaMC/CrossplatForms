@@ -25,15 +25,13 @@ menus:
         # You can specify different functionality for different clicks.
         right-click:
           # Both server and commands are optional; they can be removed. commands are run before the player is moved to the new server.
-          close: "" # Closing the menu here isn't required, it's only here for show.
-          commands:
-            - "console; tell %player_name% Sending you to the lobby in a right click fashion..."
-          server: "lobby"
+          - type: close # Closing the menu here isn't required, it's only here for show.
+          - message: "Sending you to the lobby in a right click fashion..."
+          - server: "lobby"
         left-click:
-          close: ""
-          commands:
-            - "console; tell %player_name% Sending you to the lobby in a left click fashion..."
-          server: "lobby"
+          - type: close
+          - message: "Sending you to the lobby in a left click fashion..."
+          - server: "lobby"
       4:
         display-name: "§6Minigames"
         material: GRASS
@@ -42,7 +40,7 @@ menus:
           - "§fSpleef"
           - "§fHide § Seek"
         any-click:
-          form: minigames
+          - form: minigames
       6:
         display-name: "§6Survival"
         material: EMERALD
@@ -50,10 +48,9 @@ menus:
           - "§2online players: %bungee_survival%"
         # You can also only use "any-click" to specify identical behaviour for both left and right clicks.
         any-click:
-          close: ""
-          commands:
-            - "console; tell %player_name% Sending you to Survival..."
-          server: "survival"
+          - type: close
+          - message: "Sending you to Survival..."
+          - server: "survival"
   minigames:
     title: "§0Minigames"
     allow-bedrock: false
@@ -63,11 +60,11 @@ menus:
         display-name: "§6Spleef"
         material: SNOWBALL
         any-click:
-          server: "spleef"
+          - server: "spleef"
       3:
         display-name: "§6Hide § Seek"
         material: DIRT
         any-click:
-          server: "hideseek"
+          - server: "hideseek"
 
-config-version: 1
+config-version: 2

@@ -19,16 +19,16 @@ public class DispatchableCommandSerializer implements TypeSerializer<Dispatchabl
         boolean console = value.startsWith(CONSOLE_PREFIX);
         if (player || op || console) {
             // Split the input into two strings between ";" and get the second string
-            value = value.split(";", 2)[1].trim();
+            String command = value.split(";", 2)[1].trim();
             if (player) {
-                return new DispatchableCommand(true, value, false);
+                return new DispatchableCommand(true, command, false);
             } else if (op) {
-                return new DispatchableCommand(true, value, true);
+                return new DispatchableCommand(true, command, true);
             } else {
-                return new DispatchableCommand(false, value, true);
+                return new DispatchableCommand(command);
             }
         } else {
-            return new DispatchableCommand(false, value, true);
+            return new DispatchableCommand(value); // console
         }
     }
 

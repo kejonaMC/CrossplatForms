@@ -56,6 +56,7 @@ public class CrossplatForms {
 
     private final CommandManager<CommandOrigin> commandManager;
     private final Command.Builder<CommandOrigin> commandBuilder;
+    private final String rootCommand;
 
     private final Placeholders placeholders;
 
@@ -69,6 +70,9 @@ public class CrossplatForms {
                           Placeholders placeholders,
                           CrossplatFormsBootstrap bootstrap) {
         long start = System.currentTimeMillis();
+        if (INSTANCE != null) {
+            logger.severe("CrossplatForms has already been instantiated! There may be unexpected issues.");
+        }
         INSTANCE = this;
         this.serverHandler = serverHandler;
         this.commandManager = commandManager;
@@ -121,7 +125,7 @@ public class CrossplatForms {
                 builder.registerExact(BedrockForm.class, new BedrockFormSerializer());
                 builder.registerExact(CustomComponent.class, new ComponentSerializer());
             });
-            configManager.getActionSerializer().genericAction(BedrockTransferAction.TYPE, BedrockTransferAction.class);
+            BedrockTransferAction.register(configManager.getActionSerializer());
         }
         bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
         if (!configManager.load()) {
@@ -139,7 +143,7 @@ public class CrossplatForms {
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
         // Command defined in config or default provided by implementation
-        String rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);
+        rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);
 
         // Makes the info messages for invalid syntax, sender, etc exceptions nicer
         new MinecraftExceptionHandler<CommandOrigin>()

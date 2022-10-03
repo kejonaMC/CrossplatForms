@@ -1,6 +1,6 @@
 package dev.kejona.crossplatforms.filler;
 
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
 import dev.kejona.crossplatforms.interfacing.java.ItemButton;
@@ -29,6 +29,7 @@ public abstract class UniversalFiller implements OptionFiller, SimpleFormFiller,
     @Setting(value = "format")
     private SimpleButton buttonFormat;
 
+    @SuppressWarnings("FieldMayBeFinal")
     private int insertIndex = -1;
 
     @Nullable

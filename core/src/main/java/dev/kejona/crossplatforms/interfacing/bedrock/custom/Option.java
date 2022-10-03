@@ -1,6 +1,6 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

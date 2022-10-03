@@ -309,7 +309,7 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
 
     @Override
     public boolean giveAccessItem(FormPlayer player, AccessItem accessItem, boolean setHeldSlot) {
-        return giveAccessItem((Player) player.getHandle(), accessItem, setHeldSlot);
+        return giveAccessItem(player.getHandle(Player.class), accessItem, setHeldSlot);
     }
 
     /**

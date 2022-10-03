@@ -13,4 +13,8 @@ import org.spongepowered.configurate.ConfigurationNode;
 public interface ValuedType {
 
     String type();
+
+    default boolean serializeWithType() {
+        return true;
+    }
 }

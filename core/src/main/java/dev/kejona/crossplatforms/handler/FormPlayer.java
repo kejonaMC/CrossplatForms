@@ -52,5 +52,14 @@ public interface FormPlayer {
         sendMessage(Component.text(message).color(NamedTextColor.GOLD));
     }
 
-    Object getHandle();
+    /**
+     * Switch this player to a different backend server behind a proxy like BungeeCord or Velocity. If no proxy is
+     * present, this method should fail silently and return true. This method should only return false if no backend
+     * server is found by the given server name.
+     * @param server The identifier of the backend server to switch the player to
+     * @return false if and only if there is no backend server by the given name.
+     */
+    boolean switchBackendServer(String server);
+
+    <T> T getHandle(Class<T> asType) throws ClassCastException;
 }

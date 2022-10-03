@@ -12,10 +12,12 @@ import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -25,7 +27,7 @@ public class TestModule extends AbstractModule {
     protected void configure() {
         bind(Interfacer.class).toInstance(new Interfacer() {
             @Override
-            public void sendMenu(FormPlayer player, JavaMenu menu) {
+            public void sendMenu(FormPlayer player, JavaMenu menu, @Nonnull Resolver resolver) {
 
             }
         });

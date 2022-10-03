@@ -3,7 +3,7 @@ package dev.kejona.crossplatforms.serialize;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import dev.kejona.crossplatforms.Entry;
-import dev.kejona.crossplatforms.utils.TypeUtils;
+import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -14,7 +14,6 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -34,11 +33,15 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         this.injector = injector;
     }
 
-    @Override
     @Nonnull
-    public Set<String> getTypes() {
-        Set<String> types = new HashSet<>(simpleTypes.keySet());
-        types.addAll(super.getTypes());
+    @Override
+    public Set<String> getTypes(Type superType) {
+        Set<String> types = filter(
+            superType,
+            simpleTypes.entrySet().stream().map(e -> Entry.of(e.getKey(), e.getValue().getValue()))
+        );
+
+        types.addAll(super.getTypes(superType));
         return types;
     }
 
@@ -54,7 +57,8 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         registerSimpleType(typeId, TypeToken.get(valueType), simpleType);
     }
 
-    public T deserialize(ConfigurationNode node) throws SerializationException {
+    @Override
+    public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
         Object key = node.key();
         if (key == null || key.toString().equals("")) {
             throw new SerializationException("Cannot deserialization a node into a KeyedType with a key of: " + key);
@@ -66,19 +70,19 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         if (type == null) {
             Entry<TypeToken<?>, Class<? extends T>> simpleType = simpleTypes.get(typeId.toLowerCase(Locale.ROOT));
             if (simpleType == null) {
-                throw new SerializationException("Unsupported type (not registered) '" + typeId + "'. Possible options are: " + getTypes());
+                throw new SerializationException("Unsupported type (not registered) '" + typeId + "'. Possible options are: " + getTypes(returnType));
             } else {
+                validateType(returnType, typeId, simpleType.getValue());
                 instance = deserializeSimple(simpleType.getKey(), simpleType.getValue(), node);
             }
         } else {
+            validateType(returnType, typeId, type);
             instance = node.get(type);
         }
+        if (instance == null) {
+            throw new SerializationException("Failed to deserialize as '" + typeId + "' because deserialization returned null.");
+        }
         return instance;
-    }
-
-    @Override
-    public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
-        return deserialize(node);
     }
 
     @Override
@@ -99,7 +103,7 @@ public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> im
         Injector childInjector = injector.createChildInjector(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(TypeUtils.keyFromToken(valueType)).toInstance(value);
+                bind(ConfigurateUtils.keyFromToken(valueType)).toInstance(value);
             }
         });
 

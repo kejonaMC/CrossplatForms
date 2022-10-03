@@ -3,7 +3,8 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    id("net.kyori.indra.git")
+    id("net.kyori.indra.git") // used for getting branch/commit info
+    id("idea") // used to download sources and documentation
 }
 
 allprojects{
@@ -12,7 +13,7 @@ allprojects{
     apply(plugin = "net.kyori.indra.git")
 
     group = "dev.kejona"
-    version = "1.3.2"
+    version = "1.4.0"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -58,7 +59,7 @@ subprojects {
     dependencies {
         testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
         testCompileOnly("org.projectlombok:lombok:1.18.22")
-        testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
 
         annotationProcessor("org.projectlombok:lombok:1.18.22")
         compileOnly("org.projectlombok:lombok:1.18.22")
@@ -69,5 +70,12 @@ subprojects {
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
+    }
+}
+
+idea {
+    module {
+        isDownloadJavadoc = true
+        isDownloadSources = true
     }
 }

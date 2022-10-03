@@ -1,11 +1,18 @@
 package dev.kejona.crossplatforms.serialize;
 
+import org.spongepowered.configurate.serialize.SerializationException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static io.leangen.geantyref.GenericTypeReflector.isSuperType;
 
 /**
  * Deserializes a map with keys of type identifiers (strings) and values that are instances of type provided type T,
@@ -42,7 +49,27 @@ public class TypeRegistry<T> {
     }
 
     @Nonnull
-    public Set<String> getTypes() {
-        return types.keySet();
+    public Set<String> getTypes(Type superType) {
+        return filter(superType, types);
+    }
+
+    public void validateType(Type required, String typeKey, Type registered) throws SerializationException {
+        if (!isValidType(required, registered)) {
+            throw new SerializationException("Unsupported type '" + typeKey + "'. " + registered + " is registered but incompatible. Possible type options are: " + getTypes(required));
+        }
+    }
+
+    public boolean isValidType(Type required, Type registered) {
+        return isSuperType(required, registered);
+    }
+
+    public final <V> Set<String> filter(Type superType, Map<String, Class<? extends V>> types) {
+        return filter(superType, types.entrySet().stream());
+    }
+
+    public final <V> Set<String> filter(Type superType, Stream<Map.Entry<String, Class<? extends V>>> types) {
+        return types.filter(e -> isValidType(superType, e.getValue()))
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toSet());
     }
 }

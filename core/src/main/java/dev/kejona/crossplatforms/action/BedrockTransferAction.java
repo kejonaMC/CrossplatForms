@@ -4,78 +4,66 @@ import com.google.inject.Inject;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.PostProcess;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
 @ConfigSerializable
-public class BedrockTransferAction implements Action {
+public class BedrockTransferAction implements GenericAction {
 
-    public static final String TYPE = "transfer_packet";
+    private static final String TYPE = "transfer_packet";
 
     private final transient BedrockHandler bedrockHandler;
-    private final transient Placeholders placeholders;
 
     @Required
     private String address;
 
-    @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+    @SuppressWarnings("FieldMayBeFinal")
     private String port = "19132";
 
-    /**
-     * To be used if port is an integer, can't change because of placeholders.
-     */
-    private transient int staticPort = -1;
-
     @Inject
-    private BedrockTransferAction(BedrockHandler bedrockHandler, Placeholders placeholders) {
+    private BedrockTransferAction(BedrockHandler bedrockHandler) {
         this.bedrockHandler = bedrockHandler;
-        this.placeholders = placeholders;
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Map<String, String> additionalPlaceholders) {
-        String address = placeholders.setPlaceholders(player, this.address, additionalPlaceholders);
-
-        int port;
-        if (staticPort == -1) {
-            // Failed to parse as int when action was first deserialized - assume its a placeholder.
-            String resolved = placeholders.setPlaceholders(player, this.port, additionalPlaceholders);
-            try {
-                port = Integer.parseUnsignedInt(resolved);
-            } catch (NumberFormatException e) {
-                player.warn("Failed to transfer you to a server because " + resolved + " is not a valid port");
-                Logger.get().warn("Failed to send " + player.getName() + " to " + address + " because " + resolved + " is not a valid port");
-                return;
-            }
-        } else {
-            port = staticPort;
-        }
-
-        if (bedrockHandler.isBedrockPlayer(player.getUuid())) {
-            if (!bedrockHandler.transfer(player, address, port)) {
-                player.warn("Failed to transfer you to a server due to an unknown reason");
-            }
-        } else {
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver) {
+        if (!bedrockHandler.isBedrockPlayer(player.getUuid())) {
             player.warn("Attempted to transfer you to a server that supports Bedrock Edition but you aren't a Bedrock player.");
             Logger.get().warn("Can't use transfer_packet " + address + ":" + port + " on JE player " + player.getName());
+            return;
+        }
+
+        String address = resolver.apply(this.address);
+
+        int port;
+        String resolved = resolver.apply(this.port);
+        try {
+            port = Integer.parseUnsignedInt(resolved);
+        } catch (NumberFormatException e) {
+            player.warn("Failed to transfer you to a server because there was an error determining the destination.");
+            warn(player, address, resolved, resolved + " is not a valid port.");
+            return;
+        }
+
+        if (!bedrockHandler.transfer(player, address, port)) {
+            player.warn("Failed to transfer you to a server due to an unknown reason");
+            warn(player, address, resolved, " of an unknown reason.");
         }
     }
 
-    @PostProcess
-    private void postProcess() {
-        try {
-            staticPort = Integer.parseUnsignedInt(this.port);
-        } catch (NumberFormatException ignored) {
-        }
+    private static void warn(FormPlayer player, String address, String port, String reason) {
+        Logger.get().warn("Failed to send " + player.getName() + " to " + address + ":" + port + " because " + reason);
     }
 
     @Override
     public String type() {
         return TYPE;
+    }
+
+    public static void register(ActionSerializer serializer) {
+        serializer.register(TYPE, BedrockTransferAction.class);
     }
 }

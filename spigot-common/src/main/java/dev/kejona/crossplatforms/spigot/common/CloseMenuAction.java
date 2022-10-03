@@ -1,26 +1,32 @@
 package dev.kejona.crossplatforms.spigot.common;
 
-import com.google.inject.Inject;
+import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.action.ActionSerializer;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
-import dev.kejona.crossplatforms.interfacing.java.MenuAction;
-import dev.kejona.crossplatforms.serialize.SimpleType;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import org.bukkit.entity.Player;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 
-public class CloseMenuAction extends SimpleType<String> implements MenuAction {
+@ConfigSerializable
+public class CloseMenuAction implements Action<JavaMenu> {
 
-    public static final String TYPE = "close";
+    private static final String TYPE = "close";
 
-    @Inject
-    public CloseMenuAction() {
-        super(TYPE, "");
+    @Override
+    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull Resolver resolver, @Nonnull JavaMenu menu) {
+        Player spigotPlayer = player.getHandle(Player.class);
+        spigotPlayer.closeInventory();
     }
 
     @Override
-    public void affectPlayer(@Nonnull FormPlayer player, @Nonnull JavaMenu menu) {
-        Player spigotPlayer = (Player) player.getHandle();
-        spigotPlayer.closeInventory();
+    public String type() {
+        return TYPE;
+    }
+
+    public static void register(ActionSerializer serializer) {
+        serializer.register(TYPE, CloseMenuAction.class);
     }
 }

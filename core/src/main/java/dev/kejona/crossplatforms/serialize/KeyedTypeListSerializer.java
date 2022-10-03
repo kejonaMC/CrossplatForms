@@ -1,15 +1,15 @@
 package dev.kejona.crossplatforms.serialize;
 
-import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Deserializes a map with keys of type identifiers (strings) and values that are instances of type provided type T,
@@ -26,14 +26,20 @@ public class KeyedTypeListSerializer<E extends KeyedType> implements TypeSeriali
 
     @Override
     public List<E> deserialize(Type type, ConfigurationNode node) throws SerializationException {
-        Map<String, ConfigurationNode> childMap = node.get(new TypeToken<Map<String, ConfigurationNode>>() {});
-        if (childMap == null) {
-            throw new SerializationException("Map at " + node.path() + " is empty or not the correct type!");
+        if (!(type instanceof ParameterizedType)) {
+            throw new SerializationException("Cannot deserialize to list with no element type parameter");
         }
 
+        ParameterizedType parameterized = (ParameterizedType) type;
+        Type[] typeArgs = parameterized.getActualTypeArguments();
+        if (typeArgs.length < 1) {
+            throw new SerializationException("Cannot deserialize to a list that is a raw type");
+        }
+        Type elementType = parameterized.getActualTypeArguments()[0];
+
         List<E> mapped = new ArrayList<>();
-        for (ConfigurationNode child : childMap.values()) {
-            mapped.add(elementSerializer.deserialize(child));
+        for (ConfigurationNode child : node.childrenMap().values()) {
+            mapped.add(elementSerializer.deserialize(elementType, child));
         }
 
         return mapped;
@@ -44,9 +50,11 @@ public class KeyedTypeListSerializer<E extends KeyedType> implements TypeSeriali
         node.raw(null);
 
         if (list != null) {
+            node.set(Collections.emptyMap());
+
             for (E element : list) {
-                // action decides what value should be serialized. If it is a non-simple type, it is expected that the action
-                // itself is passed. if its a simple typed, its expected that the singleton value is passed.
+                // KeyedType decides what value should be serialized. If it is a non-simple type, it is expected that
+                // the class instance is passed. If its a simple type, its expected that the singleton value is passed.
                 node.node(element.type()).set(element.value());
             }
         }

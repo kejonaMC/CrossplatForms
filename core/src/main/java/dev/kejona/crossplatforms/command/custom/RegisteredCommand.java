@@ -4,7 +4,6 @@ import dev.kejona.crossplatforms.command.CommandType;
 import lombok.ToString;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.PostProcess;
-import org.spongepowered.configurate.objectmapping.meta.Required;
 
 import java.util.Locale;
 
@@ -14,11 +13,11 @@ public class RegisteredCommand extends CustomCommand {
 
     public static final String TYPE = CommandType.REGISTER.name().toLowerCase(Locale.ROOT);
 
-    private Arguments command;
+    private Literals command;
 
     private transient boolean enable = true;
 
-    public Arguments literals() {
+    public Literals literals() {
         return command;
     }
 
@@ -38,7 +37,7 @@ public class RegisteredCommand extends CustomCommand {
     @PostProcess
     protected void postProcess() {
         if (command == null) {
-            command = Arguments.of(new String[]{getIdentifier()});
+            command = Literals.of(new String[]{getIdentifier()});
         }
     }
 }

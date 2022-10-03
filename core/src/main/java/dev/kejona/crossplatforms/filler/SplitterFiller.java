@@ -1,7 +1,8 @@
 package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.Resolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.serialize.TypeResolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
 
@@ -13,10 +14,10 @@ import java.util.stream.Stream;
 @SuppressWarnings("FieldMayBeFinal")
 public class SplitterFiller extends UniversalFiller {
 
-    public static final String TYPE = "splitter";
+    private static final String TYPE = "splitter";
 
     @Required
-    private String value;
+    private String split;
     private String regex = " ";
 
     @Inject
@@ -27,11 +28,25 @@ public class SplitterFiller extends UniversalFiller {
     @Nonnull
     @Override
     public Stream<String> rawOptions(Resolver resolver) {
-        return Arrays.stream(resolver.apply(value).split(regex, 0));
+        return Arrays.stream(resolver.apply(split).split(regex, 0));
     }
 
     @Override
     public String type() {
         return TYPE;
+    }
+
+    public static void register(FillerSerializer serializer) {
+        serializer.filler(TYPE, SplitterFiller.class, typeResolver());
+    }
+
+    private static TypeResolver typeResolver() {
+        return node -> {
+            if (node.node("split").getString() != null) {
+                return TYPE;
+            } else {
+                return null;
+            }
+        };
     }
 }
