@@ -65,7 +65,8 @@ public abstract class BedrockForm extends Interface implements ValuedType {
                 logger.info("Error Message: " + invalidResult.errorMessage());
             }
         }
-        executeHandler(() -> Action.affectPlayer(player, incorrectActions, resolver, this));    }
+        executeHandler(() -> Action.affectPlayer(player, incorrectActions, resolver, this));
+    }
 
     @Nullable
     public static FormImage createFormImage(@Nullable String data) {

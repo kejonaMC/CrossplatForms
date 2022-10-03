@@ -29,7 +29,6 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
     public ValuedTypeSerializer(String typeKey) {
         Objects.requireNonNull(typeKey);
         this.typeKey = typeKey;
-
     }
 
     /**

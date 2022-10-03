@@ -1,6 +1,5 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
-import com.google.inject.Inject;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.resolver.MapResolver;
 import dev.kejona.crossplatforms.resolver.Resolver;
@@ -43,9 +42,6 @@ public class SimpleButton extends OptionalElement {
 
     @Nullable
     private transient SimpleButton raw = null;
-
-    @Inject
-    private transient Placeholders placeholders;
 
     public SimpleButton(@Nonnull String text) {
         this.text = text;
@@ -131,7 +127,7 @@ public class SimpleButton extends OptionalElement {
         form.optionalButton(display, image, show);
     }
 
-    public void click(FormPlayer player, SimpleBedrockForm form) {
+    public void click(FormPlayer player, SimpleBedrockForm form, Placeholders placeholders) {
         Resolver resolver;
         if (raw == null) {
             resolver = placeholders.resolver(player);

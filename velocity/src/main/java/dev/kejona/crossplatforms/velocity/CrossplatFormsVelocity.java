@@ -119,13 +119,13 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
 
     @Override
     public void preConfigLoad(ConfigManager configManager) {
-        if (protocolizePresent) {
-            configManager.register(ConfigId.JAVA_MENUS);
-        }
-
         ActionSerializer actionSerializer = configManager.getActionSerializer();
         ServerAction.register(actionSerializer);
-        CloseMenuAction.register(actionSerializer);
+
+        if (protocolizePresent) {
+            configManager.register(ConfigId.JAVA_MENUS);
+            CloseMenuAction.register(actionSerializer); // Close Java Menus
+        }
     }
 
     @Override
