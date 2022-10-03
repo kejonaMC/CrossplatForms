@@ -1,6 +1,6 @@
 package dev.kejona.crossplatforms.handler;
 
-import org.geysermc.api.session.Connection;
+import org.geysermc.api.connection.Connection;
 import org.geysermc.cumulus.form.Form;
 import org.geysermc.geyser.GeyserImpl;
 import org.geysermc.geyser.session.GeyserSession;
