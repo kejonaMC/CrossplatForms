@@ -34,10 +34,15 @@ dependencies {
     api("com.google.inject:guice:5.1.0")
     api("org.bstats:bstats-base:3.0.0")
 
+    // Required because source and unshaded jars are all mixed up on the opencollab repo currently
+    val baseApi = "2.1.0-20221012.212632-20"
+    val geyserApi = "2.1.0-20221012.212634-20"
+    val geyserCore = "2.1.0-20221012.212644-20"
+
     // dependencies for java16 sources (optionally used at runtime)
-    java16Implementation("org.geysermc:api:2.1.0-SNAPSHOT") // base api
-    java16Implementation("org.geysermc.geyser:api:2.1.0-SNAPSHOT") // geyser api
-    java16Implementation("org.geysermc.geyser:core:2.1.0-SNAPSHOT") {
+    java16Implementation("org.geysermc:api:$baseApi")
+    java16Implementation("org.geysermc.geyser:api:$geyserApi")
+    java16Implementation("org.geysermc.geyser:core:$geyserCore") {
         isTransitive = false
     }
 }
