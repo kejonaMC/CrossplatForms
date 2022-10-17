@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.utils;
 
 import dev.kejona.crossplatforms.IllegalValueException;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
@@ -13,32 +14,51 @@ public class ParseUtils {
 
     }
 
-    public static int getInt(String value, String identifier) throws IllegalValueException {
+    public static int getInt(@Nullable String value, String identifier) throws IllegalValueException {
+        if (value == null) {
+            throw new IllegalValueException(null, "integer", identifier);
+        }
+
+        String s = prune(value);
         try {
-            return Integer.parseInt(value);
+            return Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            throw new IllegalValueException(value, "integer", identifier);
+            throw new IllegalValueException(s, "integer", identifier);
         }
     }
 
-    public static int getUnsignedInt(String value, String identifier) throws IllegalValueException {
+    public static int getUnsignedInt(@Nullable String value, String identifier) throws IllegalValueException {
+        if (value == null) {
+            throw new IllegalValueException(null, "non-negative integer", identifier);
+        }
+
+        String s = prune(value);
         try {
-            return Integer.parseUnsignedInt(value);
+            return Integer.parseUnsignedInt(s);
         } catch (NumberFormatException e) {
-            throw new IllegalValueException(value, "non-negative integer", identifier);
+            throw new IllegalValueException(s, "non-negative integer", identifier);
         }
     }
 
-    public static float getFloat(String value, String identifier) throws IllegalValueException {
+    public static float getFloat(@Nullable String value, String identifier) throws IllegalValueException {
+        if (value == null) {
+            throw new IllegalValueException(null, "decimal number", identifier);
+        }
+
+        String s = prune(value);
         try {
-            return Float.parseFloat(value);
+            return Float.parseFloat(s);
         } catch (NumberFormatException e) {
-            throw new IllegalValueException(value, "decimal number", identifier);
+            throw new IllegalValueException(s, "decimal number", identifier);
         }
     }
 
-    public static boolean getBoolean(String value, String identifier) throws IllegalValueException {
-        String lower = value.toLowerCase(Locale.ROOT);
+    public static boolean getBoolean(@Nullable String value, String identifier) throws IllegalValueException {
+        if (value == null) {
+            throw new IllegalValueException(null, "boolean", identifier);
+        }
+
+        String lower = prune(value);
         switch (lower) {
             case "true":
             case "yes":
@@ -53,9 +73,12 @@ public class ParseUtils {
         }
     }
 
-    public static boolean getBoolean(String value, boolean def) {
-        String lower = value.toLowerCase(Locale.ROOT);
-        switch (lower) {
+    public static boolean getBoolean(@Nullable String value, boolean def) {
+        if (value == null) {
+            return def;
+        }
+
+        switch (prune(value)) {
             case "true":
             case "yes":
             case "on":
@@ -67,5 +90,9 @@ public class ParseUtils {
             default:
                 return def;
         }
+    }
+
+    private static String prune(String s) {
+        return s.trim().toLowerCase(Locale.ROOT);
     }
 }
