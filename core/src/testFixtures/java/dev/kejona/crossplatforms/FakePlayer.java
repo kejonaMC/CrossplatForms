@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import net.kyori.adventure.text.Component;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class FakePlayer implements FormPlayer {
@@ -22,6 +23,12 @@ public class FakePlayer implements FormPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return false;
+    }
+
+    @Nullable
+    @Override
+    public String getSkinTextureId() {
+        return null;
     }
 
     @Override

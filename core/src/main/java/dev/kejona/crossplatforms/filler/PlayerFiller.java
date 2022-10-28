@@ -1,11 +1,11 @@
 package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
 import dev.kejona.crossplatforms.interfacing.java.ItemButton;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 public class PlayerFiller extends UniversalFiller {
 
     private static final String TYPE = "player";
+    private static final String AVATAR_ENDPOINT = "https://mc-heads.net/avatar/";
+    private static final String DEFAULT_AVATAR = AVATAR_ENDPOINT + "MHF_Steve";
 
     private final transient ServerHandler serverHandler;
 
@@ -47,7 +49,12 @@ public class PlayerFiller extends UniversalFiller {
     }
 
     private static String headLink(FormPlayer player) {
-        return "https://api.tydiumcraft.net/v1/players/skin?uuid=" + player.getUuid() + "&type=avatar";
+        String textureId = player.getSkinTextureId();
+        if (textureId == null) {
+            return DEFAULT_AVATAR;
+        }
+
+        return AVATAR_ENDPOINT + textureId;
     }
 
     public static void register(FillerSerializer serializer) {

@@ -40,7 +40,7 @@ public @interface UnaryNodes {
                 final Field[] fields = instance.getClass().getFields();
                 String firstSetting = null;
                 for (Field field : fields) {
-                    if (arrayContains(nodes, field.getName()) && ReflectionUtils.get(instance, field) != null) {
+                    if (arrayContains(nodes, field.getName()) && ReflectionUtils.getValue(instance, field) != null) {
                         // it is a node targeted by the annotation and a value is present
                         if (firstSetting == null) {
                             firstSetting = field.getName();

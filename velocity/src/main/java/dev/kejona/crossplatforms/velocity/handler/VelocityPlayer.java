@@ -3,10 +3,12 @@ package dev.kejona.crossplatforms.velocity.handler;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.util.GameProfile;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.velocity.CrossplatFormsVelocity;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -32,6 +34,19 @@ public class VelocityPlayer implements FormPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return player.hasPermission(permission);
+    }
+
+    @Nullable
+    @Override
+    public String getSkinTextureId() {
+        for (GameProfile.Property property : player.getGameProfileProperties()) {
+            if (property.getName().equals("textures")) {
+                String value = property.getValue();
+                return value.isEmpty() ? null : value;
+            }
+        }
+
+        return null;
     }
 
     @Override

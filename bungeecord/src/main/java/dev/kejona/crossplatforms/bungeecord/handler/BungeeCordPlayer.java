@@ -1,5 +1,6 @@
 package dev.kejona.crossplatforms.bungeecord.handler;
 
+import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.bungeecord.CrossplatFormsBungeeCord;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import lombok.AllArgsConstructor;
@@ -8,8 +9,12 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.connection.InitialHandler;
+import net.md_5.bungee.connection.LoginResult;
+import net.md_5.bungee.protocol.Property;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -33,6 +38,36 @@ public class BungeeCordPlayer implements FormPlayer {
     @Override
     public boolean hasPermission(String permission) {
         return player.hasPermission(permission);
+    }
+
+    @Nullable
+    @Override
+    public String getSkinTextureId() {
+        InitialHandler handler;
+        try {
+            handler = (InitialHandler) player.getPendingConnection();
+        } catch (ClassCastException e) {
+            Logger.get().warn("Incompatible BungeeCord fork, unable to get skin texture");
+            if (Logger.get().isDebug()) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        LoginResult loginResult = handler.getLoginProfile();
+        if (loginResult == null) {
+            return null;
+        }
+
+        for (Property property : loginResult.getProperties()) {
+            if (property.getName().equals("textures")) {
+                String value = property.getValue();
+                if (!value.isEmpty()) {
+                    return value;
+                }
+            }
+        }
+        return null;
     }
 
     @Override

@@ -1,10 +1,15 @@
 package dev.kejona.crossplatforms.spigot.common.handler;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.spigot.common.ClassNames;
 import dev.kejona.crossplatforms.spigot.common.SpigotBase;
+import dev.kejona.crossplatforms.utils.ReflectionUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +45,24 @@ public class SpigotPlayer implements FormPlayer {
             Thread.dumpStack();
         }
         return handle.hasPermission(permission);
+    }
+
+    @Nullable
+    @Override
+    public String getSkinTextureId() {
+        GameProfile profile = ReflectionUtils.castedInvoke(handle, ClassNames.GET_PROFILE_METHOD);
+        Objects.requireNonNull(profile, "game profile");
+
+        // Need to be careful here - getProperties() returns an authlib PropertyMap, which extends
+        // MultiMap from Guava. On spigot-legacy, Guava is shaded and relocated.
+        for (Property textures : profile.getProperties().get("textures")) {
+            String value = textures.getValue();
+            if (!value.isEmpty()) {
+                return value;
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public interface FormPlayer {
@@ -25,6 +26,9 @@ public interface FormPlayer {
      * @return True if the player has the permission
      */
     boolean hasPermission(String permission);
+
+    @Nullable
+    String getSkinTextureId();
 
     /**
      * Sends a player the message without any processing or plugin prefix appended.
