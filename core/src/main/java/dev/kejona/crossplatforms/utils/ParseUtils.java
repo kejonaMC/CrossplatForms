@@ -27,6 +27,18 @@ public class ParseUtils {
         }
     }
 
+    public static int getInt(@Nullable String value, int fallback) {
+        if (value == null) {
+            return fallback;
+        }
+
+        try {
+            return Integer.parseInt(prune(value));
+        } catch (NumberFormatException e) {
+            return fallback;
+        }
+    }
+
     public static int getUnsignedInt(@Nullable String value, String identifier) throws IllegalValueException {
         if (value == null) {
             throw new IllegalValueException(null, "non-negative integer", identifier);
