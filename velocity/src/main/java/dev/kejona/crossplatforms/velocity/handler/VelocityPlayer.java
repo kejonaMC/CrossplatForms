@@ -38,7 +38,7 @@ public class VelocityPlayer implements FormPlayer {
 
     @Nullable
     @Override
-    public String getSkinTextureId() {
+    public String getEncodedSkinData() {
         for (GameProfile.Property property : player.getGameProfileProperties()) {
             if (property.getName().equals("textures")) {
                 String value = property.getValue();

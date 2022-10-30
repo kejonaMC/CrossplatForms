@@ -42,7 +42,7 @@ public class BungeeCordPlayer implements FormPlayer {
 
     @Nullable
     @Override
-    public String getSkinTextureId() {
+    public String getEncodedSkinData() {
         InitialHandler handler;
         try {
             handler = (InitialHandler) player.getPendingConnection();

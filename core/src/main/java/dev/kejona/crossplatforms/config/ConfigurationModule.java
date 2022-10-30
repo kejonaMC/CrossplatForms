@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.util.Providers;
+import dev.kejona.crossplatforms.SkinCache;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
@@ -26,5 +27,6 @@ public class ConfigurationModule extends AbstractModule {
         bind(BedrockHandler.class).toProvider(Providers.of(bedrockHandler));
         bind(ServerHandler.class).toInstance(serverHandler);
         bind(Placeholders.class).toInstance(placeholders);
+        bind(SkinCache.class).asEagerSingleton();
     }
 }

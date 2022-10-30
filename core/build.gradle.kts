@@ -23,7 +23,10 @@ dependencies {
     testImplementation("org.geysermc.cumulus:cumulus:1.1.1-SNAPSHOT") // needed for testing button components
     testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
 
-    compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT")
+    compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT") {
+        exclude(group = "com.google.code.gson", module = "gson")
+    }
+
     api("cloud.commandframework:cloud-core:1.7.1")
     api("cloud.commandframework:cloud-minecraft-extras:1.7.1")
     api("net.kyori:adventure-api:4.11.0")
@@ -31,6 +34,7 @@ dependencies {
     api("net.kyori:adventure-text-serializer-gson:4.11.0")
     api("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
     api("org.spongepowered:configurate-extra-guice:4.2.0-SNAPSHOT")
+    api("com.google.code.gson:gson:2.3.1") // version provided by spigot 1.8.8
     api("com.google.inject:guice:5.1.0")
     api("org.bstats:bstats-base:3.0.0")
 

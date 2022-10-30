@@ -27,7 +27,7 @@ public class FakePlayer implements FormPlayer {
 
     @Nullable
     @Override
-    public String getSkinTextureId() {
+    public String getEncodedSkinData() {
         return null;
     }
 

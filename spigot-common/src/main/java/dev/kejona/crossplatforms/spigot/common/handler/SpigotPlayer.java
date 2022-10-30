@@ -49,7 +49,7 @@ public class SpigotPlayer implements FormPlayer {
 
     @Nullable
     @Override
-    public String getSkinTextureId() {
+    public String getEncodedSkinData() {
         GameProfile profile = ReflectionUtils.castedInvoke(handle, ClassNames.GET_PROFILE_METHOD);
         Objects.requireNonNull(profile, "game profile");
 

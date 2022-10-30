@@ -1,6 +1,7 @@
 package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
+import dev.kejona.crossplatforms.SkinCache;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
@@ -9,20 +10,21 @@ import dev.kejona.crossplatforms.resolver.Resolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 @ConfigSerializable
 public class PlayerFiller extends UniversalFiller {
 
     private static final String TYPE = "player";
-    private static final String AVATAR_ENDPOINT = "https://mc-heads.net/avatar/";
-    private static final String DEFAULT_AVATAR = AVATAR_ENDPOINT + "MHF_Steve";
 
     private final transient ServerHandler serverHandler;
+    private final transient SkinCache skinCache;
 
     @Inject
-    private PlayerFiller(ServerHandler serverHandler) {
+    private PlayerFiller(ServerHandler serverHandler, SkinCache skinCache) {
         this.serverHandler = serverHandler;
+        this.skinCache = skinCache;
     }
 
     @Nonnull
@@ -48,13 +50,9 @@ public class PlayerFiller extends UniversalFiller {
         return TYPE;
     }
 
-    private static String headLink(FormPlayer player) {
-        String textureId = player.getSkinTextureId();
-        if (textureId == null) {
-            return DEFAULT_AVATAR;
-        }
-
-        return AVATAR_ENDPOINT + textureId;
+    @Nullable
+    private String headLink(FormPlayer player) {
+        return skinCache.getAvatarUrl(player);
     }
 
     public static void register(FillerSerializer serializer) {

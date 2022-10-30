@@ -28,7 +28,7 @@ public interface FormPlayer {
     boolean hasPermission(String permission);
 
     @Nullable
-    String getSkinTextureId();
+    String getEncodedSkinData();
 
     /**
      * Sends a player the message without any processing or plugin prefix appended.
