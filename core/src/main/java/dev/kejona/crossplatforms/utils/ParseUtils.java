@@ -4,6 +4,7 @@ import dev.kejona.crossplatforms.IllegalValueException;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
+import java.util.function.BooleanSupplier;
 
 /**
  * Methods designed for parsing values from placeholders.
@@ -73,9 +74,9 @@ public class ParseUtils {
         }
     }
 
-    public static boolean getBoolean(@Nullable String value, boolean def) {
+    public static boolean getBoolean(@Nullable String value, BooleanSupplier def) {
         if (value == null) {
-            return def;
+            return def.getAsBoolean();
         }
 
         switch (prune(value)) {
@@ -88,7 +89,7 @@ public class ParseUtils {
             case "off":
                 return false;
             default:
-                return def;
+                return def.getAsBoolean();
         }
     }
 

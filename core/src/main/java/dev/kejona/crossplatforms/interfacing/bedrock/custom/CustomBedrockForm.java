@@ -70,7 +70,7 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
             }
         } catch (IllegalValueException e) {
             player.warn("There was an error sending a form to you.");
-            logger.severe("Failed to send form " + identifier + " to " + player.getName() + " because the " + e.identifier() + " of component " + components.size() + " was '" + e.value() + "' and could not be converted to a " + e.expectedType());
+            logger.severe("Failed to send form " + identifier + " to " + player.getName() + " because the " + e.identifier() + " of component " + (components.size() - 1) + " was '" + e.value() + "' and could not be converted to a " + e.expectedType());
             return;
         }
 

@@ -41,11 +41,6 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         this.text = Objects.requireNonNull(text);
     }
 
-    @Override
-    public boolean show() { // access widener
-        return super.show();
-    }
-
     public abstract CustomComponent copy();
 
     public abstract CustomComponent preparedCopy(Resolver resolver);
