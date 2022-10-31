@@ -50,21 +50,20 @@ public class JavaMenu extends Interface {
      * @param rightClick True if it was a right click, false if a left click.
      * @param player the Player who clicked on the button.
      */
-    public void process(int slot, boolean rightClick, @Nonnull FormPlayer player) {
+    public void process(int slot, boolean rightClick, @Nonnull FormPlayer player, Resolver resolver) {
         if (isButton(slot)) {
             ItemButton button = buttons.get(slot);
 
-            affectPlayer(player, button.getAnyClick());
+            affectPlayer(player, button.getAnyClick(), resolver);
             if (rightClick) {
-                affectPlayer(player, button.getRightClick());
+                affectPlayer(player, button.getRightClick(), resolver);
             } else {
-                affectPlayer(player, button.getLeftClick());
+                affectPlayer(player, button.getLeftClick(), resolver);
             }
         }
     }
 
-    private void affectPlayer(FormPlayer player, Iterable<Action<? super JavaMenu>> actions) {
-        Resolver resolver = placeholders.resolver(player);
+    private void affectPlayer(FormPlayer player, Iterable<Action<? super JavaMenu>> actions, Resolver resolver) {
         actions.forEach(a -> a.affectPlayer(player, resolver, this));
     }
 }

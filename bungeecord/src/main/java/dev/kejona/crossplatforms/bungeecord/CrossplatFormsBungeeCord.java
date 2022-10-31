@@ -74,7 +74,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
             return;
         }
 
-        logger.warn("CrossplatForms-BungeeCord does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
+        logger.warn("CrossplatForms-BungeeCord does not yet support placeholder plugins, only %player_name% and %player_uuid% and internal placeholders will work.");
         Placeholders placeholders = new BasicPlaceholders();
 
         protocolizePresent = getProxy().getPluginManager().getPlugin("Protocolize") != null;

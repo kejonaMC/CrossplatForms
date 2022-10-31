@@ -127,13 +127,11 @@ public class SimpleButton extends OptionalElement {
         form.optionalButton(display, image, show);
     }
 
-    public void click(FormPlayer player, SimpleBedrockForm form, Placeholders placeholders) {
-        Resolver resolver;
-        if (raw == null) {
-            resolver = placeholders.resolver(player);
-        } else {
-            resolver = placeholders.resolver(player, additionalPlaceholders());
+    public void click(FormPlayer player, SimpleBedrockForm form, Resolver resolver) {
+        if (raw != null) {
+            resolver = new MapResolver(additionalPlaceholders()).then(resolver);
         }
+
         Action.affectPlayer(player, actions, resolver, form);
     }
 }

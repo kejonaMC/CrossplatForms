@@ -26,7 +26,10 @@ import java.util.Objects;
 
 public class SpigotInterfacer extends Interfacer implements Listener {
 
+    // Menus that are open
     private final Map<Inventory, JavaMenu> menuCache = new HashMap<>();
+    // The active resolver for a menu that is open
+    private final Map<Inventory, Resolver> resolverCache = new HashMap<>();
 
     @Override
     public void sendMenu(FormPlayer formPlayer, JavaMenu menu, @Nonnull Resolver resolver) {
@@ -73,6 +76,7 @@ public class SpigotInterfacer extends Interfacer implements Listener {
 
         player.openInventory(selectorGUI);
         menuCache.put(selectorGUI, menu);
+        resolverCache.put(selectorGUI, resolver);
     }
 
     @EventHandler
@@ -90,7 +94,12 @@ public class SpigotInterfacer extends Interfacer implements Listener {
                 if (menuCache.containsKey(inventory)) {
                     // handle clicking in the menu inventory
                     event.setCancelled(true);
-                    menuCache.get(inventory).process(event.getSlot(), event.isRightClick(), new SpigotPlayer((Player) event.getWhoClicked()));
+                    menuCache.get(inventory).process(
+                        event.getSlot(),
+                        event.isRightClick(),
+                        new SpigotPlayer((Player) event.getWhoClicked()),
+                        resolverCache.get(inventory)
+                    );
                 } else if (event.isShiftClick()) {
                     // stop players from shift-clicking items into the menu's inventory.
                     if (menuCache.containsKey(event.getInventory())) { // the upper inventory
@@ -103,6 +112,8 @@ public class SpigotInterfacer extends Interfacer implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        menuCache.remove(event.getInventory());
+        Inventory inventory = event.getInventory();
+        menuCache.remove(inventory);
+        resolverCache.remove(inventory);
     }
 }
