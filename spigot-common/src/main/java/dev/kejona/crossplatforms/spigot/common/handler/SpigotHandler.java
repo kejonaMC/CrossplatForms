@@ -125,7 +125,6 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
 
     @Override
     public void dispatchCommand(DispatchableCommand command) {
-        Logger.get().debug("Executing [" + command + "] as console");
         server.dispatchCommand(console, command.getCommand());
     }
 
@@ -154,16 +153,22 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
                 // only temporarily op the player if the command requires op and the player is not opped
                 player.setOp(true);
                 try {
-                    server.dispatchCommand(player, command.getCommand());
+                    chatCommand(player, command.getCommand());
                 } finally {
                     player.setOp(false); // ensure player is deopped even if the command dispatch throws an exception
                 }
             } else {
-                server.dispatchCommand(player, command.getCommand());
+                chatCommand(player, command.getCommand());
             }
         } else {
             server.dispatchCommand(console, command.getCommand());
         }
+    }
+
+    private void chatCommand(Player player, String command) {
+        // https://github.com/kejonaMC/CrossplatForms/issues/129
+        // Using chat makes it so that "commands" that are not registered can still be run.
+        player.chat('/' + command);
     }
 
     @EventHandler(priority = EventPriority.LOWEST) // Same as DeluxeMenus
