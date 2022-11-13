@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
@@ -46,7 +47,7 @@ public class Slider extends CustomComponent {
             text,
             ParseUtils.getFloat(min, "min"),
             ParseUtils.getFloat(max, "max"),
-            ParseUtils.getUnsignedInt(step, "step"),
+            ParseUtils.getPositiveFloat(step, "step"),
             ParseUtils.getFloat(defaultValue, "default-value")
         );
     }
@@ -65,6 +66,12 @@ public class Slider extends CustomComponent {
         Slider copy = copy();
         copy.prepare(resolver);
         return copy;
+    }
+
+    @Nonnull
+    @Override
+    public String parse(FormPlayer player, String result) {
+        return super.parse(player, ParseUtils.downSize(result));
     }
 
     @Nonnull

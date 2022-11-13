@@ -41,14 +41,15 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         this.text = Objects.requireNonNull(text);
     }
 
+    public void parser(Parser parser) {
+        parsers.add(parser);
+    }
+
     public abstract CustomComponent copy();
 
     public abstract CustomComponent preparedCopy(Resolver resolver);
 
     public abstract Component cumulusComponent() throws IllegalValueException;
-
-    @Nonnull
-    public abstract String resultIfHidden();
 
     /**
      * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
@@ -83,9 +84,8 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         return value;
     }
 
-    public void parser(Parser parser) {
-        parsers.add(parser);
-    }
+    @Nonnull
+    public abstract String resultIfHidden();
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,7 @@
 package dev.kejona.crossplatforms.resolver;
 
+import dev.kejona.crossplatforms.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,9 @@ public class MapResolver implements Resolver {
         String result = s;
         for (String key : map.keySet()) {
             result = result.replace(key, map.get(key));
+        }
+        if (Logger.get().isDebug()) {
+            Logger.get().info("Result of map resolver: " + result);
         }
         return result;
     }
