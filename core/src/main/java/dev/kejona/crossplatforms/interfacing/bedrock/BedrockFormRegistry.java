@@ -2,32 +2,35 @@ package dev.kejona.crossplatforms.interfacing.bedrock;
 
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.config.ConfigManager;
-import dev.kejona.crossplatforms.handler.ServerHandler;
-import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.permission.Permission;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.reloadable.Reloadable;
 import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-@Getter
 public class BedrockFormRegistry implements Reloadable {
+
+    private final ConfigManager configManager;
+    private final Permissions permissions;
+
+    @Getter
+    private final Map<String, BedrockForm> forms = new HashMap<>();
 
     /**
      * If bedrock forms are enabled. may be false if disabled in the config or if all forms failed to load.
      */
+    @Getter
     private boolean enabled = false;
-    private final Map<String, BedrockForm> forms = new HashMap<>();
 
-    private final ConfigManager configManager;
-    private final ServerHandler serverHandler;
-
-    public BedrockFormRegistry(ConfigManager configManager, ServerHandler serverHandler) {
+    public BedrockFormRegistry(ConfigManager configManager, Permissions permissions) {
         this.configManager = configManager;
-        this.serverHandler = serverHandler;
+        this.permissions = permissions;
         ReloadableRegistry.register(this);
         load();
     }
@@ -44,30 +47,22 @@ public class BedrockFormRegistry implements Reloadable {
         FormConfig config = configManager.getConfig(FormConfig.class).get();
         enabled = config.isEnable();
         if (enabled) {
+            Set<Permission> permissions = new HashSet<>();
+
             for (String identifier : config.getForms().keySet()) {
                 BedrockForm form = config.getForms().get(identifier);
                 forms.put(identifier, form);
 
                 form.generatePermissions(config);
-                for (Permission entry : form.getPermissions().values()) {
-                    serverHandler.registerPermission(entry);
-                }
+                permissions.addAll(form.getPermissions().values());
             }
+
+            this.permissions.registerPermissions(permissions);
         }
     }
 
     @Override
     public boolean reload() {
-
-        // Unregister permissions
-        if (enabled) {
-            for (Interface form : forms.values()) {
-                for (Permission permission : form.getPermissions().values()) {
-                    serverHandler.unregisterPermission(permission.key());
-                }
-            }
-        }
-
         load();
         return true;
     }

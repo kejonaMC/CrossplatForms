@@ -69,16 +69,6 @@ public class TestModule extends AbstractModule {
             }
 
             @Override
-            public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
-
-            }
-
-            @Override
-            public void unregisterPermission(String key) {
-
-            }
-
-            @Override
             public void dispatchCommand(DispatchableCommand command) {
 
             }

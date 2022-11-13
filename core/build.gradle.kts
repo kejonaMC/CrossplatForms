@@ -27,6 +27,10 @@ dependencies {
         exclude(group = "com.google.code.gson", module = "gson")
     }
 
+    compileOnly("net.luckperms:api:5.4") {
+        isTransitive = false
+    }
+
     api("cloud.commandframework:cloud-core:1.7.1")
     api("cloud.commandframework:cloud-minecraft-extras:1.7.1")
     api("net.kyori:adventure-api:4.11.0")

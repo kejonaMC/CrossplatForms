@@ -18,9 +18,9 @@ import dev.kejona.crossplatforms.handler.BasicPlaceholders;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.proxy.CloseMenuAction;
-import dev.kejona.crossplatforms.proxy.LuckPermsHook;
-import dev.kejona.crossplatforms.proxy.PermissionHook;
+import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.proxy.ProtocolizeInterfacer;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
@@ -54,11 +54,8 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         metrics = new Metrics(this, BSTATS_ID);
         audiences = BungeeAudiences.create(this);
 
-        BungeeCordHandler serverHandler = new BungeeCordHandler(
-            this,
-            audiences,
-            pluginPresent("LuckPerms") ? new LuckPermsHook() : PermissionHook.empty()
-        );
+        BungeeCordHandler serverHandler = new BungeeCordHandler(this, audiences);
+        Permissions permissions = pluginPresent("LuckPerms") ? new LuckPermsHook() : Permissions.empty();
 
         BungeeCommandManager<CommandOrigin> commandManager;
         try {
@@ -83,6 +80,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
                 logger,
                 getDataFolder().toPath(),
                 serverHandler,
+                permissions,
                 "formsb",
                 commandManager,
                 placeholders,

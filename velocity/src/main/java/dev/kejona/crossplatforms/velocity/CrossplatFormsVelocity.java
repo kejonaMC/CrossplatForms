@@ -24,9 +24,9 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.proxy.CloseMenuAction;
-import dev.kejona.crossplatforms.proxy.LuckPermsHook;
-import dev.kejona.crossplatforms.proxy.PermissionHook;
+import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.proxy.ProtocolizeInterfacer;
 import dev.kejona.crossplatforms.velocity.handler.VelocityCommandOrigin;
 import dev.kejona.crossplatforms.velocity.handler.VelocityHandler;
@@ -75,10 +75,8 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         }
         metrics = metricsFactory.make(this, BSTATS_ID);
 
-        ServerHandler serverHandler = new VelocityHandler(
-            server,
-            pluginPresent("luckperms") ? new LuckPermsHook() : PermissionHook.empty()
-        );
+        ServerHandler serverHandler = new VelocityHandler(server);
+        Permissions permissions = pluginPresent("luckperms") ? new LuckPermsHook() : Permissions.empty();
 
         VelocityCommandManager<CommandOrigin> commandManager;
         try {
@@ -104,6 +102,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
                 logger,
                 dataFolder,
                 serverHandler,
+                permissions,
                 "formsv",
                 commandManager,
                 placeholders,

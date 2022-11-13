@@ -1,17 +1,17 @@
-package dev.kejona.crossplatforms.proxy;
+package dev.kejona.crossplatforms.permission;
 
 import dev.kejona.crossplatforms.Logger;
-import dev.kejona.crossplatforms.permission.PermissionDefault;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.group.GroupManager;
 import net.luckperms.api.node.types.PermissionNode;
 import net.luckperms.api.node.types.WeightNode;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
-public class LuckPermsHook implements PermissionHook {
+public class LuckPermsHook implements Permissions {
 
     private static final String DEFAULT_NAME = "default";
     private static final WeightNode DEFAULT_WEIGHT = WeightNode.builder(0).build();
@@ -20,16 +20,10 @@ public class LuckPermsHook implements PermissionHook {
     private final Logger logger = Logger.get();
 
     @Override
-    public void registerPermission(String key, @Nullable String description, PermissionDefault def) {
+    public void registerPermissions(Collection<Permission> permissions) {
         groupManager.loadGroup(DEFAULT_NAME).thenAcceptAsync(defaultGroup -> {
             Group group = defaultGroup.orElse(null);
             if (group == null) {
-                if (def == PermissionDefault.OP) {
-                    // We clear any permissions with a default of OP.
-                    // If the group doesn't exist, there is nothing to clear.
-                    return;
-                }
-
                 try {
                     group = groupManager.createAndLoadGroup(DEFAULT_NAME).get();
                     group.data().add(DEFAULT_WEIGHT);
@@ -41,19 +35,26 @@ public class LuckPermsHook implements PermissionHook {
                 }
             }
 
-            clearPermission(group, key);
-            if (def != PermissionDefault.OP) {
-                // we simply clear for OP. TRUE and FALSE should have any existing permissions with the same key
-                // cleared and then re-added with the correct values
-                setPermission(group, key, def.asBoolean());
+            // Clear existing keys
+            clearPermissions(group, permissions.stream().map(Permission::key).collect(Collectors.toSet()));
+
+            logger.debug("Registering permissions to LP:");
+            for (Permission perm : permissions) {
+                String key = perm.key();
+                PermissionDefault def = perm.defaultPermission();
+
+                logger.debug("\t" + key + " : " + def);
+                if (def != PermissionDefault.OP) {
+                    setPermission(group, perm.key(), def.asBoolean());
+                }
             }
 
             groupManager.saveGroup(group);
         });
     }
 
-    private void clearPermission(Group group, String key) {
-        group.data().clear(node -> node.getKey().equals(key));
+    private void clearPermissions(Group group, Collection<String> keys) {
+        group.data().clear(node -> keys.contains(node.getKey()));
     }
 
     private void setPermission(Group group, String key, boolean value) {

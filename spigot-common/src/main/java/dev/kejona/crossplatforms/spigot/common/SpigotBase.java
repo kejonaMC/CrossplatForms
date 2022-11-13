@@ -18,11 +18,13 @@ import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BasicPlaceholders;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.permission.LuckPermsHook;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.common.handler.PlaceholderAPIHandler;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotCommandOrigin;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotHandler;
+import dev.kejona.crossplatforms.spigot.common.handler.SpigotPermissions;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -63,7 +65,9 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         metrics = new Metrics(this, METRICS_ID);
         server = getServer();
         audiences = BukkitAudiences.create(this);
-        ServerHandler serverHandler = new SpigotHandler(this, audiences);
+
+        SpigotHandler serverHandler = new SpigotHandler(this, audiences);
+        Permissions permissions = pluginEnabled("LuckPerms") ? new LuckPermsHook() : new SpigotPermissions(this);
 
         convertGeyserHubConfig();
 
@@ -106,6 +110,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             logger,
             getDataFolder().toPath(),
             serverHandler,
+            permissions,
             "forms",
             commandManager,
             placeholders,
@@ -116,12 +121,14 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             return;
         }
 
-        SpigotAccessItemsBase accessItems = accessItems(crossplatForms);
+        SpigotAccessItemsBase accessItems = createAccessItems(crossplatForms);
         server.getPluginManager().registerEvents(accessItems, this);
 
         // Commands added by access items
         new GiveCommand(crossplatForms, accessItems).register(commandManager, crossplatForms.getCommandBuilder());
         new InspectItemCommand(crossplatForms, accessItems).register(commandManager, crossplatForms.getCommandBuilder());
+
+        permissions.notifyPluginLoaded();
     }
 
     @Override
@@ -154,6 +161,10 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         metrics.addCustomChart(chart);
     }
 
+    public boolean pluginEnabled(String id) {
+        return server.getPluginManager().isPluginEnabled(id);
+    }
+
     private void convertGeyserHubConfig() {
         File selector = new File(getDataFolder(), "selector.yml");
         if (selector.exists()) {
@@ -172,7 +183,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
     
     public abstract boolean attemptBrigadier();
     
-    public abstract SpigotAccessItemsBase accessItems(CrossplatForms crossplatForms);
+    public abstract SpigotAccessItemsBase createAccessItems(CrossplatForms crossplatForms);
 
     public static SpigotBase getInstance() {
         return INSTANCE;

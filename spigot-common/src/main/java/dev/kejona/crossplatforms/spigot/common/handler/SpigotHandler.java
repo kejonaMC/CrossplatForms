@@ -1,7 +1,6 @@
 package dev.kejona.crossplatforms.spigot.common.handler;
 
 import dev.kejona.crossplatforms.CrossplatForms;
-import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.CommandType;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
@@ -12,6 +11,7 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -20,12 +20,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -95,32 +92,6 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
     @Override
     public boolean isFloodgateEnabled() {
         return server.getPluginManager().isPluginEnabled("floodgate");
-    }
-
-    @Override
-    public void registerPermission(String key, @Nullable String description, dev.kejona.crossplatforms.permission.PermissionDefault def) {
-        ensurePrimaryThread();
-        PermissionDefault perm;
-        switch (def) {
-            case TRUE:
-                perm = PermissionDefault.TRUE;
-                break;
-            case OP:
-                perm = PermissionDefault.OP;
-                break;
-            default:
-                perm = PermissionDefault.FALSE;
-                break;
-        }
-
-        Logger.get().debug("Registering permission " + key + " : " + perm);
-        server.getPluginManager().addPermission(new Permission(key, description, perm));
-    }
-
-    @Override
-    public void unregisterPermission(String key) {
-        ensurePrimaryThread();
-        server.getPluginManager().removePermission(new Permission(key));
     }
 
     @Override
@@ -198,8 +169,8 @@ public class SpigotHandler extends InterceptCommandCache implements ServerHandle
         server.getScheduler().runTask(plugin, runnable);
     }
 
-    private void ensurePrimaryThread() {
-        if (!server.isPrimaryThread()) {
+    public static void ensurePrimaryThread() {
+        if (!Bukkit.isPrimaryThread()) {
             throw new IllegalStateException("Method not called from primary thread, instead: " + Thread.currentThread());
         }
     }

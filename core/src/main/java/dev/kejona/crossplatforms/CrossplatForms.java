@@ -29,6 +29,7 @@ import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -48,6 +49,7 @@ public class CrossplatForms {
 
     private final ConfigManager configManager;
     private final ServerHandler serverHandler;
+    private final Permissions permissions;
     private final BedrockHandler bedrockHandler;
 
     private final boolean bedrockSupport;
@@ -65,6 +67,7 @@ public class CrossplatForms {
     public CrossplatForms(Logger logger,
                           Path dataFolder,
                           ServerHandler serverHandler,
+                          Permissions permissions,
                           String defaultCommand,
                           CommandManager<CommandOrigin> commandManager,
                           Placeholders placeholders,
@@ -75,6 +78,7 @@ public class CrossplatForms {
         }
         INSTANCE = this;
         this.serverHandler = serverHandler;
+        this.permissions = permissions;
         this.commandManager = commandManager;
         this.placeholders = placeholders;
         ReloadableRegistry.clear();
@@ -137,8 +141,8 @@ public class CrossplatForms {
         // Load forms and menus from the configs into registries
         long registryTime = System.currentTimeMillis();
         interfacer.load(
-            new BedrockFormRegistry(configManager, serverHandler),
-            new JavaMenuRegistry(configManager, serverHandler)
+            new BedrockFormRegistry(configManager, permissions),
+            new JavaMenuRegistry(configManager, permissions)
         );
         logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 

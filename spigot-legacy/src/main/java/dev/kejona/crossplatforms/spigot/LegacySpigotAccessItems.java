@@ -4,10 +4,9 @@ import dev.kejona.crossplatforms.accessitem.AccessItem;
 import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.common.SpigotAccessItemsBase;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,11 +21,11 @@ public class LegacySpigotAccessItems extends SpigotAccessItemsBase {
 
     public LegacySpigotAccessItems(JavaPlugin plugin,
                                    ConfigManager configManager,
-                                   ServerHandler serverHandler,
+                                   Permissions permissions,
                                    Interfacer interfacer,
                                    BedrockHandler bedrockHandler,
                                    Placeholders placeholders) {
-        super(plugin, configManager, serverHandler, interfacer, bedrockHandler, placeholders);
+        super(plugin, configManager, permissions, interfacer, bedrockHandler, placeholders);
     }
 
     @Override

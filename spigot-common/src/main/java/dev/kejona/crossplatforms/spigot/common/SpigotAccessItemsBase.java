@@ -7,8 +7,8 @@ import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotPlayer;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
@@ -53,11 +53,11 @@ public abstract class SpigotAccessItemsBase extends AccessItemRegistry implement
 
     public SpigotAccessItemsBase(JavaPlugin plugin,
                                  ConfigManager configManager,
-                                 ServerHandler serverHandler,
+                                 Permissions permissions,
                                  Interfacer interfacer,
                                  BedrockHandler bedrockHandler,
                                  Placeholders placeholders) {
-        super(configManager, serverHandler);
+        super(configManager, permissions);
         this.interfacer = interfacer;
         this.bedrockHandler = bedrockHandler;
         this.placeholders = placeholders;

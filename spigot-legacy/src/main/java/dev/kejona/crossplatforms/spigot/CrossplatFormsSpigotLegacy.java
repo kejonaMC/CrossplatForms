@@ -19,11 +19,11 @@ public class CrossplatFormsSpigotLegacy extends SpigotBase {
     }
 
     @Override
-    public SpigotAccessItemsBase accessItems(CrossplatForms crossplatForms) {
+    public SpigotAccessItemsBase createAccessItems(CrossplatForms crossplatForms) {
         return new LegacySpigotAccessItems(
             this,
             crossplatForms.getConfigManager(),
-            crossplatForms.getServerHandler(),
+            crossplatForms.getPermissions(),
             crossplatForms.getInterfacer(),
             crossplatForms.getBedrockHandler(),
             crossplatForms.getPlaceholders()

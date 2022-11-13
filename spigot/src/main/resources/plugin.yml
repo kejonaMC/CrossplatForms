@@ -11,6 +11,7 @@ softdepend:
   - Geyser-Spigot
   - floodgate
   - PlaceholderAPI
+  - LuckPerms
 
 # Register our PlayerCommandPreprocessEvent listener before DM so that ours is called first (Since DM uses EventPriority.LOWEST)
 loadbefore:

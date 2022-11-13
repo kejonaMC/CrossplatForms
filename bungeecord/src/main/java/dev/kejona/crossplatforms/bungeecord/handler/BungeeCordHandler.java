@@ -6,11 +6,10 @@ import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.CommandType;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.custom.InterceptCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommandCache;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
-import dev.kejona.crossplatforms.proxy.PermissionHook;
-import dev.kejona.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.CommandSender;
@@ -29,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Listener {
+public class BungeeCordHandler extends InterceptCommandCache implements ServerHandler, Listener {
 
     private static final String OP_GROUP = "op";
 
@@ -38,8 +37,7 @@ public class BungeeCordHandler extends ProxyHandler implements ServerHandler, Li
     private final BungeeAudiences audiences;
     private final CommandSender console;
 
-    public BungeeCordHandler(Plugin plugin, BungeeAudiences audiences, PermissionHook permissionHook) {
-        super(permissionHook);
+    public BungeeCordHandler(Plugin plugin, BungeeAudiences audiences) {
         this.server = plugin.getProxy();
         this.pluginManager = server.getPluginManager();
         this.audiences = audiences;
