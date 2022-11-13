@@ -36,8 +36,6 @@ public abstract class Interface {
     protected transient Interfacer interfacer;
     @Inject
     protected transient ServerHandler serverHandler;
-    @Inject
-    protected transient Placeholders placeholders;
 
     @Getter
     // Stuff that is generated after deserialization, once the identifier has been loaded

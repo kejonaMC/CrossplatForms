@@ -65,7 +65,7 @@ public class SimpleBedrockForm extends BedrockForm {
 
         // actions for correct response
         form.validResultHandler(response -> executeHandler(
-            () -> buttons.get(response.clickedButtonId()).click(player, this, placeholders)
+            () -> buttons.get(response.clickedButtonId()).click(player, this, resolver)
         ));
 
         // Send the form to the floodgate player

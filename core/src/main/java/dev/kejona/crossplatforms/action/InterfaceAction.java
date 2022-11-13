@@ -63,6 +63,9 @@ public class InterfaceAction implements GenericAction {
         }
 
         try {
+            // The resolver given to this action is not passed to the form being opened.
+            // If this action is triggered by a form that has arguments, and the user wants those arguments to be passed
+            // to the form that this is opening, they must be passed explicitly as arguments (not through the resolver)
             ui.send(player, placeholders.resolver(player), arguments);
         } catch (ArgumentException e) {
             player.warn("A configuration error resulted in you not opening a form or menu.");

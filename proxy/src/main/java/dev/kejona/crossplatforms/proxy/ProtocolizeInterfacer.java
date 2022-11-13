@@ -81,11 +81,11 @@ public class ProtocolizeInterfacer extends Interfacer {
                 switch (clickType) {
                     case RIGHT_CLICK:
                     case SHIFT_RIGHT_CLICK:
-                        source.process(click.slot(), true, player);
+                        source.process(click.slot(), true, player, resolver);
                         break;
                     case LEFT_CLICK:
                     case SHIFT_LEFT_CLICK:
-                        source.process(click.slot(), false, player);
+                        source.process(click.slot(), false, player, resolver);
                         break;
                 }
             }

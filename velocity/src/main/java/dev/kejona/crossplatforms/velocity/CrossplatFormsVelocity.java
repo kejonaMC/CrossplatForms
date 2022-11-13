@@ -93,7 +93,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
             return;
         }
 
-        logger.warn("CrossplatForms-Velocity does not yet support placeholder plugins, only %player_name% and %player_uuid% will work (typically).");
+        logger.warn("CrossplatForms-Velocity does not yet support placeholder plugins, only %player_name% and %player_uuid% and internal placeholders will work.");
         Placeholders placeholders = new BasicPlaceholders();
 
         protocolizePresent = server.getPluginManager().isLoaded("protocolize");
