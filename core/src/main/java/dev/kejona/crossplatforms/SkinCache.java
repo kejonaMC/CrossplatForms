@@ -8,10 +8,10 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +29,7 @@ public class SkinCache {
     private static final Logger LOGGER = Logger.get();
 
     private final Cache<UUID, String> avatars = CacheBuilder.newBuilder()
-        .expireAfterWrite(Duration.ofMinutes(1))
+        .expireAfterWrite(5, TimeUnit.MINUTES)
         .build();
 
     @Nullable
