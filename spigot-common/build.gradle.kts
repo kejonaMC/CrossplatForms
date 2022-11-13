@@ -2,7 +2,7 @@
 dependencies {
     testImplementation(testFixtures(projects.core))
 
-    // 1.8.8 is supported but we target 1.9.4 to use PlayerSwapItemEvent if necessary
+    // 1.8.8 is supported but we target 1.9.4 to use PlayerSwapItemEvent if on 1.9.4 or above
     compileOnly("org.spigotmc:spigot-api:1.9.4-R0.1-SNAPSHOT")
     compileOnly("com.mojang:authlib:1.5.21")
     compileOnly("me.clip:placeholderapi:2.11.1")

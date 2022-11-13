@@ -30,6 +30,7 @@ import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.CustomChart;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -153,7 +154,8 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         if (audiences != null) {
             audiences.close();
         }
-        server.getMessenger().unregisterOutgoingPluginChannel(this);
+        // note: server var might be null here in case plugin is disabled early
+        Bukkit.getMessenger().unregisterOutgoingPluginChannel(this);
     }
 
     @Override

@@ -9,6 +9,15 @@ public class CrossplatFormsSpigot extends SpigotBase {
 
     @Override
     public void onEnable() {
+        try {
+            // Only available on 1.14 and above, which CrossplatForms-Spigot targets. SpigotLegacy is for less than 1.13
+            Class.forName("org.bukkit.persistence.PersistentDataContainer");
+        } catch (ClassNotFoundException e) {
+            getLogger().severe("CrossplatForms-SpigotLegacy must be used for 1.13 and below.");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+
         super.onEnable();
         addCustomChart(new SimplePie(PIE_CHART_LEGACY, () -> "false")); // not legacy
     }
