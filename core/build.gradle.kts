@@ -35,7 +35,7 @@ dependencies {
     api("cloud.commandframework:cloud-minecraft-extras:1.7.1")
     api("net.kyori:adventure-api:4.11.0")
     api("net.kyori:adventure-text-serializer-legacy:4.11.0")
-    api("net.kyori:adventure-text-serializer-gson:4.11.0") {
+    api("net.kyori:adventure-text-serializer-gson:4.12.0") {
         // This is required or else it overrides the version we explicitly define below
         exclude(group = "com.google.code.gson", module = "gson")
     }
