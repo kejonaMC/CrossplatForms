@@ -1,7 +1,7 @@
 
 plugins {
     id("net.kyori.indra")
-    id("java-test-fixtures")
+    id("java-test-fixtures") // used for the testFixtures source set, which is available for other test sources
 }
 
 sourceSets {
