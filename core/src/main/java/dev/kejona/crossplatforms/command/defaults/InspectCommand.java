@@ -36,7 +36,7 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("form")
-                .argument(StringArgument.<CommandOrigin>newBuilder("form")
+                .argument(StringArgument.<CommandOrigin>builder("form")
                         .withSuggestionsProvider(((context, s) -> bedrockRegistry.getForms().values()
                                 .stream()
                                 .map(Interface::getIdentifier)
@@ -56,7 +56,7 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("menu")
-                .argument(StringArgument.<CommandOrigin>newBuilder("menu")
+                .argument(StringArgument.<CommandOrigin>builder("menu")
                         .withSuggestionsProvider(((context, s) -> javaRegistry.getMenus().values()
                                 .stream()
                                 .map(Interface::getIdentifier)

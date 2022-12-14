@@ -43,7 +43,7 @@ public class IdentifyCommand extends FormsCommand {
 
         manager.command(defaultBuilder
                 .literal(NAME)
-                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                .argument(StringArgument.<CommandOrigin>builder("player")
                         .withSuggestionsProvider((context, s) -> serverHandler.getPlayerNames().collect(Collectors.toList()))
                         .build())
                 .permission(PERMISSION_OTHER)

@@ -67,7 +67,7 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(OPEN_NAME)
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
-                .argument(StringArgument.<CommandOrigin>newBuilder(INTERFACE_ARG)
+                .argument(StringArgument.<CommandOrigin>builder(INTERFACE_ARG)
                         .withSuggestionsProvider((context, s) -> openSuggestions(context))
                         .build())
                 .argument(extrasArgument())
@@ -98,12 +98,12 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(SEND_NAME)
                 .permission(PERMISSION_OTHER)
-                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                .argument(StringArgument.<CommandOrigin>builder("player")
                         .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
                                 .map(FormPlayer::getName)
                                 .collect(Collectors.toList()))
                         .build())
-                .argument(StringArgument.<CommandOrigin>newBuilder(INTERFACE_ARG)
+                .argument(StringArgument.<CommandOrigin>builder(INTERFACE_ARG)
                         .withSuggestionsProvider((context, s) -> sendSuggestions(context))
                         .build())
                 .argument(extrasArgument())

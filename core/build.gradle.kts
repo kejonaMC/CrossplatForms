@@ -31,11 +31,11 @@ dependencies {
     compileOnly("net.luckperms:api:5.4") { isTransitive = false }
 
     api("org.bstats:bstats-base:3.0.0")
-    api("cloud.commandframework:cloud-core:1.7.1")
-    api("cloud.commandframework:cloud-minecraft-extras:1.7.1")
-    api("net.kyori:adventure-api:4.11.0")
-    api("net.kyori:adventure-text-serializer-legacy:4.11.0")
-    api("net.kyori:adventure-text-serializer-gson:4.11.0") {
+    api("cloud.commandframework:cloud-core:1.8.0")
+    api("cloud.commandframework:cloud-minecraft-extras:1.8.0")
+    api("net.kyori:adventure-api:4.12.0")
+    api("net.kyori:adventure-text-serializer-legacy:4.12.0")
+    api("net.kyori:adventure-text-serializer-gson:4.12.0") {
         // This is required or else it overrides the version we explicitly define below
         exclude(group = "com.google.code.gson", module = "gson")
     }
@@ -59,14 +59,14 @@ dependencies {
     }
 
     // Required because source and unshaded jars are all mixed up on the opencollab repo currently
-    val baseApi = "2.1.0-20221111.161532-35"
-    val geyserApi = "2.1.0-20221111.161541-35"
-    val geyserCore = "2.1.0-20221111.161551-35"
+    val baseApi = "2.1.0-20221211.182143-60"
+    val geyserApi = "2.1.0-20221211.182145-60"
+    val geyserCore = "2.1.0-20221211.182157-60"
 
     // dependencies for java16 sources (optionally used at runtime)
-    java16Implementation("org.geysermc:api:$baseApi") { isTransitive = false}
-    java16Implementation("org.geysermc.geyser:api:$geyserApi") { isTransitive = false}
-    java16Implementation("org.geysermc.geyser:core:$geyserCore") { isTransitive = false}
+    java16Implementation("org.geysermc:api:$baseApi") { isTransitive = false }
+    java16Implementation("org.geysermc.geyser:api:$geyserApi") { isTransitive = false }
+    java16Implementation("org.geysermc.geyser:core:$geyserCore") { isTransitive = false }
 }
 
 description = "core"
