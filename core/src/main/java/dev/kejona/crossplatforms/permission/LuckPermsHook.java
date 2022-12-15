@@ -21,6 +21,11 @@ public class LuckPermsHook implements Permissions {
 
     @Override
     public void registerPermissions(Collection<Permission> permissions) {
+        if (permissions.stream().map(Permission::defaultPermission).noneMatch(PermissionDefault::asBoolean)) {
+            // None of the permission defaults are TRUE - nothing needs to be done
+            return;
+        }
+
         groupManager.loadGroup(DEFAULT_NAME).thenAcceptAsync(defaultGroup -> {
             Group group = defaultGroup.orElse(null);
             if (group == null) {
@@ -29,7 +34,7 @@ public class LuckPermsHook implements Permissions {
                     group.data().add(DEFAULT_WEIGHT);
                     logger.debug("Created LuckPerms group: " + DEFAULT_NAME);
                 } catch (InterruptedException | ExecutionException e) {
-                    Logger.get().severe("Failed to register create and load group: " + DEFAULT_NAME);
+                    Logger.get().severe("Failed to create and load group: " + DEFAULT_NAME);
                     e.printStackTrace();
                     return;
                 }
@@ -43,8 +48,8 @@ public class LuckPermsHook implements Permissions {
                 String key = perm.key();
                 PermissionDefault def = perm.defaultPermission();
 
-                logger.debug("\t" + key + " : " + def);
-                if (def != PermissionDefault.OP) {
+                if (def == PermissionDefault.TRUE) {
+                    logger.debug("\t" + key + " : " + def);
                     setPermission(group, perm.key(), def.asBoolean());
                 }
             }
