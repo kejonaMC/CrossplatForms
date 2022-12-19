@@ -142,18 +142,6 @@ public class AccessItem {
         PRESERVE(".preserve", "Stop the Access Item from being destroyed when it is dropped. This includes death, regardless of drop permission.", PermissionDefault.FALSE),
         MOVE(".move", "Ability to move the Access Item around and to inventories", PermissionDefault.FALSE);
 
-        /**
-         * Map of {@link PermissionDefault} to fallback to if the user does not define their own.
-         */
-        public static final Map<Limit, PermissionDefault> FALLBACK_DEFAULTS;
-
-        static {
-            FALLBACK_DEFAULTS = new HashMap<>();
-            for (Limit limit : Limit.values()) {
-                FALLBACK_DEFAULTS.put(limit, limit.fallbackDefault);
-            }
-        }
-
         public final String permissionSuffix;
         public final String description;
         public final PermissionDefault fallbackDefault;

@@ -134,19 +134,6 @@ public abstract class Interface {
         USE(".use", "Base permission to use the form or menu", PermissionDefault.TRUE),
         COMMAND(".command", "Open the form or menu through the open command", PermissionDefault.OP);
 
-        /**
-         * Map of {@link PermissionDefault} to fallback to if the user does not define their own.
-         */
-        public static final Map<Interface.Limit, PermissionDefault> FALLBACK_DEFAULTS;
-
-        static {
-            ImmutableMap.Builder<Interface.Limit, PermissionDefault> builder = ImmutableMap.builder();
-            for (Interface.Limit limit : Interface.Limit.values()) {
-                builder.put(limit, limit.fallbackDefault);
-            }
-            FALLBACK_DEFAULTS = builder.build();
-        }
-
         public final String permissionSuffix;
         public final String description;
         public final PermissionDefault fallbackDefault;
