@@ -30,50 +30,18 @@ public class ProtocolizeInterfacer extends Interfacer {
     }
 
     @Override
-    public void sendMenu(FormPlayer player, JavaMenu source, @Nonnull Resolver resolver) {
-        // construct the inventory. todo: validate size
-        // todo: apply placeholders and use args
-        InventoryType inventoryType;
-        int size = source.getSize();
-        if (size == 5) {
-            inventoryType = InventoryType.HOPPER;
-        } else {
-            inventoryType = InventoryType.chestInventoryWithSize(size);
+    public void openInventory(FormPlayer recipient, JavaMenu source, dev.kejona.crossplatforms.item.Inventory container, Resolver resolver) {
+        ProtocolizePlayer player = playerProvider.player(recipient.getUuid());
+        Inventory inventory = container.castedHandle();
+
+        if (!inventory.clickConsumers().isEmpty()) {
+            Logger.get().severe("Cannot send menu '" + source.getIdentifier() + "' to " + recipient.getName() + " because the backing Protocolize inventory has already been shown to a different player.");
+            Thread.dumpStack();
+            return;
         }
-
-        Inventory inventory = new Inventory(inventoryType);
-        inventory.title(source.getTitle());
-
-        Map<Integer, ItemButton> buttons = source.getButtons();
-        for (Map.Entry<Integer, ItemButton> entry : buttons.entrySet()) {
-            Integer slot = entry.getKey();
-            ItemButton button = entry.getValue();
-            // determine the material for this button
-            String material = button.getMaterial();
-            ItemType type;
-            if (material == null) {
-                type = ItemType.STONE;
-            } else {
-                material = material.toUpperCase(Locale.ROOT).trim();
-                try {
-                    type = ItemType.valueOf(material);
-                } catch (IllegalArgumentException e) {
-                    logger.severe("Java Button: " + source.getIdentifier() + "." + slot + " will be stone because '" + material + "' failed to map to a valid Spigot Material.");
-                    type = ItemType.STONE;
-                }
-            }
-
-            // construct itemstack
-            final ItemStack item = new ItemStack(type);
-            item.displayName(button.getDisplayName());
-            button.getLore().forEach(item::addToLore);
-            inventory.item(slot, item); // add itemstack to inventory
-        }
-
-        ProtocolizePlayer protocolizePlayer = playerProvider.player(player.getUuid());
 
         inventory.onClick(click -> {
-            int realSize = inventory.type().getTypicalSize(protocolizePlayer.protocolVersion());
+            int realSize = inventory.type().getTypicalSize(player.protocolVersion());
 
             // Clicks are cancelled by default, so we don't have to do it explicitly.
             ClickType clickType = click.clickType();
@@ -81,16 +49,16 @@ public class ProtocolizeInterfacer extends Interfacer {
                 switch (clickType) {
                     case RIGHT_CLICK:
                     case SHIFT_RIGHT_CLICK:
-                        source.process(click.slot(), true, player, resolver);
+                        source.process(click.slot(), true, recipient, resolver);
                         break;
                     case LEFT_CLICK:
                     case SHIFT_LEFT_CLICK:
-                        source.process(click.slot(), false, player, resolver);
+                        source.process(click.slot(), false, recipient, resolver);
                         break;
                 }
             }
         });
 
-        protocolizePlayer.openInventory(inventory);
+        player.openInventory(inventory);
     }
 }

@@ -11,6 +11,7 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
+import dev.kejona.crossplatforms.item.Inventory;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import net.kyori.adventure.audience.Audience;
@@ -26,9 +27,10 @@ public class TestModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Interfacer.class).toInstance(new Interfacer() {
-            @Override
-            public void sendMenu(FormPlayer player, JavaMenu menu, @Nonnull Resolver resolver) {
 
+            @Override
+            public void openInventory(FormPlayer recipient, JavaMenu menu, Inventory inventory, Resolver resolver) {
+                //no-op
             }
         });
 

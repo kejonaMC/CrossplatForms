@@ -1,9 +1,14 @@
 package dev.kejona.crossplatforms.interfacing.java;
 
+import com.google.inject.Inject;
 import dev.kejona.crossplatforms.Constants;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.item.Inventory;
+import dev.kejona.crossplatforms.item.InventoryFactory;
+import dev.kejona.crossplatforms.item.InventoryLayout;
+import dev.kejona.crossplatforms.item.Item;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.ToString;
@@ -26,9 +31,14 @@ public class JavaMenu extends Interface {
 
     protected final transient String permissionBase = Constants.Id() + ".menu.";
 
+    @Inject
+    protected transient InventoryFactory factory;
+
     private boolean allowBedrock = false;
 
     private int size = 5; // Hopper size by default
+    private InventoryLayout type = InventoryLayout.CHEST;
+
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
 
     /**
@@ -41,7 +51,28 @@ public class JavaMenu extends Interface {
 
     @Override
     public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver) {
-        interfacer.sendMenu(recipient, this, resolver);
+        Inventory inventory;
+        if (type == InventoryLayout.CHEST) {
+            inventory = factory.chest(title, size);
+        } else {
+            inventory = factory.inventory(title, type);
+        }
+
+        for (Integer slot : buttons.keySet()) {
+            ItemButton button = buttons.get(slot);
+
+            String material = button.getMaterial();
+            Item item = factory.item(
+                resolver.apply(button.getDisplayName()),
+                material,
+                resolver.apply(button.getLore()),
+                button.getCustomModelData()
+            );
+
+            inventory.setSlot(slot, item);
+        }
+
+        interfacer.openInventory(recipient, this, inventory, resolver);
     }
 
     /**
