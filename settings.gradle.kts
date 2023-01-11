@@ -39,3 +39,11 @@ dependencyResolutionManagement {
         maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity
     }
 }
+include("spigotcompat:v1_8_R3")
+findProject(":spigotcompat:v1_8_R3")?.name = "v1_8_R3"
+include("spigotcompat:adapter")
+findProject(":spigotcompat:adapter")?.name = "adapter"
+include("spigotcompat:all")
+findProject(":spigotcompat:all")?.name = "all"
+include("spigotcompat:v1_14_R1")
+findProject(":spigotcompat:v1_14_R1")?.name = "v1_14_R1"
