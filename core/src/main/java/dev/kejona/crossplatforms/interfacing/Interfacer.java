@@ -5,6 +5,7 @@ import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.kejona.crossplatforms.item.Inventory;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 
@@ -71,5 +72,5 @@ public abstract class Interfacer {
         return list;
     }
 
-    public abstract void sendMenu(FormPlayer player, JavaMenu menu, Resolver resolver);
+    public abstract void openInventory(FormPlayer recipient, JavaMenu menu, Inventory inventory, Resolver resolver);
 }

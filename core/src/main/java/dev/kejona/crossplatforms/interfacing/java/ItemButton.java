@@ -11,6 +11,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalInt;
 
 @ToString
 @NoArgsConstructor
@@ -36,15 +37,26 @@ public class ItemButton {
     @Nullable
     private transient FormPlayer targetPlayer;
 
-    // todo:
-    //private Integer customModelData;
-    //private ConfigurationNode nbt;
+    private OptionalInt customModelData;
+
+    //private ConfigurationNode nbt; todo: possible support
 
     private List<String> lore = Collections.emptyList();
 
     private List<Action<? super JavaMenu>> anyClick = Collections.emptyList();
     private List<Action<? super JavaMenu>> leftClick = Collections.emptyList();
     private List<Action<? super JavaMenu>> rightClick = Collections.emptyList();
+
+    public String getDisplayName() {
+        if (displayName == null) {
+            return "";
+        }
+        return displayName;
+    }
+
+    public boolean isPlayerHead() {
+        return skullOwner != null;
+    }
 
     public static ItemButton fillEntry(String displayName, FormPlayer skullOwner) {
         ItemButton item = new ItemButton();
@@ -58,16 +70,5 @@ public class ItemButton {
         ItemButton item = new ItemButton();
         item.displayName = displayName;
         return item;
-    }
-
-    public String getDisplayName() {
-        if (displayName == null) {
-            return "";
-        }
-        return displayName;
-    }
-
-    public boolean isPlayerHead() {
-        return skullOwner != null;
     }
 }

@@ -1,25 +1,18 @@
 package dev.kejona.crossplatforms.spigot.common;
 
-import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
-import dev.kejona.crossplatforms.interfacing.java.ItemButton;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -32,51 +25,13 @@ public class SpigotInterfacer extends Interfacer implements Listener {
     private final Map<Inventory, Resolver> resolverCache = new HashMap<>();
 
     @Override
-    public void sendMenu(FormPlayer formPlayer, JavaMenu menu, @Nonnull Resolver resolver) {
-        Logger logger = Logger.get();
-        Player player = Objects.requireNonNull(Bukkit.getPlayer(formPlayer.getUuid()));
+    public void openInventory(FormPlayer recipient, JavaMenu menu, dev.kejona.crossplatforms.item.Inventory inventory, Resolver resolver) {
+        Player player = Objects.requireNonNull(Bukkit.getPlayer(recipient.getUuid()), "player lookup");
+        Inventory bukkitInventory = inventory.castedHandle();
 
-        Inventory selectorGUI; // todo: better size validation?
-        if (menu.getSize() == JavaMenu.HOPPER_SIZE) {
-            selectorGUI = Bukkit.createInventory(player, InventoryType.HOPPER, resolver.apply(menu.getTitle()));
-        } else {
-            selectorGUI = Bukkit.createInventory(player, menu.getSize(), resolver.apply(menu.getTitle()));
-        }
-
-        Map<Integer, ItemButton> buttons = menu.getButtons();
-        for (Integer slot : buttons.keySet()) {
-            ItemButton button = buttons.get(slot);
-
-            String material = button.getMaterial();
-            Material type;
-            if (material != null) {
-                type = Material.matchMaterial(button.getMaterial());
-                if (type == null) {
-                    logger.severe("Java Button: " + menu.getIdentifier() + "." + slot + " will be stone because '" + button.getMaterial() +"' failed to map to a valid Spigot Material.");
-                    type = Material.STONE;
-                }
-            } else {
-                type = Material.STONE;
-            }
-
-            // todo: merge item construction logic with stuff from access items
-            // Construct the item
-            ItemStack item = new ItemStack(type);
-
-            ItemMeta meta = item.getItemMeta();
-            if (meta == null) {
-                logger.severe("Java Button: " + menu.getIdentifier() + "." + slot + " with Material: " + button.getMaterial() + " returned null ItemMeta, not adding the button!");
-            } else {
-                meta.setDisplayName(resolver.apply(button.getDisplayName()));
-                meta.setLore(resolver.apply(button.getLore()));
-                item.setItemMeta(meta);
-                selectorGUI.setItem(slot, item);
-            }
-        }
-
-        player.openInventory(selectorGUI);
-        menuCache.put(selectorGUI, menu);
-        resolverCache.put(selectorGUI, resolver);
+        player.openInventory(bukkitInventory);
+        menuCache.put(bukkitInventory, menu);
+        resolverCache.put(bukkitInventory, resolver);
     }
 
     @EventHandler
