@@ -21,6 +21,7 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.permission.Permissions;
+import dev.kejona.crossplatforms.spigot.common.adapter.VersionAdapter;
 import dev.kejona.crossplatforms.spigot.common.handler.PlaceholderAPIHandler;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotCommandOrigin;
 import dev.kejona.crossplatforms.spigot.common.handler.SpigotHandler;
@@ -40,7 +41,6 @@ import java.io.IOException;
 
 public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBootstrap {
     
-    protected static final String PIE_CHART_LEGACY = "legacy";
     protected static final int METRICS_ID = 14707;
 
     public static final LegacyComponentSerializer LEGACY_SERIALIZER = BukkitComponentSerializer.legacy();
@@ -122,7 +122,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             return;
         }
 
-        SpigotAccessItemsBase accessItems = createAccessItems(crossplatForms);
+        SpigotAccessItems accessItems = createAccessItems(crossplatForms);
         server.getPluginManager().registerEvents(accessItems, this);
 
         // Commands added by access items
@@ -183,9 +183,23 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         }
     }
     
-    public abstract boolean attemptBrigadier();
+    public boolean attemptBrigadier() {
+        return true; // todo: determine if registering brig should be attempted
+    }
     
-    public abstract SpigotAccessItemsBase createAccessItems(CrossplatForms crossplatForms);
+    public SpigotAccessItems createAccessItems(CrossplatForms crossplatForms) {
+        return new SpigotAccessItems(
+                this,
+                createVersionAdapter(this),
+                crossplatForms.getConfigManager(),
+                crossplatForms.getPermissions(),
+                crossplatForms.getInterfacer(),
+                crossplatForms.getBedrockHandler(),
+                crossplatForms.getPlaceholders()
+        );
+    }
+
+    public abstract VersionAdapter createVersionAdapter(JavaPlugin plugin);
 
     public static SpigotBase getInstance() {
         return INSTANCE;

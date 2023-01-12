@@ -1,6 +1,6 @@
 package dev.kejonamc.crossplatforms.spigot.v1_14_R1;
 
-import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
+import dev.kejona.crossplatforms.spigot.common.adapter.NbtAccessor;
 import lombok.AllArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

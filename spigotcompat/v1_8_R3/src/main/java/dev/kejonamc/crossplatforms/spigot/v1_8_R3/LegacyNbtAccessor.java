@@ -2,7 +2,7 @@ package dev.kejonamc.crossplatforms.spigot.v1_8_R3;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
+import dev.kejona.crossplatforms.spigot.common.adapter.NbtAccessor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 

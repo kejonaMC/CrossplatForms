@@ -6,6 +6,7 @@ import dev.kejona.crossplatforms.item.Inventory;
 import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.item.InventoryLayout;
 import dev.kejona.crossplatforms.item.Item;
+import dev.kejona.crossplatforms.spigot.common.adapter.VersionAdapter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +29,12 @@ public class SpigotInventoryFactory implements InventoryFactory {
             Logger.get().debug("Using legacy SKULL_ITEM material for player heads");
             PLAYER_HEAD_MATERIAL = Objects.requireNonNull(Material.getMaterial("SKULL_ITEM"), "SKULL_ITEM material lookup");
         }
+    }
+
+    private final Material playerHeadMaterial;
+
+    public SpigotInventoryFactory(VersionAdapter adapter) {
+        playerHeadMaterial = adapter.playerHeadMaterial();
     }
 
     @Override
@@ -53,13 +60,8 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item skullItem(String owner, String displayName, List<String> lore) {
-        return null;
-    }
-
-    @Override
     public Item skullItem(FormPlayer player, @Nullable String displayName, List<String> lore) {
-        ItemStack item = new ItemStack(PLAYER_HEAD_MATERIAL);
+        ItemStack item = new ItemStack(playerHeadMaterial);
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         if (displayName != null) {

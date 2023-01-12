@@ -55,11 +55,6 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item skullItem(String owner, String displayName, List<String> lore) {
-        return null;
-    }
-
-    @Override
     public Item skullItem(FormPlayer owner, String displayName, List<String> lore) {
         return null;
     }

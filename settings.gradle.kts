@@ -9,7 +9,6 @@ include(":velocity")
 include(":access-item")
 include(":spigot-common")
 include(":spigot")
-include(":spigot-legacy")
 
 pluginManagement {
     repositories {
@@ -41,9 +40,15 @@ dependencyResolutionManagement {
 }
 include("spigotcompat:v1_8_R3")
 findProject(":spigotcompat:v1_8_R3")?.name = "v1_8_R3"
-include("spigotcompat:adapter")
-findProject(":spigotcompat:adapter")?.name = "adapter"
+include("spigotcompat:common")
+findProject(":spigotcompat:common")?.name = "common"
 include("spigotcompat:all")
 findProject(":spigotcompat:all")?.name = "all"
 include("spigotcompat:v1_14_R1")
 findProject(":spigotcompat:v1_14_R1")?.name = "v1_14_R1"
+include("spigotcompat:v1_13_R2")
+findProject(":spigotcompat:v1_13_R2")?.name = "v1_13_R2"
+include("spigotcompat:v1_12_R1")
+findProject(":spigotcompat:v1_12_R1")?.name = "v1_12_R1"
+include("spigotcompat:v1_9_R2")
+findProject(":spigotcompat:v1_9_R2")?.name = "v1_9_R2"
