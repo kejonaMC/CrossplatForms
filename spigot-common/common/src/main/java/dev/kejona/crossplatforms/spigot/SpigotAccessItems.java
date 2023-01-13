@@ -85,14 +85,14 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
         // Have not checked any other versions
         Material material = Material.matchMaterial(accessItem.getMaterial());
         if (material == null) {
-            logger.severe(String.format("Failed to get access dev.kejona.crossplatforms.spigot.item from '%s' for access dev.kejona.crossplatforms.spigot.item '%s'", accessItem.getMaterial(), accessItem.getIdentifier()));
+            logger.severe(String.format("Failed to get access item from '%s' for access item '%s'", accessItem.getMaterial(), accessItem.getIdentifier()));
             material = Material.COMPASS;
         }
 
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
-            logger.severe(String.format("Itemstack from material %s for access dev.kejona.crossplatforms.spigot.item %s has null dev.kejona.crossplatforms.spigot.item meta!", material, accessItem.getIdentifier()));
+            logger.severe(String.format("Itemstack from material %s for access item %s has null item meta!", material, accessItem.getIdentifier()));
             item = new ItemStack(Material.COMPASS);
             meta = Objects.requireNonNull(item.getItemMeta());
         }
@@ -111,26 +111,26 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
             if (item != null) {
                 String id = getItemId(item);
                 if (id != null) {
-                    // Don't allow using the dev.kejona.crossplatforms.spigot.item to break blocks
-                    // If it was a right click, using the access dev.kejona.crossplatforms.spigot.item should be the only behaviour
+                    // Don't allow using the item to break blocks
+                    // If it was a right click, using the access item should be the only behaviour
                     event.setCancelled(true);
 
                     Player player = event.getPlayer();
                     if (isEnabled()) {
                         AccessItem access = getItem(id);
                         if (access == null) {
-                            // dev.kejona.crossplatforms.spigot.item not longer exists
+                            // item not longer exists
                             remove(player, item, RemoveReason.ITEM_REMOVED);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
                                 access.trigger(new SpigotPlayer(player));
                             }
                         } else {
-                            // player no longer has permission to have the dev.kejona.crossplatforms.spigot.item
+                            // player no longer has permission to have the item
                             remove(player, item, RemoveReason.IMPERMISSIBLE);
                         }
                     } else {
-                        // dev.kejona.crossplatforms.spigot.item no longer exists because the registry has been disabled
+                        // item no longer exists because the registry has been disabled
                         remove(player, item, RemoveReason.ITEMS_DISABLED);
                     }
                 }
@@ -145,7 +145,7 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
         if (item != null) {
             String id = getItemId(item);
             if (id != null) {
-                // the dev.kejona.crossplatforms.spigot.item is or was an access dev.kejona.crossplatforms.spigot.item
+                // the item is or was an access item
 
                 HumanEntity human = event.getWhoClicked();
                 if (isEnabled()) {
@@ -176,12 +176,12 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
             AccessItem access = getItem(id);
             Player player = event.getPlayer();
             if (access == null) {
-                // access dev.kejona.crossplatforms.spigot.item no longer exists
+                // access item no longer exists
                 player.sendMessage(RemoveReason.ITEM_REMOVED.message);
                 event.getItemDrop().remove();
             } else if (player.hasPermission(access.permission(AccessItem.Limit.DROP))) {
                 if (!player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                    // has permission to "drop" it but the dev.kejona.crossplatforms.spigot.item is destroyed
+                    // has permission to "drop" it but the item is destroyed
                     event.getItemDrop().remove();
                 }
             } else {
@@ -200,8 +200,8 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
             if (id != null) {
                 AccessItem access = getItem(id);
                 if (access == null || !player.hasPermission(access.permission(AccessItem.Limit.PRESERVE))) {
-                    // the access dev.kejona.crossplatforms.spigot.item no longer exists and should be removed
-                    // OR the player no longer has permission for it, so the dev.kejona.crossplatforms.spigot.item should be removed.
+                    // the access item no longer exists and should be removed
+                    // OR the player no longer has permission for it, so the item should be removed.
                     iterator.remove();
                 }
             }
@@ -209,12 +209,12 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) { // give the access dev.kejona.crossplatforms.spigot.item when the player joins
+    public void onPlayerJoin(PlayerJoinEvent event) { // give the access item when the player joins
         regive(event.getPlayer(), AccessItem::isOnJoin);
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access dev.kejona.crossplatforms.spigot.item when the player respawns
+    public void onPlayerRespawn(PlayerRespawnEvent event) { // give the access item when the player respawns
         regive(event.getPlayer(), AccessItem::isOnRespawn);
     }
 
@@ -232,8 +232,8 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
                 if (id != null) {
                     AccessItem access = getItem(id);
                     if (access == null || !access.isPersist()) {
-                        // the access dev.kejona.crossplatforms.spigot.item no longer exists and should be removed
-                        // OR the access dev.kejona.crossplatforms.spigot.item is not allowed to be persisted
+                        // the access item no longer exists and should be removed
+                        // OR the access item is not allowed to be persisted
 
                         // we could check for permission to have it here, but that'll happen when they join again
                         player.getInventory().remove(item);
@@ -248,7 +248,7 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
         if (id != null) {
             AccessItem access = getItem(id);
             if (access == null) {
-                // the dev.kejona.crossplatforms.spigot.item no longer exists, don't allow picking it up
+                // the item no longer exists, don't allow picking it up
                 event.setCancelled(true);
             } else if (!player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                 // they don't have permission to have it
@@ -272,12 +272,12 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
                 if (id != null) {
                     AccessItem access = getItem(id);
                     if (access == null) {
-                        // access dev.kejona.crossplatforms.spigot.item no longer exists
+                        // access item no longer exists
                         player.getInventory().remove(item);
                     } else {
                         if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             contained.add(access.getIdentifier());
-                            logger.debug(String.format("%s is keeping access dev.kejona.crossplatforms.spigot.item %s", player.getName(), access.getIdentifier()));
+                            logger.debug(String.format("%s is keeping access item %s", player.getName(), access.getIdentifier()));
                         } else {
                             player.getInventory().remove(item);
                             logger.debug(String.format("Removed %s from %s because they don't have permission for it", access.getIdentifier(), player.getName()));
@@ -288,7 +288,7 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
         }
 
         // Give any access items that should be given
-        boolean changedHand = false; // If we have changed the dev.kejona.crossplatforms.spigot.item the player is holding
+        boolean changedHand = false; // If we have changed the item the player is holding
         for (AccessItem access : getItems().values()) {
             if (give.test(access) && access.getPlatform().matches(player.getUniqueId(), bedrockHandler) && player.hasPermission(access.permission(AccessItem.Limit.EVENT))) {
                 if (!contained.contains(access.getIdentifier())) {
@@ -300,9 +300,9 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
                         giveAccessItem(new SpigotPlayer(player), access, false);
                     }
 
-                    logger.debug(String.format("Gave access dev.kejona.crossplatforms.spigot.item %s to %s", access.getIdentifier(), player.getName()));
+                    logger.debug(String.format("Gave access item %s to %s", access.getIdentifier(), player.getName()));
                 } else {
-                    logger.debug(String.format("%s has permission for access dev.kejona.crossplatforms.spigot.item %s, but they already have it", player.getName(), access.getIdentifier()));
+                    logger.debug(String.format("%s has permission for access item %s, but they already have it", player.getName(), access.getIdentifier()));
                 }
             }
         }
@@ -314,11 +314,11 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
     }
 
     /**
-     * Gives a player an access dev.kejona.crossplatforms.spigot.item
-     * @param player The player to give the access dev.kejona.crossplatforms.spigot.item to
-     * @param accessItem The access dev.kejona.crossplatforms.spigot.item to give
-     * @param setHeldSlot True if the player's selected dev.kejona.crossplatforms.spigot.item should be forced to the access dev.kejona.crossplatforms.spigot.item
-     * @return True if the access dev.kejona.crossplatforms.spigot.item was successfully given. False if the inventory was too full.
+     * Gives a player an access item
+     * @param player The player to give the access item to
+     * @param accessItem The access item to give
+     * @param setHeldSlot True if the player's selected item should be forced to the access item
+     * @return True if the access item was successfully given. False if the inventory was too full.
      */
     public boolean giveAccessItem(Player player, AccessItem accessItem, boolean setHeldSlot) {
         ItemStack accessItemStack = createItemStack(accessItem, player); // todo update placeholders after the fact. but when?
@@ -327,7 +327,7 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
         ItemStack blockingItem = player.getInventory().getItem(desiredSlot);
         boolean success = false;
         if (blockingItem == null || blockingItem.getType() == Material.AIR) {
-            // put the dev.kejona.crossplatforms.spigot.item in the desired place
+            // put the item in the desired place
             player.getInventory().setItem(desiredSlot, accessItemStack);
             success = true;
         } else {
@@ -336,9 +336,9 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
 
                 ItemStack otherItem = player.getInventory().getItem(i);
                 if (otherItem == null || otherItem.getType() == Material.AIR) {
-                    // slot is empty, move the dev.kejona.crossplatforms.spigot.item that is blocking us to it
+                    // slot is empty, move the item that is blocking us to it
                     player.getInventory().setItem(i, blockingItem);
-                    // put the access dev.kejona.crossplatforms.spigot.item in the slot that is no longer blocked
+                    // put the access item in the slot that is no longer blocked
                     player.getInventory().setItem(desiredSlot, accessItemStack);
                     success = true;
                     break;
@@ -349,7 +349,7 @@ public class SpigotAccessItems extends AccessItemRegistry implements Listener {
 
         if (success) {
             if (setHeldSlot) {
-                // Set the held dev.kejona.crossplatforms.spigot.item to the slot of the access dev.kejona.crossplatforms.spigot.item
+                // Set the held item to the slot of the access item
                 player.getInventory().setHeldItemSlot(accessItem.getSlot());
             }
             return true;

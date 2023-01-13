@@ -25,20 +25,20 @@ public class InspectItemCommand extends FormsCommand {
         manager.command(crossplatForms.getCommandBuilder()
                 .literal(InspectCommand.NAME)
                 .permission(InspectCommand.PERMISSION)
-                .literal("dev.kejona.crossplatforms.spigot.item")
-                .argument(StringArgument.<CommandOrigin>newBuilder("dev.kejona.crossplatforms.spigot.item")
+                .literal("item")
+                .argument(StringArgument.<CommandOrigin>newBuilder("item")
                         .withSuggestionsProvider(((context, s) -> itemRegistry.getItems().values()
                                 .stream()
                                 .map(AccessItem::getIdentifier)
                                 .collect(Collectors.toList()))))
                 .handler(context -> {
                     CommandOrigin origin = context.getSender();
-                    String name = context.get("dev.kejona.crossplatforms.spigot.item");
+                    String name = context.get("item");
                     AccessItem item = itemRegistry.getItems().get(name);
                     if (item == null) {
                         origin.warn("That Access Item doesn't exist!");
                     } else {
-                        origin.sendMessage("Inspection of access dev.kejona.crossplatforms.spigot.item: " + name);
+                        origin.sendMessage("Inspection of access item: " + name);
                         origin.sendMessage(item.toString());
                     }
                 })

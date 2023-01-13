@@ -37,17 +37,17 @@ public abstract class BedrockForm extends Interface implements ValuedType {
     private List<Action<? super BedrockForm>> incorrectActions = Collections.emptyList();
 
     /**
-     * Properly execute the response dev.kejona.crossplatforms.spigot.handler of a form, taking into account thread safety
-     * @param runnable The response dev.kejona.crossplatforms.spigot.handler to execute
+     * Properly execute the response handler of a form, taking into account thread safety
+     * @param runnable The response handler to execute
      * @see Runnable#run()
      */
     protected final void executeHandler(Runnable runnable) {
         if (bedrockHandler.executesResponseHandlersSafely()) {
-            Logger.get().debug("Executing response dev.kejona.crossplatforms.spigot.handler on this thread: " + Thread.currentThread().getName());
+            Logger.get().debug("Executing response handler on this thread: " + Thread.currentThread().getName());
             runnable.run();
         } else {
             serverHandler.executeSafely(() -> {
-                Logger.get().debug("Executing response dev.kejona.crossplatforms.spigot.handler on thread: " + Thread.currentThread().getName());
+                Logger.get().debug("Executing response handler on thread: " + Thread.currentThread().getName());
                 runnable.run();
             });
         }
