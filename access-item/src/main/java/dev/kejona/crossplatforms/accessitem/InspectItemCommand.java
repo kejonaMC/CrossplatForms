@@ -26,7 +26,7 @@ public class InspectItemCommand extends FormsCommand {
                 .literal(InspectCommand.NAME)
                 .permission(InspectCommand.PERMISSION)
                 .literal("item")
-                .argument(StringArgument.<CommandOrigin>newBuilder("item")
+                .argument(StringArgument.<CommandOrigin>builder("item")
                         .withSuggestionsProvider(((context, s) -> itemRegistry.getItems().values()
                                 .stream()
                                 .map(AccessItem::getIdentifier)

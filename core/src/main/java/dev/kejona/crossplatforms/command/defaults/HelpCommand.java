@@ -20,7 +20,6 @@ public class HelpCommand extends FormsCommand {
         this.minecraftHelp = minecraftHelp;
     }
 
-    @SuppressWarnings("ConstantConditions") // CommandContext#getOrDefault will not return null if given nonnull default
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
         manager.command(defaultBuilder
