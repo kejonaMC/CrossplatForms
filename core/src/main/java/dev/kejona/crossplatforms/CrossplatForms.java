@@ -168,7 +168,7 @@ public class CrossplatForms {
         // The top of our command tree
         commandBuilder = commandManager.commandBuilder(rootCommand);
 
-        // The handler for the root /forms command
+        // The dev.kejona.crossplatforms.spigot.handler for the root /forms command
         commandManager.command(commandBuilder
                 .permission(FormsCommand.PERMISSION_BASE + "base")
                 .handler((context -> {

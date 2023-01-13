@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.spigot;
 
-import dev.kejona.crossplatforms.spigot.common.SpigotBase;
-import dev.kejona.crossplatforms.spigot.common.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.spigot.SpigotBase;
+import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class CrossplatFormsSpigot extends SpigotBase {

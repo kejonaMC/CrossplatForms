@@ -120,7 +120,7 @@ public abstract class Interface {
         ImmutableMap.Builder<Interface.Limit, Permission> builder = ImmutableMap.builder();
         for (Interface.Limit limit : Interface.Limit.values()) {
             // Alright this is a bit janky. 1st, attempt to retrieve the permission default from this specific config.
-            // If it is not specified for this item, then we check the global permission defaults.
+            // If it is not specified for this dev.kejona.crossplatforms.spigot.item, then we check the global permission defaults.
             // If the user has not specified anything in the globals, then we use fallback values
             PermissionDefault permissionDefault = permissionDefaults.getOrDefault(limit, registry.getGlobalPermissionDefaults().getOrDefault(limit, limit.fallbackDefault));
             builder.put(limit, new Permission(mainPermission + limit.permissionSuffix, limit.description, permissionDefault));

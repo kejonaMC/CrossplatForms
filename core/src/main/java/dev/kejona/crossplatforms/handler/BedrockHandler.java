@@ -14,7 +14,7 @@ public interface BedrockHandler {
 
     /**
      * Determines if this BedrockHandler executes Form response handlers in a way that allows for thread safe access to the
-     * server API of the given implementation. For example, Floodgate executes response handler on Bukkit's main thread,
+     * server API of the given implementation. For example, Floodgate executes response dev.kejona.crossplatforms.spigot.handler on Bukkit's main thread,
      * but Geyser doesn't. On proxy implementations like BungeeCord or Velocity where there is no "main thread", this method
      * is not as meaningful.
      *

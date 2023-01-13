@@ -19,7 +19,7 @@ public interface InventoryFiller extends ValuedType {
         }
 
         throw new IllegalStateException("Item generation not implemented yet");
-        // return rawItems(resolver).map(item -> item.format(format)).collect(Collectors.toList());
+        // return rawItems(resolver).map(dev.kejona.crossplatforms.spigot.item -> dev.kejona.crossplatforms.spigot.item.format(format)).collect(Collectors.toList());
     }
 
     @Nonnull

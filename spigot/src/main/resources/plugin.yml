@@ -34,13 +34,13 @@ permissions:
     description: Access to /forms send <player> <form>
     default: op
   crossplatforms.command.give:
-    description: Access to /forms give <access item>
+    description: Access to /forms give <access dev.kejona.crossplatforms.spigot.item>
     default: op
   crossplatforms.command.give.others:
-    description: Access to /forms give <access item> <player>
+    description: Access to /forms give <access dev.kejona.crossplatforms.spigot.item> <player>
     default: op
   crossplatforms.command.inspect:
-    description: Access to /forms inspect <form|menu|item> <name>
+    description: Access to /forms inspect <form|menu|dev.kejona.crossplatforms.spigot.item> <name>
     default: op
   crossplatforms.command.identify:
     description: Access to /forms identify <player>

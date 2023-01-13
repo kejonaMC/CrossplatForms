@@ -1,0 +1,56 @@
+enable: true
+
+menus:
+  default:
+    title: "§0Server Selector"
+    size: 9
+    buttons:
+      2:
+        display-name: "§6Lobby"
+        material: DIAMOND
+        lore:
+          - "§2Online players: %bungee_lobby%"
+        right-click:
+          commands:
+            - "console; tell %player_name% Sending you to the lobby in a right click fashion..."
+          server: "lobby"
+        left-click:
+          commands:
+            - "console; tell %player_name% Sending you to the lobby in a left click fashion..."
+          server: "lobby"
+      4:
+        display-name: "§6Minigames"
+        material: GRASS
+        lore:
+          - "Currently Available:"
+          - "§fSpleef"
+          - "§fHide § Seek"
+        any-click:
+          commands:
+            - "player; ghub form minigames"
+      6:
+        display-name: "§6Survival"
+        material: EMERALD
+        lore:
+          - "§2online players: %bungee_survival%"
+        any-click:
+          commands:
+            - "console; tell %player_name% Sending you to Survival..."
+          server: "survival"
+
+  minigames:
+    title: "§0Minigames"
+    size: 5
+    buttons:
+      1:
+        display-name: "§6Spleef"
+        material: SNOWBALL
+        any-click:
+          server: "spleef"
+      3:
+        display-name: "§6Hide § Seek"
+        material: DIRT
+        any-click:
+          server: "hideseek"
+
+config-version: 1
