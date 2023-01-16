@@ -1,4 +1,4 @@
-package dev.kejonamc.crossplatforms.spigot.v1_8_R3;
+package dev.kejona.crossplatforms.spigot.v1_8_R3;
 
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
 import lombok.AllArgsConstructor;

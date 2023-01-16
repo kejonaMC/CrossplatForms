@@ -1,4 +1,4 @@
-package dev.kejonamc.crossplatforms.spigot.v1_14_R1;
+package dev.kejona.crossplatforms.spigot.v1_14_R1;
 
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
 import dev.kejona.crossplatforms.spigot.v1_13_R2.Adapter_v1_13_R2;

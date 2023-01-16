@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.spigot.v1_9_R2;
 
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
-import dev.kejonamc.crossplatforms.spigot.v1_8_R3.Adapter_v1_8_R3;
+import dev.kejona.crossplatforms.spigot.v1_8_R3.Adapter_v1_8_R3;
 import org.bukkit.plugin.Plugin;
 
 public class Adapter_v1_9_R2 extends Adapter_v1_8_R3 {

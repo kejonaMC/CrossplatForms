@@ -1,4 +1,4 @@
-package dev.kejonamc.crossplatforms.spigot.v1_8_R3;
+package dev.kejona.crossplatforms.spigot.v1_8_R3;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
