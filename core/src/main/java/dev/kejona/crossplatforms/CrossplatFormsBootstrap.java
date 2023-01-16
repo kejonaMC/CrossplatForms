@@ -16,6 +16,8 @@ public interface CrossplatFormsBootstrap {
     /**
      * Construct an {@link Interfacer} implementation with the given parameters. This method will be called only once
      * during the construction of {@link CrossplatForms}. This method exists
+     *
+     * todo: this can just be moved to CrossplatForms constructor
      */
     Interfacer interfaceManager();
 

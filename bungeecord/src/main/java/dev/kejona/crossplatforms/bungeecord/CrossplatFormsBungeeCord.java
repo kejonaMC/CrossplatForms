@@ -22,6 +22,7 @@ import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.proxy.CloseMenuAction;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.proxy.ProtocolizeInterfacer;
+import dev.kejona.crossplatforms.proxy.item.ProtocolizeInventoryFactory;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
@@ -84,6 +85,7 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
                 "formsb",
                 commandManager,
                 placeholders,
+                new ProtocolizeInventoryFactory(),
                 this
         );
 

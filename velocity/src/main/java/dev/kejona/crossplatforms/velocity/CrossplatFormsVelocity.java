@@ -28,6 +28,7 @@ import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.proxy.CloseMenuAction;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.proxy.ProtocolizeInterfacer;
+import dev.kejona.crossplatforms.proxy.item.ProtocolizeInventoryFactory;
 import dev.kejona.crossplatforms.velocity.handler.VelocityCommandOrigin;
 import dev.kejona.crossplatforms.velocity.handler.VelocityHandler;
 import lombok.Getter;
@@ -106,6 +107,7 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
                 "formsv",
                 commandManager,
                 placeholders,
+                new ProtocolizeInventoryFactory(),
                 this
         );
 

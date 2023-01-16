@@ -1,27 +1,25 @@
-package dev.kejona.crossplatforms.spigot;
-
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+package dev.kejona.crossplatforms.spigot.adapter;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Optional;
 
-public class IndexResult {
+public class VersionIndexResult {
 
     private final VersionAdapter adapter;
     private final String betterVersion;
 
-    protected IndexResult(@Nonnull VersionAdapter adapter, @Nonnull String betterVersion) {
+    protected VersionIndexResult(@Nonnull VersionAdapter adapter, @Nonnull String betterVersion) {
         this.adapter = Objects.requireNonNull(adapter, "adapter");
         this.betterVersion = Objects.requireNonNull(betterVersion, "betterVersion");
     }
 
-    protected IndexResult(@Nonnull VersionAdapter adapter) {
+    protected VersionIndexResult(@Nonnull VersionAdapter adapter) {
         this.adapter = Objects.requireNonNull(adapter, "adapter");
         this.betterVersion = null;
     }
 
-    protected IndexResult(@Nonnull String betterVersion) {
+    protected VersionIndexResult(@Nonnull String betterVersion) {
         this.adapter = null;
         this.betterVersion = Objects.requireNonNull(betterVersion, "betterVersion");
     }

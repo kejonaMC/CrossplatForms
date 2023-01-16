@@ -1,6 +1,5 @@
-package dev.kejona.crossplatforms.spigot;
+package dev.kejona.crossplatforms.spigot.adapter;
 
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
 import dev.kejona.crossplatforms.spigot.v1_12_R1.Adapter_v1_12_R1;
 import dev.kejona.crossplatforms.spigot.v1_13_R2.Adapter_v1_13_R2;
 import dev.kejona.crossplatforms.spigot.v1_9_R2.Adapter_v1_9_R2;
@@ -12,7 +11,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
-public class AdapterIndexer {
+public class VersionIndexer {
 
     private static final int SUPPORTED_MAJOR_VERSION = 1;
     private static final TreeMap<Version, Supplier<VersionAdapter>> ADAPTERS = new TreeMap<>();
@@ -33,16 +32,16 @@ public class AdapterIndexer {
     /**
      * @param nmsVersion x_y_Rz
      */
-    public IndexResult findLenientAdapter(String nmsVersion) throws IllegalArgumentException {
+    public VersionIndexResult findLenientAdapter(String nmsVersion) throws IllegalArgumentException {
         Version version = new Version(nmsVersion);
 
         if (version.major() != SUPPORTED_MAJOR_VERSION) {
-            return new IndexResult(ADAPTERS.firstKey().nmsVersion());
+            return new VersionIndexResult(ADAPTERS.firstKey().nmsVersion());
         }
 
         if (ADAPTERS.containsKey(version)) {
             // Direct support for this version
-            return new IndexResult(adapter(version));
+            return new VersionIndexResult(adapter(version));
         }
 
         // Find adapter versions below and above the given version
@@ -51,11 +50,11 @@ public class AdapterIndexer {
 
         if (lower == null) {
             // Given version is lower than lowest adapter version
-            return new IndexResult(higher.nmsVersion());
+            return new VersionIndexResult(higher.nmsVersion());
         }
         if (higher == null) {
             // Given version is higher than highest adapter version
-            return new IndexResult(adapter(lower));
+            return new VersionIndexResult(adapter(lower));
         }
 
         if (lower.minor() != version.minor()) {
@@ -65,15 +64,15 @@ public class AdapterIndexer {
                 // The given version and higher adapter version only differ in patch version. The server should be updated.
                 // eg 1.13  <  1.14.1  <  1.14.2
                 //    lower    version    higher
-                return new IndexResult(adapter(higher), higher.nmsVersion());
+                return new VersionIndexResult(adapter(higher), higher.nmsVersion());
             } else {
                 // eg 1.13  <  1.14  <  1.15
                 //    lower   version   higher
-                return new IndexResult(adapter(lower));
+                return new VersionIndexResult(adapter(lower));
             }
         }
 
         // There is an adapter for the same minor version, but a lower patch version
-        return new IndexResult(adapter(lower));
+        return new VersionIndexResult(adapter(lower));
     }
 }

@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class SpigotAccessItems extends AccessItemRegistry implements Listener {
+public final class SpigotAccessItems extends AccessItemRegistry implements Listener {
 
     private final Logger logger = Logger.get();
 

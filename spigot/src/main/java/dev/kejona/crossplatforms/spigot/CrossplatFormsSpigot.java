@@ -1,18 +1,18 @@
 package dev.kejona.crossplatforms.spigot;
 
-import dev.kejona.crossplatforms.spigot.SpigotBase;
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.kejona.crossplatforms.spigot.adapter.VersionIndexer;
+import dev.kejona.crossplatforms.spigot.adapter.VersionIndexResult;
 
 public class CrossplatFormsSpigot extends SpigotBase {
 
     @Override
-    public void onEnable() {
+    public VersionIndexResult findVersionAdapter() {
+        String serverPackage = getServer().getClass().getPackage().getName();
+        logger.debug("Server package: " + serverPackage);
+        // +2 to remove the ".v"
+        String version = serverPackage.substring(serverPackage.lastIndexOf('.') + 2);
+        logger.debug("NMS version: " + version);
 
-    }
-
-    @Override
-    public VersionAdapter createVersionAdapter(JavaPlugin plugin) {
-        return null;
+        return new VersionIndexer().findLenientAdapter(version);
     }
 }

@@ -59,6 +59,7 @@ public class ConfigId {
     @Nullable
     public final Supplier<ConfigurationTransformation.Versioned> updater;
 
+    // todo: can be removed and substituted for Configurate's new post processing feature
     @Nullable
     public final Consumer<Configuration> postProcessor;
 

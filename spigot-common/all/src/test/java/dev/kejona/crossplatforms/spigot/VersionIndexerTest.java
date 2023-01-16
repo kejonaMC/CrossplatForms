@@ -1,6 +1,8 @@
 package dev.kejona.crossplatforms.spigot;
 
+import dev.kejona.crossplatforms.spigot.adapter.VersionIndexer;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.VersionIndexResult;
 import dev.kejona.crossplatforms.spigot.v1_12_R1.Adapter_v1_12_R1;
 import dev.kejona.crossplatforms.spigot.v1_13_R2.Adapter_v1_13_R2;
 import dev.kejona.crossplatforms.spigot.v1_9_R2.Adapter_v1_9_R2;
@@ -13,16 +15,16 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdapterIndexerTest {
+public class VersionIndexerTest {
 
-    private static AdapterIndexer adapters;
+    private static VersionIndexer adapters;
     private static final String[] UNSUPPORTED_VERSIONS = {"1_7_R4", "1_8_R1", "1_8_R2"};
     private static final String[] UNDESIRED_VERSIONS = {"1_9_R1", "1_13_R1"};
     private static final Map<String, Class<? extends VersionAdapter>> EXPECTATIONS = new HashMap<>();
 
     @BeforeAll
     public static void setup() {
-        adapters = new AdapterIndexer();
+        adapters = new VersionIndexer();
 
         Class<? extends VersionAdapter> latestAdapter = Adapter_v1_14_R1.class;
 
@@ -70,7 +72,7 @@ public class AdapterIndexerTest {
     @Test
     public void testUnsupportedVersions() {
         for (String version : UNSUPPORTED_VERSIONS) {
-            IndexResult index = adapters.findLenientAdapter(version);
+            VersionIndexResult index = adapters.findLenientAdapter(version);
 
             Assertions.assertNull(index.adapter().orElse(null));
             Assertions.assertNotNull(index.betterVersion().orElse(null));

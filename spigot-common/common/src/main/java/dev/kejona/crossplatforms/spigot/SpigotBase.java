@@ -22,10 +22,12 @@ import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.VersionIndexResult;
 import dev.kejona.crossplatforms.spigot.handler.PlaceholderAPIHandler;
 import dev.kejona.crossplatforms.spigot.handler.SpigotCommandOrigin;
 import dev.kejona.crossplatforms.spigot.handler.SpigotHandler;
 import dev.kejona.crossplatforms.spigot.handler.SpigotPermissions;
+import dev.kejona.crossplatforms.spigot.item.SpigotInventoryFactory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -41,7 +43,7 @@ import java.io.IOException;
 
 public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBootstrap {
     
-    protected static final int METRICS_ID = 14707;
+    private static final int METRICS_ID = 14707;
 
     public static final LegacyComponentSerializer LEGACY_SERIALIZER = BukkitComponentSerializer.legacy();
     private static SpigotBase INSTANCE;
@@ -51,10 +53,11 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         Constants.fetch();
     }
 
-    private Logger logger;
-    protected Server server;
-    protected BukkitAudiences audiences;
+    protected Logger logger;
+    private Server server;
+    private BukkitAudiences audiences;
     private Metrics metrics;
+    private VersionAdapter versionAdapter;
 
     protected SpigotBase() {
         INSTANCE = this;
@@ -63,12 +66,20 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
     @Override
     public void onEnable() {
         logger = new JavaUtilLogger(getLogger());
-        metrics = new Metrics(this, METRICS_ID);
         server = getServer();
         audiences = BukkitAudiences.create(this);
+        metrics = new Metrics(this, METRICS_ID);
+
+        VersionIndexResult result = findVersionAdapter();
+        result.betterVersion().ifPresent(v -> logger.warn("Consider using server version " + v + " instead."));
+        if (result.adapter().isPresent()) {
+            versionAdapter = result.adapter().get();
+        } else {
+            logger.severe("This server version is unsupported. If you believe this is incorrect, please contact us.");
+        }
 
         SpigotHandler serverHandler = new SpigotHandler(this, audiences);
-        Permissions permissions = pluginEnabled("LuckPerms") ? new LuckPermsHook() : new SpigotPermissions(this);
+        Permissions permissions = server.getPluginManager().isPluginEnabled("LuckPerms") ? new LuckPermsHook() : new SpigotPermissions(this);
 
         convertGeyserHubConfig();
 
@@ -93,6 +104,10 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
                 commandManager.registerBrigadier();
             } catch (BukkitCommandManager.BrigadierFailureException e) {
                 logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
+                if (e.getReason() == BukkitCommandManager.BrigadierFailureReason.VERSION_TOO_HIGH) {
+                    // Commodore brig only supports Spigot 1.13 - 1.18.2
+                    logger.warn("Using Paper instead of Spigot will likely fix this.");
+                }
             }
         }
 
@@ -115,15 +130,21 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             "forms",
             commandManager,
             placeholders,
+            new SpigotInventoryFactory(versionAdapter),
             this
         );
 
-        if (!crossplatForms.isSuccess()) {
-            return;
-        }
-
-        SpigotAccessItems accessItems = createAccessItems(crossplatForms);
+        SpigotAccessItems accessItems = new SpigotAccessItems(
+            this,
+            versionAdapter,
+            crossplatForms.getConfigManager(),
+            crossplatForms.getPermissions(),
+            crossplatForms.getInterfacer(),
+            crossplatForms.getBedrockHandler(),
+            crossplatForms.getPlaceholders()
+        );
         server.getPluginManager().registerEvents(accessItems, this);
+        versionAdapter.registerAuxiliaryEvents(this, accessItems); // Events for versions above 1.8
 
         // Commands added by access items
         new GiveCommand(crossplatForms, accessItems).register(commandManager, crossplatForms.getCommandBuilder());
@@ -163,10 +184,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         metrics.addCustomChart(chart);
     }
 
-    public boolean pluginEnabled(String id) {
-        return server.getPluginManager().isPluginEnabled(id);
-    }
-
     private void convertGeyserHubConfig() {
         File selector = new File(getDataFolder(), "selector.yml");
         if (selector.exists()) {
@@ -183,23 +200,19 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         }
     }
     
-    public boolean attemptBrigadier() {
-        return true; // todo: determine if registering brig should be attempted
-    }
-    
-    public SpigotAccessItems createAccessItems(CrossplatForms crossplatForms) {
-        return new SpigotAccessItems(
-                this,
-                createVersionAdapter(this),
-                crossplatForms.getConfigManager(),
-                crossplatForms.getPermissions(),
-                crossplatForms.getInterfacer(),
-                crossplatForms.getBedrockHandler(),
-                crossplatForms.getPlaceholders()
-        );
+    private boolean attemptBrigadier() {
+        try {
+            // Brigadier is available on 1.13 and above
+            Class.forName("org.bukkit.entity.Dolphin");
+            return true;
+        } catch (ClassNotFoundException ignored) {
+            // no-op
+        }
+
+        return false;
     }
 
-    public abstract VersionAdapter createVersionAdapter(JavaPlugin plugin);
+    public abstract VersionIndexResult findVersionAdapter();
 
     public static SpigotBase getInstance() {
         return INSTANCE;

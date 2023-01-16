@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.spigot;
+package dev.kejona.crossplatforms.spigot.adapter;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -7,21 +7,26 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.item.InventoryFactory;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class ConfigurationModule extends AbstractModule {
 
     private final Interfacer interfacer;
+    private final InventoryFactory inventoryFactory;
     private final BedrockHandler bedrockHandler;
     private final ServerHandler serverHandler;
     private final Placeholders placeholders;
 
     @Override
     protected void configure() {
-        // remember: explicit bindings cannot be required because this module is used for creating configs
+        // remember: explicit bindings cannot be set as required using binder().requireExplicitBindings()
+        // because this module is used for creating configs - bindings are created on the fly (just in time)
 
         bind(Interfacer.class).toInstance(interfacer);
+        bind(InventoryFactory.class).toInstance(inventoryFactory);
+
         // Hack to stop the instance from having its members being injected
         // which causes a ClassDefNotFound error if Cumulus is not present (EmptyBedrockHandler)
         bind(BedrockHandler.class).toProvider(Providers.of(bedrockHandler));

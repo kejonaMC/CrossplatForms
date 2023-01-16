@@ -29,6 +29,7 @@ import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.ComponentSerializer;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.CustomComponent;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
+import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
@@ -62,6 +63,7 @@ public class CrossplatForms {
 
     private final Placeholders placeholders;
 
+    @Deprecated
     private final boolean success = true;
 
     public CrossplatForms(Logger logger,
@@ -71,6 +73,7 @@ public class CrossplatForms {
                           String defaultCommand,
                           CommandManager<CommandOrigin> commandManager,
                           Placeholders placeholders,
+                          InventoryFactory inventoryFactory,
                           CrossplatFormsBootstrap bootstrap) {
         long start = System.currentTimeMillis();
         if (INSTANCE != null) {
@@ -112,6 +115,7 @@ public class CrossplatForms {
         Injector injector = Guice.createInjector(
             new ConfigurationModule(
                 interfacer,
+                inventoryFactory,
                 bedrockHandler,
                 serverHandler,
                 placeholders
