@@ -60,6 +60,19 @@ public final class ReflectionUtils {
     }
 
     @Nullable
+    public static Field getField(Class<?> clazz, String name, boolean declared) {
+        try {
+            if (declared) {
+                return clazz.getDeclaredField(name);
+            } else {
+                return clazz.getField(name);
+            }
+        } catch (NoSuchFieldException ignored) {
+            return null;
+        }
+    }
+
+    @Nullable
     public static Object getValue(Object instance, Field field) {
         field.setAccessible(true);
         try {
@@ -67,5 +80,20 @@ public final class ReflectionUtils {
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Failed to set " + field.getName() + " on " + instance.getClass() + " accessible", e);
         }
+    }
+
+    public static void setValue(Object instance, Field field, Object value) {
+        field.setAccessible(true);
+        try {
+            field.set(instance, value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    public static <T> T getValue(Object instance, Field field, Class<T> type) {
+        return (T) getValue(instance, field);
     }
 }

@@ -1,12 +1,33 @@
 package dev.kejona.crossplatforms.spigot.v1_8_R3;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.utils.ReflectionUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.util.Objects;
+
 public class Adapter_v1_8_R3 implements VersionAdapter {
+
+    private static final Field PROFILE_FIELD;
+
+    static {
+        PROFILE_FIELD = Objects.requireNonNull(
+            ReflectionUtils.getField(SkullMeta.class, "profile", true),
+            "Field 'profile' of GameProfile"
+        );
+    }
 
     @Override
     public boolean customModelData() {
@@ -14,8 +35,21 @@ public class Adapter_v1_8_R3 implements VersionAdapter {
     }
 
     @Override
+    public void setCustomModelData(@Nonnull ItemStack stack, @Nullable Integer value) {
+        throw new UnsupportedOperationException("CustomModelData only supported on 1.14.4 and above. Current version is " + Bukkit.getVersion());
+    }
+
+    @Override
     public Material playerHeadMaterial() {
         return Material.SKULL_ITEM;
+    }
+
+    @Override
+    public void setSkullProfile(SkullMeta meta, FormPlayer player) {
+        GameProfile profile = new GameProfile(player.getUuid(), player.getName());
+        profile.getProperties().put("textures", new Property("textures", player.getEncodedSkinData()));
+
+        ReflectionUtils.setValue(meta, PROFILE_FIELD, profile);
     }
 
     @Override

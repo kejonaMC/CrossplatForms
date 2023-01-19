@@ -10,6 +10,8 @@ import org.bukkit.plugin.Plugin;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import static dev.kejona.crossplatforms.spigot.utils.InventoryUtils.requireItemMeta;
+
 /**
  * Uses the Spigot Persistent Data Container api
  */
@@ -38,10 +40,5 @@ public class ModernNbtAccessor implements NbtAccessor {
             PersistentDataType.STRING,
             value
         );
-    }
-
-    @Override
-    public void setCustomModelData(@Nonnull ItemStack stack, @Nullable Integer value) {
-        requireItemMeta(stack).setCustomModelData(value);
     }
 }

@@ -7,44 +7,48 @@ import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.item.InventoryLayout;
 import dev.kejona.crossplatforms.item.Item;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.OptionalInt;
 
 public class SpigotInventoryFactory implements InventoryFactory {
 
-    private static final Material PLAYER_HEAD_MATERIAL;
+    private static final int MAX_CHEST_SIZE = 9 * 5;
 
-    static {
-        Material modern = Material.getMaterial("PLAYER_HEAD");
-        if (modern != null) {
-            PLAYER_HEAD_MATERIAL = modern;
-        } else {
-            Logger.get().debug("Using legacy SKULL_ITEM material for player heads");
-            PLAYER_HEAD_MATERIAL = Objects.requireNonNull(Material.getMaterial("SKULL_ITEM"), "SKULL_ITEM material lookup");
-        }
-    }
+    private static boolean warnedForCustomModelData = false;
 
+    private final VersionAdapter adapter;
     private final Material playerHeadMaterial;
+    private final Logger logger;
 
-    public SpigotInventoryFactory(VersionAdapter adapter) {
-        playerHeadMaterial = adapter.playerHeadMaterial();
+    public SpigotInventoryFactory(VersionAdapter adapter, Logger logger) {
+        this.adapter = adapter;
+        this.playerHeadMaterial = adapter.playerHeadMaterial();
+        this.logger = logger;
     }
 
     @Override
     public Inventory chest(String title, int chestSize) {
-        return new SpigotInventory(title, chestSize);
+        org.bukkit.inventory.Inventory inventory = Bukkit.createInventory(null, chestSize, title);
+        return new SpigotInventory(inventory);
     }
 
     @Override
     public Inventory inventory(String title, InventoryLayout layout) {
-        return new SpigotInventory(title, layout);
+        if (layout == InventoryLayout.CHEST) {
+            return chest(title, MAX_CHEST_SIZE);
+        }
+
+        org.bukkit.inventory.Inventory inventory = Bukkit.createInventory(null, convertType(layout), title);
+        return new SpigotInventory(inventory);
     }
 
     @Override
@@ -55,6 +59,20 @@ public class SpigotInventoryFactory implements InventoryFactory {
         meta.setDisplayName(displayName);
         meta.setLore(lore);
         item.setItemMeta(meta);
+
+        if (customModelData.isPresent()) {
+            if (adapter.customModelData()) {
+                // On a version that supports CustomModelData
+                adapter.setCustomModelData(item, customModelData.getAsInt());
+            } else {
+                // Not supported, warn about it
+                if (!warnedForCustomModelData) {
+                    logger.warn("Cannot set CustomModelData of " + customModelData.getAsInt() + " on item with name " + displayName);
+                    logger.warn("Custom model data is not supported below 1.14");
+                    warnedForCustomModelData = true;
+                }
+            }
+        }
 
         return new SpigotItem(item);
     }
@@ -68,9 +86,50 @@ public class SpigotInventoryFactory implements InventoryFactory {
             meta.setDisplayName(displayName);
         }
         meta.setLore(lore);
-
-
         item.setItemMeta(meta);
+
+        adapter.setSkullProfile(meta, player);
+
         return new SpigotItem(item);
+    }
+
+    private static InventoryType convertType(InventoryLayout layout) {
+        switch (layout) {
+            case HOPPER:
+                return InventoryType.HOPPER;
+            case DISPENSER:
+                return InventoryType.DISPENSER;
+            case CHEST:
+                throw new IllegalArgumentException("Chest inventories should be created directly");
+        }
+
+        throw new AssertionError("Unhandled InventoryLayout: " + layout.name());
+    }
+
+    @RequiredArgsConstructor
+    private static class SpigotItem implements Item {
+
+        private final ItemStack handle;
+
+        @Override
+        public Object handle() {
+            return handle;
+        }
+    }
+
+    @RequiredArgsConstructor
+    private static class SpigotInventory implements Inventory {
+
+        private final org.bukkit.inventory.Inventory handle;
+
+        @Override
+        public Object handle() {
+            return handle;
+        }
+
+        @Override
+        public void setSlot(int index, Item item) {
+            handle.setItem(index, item.castedHandle());
+        }
     }
 }

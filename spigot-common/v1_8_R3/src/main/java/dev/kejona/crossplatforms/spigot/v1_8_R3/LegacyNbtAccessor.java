@@ -54,9 +54,4 @@ public class LegacyNbtAccessor implements NbtAccessor {
         // then set string with our namespace applied
         new NBTItem(stack, true).addCompound(BUKKIT_COMPOUND).setString(applyNamespace(key), value);
     }
-
-    @Override
-    public void setCustomModelData(@Nonnull ItemStack stack, @Nullable Integer value) {
-        throw new UnsupportedOperationException("CustomModelData only supported on 1.14.4 and above (current version is 1.18.3)");
-    }
 }

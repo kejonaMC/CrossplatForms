@@ -15,6 +15,7 @@ public class VersionIndexer {
 
     private static final int SUPPORTED_MAJOR_VERSION = 1;
     private static final TreeMap<Version, Supplier<VersionAdapter>> ADAPTERS = new TreeMap<>();
+    // todo: probably need to make the value generic so that this can be unit tested (some adapters rely on craft classes)
 
     static {
         ADAPTERS.put(new Version("1_8_R3"), Adapter_v1_8_R3::new);

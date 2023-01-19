@@ -76,6 +76,8 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             versionAdapter = result.adapter().get();
         } else {
             logger.severe("This server version is unsupported. If you believe this is incorrect, please contact us.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         SpigotHandler serverHandler = new SpigotHandler(this, audiences);
@@ -130,7 +132,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             "forms",
             commandManager,
             placeholders,
-            new SpigotInventoryFactory(versionAdapter),
+            new SpigotInventoryFactory(versionAdapter, logger),
             this
         );
 
