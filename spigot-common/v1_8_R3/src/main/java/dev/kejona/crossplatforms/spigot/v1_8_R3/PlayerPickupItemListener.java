@@ -1,6 +1,5 @@
 package dev.kejona.crossplatforms.spigot.v1_8_R3;
 
-import de.tr7zw.changeme.nbtapi.NBT;
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
 import lombok.AllArgsConstructor;
 import org.bukkit.event.EventHandler;
