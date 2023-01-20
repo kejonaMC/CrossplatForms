@@ -100,7 +100,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             return;
         }
 
-        if (attemptBrigadier()) {
+        if (brigadierAvailable()) {
             try {
                 // Brigadier is ideal if possible. Allows for much more readable command options, especially on BE.
                 commandManager.registerBrigadier();
@@ -138,7 +138,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         );
 
         // Wait for debug to be set or not
-        logger.info("Using " + versionAdapter.getClass().getSimpleName() + " for server version " + ClassNames.NMS_VERSION);
+        logger.debug("Using " + versionAdapter.getClass().getSimpleName() + " for server version " + ClassNames.NMS_VERSION);
 
         SpigotAccessItems accessItems = new SpigotAccessItems(
             this,
@@ -206,7 +206,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         }
     }
     
-    private boolean attemptBrigadier() {
+    private boolean brigadierAvailable() {
         try {
             // Brigadier is available on 1.13 and above
             Class.forName("org.bukkit.entity.Dolphin");
