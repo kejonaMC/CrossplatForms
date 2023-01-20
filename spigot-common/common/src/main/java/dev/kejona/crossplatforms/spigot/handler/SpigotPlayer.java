@@ -50,7 +50,7 @@ public class SpigotPlayer implements FormPlayer {
     @Nullable
     @Override
     public String getEncodedSkinData() {
-        GameProfile profile = ReflectionUtils.castedInvoke(handle, ClassNames.GET_PROFILE_METHOD);
+        GameProfile profile = ReflectionUtils.castedInvoke(handle, ClassNames.PLAYER_GET_PROFILE);
         Objects.requireNonNull(profile, "game profile");
 
         // Need to be careful here - getProperties() returns an authlib PropertyMap, which extends

@@ -7,7 +7,7 @@ plugins {
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
     api("de.tr7zw:item-nbt-api:2.10.0")
-    api(projects.spigotCommon.all)
+    api(projects.spigotCommon.v114R1)
 }
 
 tasks.withType<ShadowJar> {

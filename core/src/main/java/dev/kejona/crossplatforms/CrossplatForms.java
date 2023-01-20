@@ -143,12 +143,10 @@ public class CrossplatForms {
         logger.debug("Took " + (System.currentTimeMillis() - configTime) + "ms to load config files.");
 
         // Load forms and menus from the configs into registries
-        long registryTime = System.currentTimeMillis();
         interfacer.load(
             new BedrockFormRegistry(configManager, permissions),
             new JavaMenuRegistry(configManager, permissions)
         );
-        logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
         // Command defined in config or default provided by implementation
         rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);

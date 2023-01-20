@@ -3,8 +3,8 @@ package dev.kejona.crossplatforms.spigot;
 import dev.kejona.crossplatforms.utils.ReflectionUtils;
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 /**
  * Thanks to Floodgate
@@ -12,14 +12,23 @@ import java.util.Objects;
  */
 public final class ClassNames {
 
-    public static final Method GET_PROFILE_METHOD;
+    /**
+     * Includes the v at the front
+     */
+    public static final String NMS_VERSION;
+    private static final String CRAFTBUKKIT_PACKAGE;
+
+    public static final Method PLAYER_GET_PROFILE;
+    public static final Field META_SKULL_PROFILE;
 
     static {
-        String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        NMS_VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+        CRAFTBUKKIT_PACKAGE = "org.bukkit.craftbukkit." + NMS_VERSION;
 
-        Class<?> craftPlayerClass = ReflectionUtils.getClass("org.bukkit.craftbukkit." + version + ".entity.CraftPlayer");
+        Class<?> craftPlayer = ReflectionUtils.requireClass(CRAFTBUKKIT_PACKAGE + ".entity.CraftPlayer");
+        PLAYER_GET_PROFILE = ReflectionUtils.requireMethod(craftPlayer, "getProfile");
 
-        GET_PROFILE_METHOD = ReflectionUtils.getMethod(craftPlayerClass, "getProfile");
-        Objects.requireNonNull(GET_PROFILE_METHOD, "Get profile method");
+        Class<?> craftMetaSkull = ReflectionUtils.requireClass(CRAFTBUKKIT_PACKAGE + ".inventory.CraftMetaSkull");
+        META_SKULL_PROFILE = ReflectionUtils.requireField(craftMetaSkull, "profile");
     }
 }

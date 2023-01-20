@@ -22,7 +22,7 @@ import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
-import dev.kejona.crossplatforms.spigot.adapter.VersionIndexResult;
+import dev.kejona.crossplatforms.spigot.adapter.VersionValue;
 import dev.kejona.crossplatforms.spigot.handler.PlaceholderAPIHandler;
 import dev.kejona.crossplatforms.spigot.handler.SpigotCommandOrigin;
 import dev.kejona.crossplatforms.spigot.handler.SpigotHandler;
@@ -70,10 +70,10 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         audiences = BukkitAudiences.create(this);
         metrics = new Metrics(this, METRICS_ID);
 
-        VersionIndexResult result = findVersionAdapter();
+        VersionValue<VersionAdapter> result = findVersionAdapter();
         result.betterVersion().ifPresent(v -> logger.warn("Consider using server version " + v + " instead."));
-        if (result.adapter().isPresent()) {
-            versionAdapter = result.adapter().get();
+        if (result.value().isPresent()) {
+            versionAdapter = result.value().get();
         } else {
             logger.severe("This server version is unsupported. If you believe this is incorrect, please contact us.");
             getServer().getPluginManager().disablePlugin(this);
@@ -104,6 +104,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             try {
                 // Brigadier is ideal if possible. Allows for much more readable command options, especially on BE.
                 commandManager.registerBrigadier();
+                logger.info("Successfully registered Brigadier mappings");
             } catch (BukkitCommandManager.BrigadierFailureException e) {
                 logger.warn("Failed to initialize Brigadier support: " + e.getMessage());
                 if (e.getReason() == BukkitCommandManager.BrigadierFailureReason.VERSION_TOO_HIGH) {
@@ -135,6 +136,9 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             new SpigotInventoryFactory(versionAdapter, logger),
             this
         );
+
+        // Wait for debug to be set or not
+        logger.info("Using " + versionAdapter.getClass().getSimpleName() + " for server version " + ClassNames.NMS_VERSION);
 
         SpigotAccessItems accessItems = new SpigotAccessItems(
             this,
@@ -214,7 +218,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         return false;
     }
 
-    public abstract VersionIndexResult findVersionAdapter();
+    public abstract VersionValue<VersionAdapter> findVersionAdapter();
 
     public static SpigotBase getInstance() {
         return INSTANCE;

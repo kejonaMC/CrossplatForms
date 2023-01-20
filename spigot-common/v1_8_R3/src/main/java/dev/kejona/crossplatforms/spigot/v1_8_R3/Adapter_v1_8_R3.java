@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.spigot.v1_8_R3;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.spigot.ClassNames;
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
@@ -15,19 +16,8 @@ import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.util.Objects;
 
 public class Adapter_v1_8_R3 implements VersionAdapter {
-
-    private static final Field PROFILE_FIELD;
-
-    static {
-        PROFILE_FIELD = Objects.requireNonNull(
-            ReflectionUtils.getField(SkullMeta.class, "profile", true),
-            "Field 'profile' of GameProfile"
-        );
-    }
 
     @Override
     public boolean customModelData() {
@@ -49,7 +39,7 @@ public class Adapter_v1_8_R3 implements VersionAdapter {
         GameProfile profile = new GameProfile(player.getUuid(), player.getName());
         profile.getProperties().put("textures", new Property("textures", player.getEncodedSkinData()));
 
-        ReflectionUtils.setValue(meta, PROFILE_FIELD, profile);
+        ReflectionUtils.setValue(meta, ClassNames.META_SKULL_PROFILE, profile);
     }
 
     @Override

@@ -40,9 +40,6 @@ include(":velocity")
 
 include(":spigot")
 
-include(":spigot-common:all")
-findProject(":spigot-common:all")?.name = "all"
-
 include(":spigot-common:common")
 findProject(":spigot-common:common")?.name = "common"
 
