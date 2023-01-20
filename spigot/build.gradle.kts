@@ -28,7 +28,6 @@ tasks.withType<ShadowJar> {
             val name = e.name
             name.startsWith("org.yaml") // Available on Spigot
             || (name.startsWith("com.google") && !name.startsWith("com.google.inject"))
-            || name.startsWith("javax.inject")
         }
     }
 
