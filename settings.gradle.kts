@@ -24,7 +24,7 @@ dependencyResolutionManagement {
         maven("https://oss.sonatype.org/content/repositories/snapshots") // bungeecord, spigot
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // spigot
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/") // PlaceholderAPI
-        maven("https://repo.codemc.org/repository/maven-public/") // NBT api
+        maven("https://repo.codemc.io//repository/maven-public/") // NBT api
 
         maven("https://mvn.exceptionflug.de/repository/exceptionflug-public/") // protocolize for proxies
         maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity

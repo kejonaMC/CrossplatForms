@@ -36,7 +36,6 @@ tasks.withType<ShadowJar> {
             (name.startsWith("com.google")
                     && !name.startsWith("com.google.inject")
                     && !name.startsWith("com.google.guava")) // contains package name of com.google.common
-                    || name.startsWith("javax.inject")
         }
     }
 
