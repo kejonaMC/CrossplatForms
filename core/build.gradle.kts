@@ -39,9 +39,9 @@ dependencies {
     api("org.bstats:bstats-base:3.0.0")
 
     // Required because source and unshaded jars are all mixed up on the opencollab repo currently
-    val baseApi = "2.1.0-20221012.212632-20"
-    val geyserApi = "2.1.0-20221012.212634-20"
-    val geyserCore = "2.1.0-20221012.212644-20"
+    val baseApi = "2.1.0-20221211.182143-60"
+    val geyserApi = "2.1.0-20221211.182145-60"
+    val geyserCore = "2.1.0-20221211.182157-60"
 
     // dependencies for java16 sources (optionally used at runtime)
     java16Implementation("org.geysermc:api:$baseApi")
