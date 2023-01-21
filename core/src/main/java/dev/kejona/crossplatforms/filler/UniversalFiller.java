@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 @ConfigSerializable
 public abstract class UniversalFiller implements OptionFiller, SimpleFormFiller, InventoryFiller {
 
+    // todo: this REALLY needs to be done in a better way... at least the formatting
+
     /**
      * OptionFormat is used here since Option is deserialized as a scalar, and the format node is a map.
      */

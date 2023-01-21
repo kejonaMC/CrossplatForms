@@ -6,6 +6,7 @@ import dev.kejona.crossplatforms.item.Inventory;
 import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.item.InventoryLayout;
 import dev.kejona.crossplatforms.item.Item;
+import dev.kejona.crossplatforms.item.SkullProfile;
 import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -16,8 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.OptionalInt;
 
 public class SpigotInventoryFactory implements InventoryFactory {
 
@@ -52,22 +53,34 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item item(String displayName, String material, List<String> lore, OptionalInt customModelData) {
-        ItemStack item = new ItemStack(Material.matchMaterial(material));
+    public Item item(@Nonnull String displayName, @Nullable String material, @Nonnull List<String> lore, Integer customModelData) {
+        Material type;
+        if (material == null || material.isEmpty()) {
+            type = Material.STONE;
+        } else {
+            try {
+                type = Material.matchMaterial(material);
+            } catch (IllegalArgumentException ignored) {
+                Logger.get().warn("Material '" + material + "' is not a valid material on BungeeCord/Velocity (Protocolize)");
+                type = Material.STONE;
+            }
+        }
+
+        ItemStack item = new ItemStack(type);
 
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(displayName);
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        if (customModelData.isPresent()) {
+        if (customModelData != null) {
             if (adapter.customModelData()) {
                 // On a version that supports CustomModelData
-                adapter.setCustomModelData(item, customModelData.getAsInt());
+                adapter.setCustomModelData(item, customModelData);
             } else {
                 // Not supported, warn about it
                 if (!warnedForCustomModelData) {
-                    logger.warn("Cannot set CustomModelData of " + customModelData.getAsInt() + " on item with name " + displayName);
+                    logger.warn("Cannot set CustomModelData of " + customModelData + " on item with name " + displayName);
                     logger.warn("Custom model data is not supported below 1.14");
                     warnedForCustomModelData = true;
                 }
@@ -78,19 +91,34 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item skullItem(FormPlayer player, @Nullable String displayName, List<String> lore) {
-        ItemStack item = new ItemStack(playerHeadMaterial);
+    public Item skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
+        ItemStack item = skullBase(displayName, lore);
+        adapter.setSkullProfile(skullMeta(item), owner);
+        return new SpigotItem(item);
+    }
 
+    @Override
+    public Item skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
+        ItemStack item = skullBase(displayName, lore);
+        adapter.setSkullProfile(skullMeta(item), owner.getOwnerId(), owner.getOwnerName(), owner.getTexturesValue());
+        return new SpigotItem(item);
+    }
+
+    private ItemStack skullBase(String displayName, List<String> lore) {
+        ItemStack item = new ItemStack(playerHeadMaterial);
         SkullMeta meta = (SkullMeta) item.getItemMeta();
+
         if (displayName != null) {
             meta.setDisplayName(displayName);
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        adapter.setSkullProfile(meta, player);
+        return item;
+    }
 
-        return new SpigotItem(item);
+    private SkullMeta skullMeta(ItemStack skullItem) {
+        return (SkullMeta) skullItem;
     }
 
     private static InventoryType convertType(InventoryLayout layout) {
