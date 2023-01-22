@@ -2,7 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
-import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -31,9 +31,9 @@ public class Toggle extends CustomComponent {
     }
 
     @Override
-    public void prepare(@Nonnull Resolver resolver) {
-        super.prepare(resolver);
-        defaultValue = resolver.apply(defaultValue);
+    public void prepare(@Nonnull PlayerContext context) {
+        super.prepare(context);
+        defaultValue = context.resolver().apply(defaultValue);
     }
 
     @Override
@@ -42,13 +42,6 @@ public class Toggle extends CustomComponent {
         toggle.copyBasics(this);
         toggle.defaultValue = this.defaultValue;
         return toggle;
-    }
-
-    @Override
-    public Toggle preparedCopy(Resolver resolver) {
-        Toggle copy = copy();
-        copy.prepare(resolver);
-        return copy;
     }
 
     @Nonnull

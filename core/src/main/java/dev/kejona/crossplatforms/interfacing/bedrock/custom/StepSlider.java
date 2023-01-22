@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.filler.OptionFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
@@ -59,28 +60,17 @@ public class StepSlider extends CustomComponent {
     }
 
     @Override
-    public void prepare(@Nonnull Resolver resolver) {
-        super.prepare(resolver);
+    public void prepare(@Nonnull PlayerContext context) {
+        super.prepare(context);
         // apply fillers
         for (OptionFiller filler : fillers) {
-            int index = filler.insertIndex();
-            if (index < 0) {
-                filler.generateOptions(resolver).forEachOrdered(steps::add);
-            } else {
-                filler.generateOptions(resolver).forEachOrdered(o -> steps.add(index, o));
-            }
+            filler.fillOptions(steps, context);
         }
 
         // apply placeholders
+        Resolver resolver = context.resolver();
         steps = steps.stream().map(o -> o.with(resolver)).collect(Collectors.toList());
         defaultStep = resolver.apply(defaultStep);
-    }
-
-    @Override
-    public StepSlider preparedCopy(Resolver resolver) {
-        StepSlider copy = copy();
-        copy.prepare(resolver);
-        return copy;
     }
 
     @Nonnull

@@ -3,13 +3,16 @@ package dev.kejona.crossplatforms.interfacing.java;
 
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.item.Item;
 import dev.kejona.crossplatforms.item.SkullProfile;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -49,11 +52,9 @@ public class ItemButton {
         return displayName;
     }
 
-    public static ItemButton fillEntry(String displayName, FormPlayer skullOwner) {
-        ItemButton item = new ItemButton();
-        item.displayName = displayName;
-        item.skull = new SkullProfile(skullOwner.getName(), skullOwner.getUuid(), skullOwner.getEncodedSkinData());
-        return item;
+    @Contract("_ -> new")
+    public ItemButton withReplacementsFromFiller(@Nonnull ItemButton generated) {
+        throw new AssertionError("Not yet implemented"); // todo: implement formatting for item button
     }
 
     public static ItemButton fillEntry(String displayName) {

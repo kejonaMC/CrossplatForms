@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.serialize.TypeResolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Required;
@@ -27,8 +27,8 @@ public class SplitterFiller extends UniversalFiller {
 
     @Nonnull
     @Override
-    public Stream<String> rawOptions(Resolver resolver) {
-        return Arrays.stream(resolver.apply(split).split(regex, 0));
+    public Stream<String> rawOptions(PlayerContext context) {
+        return Arrays.stream(context.resolver().apply(split).split(regex, 0));
     }
 
     @Override

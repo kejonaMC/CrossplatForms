@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 import dev.kejona.crossplatforms.IllegalValueException;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.resolver.MapResolver;
@@ -60,9 +61,10 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
         // Setup and add components
         List<CustomComponent> formatted = new ArrayList<>();
         try {
+            PlayerContext context = new PlayerContext(player, resolver); // todo: move upwards
             for (CustomComponent component : this.components) {
                 // resolve placeholders
-                CustomComponent prepared = component.preparedCopy(resolver);
+                CustomComponent prepared = component.preparedCopy(context);
                 formatted.add(prepared);
 
                 // add component to form
