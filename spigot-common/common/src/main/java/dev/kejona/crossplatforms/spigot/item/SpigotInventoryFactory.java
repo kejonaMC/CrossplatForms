@@ -53,7 +53,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item item(@Nonnull String displayName, @Nullable String material, @Nonnull List<String> lore, Integer customModelData) {
+    public Item item(@Nullable String material, @Nonnull String displayName, @Nonnull List<String> lore, Integer customModelData) {
         Material type;
         if (material == null || material.isEmpty()) {
             type = Material.STONE;

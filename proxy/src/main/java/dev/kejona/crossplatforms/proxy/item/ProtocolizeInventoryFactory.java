@@ -50,7 +50,7 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item item(@Nonnull String displayName, @Nullable String material, @Nonnull List<String> lore, @Nullable Integer customModelData) {
+    public Item item(@Nullable String material, @Nonnull String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
         ItemType type;
         if (material == null || material.isEmpty()) {
             type = ItemType.STONE;

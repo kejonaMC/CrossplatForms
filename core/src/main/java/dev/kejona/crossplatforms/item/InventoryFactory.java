@@ -17,7 +17,7 @@ public interface InventoryFactory {
     Inventory chest(String title, int chestSize);
     Inventory inventory(String title, InventoryLayout layout);
 
-    Item item(@Nonnull String displayName, @Nullable String material, @Nonnull List<String> lore, @Nullable Integer customModelData);
+    Item item(@Nullable String material, @Nonnull String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData);
 
     Item skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore);
     Item skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore);

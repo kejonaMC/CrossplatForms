@@ -8,7 +8,6 @@ import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.item.Inventory;
 import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.item.InventoryLayout;
-import dev.kejona.crossplatforms.item.Item;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.ToString;
@@ -51,25 +50,17 @@ public class JavaMenu extends Interface {
 
     @Override
     public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver) {
+        String title = resolver.apply(this.title);
         Inventory inventory;
         if (type == InventoryLayout.CHEST) {
             inventory = factory.chest(title, size);
         } else {
             inventory = factory.inventory(title, type);
         }
-
+        // todo: size validation/restraint
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
-
-            String material = button.getMaterial();
-            Item item = factory.item(
-                resolver.apply(button.getDisplayName()),
-                material,
-                resolver.apply(button.getLore()),
-                button.getCustomModelData()
-            );
-
-            inventory.setSlot(slot, item);
+            inventory.setSlot(slot, button.convertAndResolve(recipient, resolver));
         }
 
         interfacer.openInventory(recipient, this, inventory, resolver);
