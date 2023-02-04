@@ -178,6 +178,7 @@ public class CrossplatForms {
                     try {
                         if (origin.hasPermission(ListCommand.PERMISSION)) {
                             logger.debug("Executing /forms list from /forms");
+                            // todo: don't need to wait for command result
                             commandManager.executeCommand(origin, rootCommand + " list").get();
                         } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
                             minecraftHelp.queryCommands("", context.getSender());
