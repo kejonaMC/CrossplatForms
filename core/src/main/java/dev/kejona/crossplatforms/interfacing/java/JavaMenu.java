@@ -53,7 +53,12 @@ public class JavaMenu extends Interface {
         String title = resolver.apply(this.title);
         Inventory inventory;
         if (type == InventoryLayout.CHEST) {
-            inventory = factory.chest(title, size);
+            if (size == 5) {
+                // Hopper
+                inventory = factory.inventory(title, InventoryLayout.HOPPER);
+            } else {
+                inventory = factory.chest(title, size);
+            }
         } else {
             inventory = factory.inventory(title, type);
         }

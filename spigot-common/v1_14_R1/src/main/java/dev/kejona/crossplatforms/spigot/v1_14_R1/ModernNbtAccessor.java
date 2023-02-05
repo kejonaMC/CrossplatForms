@@ -4,6 +4,7 @@ import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
 import lombok.AllArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
@@ -35,10 +36,13 @@ public class ModernNbtAccessor implements NbtAccessor {
 
     @Override
     public void setCustomString(@Nonnull ItemStack stack, @Nonnull String key, @Nonnull String value) {
-        requireItemMeta(stack).getPersistentDataContainer().set(
+        ItemMeta meta = requireItemMeta(stack);
+        meta.getPersistentDataContainer().set(
             new NamespacedKey(plugin, key),
             PersistentDataType.STRING,
             value
         );
+
+        stack.setItemMeta(meta); // Since ItemStack#getItemMeta returns a copy
     }
 }
