@@ -65,7 +65,7 @@ public final class SkinUtils {
     }
 
     @Nonnull
-    public static String getSkinId(String skinUrl) {
+    public static String getSkinId(String skinUrl) throws IllegalArgumentException {
         Matcher matcher = URL_PATTERN.matcher(skinUrl);
         if (matcher.matches()) {
             return matcher.group(2);

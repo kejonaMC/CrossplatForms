@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @deprecated Subject for removal
+ */
 public class LegacyToMiniTranslator {
 
     private static final Map<Character, String> TRANSLATIONS = new HashMap<>();

@@ -5,7 +5,7 @@ import com.mojang.authlib.properties.Property;
 import dev.kejona.crossplatforms.spigot.ClassNames;
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
 import dev.kejona.crossplatforms.utils.ReflectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class Adapter_v1_8_R3 implements VersionAdapter {
+public class Adapter_v1_8_R3 implements SpigotAdapter {
 
     @Override
     public boolean customModelData() {

@@ -21,8 +21,8 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.permission.Permissions;
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
-import dev.kejona.crossplatforms.spigot.adapter.VersionValue;
+import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.Versioned;
 import dev.kejona.crossplatforms.spigot.handler.PlaceholderAPIHandler;
 import dev.kejona.crossplatforms.spigot.handler.SpigotCommandOrigin;
 import dev.kejona.crossplatforms.spigot.handler.SpigotHandler;
@@ -57,7 +57,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
     private Server server;
     private BukkitAudiences audiences;
     private Metrics metrics;
-    private VersionAdapter versionAdapter;
+    private SpigotAdapter spigotAdapter;
 
     protected SpigotBase() {
         INSTANCE = this;
@@ -70,10 +70,10 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         audiences = BukkitAudiences.create(this);
         metrics = new Metrics(this, METRICS_ID);
 
-        VersionValue<VersionAdapter> result = findVersionAdapter();
+        Versioned<SpigotAdapter> result = findVersionAdapter();
         result.betterVersion().ifPresent(v -> logger.warn("Consider using server version " + v + " instead."));
         if (result.value().isPresent()) {
-            versionAdapter = result.value().get();
+            spigotAdapter = result.value().get();
         } else {
             logger.severe("This server version is unsupported. If you believe this is incorrect, please contact us.");
             getServer().getPluginManager().disablePlugin(this);
@@ -133,16 +133,16 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             "forms",
             commandManager,
             placeholders,
-            new SpigotInventoryFactory(versionAdapter, logger),
+            new SpigotInventoryFactory(spigotAdapter, logger),
             this
         );
 
         // Wait for debug to be set or not
-        logger.debug("Using " + versionAdapter.getClass().getSimpleName() + " for server version " + ClassNames.NMS_VERSION);
+        logger.debug("Using " + spigotAdapter.getClass().getSimpleName() + " for server version " + ClassNames.NMS_VERSION);
 
         SpigotAccessItems accessItems = new SpigotAccessItems(
             this,
-            versionAdapter,
+            spigotAdapter,
             crossplatForms.getConfigManager(),
             crossplatForms.getPermissions(),
             crossplatForms.getInterfacer(),
@@ -150,7 +150,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             crossplatForms.getPlaceholders()
         );
         server.getPluginManager().registerEvents(accessItems, this);
-        versionAdapter.registerAuxiliaryEvents(this, accessItems); // Events for versions above 1.8
+        spigotAdapter.registerAuxiliaryEvents(this, accessItems); // Events for versions above 1.8
 
         // Commands added by access items
         new GiveCommand(crossplatForms, accessItems).register(commandManager, crossplatForms.getCommandBuilder());
@@ -218,7 +218,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         return false;
     }
 
-    public abstract VersionValue<VersionAdapter> findVersionAdapter();
+    public abstract Versioned<SpigotAdapter> findVersionAdapter();
 
     public static SpigotBase getInstance() {
         return INSTANCE;

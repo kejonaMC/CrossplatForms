@@ -34,10 +34,4 @@ public class ItemButton extends ConfiguredItem {
     public ItemButton withReplacementsFromFiller(@Nonnull ItemButton generated) {
         throw new AssertionError("Not yet implemented"); // todo: implement formatting for item button
     }
-
-    public static ItemButton fillEntry(String displayName) {
-        ItemButton item = new ItemButton();
-        item.displayName = displayName;
-        return item;
-    }
 }

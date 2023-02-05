@@ -50,7 +50,7 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item item(@Nullable String material, @Nonnull String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
+    public Item item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
         ItemType type;
         if (material == null || material.isEmpty()) {
             type = ItemType.STONE;
@@ -64,7 +64,9 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
         }
 
         ItemStack item = new ItemStack(type);
-        item.displayName(displayName);
+        if (displayName != null) {
+            item.displayName(displayName);
+        }
         item.lore(lore, true);
 
         CompoundTag nbt = item.nbtData();
@@ -85,7 +87,7 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item skullItem(FormPlayer viewer, SkullProfile owner, @org.jetbrains.annotations.Nullable String displayName, List<String> lore) {
+    public Item skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
         setSkullOwner(viewer,
             item.nbtData(),

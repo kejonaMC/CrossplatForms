@@ -6,12 +6,10 @@ import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
-import dev.kejona.crossplatforms.interfacing.java.ItemButton;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @ConfigSerializable
@@ -38,13 +36,6 @@ public class PlayerFiller extends UniversalFiller {
     @Override
     public Stream<SimpleButton> rawButtons(PlayerContext context) {
         return serverHandler.getPlayersSorted().map(player -> new SimpleButton(player.getName(), headLink(player)));
-    }
-
-    @Nonnull
-    @Override
-    public Map<Integer, ItemButton> rawItems(PlayerContext context) {
-        //return serverHandler.getPlayersSorted().map(player -> ItemButton.fillEntry(player.getName(), player));
-        throw new AssertionError("Not yet implemented"); // todo
     }
 
     @Override

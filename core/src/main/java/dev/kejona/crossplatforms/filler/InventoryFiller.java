@@ -8,6 +8,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
+/**
+ * @deprecated Subject to future change once implementation is finished
+ */
 public interface InventoryFiller extends ValuedType {
 
     default void fillItems(Map<Integer, ItemButton> container, PlayerContext context) {

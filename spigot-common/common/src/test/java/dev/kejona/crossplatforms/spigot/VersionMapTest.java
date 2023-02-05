@@ -2,7 +2,7 @@ package dev.kejona.crossplatforms.spigot;
 
 import dev.kejona.crossplatforms.spigot.adapter.Version;
 import dev.kejona.crossplatforms.spigot.adapter.VersionMap;
-import dev.kejona.crossplatforms.spigot.adapter.VersionValue;
+import dev.kejona.crossplatforms.spigot.adapter.Versioned;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ public class VersionMapTest {
     @Test
     public void testUnsupportedVersions() {
         for (String version : UNSUPPORTED_VERSIONS) {
-            VersionValue<String> index = map.findLenientAdapter(version);
+            Versioned<String> index = map.findLenientAdapter(version);
 
             // The value
             Assertions.assertNull(index.value().orElse(null),

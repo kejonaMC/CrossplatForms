@@ -10,7 +10,7 @@ import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
 import dev.kejona.crossplatforms.spigot.handler.SpigotPlayer;
 import lombok.AllArgsConstructor;
 import org.bukkit.Material;
@@ -51,7 +51,7 @@ public final class SpigotAccessItems extends AccessItemRegistry implements Liste
     protected final Placeholders placeholders;
 
     public SpigotAccessItems(JavaPlugin plugin,
-                             VersionAdapter adapter,
+                             SpigotAdapter adapter,
                              ConfigManager configManager,
                              Permissions permissions,
                              Interfacer interfacer,

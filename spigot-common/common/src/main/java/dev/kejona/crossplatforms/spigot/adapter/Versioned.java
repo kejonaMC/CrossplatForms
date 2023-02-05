@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class VersionValue<T> {
+public class Versioned<T> {
 
     /**
      * The value found for a version
@@ -17,16 +17,16 @@ public class VersionValue<T> {
      */
     private final String betterVersion;
 
-    public VersionValue(@Nullable T value, @Nullable String betterVersion) {
+    public Versioned(@Nullable T value, @Nullable String betterVersion) {
         this.value = value;
         this.betterVersion = betterVersion;
     }
 
-    public VersionValue(@Nonnull T value) {
+    public Versioned(@Nonnull T value) {
         this(value, null);
     }
 
-    public VersionValue(@Nonnull String betterVersion) {
+    public Versioned(@Nonnull String betterVersion) {
         this(null, betterVersion);
     }
 
@@ -39,17 +39,17 @@ public class VersionValue<T> {
     }
 
     /**
-     * Converts the given {@link Supplier} type {@link VersionValue} by calling {@link Supplier#get()} if the value is
-     * present, otherwise using null for the new VersionValue.
+     * Converts the given {@link Versioned} of a {@link Supplier} by calling {@link Supplier#get()} if the value is
+     * present, otherwise using null for the new Versioned.
      *
-     * @param value The Supplier type VersionValue to convert
+     * @param versioned The Supplier-type Versioned to convert
      * @param <T> The type that the Supplier provides, that will be the type of the converted VersionValue
-     * @return A new {@link VersionValue} with the Supplier intermediary removed
+     * @return A new {@link Versioned} with the Supplier intermediary removed
      */
-    public static <T> VersionValue<T> convertSupplierType(VersionValue<Supplier<T>> value) {
-        return new VersionValue<>(
-            value.value().map(Supplier::get).orElse(null),
-            value.betterVersion().orElse(null)
+    public static <T> Versioned<T> convertSupplierType(Versioned<Supplier<T>> versioned) {
+        return new Versioned<>(
+            versioned.value().map(Supplier::get).orElse(null),
+            versioned.betterVersion().orElse(null)
         );
     }
 }

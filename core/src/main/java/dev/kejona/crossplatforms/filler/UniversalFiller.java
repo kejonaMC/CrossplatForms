@@ -11,7 +11,6 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -50,17 +49,7 @@ public abstract class UniversalFiller implements OptionFiller, SimpleFormFiller,
     @Nonnull
     @Override
     public Map<Integer, ItemButton> rawItems(PlayerContext context) {
-        // String[]::new takes size as input
-        String[] options = rawOptions(context).toArray(String[]::new);
-
-        Map<Integer, ItemButton> buttons = new HashMap<>(options.length);
-        int i = 0;
-        for (String option : options) {
-            buttons.put(i, ItemButton.fillEntry(option));
-            i++;
-        }
-
-        return buttons;
+        throw new AssertionError("Not yet implemented");
     }
 
     @Nonnull

@@ -7,7 +7,7 @@ import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.item.InventoryLayout;
 import dev.kejona.crossplatforms.item.Item;
 import dev.kejona.crossplatforms.item.SkullProfile;
-import dev.kejona.crossplatforms.spigot.adapter.VersionAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,9 +15,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class SpigotInventoryFactory implements InventoryFactory {
@@ -26,11 +26,11 @@ public class SpigotInventoryFactory implements InventoryFactory {
 
     private static boolean warnedForCustomModelData = false;
 
-    private final VersionAdapter adapter;
+    private final SpigotAdapter adapter;
     private final Material playerHeadMaterial;
     private final Logger logger;
 
-    public SpigotInventoryFactory(VersionAdapter adapter, Logger logger) {
+    public SpigotInventoryFactory(SpigotAdapter adapter, Logger logger) {
         this.adapter = adapter;
         this.playerHeadMaterial = adapter.playerHeadMaterial();
         this.logger = logger;
@@ -53,7 +53,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item item(@Nullable String material, @Nonnull String displayName, @Nonnull List<String> lore, Integer customModelData) {
+    public Item item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
         Material type;
         if (material == null || material.isEmpty()) {
             type = Material.STONE;
@@ -69,7 +69,9 @@ public class SpigotInventoryFactory implements InventoryFactory {
         ItemStack item = new ItemStack(type);
 
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(displayName);
+        if (displayName != null) {
+            meta.setDisplayName(displayName);
+        }
         meta.setLore(lore);
         item.setItemMeta(meta);
 
@@ -118,7 +120,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     private SkullMeta skullMeta(ItemStack skullItem) {
-        return (SkullMeta) skullItem;
+        return (SkullMeta) skullItem.getItemMeta();
     }
 
     private static InventoryType convertType(InventoryLayout layout) {

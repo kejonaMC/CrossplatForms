@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public interface VersionAdapter {
+public interface SpigotAdapter {
 
     boolean customModelData();
 

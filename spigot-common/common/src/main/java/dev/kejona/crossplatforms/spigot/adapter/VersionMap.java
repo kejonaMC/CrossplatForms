@@ -20,7 +20,7 @@ public class VersionMap<T> extends TreeMap<Version, T> {
     /**
      * @param nmsVersion x_y_Rz
      */
-    public VersionValue<T> findLenientAdapter(String nmsVersion) throws IllegalArgumentException {
+    public Versioned<T> findLenientAdapter(String nmsVersion) throws IllegalArgumentException {
         if (isEmpty()) {
            throw new IllegalStateException("The map is empty");
         }
@@ -28,12 +28,12 @@ public class VersionMap<T> extends TreeMap<Version, T> {
         Version version = new Version(nmsVersion);
 
         if (version.major() != supportedMajorVersion) {
-            return new VersionValue<>(firstKey().nmsVersion());
+            return new Versioned<>(firstKey().nmsVersion());
         }
 
         if (containsKey(version)) {
             // Direct support for this version
-            return new VersionValue<>(adapter(version));
+            return new Versioned<>(adapter(version));
         }
 
         // Find adapter versions below and above the given version
@@ -42,11 +42,11 @@ public class VersionMap<T> extends TreeMap<Version, T> {
 
         if (lower == null) {
             // Given version is lower than lowest adapter version
-            return new VersionValue<>(higher.nmsVersion());
+            return new Versioned<>(higher.nmsVersion());
         }
         if (higher == null) {
             // Given version is higher than highest adapter version
-            return new VersionValue<>(adapter(lower));
+            return new Versioned<>(adapter(lower));
         }
 
         if (lower.minor() != version.minor()) {
@@ -56,15 +56,15 @@ public class VersionMap<T> extends TreeMap<Version, T> {
                 // The given version and higher adapter version only differ in patch version. The server should be updated.
                 // eg 1.13  <  1.14.1  <  1.14.2
                 //    lower    version    higher
-                return new VersionValue<>(adapter(higher), higher.nmsVersion());
+                return new Versioned<>(adapter(higher), higher.nmsVersion());
             } else {
                 // eg 1.13  <  1.14  <  1.15
                 //    lower   version   higher
-                return new VersionValue<>(adapter(lower));
+                return new Versioned<>(adapter(lower));
             }
         }
 
         // There is an adapter for the same minor version, but a lower patch version
-        return new VersionValue<>(adapter(lower));
+        return new Versioned<>(adapter(lower));
     }
 }

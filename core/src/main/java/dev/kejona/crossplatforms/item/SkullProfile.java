@@ -80,6 +80,8 @@ public class SkullProfile {
 
         @Override
         public void serialize(Type type, @Nullable SkullProfile skull, ConfigurationNode node) throws SerializationException {
+            node.raw(null);
+
             if (skull != null) {
                 if (skull.texturesValue != null) {
                     node.node(TEXTURES).set(skull.texturesValue);
