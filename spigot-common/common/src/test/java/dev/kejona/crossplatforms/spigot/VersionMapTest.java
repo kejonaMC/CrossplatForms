@@ -56,7 +56,7 @@ public class VersionMapTest {
 
             Assertions.assertEquals(
                 expected,
-                map.findLenientAdapter(version).value().orElse(null),
+                map.lenientSearch(version).value().orElse(null),
                 "Failed to find the right version for a supported version"
             );
         }
@@ -66,7 +66,7 @@ public class VersionMapTest {
     public void testUndesiredVersions() {
         for (String version : UNDESIRED_VERSIONS) {
             Assertions.assertNotNull(
-                map.findLenientAdapter(version).betterVersion().orElse(null),
+                map.lenientSearch(version).betterVersion().orElse(null),
                 "Expected undesired version " + version + " to still result in a version"
             );
         }
@@ -75,7 +75,7 @@ public class VersionMapTest {
     @Test
     public void testUnsupportedVersions() {
         for (String version : UNSUPPORTED_VERSIONS) {
-            Versioned<String> index = map.findLenientAdapter(version);
+            Versioned<String> index = map.lenientSearch(version);
 
             // The value
             Assertions.assertNull(index.value().orElse(null),

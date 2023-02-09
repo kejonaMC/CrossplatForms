@@ -28,7 +28,7 @@ public class CrossplatFormsSpigot extends SpigotBase {
     @Override
     public Versioned<SpigotAdapter> findVersionAdapter() {
         // substring to remove the v
-        Versioned<Supplier<SpigotAdapter>> adapterSupplier = INDEXER.findLenientAdapter(ClassNames.NMS_VERSION.substring(1));
+        Versioned<Supplier<SpigotAdapter>> adapterSupplier = INDEXER.lenientSearch(ClassNames.NMS_VERSION.substring(1));
         return Versioned.convertSupplierType(adapterSupplier);
     }
 }

@@ -7,7 +7,6 @@ import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.interfacing.Interfacer;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
 import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
@@ -45,21 +44,18 @@ public final class SpigotAccessItems extends AccessItemRegistry implements Liste
 
     private final Logger logger = Logger.get();
 
-    protected final NbtAccessor nbt;
-    protected final Interfacer interfacer;
-    protected final BedrockHandler bedrockHandler;
-    protected final Placeholders placeholders;
+    private final NbtAccessor nbt;
+    private final BedrockHandler bedrockHandler;
+    private final Placeholders placeholders;
 
     public SpigotAccessItems(JavaPlugin plugin,
                              SpigotAdapter adapter,
                              ConfigManager configManager,
                              Permissions permissions,
-                             Interfacer interfacer,
                              BedrockHandler bedrockHandler,
                              Placeholders placeholders) {
         super(configManager, permissions);
         this.nbt = adapter.nbtAccessor(plugin);
-        this.interfacer = interfacer;
         this.bedrockHandler = bedrockHandler;
         this.placeholders = placeholders;
     }
@@ -119,7 +115,7 @@ public final class SpigotAccessItems extends AccessItemRegistry implements Liste
                     if (isEnabled()) {
                         AccessItem access = getItem(id);
                         if (access == null) {
-                            // item not longer exists
+                            // item no longer exists
                             remove(player, item, RemoveReason.ITEM_REMOVED);
                         } else if (player.hasPermission(access.permission(AccessItem.Limit.POSSESS))) {
                             if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
@@ -365,6 +361,7 @@ public final class SpigotAccessItems extends AccessItemRegistry implements Liste
         ITEM_REMOVED("That Access Item doesn't exist anymore."),
         IMPERMISSIBLE("You don't have permission to have that.");
 
-        @Nonnull String message;
+        @Nonnull
+        final String message;
     }
 }

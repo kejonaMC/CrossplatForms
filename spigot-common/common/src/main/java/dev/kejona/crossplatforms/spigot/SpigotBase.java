@@ -145,7 +145,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             spigotAdapter,
             crossplatForms.getConfigManager(),
             crossplatForms.getPermissions(),
-            crossplatForms.getInterfacer(),
             crossplatForms.getBedrockHandler(),
             crossplatForms.getPlaceholders()
         );
