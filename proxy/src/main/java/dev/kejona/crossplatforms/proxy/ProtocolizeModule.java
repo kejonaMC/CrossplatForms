@@ -1,10 +1,10 @@
 package dev.kejona.crossplatforms.proxy;
 
 import com.google.inject.AbstractModule;
-import dev.kejona.crossplatforms.item.InventoryController;
-import dev.kejona.crossplatforms.item.InventoryFactory;
-import dev.kejona.crossplatforms.proxy.item.ProtocolizeInventoryController;
-import dev.kejona.crossplatforms.proxy.item.ProtocolizeInventoryFactory;
+import dev.kejona.crossplatforms.inventory.InventoryController;
+import dev.kejona.crossplatforms.inventory.InventoryFactory;
+import dev.kejona.crossplatforms.proxy.inventory.ProtocolizeInventoryController;
+import dev.kejona.crossplatforms.proxy.inventory.ProtocolizeInventoryFactory;
 
 public class ProtocolizeModule extends AbstractModule {
 

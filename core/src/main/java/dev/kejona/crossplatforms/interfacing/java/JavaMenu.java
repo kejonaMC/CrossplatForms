@@ -5,11 +5,11 @@ import dev.kejona.crossplatforms.Constants;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
-import dev.kejona.crossplatforms.item.ClickHandler;
-import dev.kejona.crossplatforms.item.Inventory;
-import dev.kejona.crossplatforms.item.InventoryController;
-import dev.kejona.crossplatforms.item.InventoryFactory;
-import dev.kejona.crossplatforms.item.InventoryLayout;
+import dev.kejona.crossplatforms.inventory.ClickHandler;
+import dev.kejona.crossplatforms.inventory.InventoryHandle;
+import dev.kejona.crossplatforms.inventory.InventoryController;
+import dev.kejona.crossplatforms.inventory.InventoryFactory;
+import dev.kejona.crossplatforms.inventory.InventoryLayout;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import lombok.ToString;
@@ -52,7 +52,7 @@ public class JavaMenu extends Interface {
     @Override
     public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver) {
         String title = resolver.apply(this.title);
-        Inventory inventory;
+        InventoryHandle inventory;
         if (type == InventoryLayout.CHEST) {
             if (size == 5) {
                 // Hopper

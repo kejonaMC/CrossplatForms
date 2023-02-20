@@ -1,10 +1,11 @@
-package dev.kejona.crossplatforms.proxy.item;
+package dev.kejona.crossplatforms.proxy.inventory;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.item.ClickHandler;
-import dev.kejona.crossplatforms.item.Inventory;
-import dev.kejona.crossplatforms.item.InventoryController;
+import dev.kejona.crossplatforms.inventory.ClickHandler;
+import dev.kejona.crossplatforms.inventory.InventoryController;
+import dev.kejona.crossplatforms.inventory.InventoryHandle;
 import dev.simplix.protocolize.api.Protocolize;
+import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.player.ProtocolizePlayer;
 import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 
@@ -13,9 +14,9 @@ public class ProtocolizeInventoryController implements InventoryController {
     private final ProtocolizePlayerProvider players = Protocolize.playerProvider();
 
     @Override
-    public void openInventory(FormPlayer recipient, Inventory container, ClickHandler clickHandler) {
+    public void openInventory(FormPlayer recipient, InventoryHandle container, ClickHandler clickHandler) {
         ProtocolizePlayer player = players.player(recipient.getUuid());
-        dev.simplix.protocolize.api.inventory.Inventory inventory = container.castedHandle();
+        Inventory inventory = container.castedHandle(Inventory.class);
 
         inventory.onClick(click -> {
             int slot = click.slot();

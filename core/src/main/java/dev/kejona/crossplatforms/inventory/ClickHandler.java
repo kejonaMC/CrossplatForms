@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
 /**
  * Responsible for handling clicks inside an inventory

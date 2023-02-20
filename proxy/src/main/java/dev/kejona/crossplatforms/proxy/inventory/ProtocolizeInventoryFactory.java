@@ -1,13 +1,14 @@
-package dev.kejona.crossplatforms.proxy.item;
+package dev.kejona.crossplatforms.proxy.inventory;
 
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.item.Inventory;
-import dev.kejona.crossplatforms.item.InventoryFactory;
-import dev.kejona.crossplatforms.item.InventoryLayout;
-import dev.kejona.crossplatforms.item.Item;
-import dev.kejona.crossplatforms.item.SkullProfile;
+import dev.kejona.crossplatforms.inventory.InventoryFactory;
+import dev.kejona.crossplatforms.inventory.InventoryHandle;
+import dev.kejona.crossplatforms.inventory.InventoryLayout;
+import dev.kejona.crossplatforms.inventory.ItemHandle;
+import dev.kejona.crossplatforms.inventory.SkullProfile;
 import dev.simplix.protocolize.api.Protocolize;
+import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
 import dev.simplix.protocolize.api.player.ProtocolizePlayer;
 import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
@@ -30,9 +31,9 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     private final ProtocolizePlayerProvider players = Protocolize.playerProvider();
 
     @Override
-    public Inventory chest(String title, int chestSize) {
+    public InventoryHandle chest(String title, int chestSize) {
         InventoryType type = InventoryType.chestInventoryWithSize(chestSize);
-        dev.simplix.protocolize.api.inventory.Inventory inventory = new dev.simplix.protocolize.api.inventory.Inventory(type);
+        Inventory inventory = new Inventory(type);
 
         inventory.title(title);
 
@@ -40,9 +41,9 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Inventory inventory(String title, InventoryLayout layout) {
+    public InventoryHandle inventory(String title, InventoryLayout layout) {
         InventoryType type = convertType(layout);
-        dev.simplix.protocolize.api.inventory.Inventory inventory = new dev.simplix.protocolize.api.inventory.Inventory(type);
+        Inventory inventory = new Inventory(type);
 
         inventory.title(title);
 
@@ -50,7 +51,7 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
+    public ItemHandle item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
         ItemType type;
         if (material == null || material.isEmpty()) {
             type = ItemType.STONE;
@@ -80,14 +81,14 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
+    public ItemHandle skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
         setSkullOwner(viewer, item.nbtData(), owner.getUuid(), owner.getName(), owner.getEncodedSkinData());
         return new ProtocolizeItem(item);
     }
 
     @Override
-    public Item skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
+    public ItemHandle skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
         setSkullOwner(viewer,
             item.nbtData(),

@@ -3,7 +3,7 @@ package dev.kejona.crossplatforms.interfacing.java;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.action.Action;
-import dev.kejona.crossplatforms.item.ConfiguredItem;
+import dev.kejona.crossplatforms.inventory.ConfiguredItem;
 import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.Contract;

@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

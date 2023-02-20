@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
 
@@ -8,5 +8,5 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
  */
 public interface InventoryController {
 
-    void openInventory(FormPlayer recipient, Inventory container, ClickHandler clickHandler);
+    void openInventory(FormPlayer recipient, InventoryHandle container, ClickHandler clickHandler);
 }

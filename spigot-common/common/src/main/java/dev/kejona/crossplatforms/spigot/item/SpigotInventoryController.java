@@ -1,8 +1,9 @@
 package dev.kejona.crossplatforms.spigot.item;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.item.ClickHandler;
-import dev.kejona.crossplatforms.item.InventoryController;
+import dev.kejona.crossplatforms.inventory.ClickHandler;
+import dev.kejona.crossplatforms.inventory.InventoryController;
+import dev.kejona.crossplatforms.inventory.InventoryHandle;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,9 +22,9 @@ public class SpigotInventoryController implements InventoryController, Listener 
     private final Map<Inventory, ClickHandler> handlerCache = new HashMap<>();
 
     @Override
-    public void openInventory(FormPlayer recipient, dev.kejona.crossplatforms.item.Inventory container, ClickHandler clickHandler) {
+    public void openInventory(FormPlayer recipient, InventoryHandle container, ClickHandler clickHandler) {
         Player player = Objects.requireNonNull(Bukkit.getPlayer(recipient.getUuid()), "player lookup");
-        Inventory inventory = container.castedHandle();
+        Inventory inventory = container.castedHandle(Inventory.class);
 
         player.openInventory(inventory);
         handlerCache.put(inventory, clickHandler);

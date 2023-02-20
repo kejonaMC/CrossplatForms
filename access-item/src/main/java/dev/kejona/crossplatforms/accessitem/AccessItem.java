@@ -8,7 +8,7 @@ import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.item.ConfiguredItem;
+import dev.kejona.crossplatforms.inventory.ConfiguredItem;
 import dev.kejona.crossplatforms.permission.Permission;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
 import dev.kejona.crossplatforms.resolver.Resolver;

@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
 
@@ -14,11 +14,11 @@ public interface InventoryFactory {
     their implementation back
      */
 
-    Inventory chest(String title, int chestSize);
-    Inventory inventory(String title, InventoryLayout layout);
+    InventoryHandle chest(String title, int chestSize);
+    InventoryHandle inventory(String title, InventoryLayout layout);
 
-    Item item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData);
+    ItemHandle item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData);
 
-    Item skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore);
-    Item skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore);
+    ItemHandle skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore);
+    ItemHandle skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore);
 }

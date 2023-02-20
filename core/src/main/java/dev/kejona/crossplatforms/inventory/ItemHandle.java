@@ -1,6 +1,6 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
-public interface Item {
+public interface ItemHandle {
 
     Object handle();
 

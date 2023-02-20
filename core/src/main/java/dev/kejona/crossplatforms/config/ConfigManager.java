@@ -18,7 +18,7 @@ import dev.kejona.crossplatforms.filler.SplitterFiller;
 import dev.kejona.crossplatforms.interfacing.Argument;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
-import dev.kejona.crossplatforms.item.SkullProfile;
+import dev.kejona.crossplatforms.inventory.SkullProfile;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
 import dev.kejona.crossplatforms.serialize.PathNodeResolver;

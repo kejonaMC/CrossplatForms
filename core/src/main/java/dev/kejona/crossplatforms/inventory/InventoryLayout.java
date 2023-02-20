@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
 public enum InventoryLayout {
     CHEST,

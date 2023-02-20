@@ -1,4 +1,4 @@
-package dev.kejona.crossplatforms.item;
+package dev.kejona.crossplatforms.inventory;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.handler.FormPlayer;
@@ -41,7 +41,7 @@ public class ConfiguredItem {
         return displayName == null ? "" : displayName;
     }
 
-    public Item convertAndResolve(FormPlayer viewer, Resolver resolver) {
+    public ItemHandle convertAndResolve(FormPlayer viewer, Resolver resolver) {
         String material = resolver.apply(this.material);
         List<String> lore = resolver.apply(this.lore);
 

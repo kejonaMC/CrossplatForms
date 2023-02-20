@@ -2,16 +2,17 @@ package dev.kejona.crossplatforms.spigot.item;
 
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.item.Inventory;
-import dev.kejona.crossplatforms.item.InventoryFactory;
-import dev.kejona.crossplatforms.item.InventoryLayout;
-import dev.kejona.crossplatforms.item.Item;
-import dev.kejona.crossplatforms.item.SkullProfile;
+import dev.kejona.crossplatforms.inventory.InventoryFactory;
+import dev.kejona.crossplatforms.inventory.InventoryHandle;
+import dev.kejona.crossplatforms.inventory.InventoryLayout;
+import dev.kejona.crossplatforms.inventory.ItemHandle;
+import dev.kejona.crossplatforms.inventory.SkullProfile;
 import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -36,23 +37,23 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Inventory chest(String title, int chestSize) {
-        org.bukkit.inventory.Inventory inventory = Bukkit.createInventory(null, chestSize, title);
+    public InventoryHandle chest(String title, int chestSize) {
+        Inventory inventory = Bukkit.createInventory(null, chestSize, title);
         return new SpigotInventory(inventory);
     }
 
     @Override
-    public Inventory inventory(String title, InventoryLayout layout) {
+    public InventoryHandle inventory(String title, InventoryLayout layout) {
         if (layout == InventoryLayout.CHEST) {
             return chest(title, MAX_CHEST_SIZE);
         }
 
-        org.bukkit.inventory.Inventory inventory = Bukkit.createInventory(null, convertType(layout), title);
+        Inventory inventory = Bukkit.createInventory(null, convertType(layout), title);
         return new SpigotInventory(inventory);
     }
 
     @Override
-    public Item item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
+    public ItemHandle item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
 
         Material type;
         if (material == null || material.isEmpty()) {
@@ -92,14 +93,14 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public Item skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
+    public ItemHandle skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
         adapter.setSkullProfile(skullMeta(item), owner);
         return new SpigotItem(item);
     }
 
     @Override
-    public Item skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
+    public ItemHandle skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
         adapter.setSkullProfile(skullMeta(item), owner.getOwnerId(), owner.getOwnerName(), owner.getTexturesValue());
         return new SpigotItem(item);
@@ -136,7 +137,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @RequiredArgsConstructor
-    private static class SpigotItem implements Item {
+    private static class SpigotItem implements ItemHandle {
 
         private final ItemStack handle;
 
@@ -147,9 +148,9 @@ public class SpigotInventoryFactory implements InventoryFactory {
     }
 
     @RequiredArgsConstructor
-    private static class SpigotInventory implements Inventory {
+    private static class SpigotInventory implements InventoryHandle {
 
-        private final org.bukkit.inventory.Inventory handle;
+        private final Inventory handle;
 
         @Override
         public Object handle() {
@@ -162,7 +163,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
         }
 
         @Override
-        public void setSlot(int index, Item item) {
+        public void setSlot(int index, ItemHandle item) {
             handle.setItem(index, item.castedHandle());
         }
     }
