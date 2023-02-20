@@ -5,7 +5,9 @@ import dev.kejona.crossplatforms.Constants;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
+import dev.kejona.crossplatforms.item.ClickHandler;
 import dev.kejona.crossplatforms.item.Inventory;
+import dev.kejona.crossplatforms.item.InventoryController;
 import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.item.InventoryLayout;
 import dev.kejona.crossplatforms.resolver.Resolver;
@@ -25,13 +27,12 @@ public class JavaMenu extends Interface {
 
     public static final String TYPE = "java_menu";
 
-    public static final int MAX_SIZE = 54; // todo: size validation
-    public static final int HOPPER_SIZE = 5;
-
     protected final transient String permissionBase = Constants.Id() + ".menu.";
 
     @Inject
     protected transient InventoryFactory factory;
+    @Inject
+    protected transient InventoryController controller;
 
     private boolean allowBedrock = false;
 
@@ -68,26 +69,20 @@ public class JavaMenu extends Interface {
             inventory.setSlot(slot, button.convertAndResolve(recipient, resolver));
         }
 
-        interfacer.openInventory(recipient, this, inventory, resolver);
-    }
+        ClickHandler clickHandler = (slot, rightClick) -> {
+            if (isButton(slot)) {
+                ItemButton button = buttons.get(slot);
 
-    /**
-     * Process a button click by a player in the menu.
-     * @param slot The slot in the inventory. Nothing will happen if the slot does not contain a button.
-     * @param rightClick True if it was a right click, false if a left click.
-     * @param player the Player who clicked on the button.
-     */
-    public void process(int slot, boolean rightClick, @Nonnull FormPlayer player, Resolver resolver) {
-        if (isButton(slot)) {
-            ItemButton button = buttons.get(slot);
-
-            affectPlayer(player, button.getAnyClick(), resolver);
-            if (rightClick) {
-                affectPlayer(player, button.getRightClick(), resolver);
-            } else {
-                affectPlayer(player, button.getLeftClick(), resolver);
+                affectPlayer(recipient, button.getAnyClick(), resolver);
+                if (rightClick) {
+                    affectPlayer(recipient, button.getRightClick(), resolver);
+                } else {
+                    affectPlayer(recipient, button.getLeftClick(), resolver);
+                }
             }
-        }
+        };
+
+        controller.openInventory(recipient, inventory, clickHandler);
     }
 
     private void affectPlayer(FormPlayer player, Iterable<Action<? super JavaMenu>> actions, Resolver resolver) {

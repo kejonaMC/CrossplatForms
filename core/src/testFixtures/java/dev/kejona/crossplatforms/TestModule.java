@@ -9,16 +9,10 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
-import dev.kejona.crossplatforms.interfacing.Interfacer;
-import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
-import dev.kejona.crossplatforms.item.Inventory;
-import dev.kejona.crossplatforms.permission.PermissionDefault;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -26,13 +20,6 @@ public class TestModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Interfacer.class).toInstance(new Interfacer() {
-
-            @Override
-            public void openInventory(FormPlayer recipient, JavaMenu menu, Inventory inventory, Resolver resolver) {
-                //no-op
-            }
-        });
 
         bind(BedrockHandler.class).toInstance(BedrockHandler.empty());
 

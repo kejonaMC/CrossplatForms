@@ -1,12 +1,9 @@
 package dev.kejona.crossplatforms.interfacing;
 
-import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenu;
 import dev.kejona.crossplatforms.interfacing.java.JavaMenuRegistry;
-import dev.kejona.crossplatforms.item.Inventory;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 
 import javax.annotation.Nonnull;
@@ -15,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public abstract class Interfacer {
+public final class Interfacer {
 
-    protected BedrockFormRegistry bedrockRegistry;
-    protected JavaMenuRegistry javaRegistry;
+    private BedrockFormRegistry bedrockRegistry;
+    private JavaMenuRegistry javaRegistry;
 
     public void load(BedrockFormRegistry bedrockRegistry, JavaMenuRegistry javaRegistry) {
         this.bedrockRegistry = bedrockRegistry;
@@ -71,6 +68,4 @@ public abstract class Interfacer {
 
         return list;
     }
-
-    public abstract void openInventory(FormPlayer recipient, JavaMenu menu, Inventory inventory, Resolver resolver);
 }

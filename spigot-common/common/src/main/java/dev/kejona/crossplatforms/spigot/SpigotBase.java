@@ -3,6 +3,8 @@ package dev.kejona.crossplatforms.spigot;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import dev.kejona.crossplatforms.Constants;
 import dev.kejona.crossplatforms.CrossplatForms;
 import dev.kejona.crossplatforms.CrossplatFormsBootstrap;
@@ -18,7 +20,9 @@ import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BasicPlaceholders;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.interfacing.Interfacer;
+import dev.kejona.crossplatforms.handler.ServerHandler;
+import dev.kejona.crossplatforms.item.InventoryController;
+import dev.kejona.crossplatforms.item.InventoryFactory;
 import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
@@ -27,6 +31,7 @@ import dev.kejona.crossplatforms.spigot.handler.PlaceholderAPIHandler;
 import dev.kejona.crossplatforms.spigot.handler.SpigotCommandOrigin;
 import dev.kejona.crossplatforms.spigot.handler.SpigotHandler;
 import dev.kejona.crossplatforms.spigot.handler.SpigotPermissions;
+import dev.kejona.crossplatforms.spigot.item.SpigotInventoryController;
 import dev.kejona.crossplatforms.spigot.item.SpigotInventoryFactory;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.platform.bukkit.BukkitComponentSerializer;
@@ -40,6 +45,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBootstrap {
     
@@ -54,7 +61,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
     }
 
     protected Logger logger;
-    private Server server;
     private BukkitAudiences audiences;
     private Metrics metrics;
     private SpigotAdapter spigotAdapter;
@@ -65,8 +71,9 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
 
     @Override
     public void onEnable() {
+        Server server = getServer();
+
         logger = new JavaUtilLogger(getLogger());
-        server = getServer();
         audiences = BukkitAudiences.create(this);
         metrics = new Metrics(this, METRICS_ID);
 
@@ -80,10 +87,13 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             return;
         }
 
-        SpigotHandler serverHandler = new SpigotHandler(this, audiences);
-        Permissions permissions = server.getPluginManager().isPluginEnabled("LuckPerms") ? new LuckPermsHook() : new SpigotPermissions(this);
+        // For ServerAction
+        server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         convertGeyserHubConfig();
+
+        ServerHandler serverHandler = new SpigotHandler(this, audiences);
+        Permissions permissions = server.getPluginManager().isPluginEnabled("LuckPerms") ? new LuckPermsHook() : new SpigotPermissions(this);
 
         // Yes, this is not Paper-exclusive plugin. Cloud handles this gracefully.
         PaperCommandManager<CommandOrigin> commandManager;
@@ -114,9 +124,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             }
         }
 
-        // For ServerAction
-        server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-
         Placeholders placeholders;
         if (server.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             placeholders = new PlaceholderAPIHandler(this);
@@ -133,7 +140,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
             "forms",
             commandManager,
             placeholders,
-            new SpigotInventoryFactory(spigotAdapter, logger),
             this
         );
 
@@ -159,6 +165,26 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
     }
 
     @Override
+    public List<Module> configModules() {
+        List<Module> modules = new ArrayList<>();
+
+        SpigotInventoryController controller = new SpigotInventoryController();
+        getServer().getPluginManager().registerEvents(controller, this);
+        SpigotInventoryFactory factory = new SpigotInventoryFactory(spigotAdapter);
+
+
+        modules.add(new AbstractModule() {
+            @Override
+            public void configure() {
+                bind(InventoryController.class).toInstance(controller);
+                bind(InventoryFactory.class).toInstance(factory);
+            }
+        });
+
+        return modules;
+    }
+
+    @Override
     public void preConfigLoad(ConfigManager configManager) {
         configManager.register(ConfigId.JAVA_MENUS);
         configManager.register(AccessItemConfig.asConfigId());
@@ -166,13 +192,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         ActionSerializer actionSerializer = configManager.getActionSerializer();
         ServerAction.register(actionSerializer);
         CloseMenuAction.register(actionSerializer);
-    }
-
-    @Override
-    public Interfacer interfaceManager() {
-        SpigotInterfacer manager = new SpigotInterfacer();
-        server.getPluginManager().registerEvents(manager, this);
-        return manager;
     }
 
     @Override

@@ -26,14 +26,13 @@ public class SpigotInventoryFactory implements InventoryFactory {
 
     private static boolean warnedForCustomModelData = false;
 
+    private final Logger logger = Logger.get();
     private final SpigotAdapter adapter;
     private final Material playerHeadMaterial;
-    private final Logger logger;
 
-    public SpigotInventoryFactory(SpigotAdapter adapter, Logger logger) {
+    public SpigotInventoryFactory(SpigotAdapter adapter) {
         this.adapter = adapter;
         this.playerHeadMaterial = adapter.playerHeadMaterial();
-        this.logger = logger;
     }
 
     @Override
@@ -54,14 +53,14 @@ public class SpigotInventoryFactory implements InventoryFactory {
 
     @Override
     public Item item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
+
         Material type;
         if (material == null || material.isEmpty()) {
             type = Material.STONE;
         } else {
-            try {
-                type = Material.matchMaterial(material);
-            } catch (IllegalArgumentException ignored) {
-                Logger.get().warn("Material '" + material + "' is not a valid material on BungeeCord/Velocity (Protocolize)");
+            type = Material.matchMaterial(material);
+            if (type == null) {
+                Logger.get().warn("Material '" + material + "' is not a valid material. Check the Material enum for this specific server version.");
                 type = Material.STONE;
             }
         }
@@ -155,6 +154,11 @@ public class SpigotInventoryFactory implements InventoryFactory {
         @Override
         public Object handle() {
             return handle;
+        }
+
+        @Override
+        public String title() {
+            return handle.getTitle();
         }
 
         @Override

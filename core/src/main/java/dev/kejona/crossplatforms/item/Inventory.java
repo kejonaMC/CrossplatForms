@@ -9,5 +9,7 @@ public interface Inventory {
         return (T) handle();
     }
 
+    String title();
+
     void setSlot(int index, Item item);
 }

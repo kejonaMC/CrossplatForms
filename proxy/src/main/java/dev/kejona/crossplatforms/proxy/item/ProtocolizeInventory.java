@@ -15,6 +15,11 @@ public class ProtocolizeInventory implements dev.kejona.crossplatforms.item.Inve
     }
 
     @Override
+    public String title() {
+        return inventory.title(true);
+    }
+
+    @Override
     public void setSlot(int index, Item item) {
         inventory.item(index, item.castedHandle());
     }
