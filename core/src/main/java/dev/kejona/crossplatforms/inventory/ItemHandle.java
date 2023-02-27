@@ -4,8 +4,8 @@ public interface ItemHandle {
 
     Object handle();
 
-    @SuppressWarnings("unchecked")
-    default <T> T castedHandle() {
+    @SuppressWarnings({"unchecked", "unused"})
+    default <T> T castedHandle(Class<T> type) {
         return (T) handle();
     }
 }

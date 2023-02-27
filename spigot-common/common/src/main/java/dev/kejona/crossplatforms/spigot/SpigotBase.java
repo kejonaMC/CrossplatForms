@@ -172,7 +172,6 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         getServer().getPluginManager().registerEvents(controller, this);
         SpigotInventoryFactory factory = new SpigotInventoryFactory(spigotAdapter);
 
-
         modules.add(new AbstractModule() {
             @Override
             public void configure() {

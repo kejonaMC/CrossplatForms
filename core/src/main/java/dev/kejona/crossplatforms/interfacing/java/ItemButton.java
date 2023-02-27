@@ -6,10 +6,8 @@ import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.inventory.ConfiguredItem;
 import lombok.Getter;
 import lombok.ToString;
-import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,10 +26,5 @@ public class ItemButton extends ConfiguredItem {
     @Inject
     private ItemButton() {
         super();
-    }
-
-    @Contract("_ -> new")
-    public ItemButton withReplacementsFromFiller(@Nonnull ItemButton generated) {
-        throw new AssertionError("Not yet implemented"); // todo: implement formatting for item button
     }
 }

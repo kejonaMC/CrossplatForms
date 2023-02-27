@@ -23,7 +23,7 @@ public class ConfiguredItem {
     @Nullable
     protected String displayName;
 
-    private List<String> lore = Collections.emptyList();
+    protected List<String> lore = Collections.emptyList();
 
     @Nullable
     protected Integer customModelData;

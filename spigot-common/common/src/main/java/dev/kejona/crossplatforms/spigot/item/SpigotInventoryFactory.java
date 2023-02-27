@@ -164,7 +164,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
 
         @Override
         public void setSlot(int index, ItemHandle item) {
-            handle.setItem(index, item.castedHandle());
+            handle.setItem(index, item.castedHandle(ItemStack.class));
         }
     }
 }

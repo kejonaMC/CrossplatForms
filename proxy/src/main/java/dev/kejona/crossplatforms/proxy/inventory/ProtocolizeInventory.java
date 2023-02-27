@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.proxy.inventory;
 import dev.kejona.crossplatforms.inventory.InventoryHandle;
 import dev.kejona.crossplatforms.inventory.ItemHandle;
 import dev.simplix.protocolize.api.inventory.Inventory;
+import dev.simplix.protocolize.api.item.ItemStack;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -22,6 +23,6 @@ public class ProtocolizeInventory implements InventoryHandle {
 
     @Override
     public void setSlot(int index, ItemHandle item) {
-        inventory.item(index, item.castedHandle());
+        inventory.item(index, item.castedHandle(ItemStack.class));
     }
 }
