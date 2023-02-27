@@ -25,8 +25,8 @@ public class Option {
         this.returnText = returnText;
     }
 
-    @Contract(pure = true)
-    public Option with(Resolver resolver) {
+    @Contract(value = "_ -> new", pure = true)
+    public Option with(@Nonnull Resolver resolver) {
         if (returnText == null) {
             return new Option(resolver.apply(display));
         } else {

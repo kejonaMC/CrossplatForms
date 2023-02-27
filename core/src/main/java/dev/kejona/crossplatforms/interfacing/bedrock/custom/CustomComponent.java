@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
 import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
@@ -11,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -47,7 +47,11 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
 
     public abstract CustomComponent copy();
 
-    public abstract CustomComponent preparedCopy(Resolver resolver);
+    public final CustomComponent preparedCopy(PlayerContext context) {
+        CustomComponent copy = copy();
+        copy.prepare(context);
+        return copy;
+    }
 
     public abstract Component cumulusComponent() throws IllegalValueException;
 
@@ -60,12 +64,8 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         this.shouldShow = new ArrayList<>(source.shouldShow);
     }
 
-    /**
-     * Sets placeholders
-     * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
-     */
-    public void prepare(@Nonnull Resolver resolver) {
-        Objects.requireNonNull(resolver);
+    public void prepare(@Nonnull PlayerContext context) {
+        Resolver resolver = context.resolver();
         text = resolver.apply(text);
         shouldShow = shouldShow.stream().map(resolver).collect(Collectors.toList());
     }

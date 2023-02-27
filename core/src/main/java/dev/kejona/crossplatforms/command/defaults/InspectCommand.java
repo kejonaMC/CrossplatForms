@@ -6,7 +6,6 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import dev.kejona.crossplatforms.CrossplatForms;
 import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.FormsCommand;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
@@ -26,7 +25,6 @@ public class InspectCommand extends FormsCommand {
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
-        ServerHandler serverHandler = crossplatForms.getServerHandler();
         BedrockFormRegistry bedrockRegistry = crossplatForms.getInterfacer().getBedrockRegistry();
         JavaMenuRegistry javaRegistry = crossplatForms.getInterfacer().getJavaRegistry();
 

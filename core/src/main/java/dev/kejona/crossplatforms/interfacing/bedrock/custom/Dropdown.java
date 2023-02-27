@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.filler.OptionFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
@@ -60,28 +61,17 @@ public class Dropdown extends CustomComponent {
     }
 
     @Override
-    public void prepare(@Nonnull Resolver resolver) {
-        super.prepare(resolver);
+    public void prepare(@Nonnull PlayerContext context) {
+        super.prepare(context);
         // apply fillers
         for (OptionFiller filler : fillers) {
-            int index = filler.insertIndex();
-            if (index < 0) {
-                filler.generateOptions(resolver).forEachOrdered(options::add);
-            } else {
-                filler.generateOptions(resolver).forEachOrdered(o -> options.add(index, o));
-            }
+            filler.fillOptions(options, context);
         }
 
         // apply placeholders
+        Resolver resolver = context.resolver();
         options = options.stream().map(o -> o.with(resolver)).collect(Collectors.toList());
         defaultOption = resolver.apply(defaultOption);
-    }
-
-    @Override
-    public Dropdown preparedCopy(Resolver resolver) {
-        Dropdown copy = copy();
-        copy.prepare(resolver);
-        return copy;
     }
 
     @Nonnull

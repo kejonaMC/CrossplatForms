@@ -1,41 +1,34 @@
 package dev.kejona.crossplatforms.spigot;
 
-import dev.kejona.crossplatforms.CrossplatForms;
-import dev.kejona.crossplatforms.spigot.common.SpigotAccessItemsBase;
-import dev.kejona.crossplatforms.spigot.common.SpigotBase;
-import org.bstats.charts.SimplePie;
+import dev.kejona.crossplatforms.spigot.adapter.Version;
+import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
+import dev.kejona.crossplatforms.spigot.adapter.VersionMap;
+import dev.kejona.crossplatforms.spigot.adapter.Versioned;
+import dev.kejona.crossplatforms.spigot.v1_12_R1.Adapter_v1_12_R1;
+import dev.kejona.crossplatforms.spigot.v1_13_R2.Adapter_v1_13_R2;
+import dev.kejona.crossplatforms.spigot.v1_14_R1.Adapter_v1_14_R1;
+import dev.kejona.crossplatforms.spigot.v1_8_R3.Adapter_v1_8_R3;
+import dev.kejona.crossplatforms.spigot.v1_9_R2.Adapter_v1_9_R2;
+
+import java.util.function.Supplier;
 
 public class CrossplatFormsSpigot extends SpigotBase {
 
-    @Override
-    public void onEnable() {
-        try {
-            // Only available on 1.14 and above, which CrossplatForms-Spigot targets. SpigotLegacy is for less than 1.13
-            Class.forName("org.bukkit.persistence.PersistentDataContainer");
-        } catch (ClassNotFoundException e) {
-            getLogger().severe("CrossplatForms-SpigotLegacy must be used for 1.13 and below.");
-            getPluginLoader().disablePlugin(this);
-            return;
-        }
+    private static final int SUPPORTED_MAJOR_VERSION = 1;
+    private static final VersionMap<Supplier<SpigotAdapter>> INDEXER = new VersionMap<>(SUPPORTED_MAJOR_VERSION);
 
-        super.onEnable();
-        addCustomChart(new SimplePie(PIE_CHART_LEGACY, () -> "false")); // not legacy
+    static {
+        INDEXER.put(new Version("1_8_R3"), Adapter_v1_8_R3::new);
+        INDEXER.put(new Version("1_9_R2"), Adapter_v1_9_R2::new);
+        INDEXER.put(new Version("1_12_R1"), Adapter_v1_12_R1::new);
+        INDEXER.put(new Version("1_13_R2"), Adapter_v1_13_R2::new);
+        INDEXER.put(new Version("1_14_R1"), Adapter_v1_14_R1::new);
     }
 
     @Override
-    public boolean attemptBrigadier() {
-        return true;
-    }
-
-    @Override
-    public SpigotAccessItemsBase createAccessItems(CrossplatForms crossplatForms) {
-        return new SpigotAccessItems(
-            this,
-            crossplatForms.getConfigManager(),
-            crossplatForms.getPermissions(),
-            crossplatForms.getInterfacer(),
-            crossplatForms.getBedrockHandler(),
-            crossplatForms.getPlaceholders()
-        );
+    public Versioned<SpigotAdapter> findVersionAdapter() {
+        // substring to remove the v
+        Versioned<Supplier<SpigotAdapter>> adapterSupplier = INDEXER.lenientSearch(ClassNames.NMS_VERSION.substring(1));
+        return Versioned.convertSupplierType(adapterSupplier);
     }
 }

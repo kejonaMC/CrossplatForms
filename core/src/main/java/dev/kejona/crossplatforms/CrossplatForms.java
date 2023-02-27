@@ -6,6 +6,7 @@ import cloud.commandframework.minecraft.extras.MinecraftExceptionHandler;
 import cloud.commandframework.minecraft.extras.MinecraftHelp;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import dev.kejona.crossplatforms.action.BedrockTransferAction;
 import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.FormsCommand;
@@ -37,6 +38,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bstats.charts.SimplePie;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -61,8 +63,6 @@ public class CrossplatForms {
     private final String rootCommand;
 
     private final Placeholders placeholders;
-
-    private final boolean success = true;
 
     public CrossplatForms(Logger logger,
                           Path dataFolder,
@@ -108,20 +108,16 @@ public class CrossplatForms {
             logger.warn("No Bedrock Handler being used! There may be issues.");
         }
 
-        interfacer = bootstrap.interfaceManager();
-        Injector injector = Guice.createInjector(
-            new ConfigurationModule(
-                interfacer,
-                bedrockHandler,
-                serverHandler,
-                placeholders
-            )
-        );
+        interfacer = new Interfacer();
 
-        // Load all configs
+        List<Module> modules = bootstrap.configModules();
+        modules.add(new ConfigurationModule(interfacer, bedrockHandler, serverHandler, placeholders));
+        Injector injector = Guice.createInjector(modules);
+
+        // Register configs and serializers
         long configTime = System.currentTimeMillis();
         configManager = new ConfigManager(dataFolder, logger, injector);
-        configManager.registerPriority(ConfigId.GENERAL);
+        configManager.registerPriority(ConfigId.GENERAL); // ensure this config is loaded first
         if (bedrockSupport) {
             // Only register bedrock form features and only references cumulus classes if cumulus is available
             configManager.register(ConfigId.BEDROCK_FORMS);
@@ -132,20 +128,19 @@ public class CrossplatForms {
             BedrockTransferAction.register(configManager.getActionSerializer());
         }
         bootstrap.preConfigLoad(configManager); // allow implementation to add extra serializers, configs, actions, etc
+
         if (!configManager.load()) {
             logger.severe("A severe configuration error occurred, which will lead to significant parts of this plugin not loading. Please repair the config and run /forms reload or restart the server.");
         }
-        Optional<GeneralConfig> generalConfig = configManager.getConfig(GeneralConfig.class);
         logger.debug("Took " + (System.currentTimeMillis() - configTime) + "ms to load config files.");
 
         // Load forms and menus from the configs into registries
-        long registryTime = System.currentTimeMillis();
         interfacer.load(
             new BedrockFormRegistry(configManager, permissions),
             new JavaMenuRegistry(configManager, permissions)
         );
-        logger.debug("Took " + (System.currentTimeMillis() - registryTime) + "ms to setup registries.");
 
+        Optional<GeneralConfig> generalConfig = configManager.getConfig(GeneralConfig.class);
         // Command defined in config or default provided by implementation
         rootCommand = generalConfig.map(GeneralConfig::getRootCommand).orElse(defaultCommand);
 
@@ -176,6 +171,7 @@ public class CrossplatForms {
                     try {
                         if (origin.hasPermission(ListCommand.PERMISSION)) {
                             logger.debug("Executing /forms list from /forms");
+                            // todo: don't need to wait for command result
                             commandManager.executeCommand(origin, rootCommand + " list").get();
                         } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
                             minecraftHelp.queryCommands("", context.getSender());

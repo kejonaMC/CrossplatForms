@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
@@ -53,17 +53,10 @@ public class Input extends CustomComponent {
     }
 
     @Override
-    public void prepare(@Nonnull Resolver resolver) {
-        super.prepare(resolver);
-        placeholder = resolver.apply(placeholder);
-        defaultText = resolver.apply(defaultText);
-    }
-
-    @Override
-    public Input preparedCopy(Resolver resolver) {
-        Input copy = copy();
-        copy.prepare(resolver);
-        return copy;
+    public void prepare(@Nonnull PlayerContext context) {
+        super.prepare(context);
+        placeholder = context.resolver().apply(placeholder);
+        defaultText = context.resolver().apply(defaultText);
     }
 
     @Override

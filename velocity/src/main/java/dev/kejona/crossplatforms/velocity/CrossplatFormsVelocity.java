@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.velocity;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.velocity.VelocityCommandManager;
 import com.google.inject.Inject;
+import com.google.inject.Module;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -22,12 +23,10 @@ import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BasicPlaceholders;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
-import dev.kejona.crossplatforms.interfacing.Interfacer;
-import dev.kejona.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.kejona.crossplatforms.permission.LuckPermsHook;
 import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.proxy.CloseMenuAction;
-import dev.kejona.crossplatforms.permission.LuckPermsHook;
-import dev.kejona.crossplatforms.proxy.ProtocolizeInterfacer;
+import dev.kejona.crossplatforms.proxy.ProtocolizeModule;
 import dev.kejona.crossplatforms.velocity.handler.VelocityCommandOrigin;
 import dev.kejona.crossplatforms.velocity.handler.VelocityHandler;
 import lombok.Getter;
@@ -35,6 +34,8 @@ import org.bstats.charts.CustomChart;
 import org.bstats.velocity.Metrics;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
 
@@ -109,11 +110,18 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
                 this
         );
 
-        if (!crossplatForms.isSuccess()) {
-            return;
+        server.getEventManager().register(this, serverHandler); // events for catching proxy commands
+    }
+
+    @Override
+    public List<Module> configModules() {
+        List<Module> modules = new ArrayList<>();
+
+        if (protocolizePresent) {
+            modules.add(new ProtocolizeModule());
         }
 
-        server.getEventManager().register(this, serverHandler); // events for catching proxy commands
+        return modules;
     }
 
     @Override
@@ -124,15 +132,6 @@ public class CrossplatFormsVelocity implements CrossplatFormsBootstrap {
         if (protocolizePresent) {
             configManager.register(ConfigId.JAVA_MENUS);
             CloseMenuAction.register(actionSerializer); // Close Java Menus
-        }
-    }
-
-    @Override
-    public Interfacer interfaceManager() {
-        if (protocolizePresent) {
-            return new ProtocolizeInterfacer();
-        } else {
-            return new NoMenusInterfacer();
         }
     }
 

@@ -2,15 +2,6 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "CrossplatForms"
 
-include(":core")
-include(":proxy")
-include(":bungeecord")
-include(":velocity")
-include(":access-item")
-include(":spigot-common")
-include(":spigot")
-include(":spigot-legacy")
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -39,3 +30,30 @@ dependencyResolutionManagement {
         maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity
     }
 }
+
+include(":core")
+include(":access-item")
+
+include(":proxy")
+include(":bungeecord")
+include(":velocity")
+
+include(":spigot")
+
+include(":spigot-common:common")
+findProject(":spigot-common:common")?.name = "common"
+
+include(":spigot-common:v1_8_R3")
+findProject(":spigot-common:v1_8_R3")?.name = "v1_8_R3"
+
+include(":spigot-common:v1_9_R2")
+findProject(":spigot-common:v1_9_R2")?.name = "v1_9_R2"
+
+include(":spigot-common:v1_12_R1")
+findProject(":spigot-common:v1_12_R1")?.name = "v1_12_R1"
+
+include(":spigot-common:v1_13_R2")
+findProject(":spigot-common:v1_13_R2")?.name = "v1_13_R2"
+
+include(":spigot-common:v1_14_R1")
+findProject(":spigot-common:v1_14_R1")?.name = "v1_14_R1"

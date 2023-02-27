@@ -40,7 +40,7 @@ public class GiveCommand extends FormsCommand {
         // Base open command
         manager.command(defaultBuilder
                 .literal(NAME)
-                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
+                .argument(StringArgument.<CommandOrigin>builder(ARGUMENT)
                         .withSuggestionsProvider((context, s) -> itemSuggestions(context))
                         .build())
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
@@ -70,10 +70,10 @@ public class GiveCommand extends FormsCommand {
         // Additional command to make other players open a form or menu
         manager.command(defaultBuilder
                 .literal(NAME)
-                .argument(StringArgument.<CommandOrigin>newBuilder(ARGUMENT)
+                .argument(StringArgument.<CommandOrigin>builder(ARGUMENT)
                         .withSuggestionsProvider((context, s) -> itemSuggestions(context))
                         .build())
-                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                .argument(StringArgument.<CommandOrigin>builder("player")
                         .withSuggestionsProvider(((context, s) -> playerSuggestions(context)))
                         .build())
                 .permission(PERMISSION_OTHER)
