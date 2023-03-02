@@ -40,7 +40,6 @@ import org.bstats.charts.SimplePie;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Getter
 public class CrossplatForms {
@@ -168,18 +167,12 @@ public class CrossplatForms {
                 .permission(FormsCommand.PERMISSION_BASE + "base")
                 .handler((context -> {
                     CommandOrigin origin = context.getSender();
-                    try {
-                        if (origin.hasPermission(ListCommand.PERMISSION)) {
-                            logger.debug("Executing /forms list from /forms");
-                            // todo: don't need to wait for command result
-                            commandManager.executeCommand(origin, rootCommand + " list").get();
-                        } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
-                            minecraftHelp.queryCommands("", context.getSender());
-                        } else {
-                            origin.warn("Please specify a sub command");
-                        }
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
+                    if (origin.hasPermission(ListCommand.PERMISSION)) {
+                        commandManager.executeCommand(origin, rootCommand + " list");
+                    } else if (origin.hasPermission(HelpCommand.PERMISSION)) {
+                        minecraftHelp.queryCommands("", context.getSender());
+                    } else {
+                        origin.warn("Please specify a sub command");
                     }
                 }))
                 .build());
