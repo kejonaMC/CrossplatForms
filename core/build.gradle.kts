@@ -31,7 +31,7 @@ dependencies {
     compileOnly("net.luckperms:api:5.4") { isTransitive = false }
 
     api("org.bstats:bstats-base:3.0.0")
-    api("cloud.commandframework:cloud-core:1.8.0")
+    api("cloud.commandframework:cloud-core:1.8.3")
     api("cloud.commandframework:cloud-minecraft-extras:1.8.0")
     api("net.kyori:adventure-api:4.12.0")
     api("net.kyori:adventure-text-serializer-legacy:4.12.0")
