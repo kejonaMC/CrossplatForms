@@ -9,7 +9,7 @@ dependencies {
     compileOnly("com.github.SpigotMC.BungeeCord:bungeecord-proxy:e717676") // For getting skins (dependency through jitpack)
     api("cloud.commandframework:cloud-bungee:1.8.0")
     api("net.kyori:adventure-platform-bungeecord:4.2.0")
-    implementation("org.bstats:bstats-bungeecord:3.0.0")
+    implementation("org.bstats:bstats-bungeecord:3.0.2")
     api(projects.proxy)
     api(projects.core)
 }
