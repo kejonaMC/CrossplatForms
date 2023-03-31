@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.Contract;
 import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
@@ -16,7 +15,6 @@ import java.util.Base64;
 import java.util.UUID;
 
 @Getter
-@ConfigSerializable
 public class SkullProfile {
 
     private static final int MIN_USERNAME_LENGTH = 3;
