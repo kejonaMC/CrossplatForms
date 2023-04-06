@@ -30,9 +30,9 @@ dependencies {
     compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT") { isTransitive = false }
     compileOnly("net.luckperms:api:5.4") { isTransitive = false }
 
-    api("org.bstats:bstats-base:3.0.0")
-    api("cloud.commandframework:cloud-core:1.8.0")
-    api("cloud.commandframework:cloud-minecraft-extras:1.8.0")
+    api("org.bstats:bstats-base:3.0.2")
+    api("cloud.commandframework:cloud-core:1.8.3")
+    api("cloud.commandframework:cloud-minecraft-extras:1.8.3")
     api("net.kyori:adventure-api:4.12.0")
     api("net.kyori:adventure-text-serializer-legacy:4.12.0")
     api("net.kyori:adventure-text-serializer-gson:4.12.0") {
@@ -58,15 +58,9 @@ dependencies {
         }
     }
 
-    // Required because source and unshaded jars are all mixed up on the opencollab repo currently
-    val baseApi = "2.1.0-20221211.182143-60"
-    val geyserApi = "2.1.0-20221211.182145-60"
-    val geyserCore = "2.1.0-20221211.182157-60"
-
     // dependencies for java16 sources (optionally used at runtime)
-    java16Implementation("org.geysermc:api:$baseApi") { isTransitive = false }
-    java16Implementation("org.geysermc.geyser:api:$geyserApi") { isTransitive = false }
-    java16Implementation("org.geysermc.geyser:core:$geyserCore") { isTransitive = false }
+    // if someone wants geyser to be directly used then they must be running java 16 or higher
+    java16Implementation("org.geysermc.api:geyser-api:1.0.1-SNAPSHOT")
 }
 
 description = "core"

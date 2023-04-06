@@ -5,10 +5,10 @@ plugins {
 }
 
 dependencies {
-    //annotationProcessor("com.velocitypowered:velocity-api:3.1.0")
-    compileOnly("com.velocitypowered:velocity-api:3.1.0")
-    api("cloud.commandframework:cloud-velocity:1.8.0")
-    api("org.bstats:bstats-velocity:3.0.0")
+    //annotationProcessor("com.velocitypowered:velocity-api:3.1.1")
+    compileOnly("com.velocitypowered:velocity-api:3.1.1")
+    api("cloud.commandframework:cloud-velocity:1.8.3")
+    api("org.bstats:bstats-velocity:3.0.2")
     api(projects.proxy)
     api(projects.core)
 }

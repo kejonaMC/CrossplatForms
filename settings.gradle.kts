@@ -27,7 +27,7 @@ dependencyResolutionManagement {
         maven("https://repo.codemc.io//repository/maven-public/") // NBT api
 
         maven("https://mvn.exceptionflug.de/repository/exceptionflug-public/") // protocolize for proxies
-        maven("https://nexus.velocitypowered.com/repository/maven-public/") // velocity
+        maven("https://repo.papermc.io/repository/maven-public/") // velocity
     }
 }
 

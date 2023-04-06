@@ -28,7 +28,7 @@ public class VersionMap<T> extends TreeMap<Version, T> {
         Version version = new Version(nmsVersion);
 
         if (version.major() != supportedMajorVersion) {
-            return new Versioned<>(firstKey().nmsVersion());
+            return new Versioned<>(firstKey().nmsVersion()); // todo: questionable?
         }
 
         if (containsKey(version)) {

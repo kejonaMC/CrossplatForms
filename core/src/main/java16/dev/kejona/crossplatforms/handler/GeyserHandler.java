@@ -1,17 +1,15 @@
 package dev.kejona.crossplatforms.handler;
 
-import org.geysermc.api.connection.Connection;
 import org.geysermc.cumulus.form.Form;
-import org.geysermc.geyser.GeyserImpl;
-import org.geysermc.geyser.session.GeyserSession;
+import org.geysermc.geyser.api.GeyserApi;
+import org.geysermc.geyser.api.connection.GeyserConnection;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("unused") // loaded on JDK 16
 public class GeyserHandler implements BedrockHandler {
 
-    private final GeyserImpl geyser = Objects.requireNonNull(GeyserImpl.getInstance());
+    private final GeyserApi api = GeyserApi.api();
 
     public static boolean supported() {
         // method is used so that compiler doesn't inline value
@@ -25,17 +23,13 @@ public class GeyserHandler implements BedrockHandler {
 
     @Override
     public boolean isBedrockPlayer(UUID uuid) {
-        return geyser.connectionByUuid(uuid) != null;
+        return api.isBedrockPlayer(uuid);
     }
 
     @Override
     public void sendForm(UUID uuid, Form form) {
-        GeyserSession session = geyser.connectionByUuid(uuid);
-        if (session == null) {
-            throw new NullPointerException("Failed to get GeyserSession for UUID " + uuid);
-        } else {
-            session.getFormCache().showForm(form);
-        }
+        // don't use GeyserApi#sendForm since it only returns false when there is no session found for the uuid
+        requireConnection(uuid).sendForm(form);
     }
 
     @Override
@@ -45,11 +39,16 @@ public class GeyserHandler implements BedrockHandler {
 
     @Override
     public boolean transfer(FormPlayer player, String address, int port) {
-        Connection connection = geyser.connectionByUuid(player.getUuid());
+        // don't use GeyserApi#transfer since it only returns false when there is no session found for the uuid
+        return requireConnection(player.getUuid()).transfer(address, port);
+    }
+
+    private GeyserConnection requireConnection(UUID uuid) {
+        GeyserConnection connection = api.connectionByUuid(uuid);
         if (connection == null) {
-            throw new IllegalArgumentException("Failed to find GeyserSession for " + player.getName() + player.getUuid());
-        } else {
-            return connection.transfer(address, port);
+            throw new NullPointerException("Failed to get GeyserConnection for UUID: " + uuid);
         }
+
+        return connection;
     }
 }
