@@ -17,8 +17,6 @@ import java.util.List;
 @SuppressWarnings("FieldMayBeFinal")
 public class ItemButton extends ConfiguredItem {
 
-    public static final String STATIC_IDENTIFIER = "crossplatformsbutton";
-
     private List<Action<? super JavaMenu>> anyClick = Collections.emptyList();
     private List<Action<? super JavaMenu>> leftClick = Collections.emptyList();
     private List<Action<? super JavaMenu>> rightClick = Collections.emptyList();

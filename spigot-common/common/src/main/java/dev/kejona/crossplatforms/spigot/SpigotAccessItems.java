@@ -7,7 +7,10 @@ import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.inventory.ItemHandle;
 import dev.kejona.crossplatforms.permission.Permissions;
+import dev.kejona.crossplatforms.resolver.PlayerResolver;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.spigot.adapter.NbtAccessor;
 import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
 import dev.kejona.crossplatforms.spigot.handler.SpigotPlayer;
@@ -29,7 +32,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
@@ -37,7 +39,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 public final class SpigotAccessItems extends AccessItemRegistry implements Listener {
@@ -77,24 +78,11 @@ public final class SpigotAccessItems extends AccessItemRegistry implements Liste
 
     public ItemStack createItemStack(AccessItem accessItem, Player player) {
         FormPlayer formPlayer = new SpigotPlayer(player);
-        // todo: material lookups on 1.13 on SpigotLegacy seem to fail on materials with underscores.
-        // Have not checked any other versions
-        Material material = Material.matchMaterial(accessItem.getMaterial());
-        if (material == null) {
-            logger.severe(String.format("Failed to get access item from '%s' for access item '%s'", accessItem.getMaterial(), accessItem.getIdentifier()));
-            material = Material.COMPASS;
-        }
+        Resolver resolver = new PlayerResolver(formPlayer, placeholders);
 
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) {
-            logger.severe(String.format("Itemstack from material %s for access item %s has null item meta!", material, accessItem.getIdentifier()));
-            item = new ItemStack(Material.COMPASS);
-            meta = Objects.requireNonNull(item.getItemMeta());
-        }
-        meta.setDisplayName(placeholders.setPlaceholders(formPlayer, accessItem.getDisplayName()));
-        meta.setLore(placeholders.setPlaceholders(formPlayer, accessItem.getLore()));
-        item.setItemMeta(meta);
+        ItemHandle handle = accessItem.convertAndResolve(formPlayer, resolver);
+        ItemStack item = handle.castedHandle(ItemStack.class);
+
         setItemId(item, accessItem.getIdentifier());
         return item;
     }

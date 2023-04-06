@@ -95,7 +95,7 @@ public class AccessItem extends ConfiguredItem {
 
     public void generatePermissions(AccessItemRegistry registry) {
         if (permissions != null) {
-            Logger.get().severe("Permissions in Access Item '" + identifier + "' have already been generated!");
+            Logger.get().warn("Permissions in Access Item '" + identifier + "' have already been generated!");
         }
 
         String mainPermission = PERMISSION_BASE + "." + identifier;
