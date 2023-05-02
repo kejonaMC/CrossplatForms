@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public interface SpigotAdapter {
 
@@ -20,11 +19,11 @@ public interface SpigotAdapter {
 
     Material playerHeadMaterial();
 
-    @Contract("_, null, null, null -> fail")
-    void setSkullProfile(SkullMeta meta, UUID id, String name, String textures);
+    @Contract("_, null, null -> fail")
+    void setSkullProfile(SkullMeta meta, String name, String textures);
 
     default void setSkullProfile(SkullMeta meta, FormPlayer player) {
-        setSkullProfile(meta, player.getUuid(), player.getName(), player.getEncodedSkinData());
+        setSkullProfile(meta, player.getName(), player.getEncodedSkinData());
     }
 
     NbtAccessor nbtAccessor(Plugin plugin);

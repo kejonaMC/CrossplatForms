@@ -80,7 +80,7 @@ public final class SpigotAccessItems extends AccessItemRegistry implements Liste
         FormPlayer formPlayer = new SpigotPlayer(player);
         Resolver resolver = new PlayerResolver(formPlayer, placeholders);
 
-        ItemHandle handle = accessItem.convertAndResolve(formPlayer, resolver);
+        ItemHandle handle = accessItem.convertAndResolve(resolver);
         ItemStack item = handle.castedHandle(ItemStack.class);
 
         setItemId(item, accessItem.getIdentifier());

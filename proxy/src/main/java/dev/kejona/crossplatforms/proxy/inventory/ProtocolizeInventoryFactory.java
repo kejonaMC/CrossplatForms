@@ -7,11 +7,8 @@ import dev.kejona.crossplatforms.inventory.InventoryHandle;
 import dev.kejona.crossplatforms.inventory.InventoryLayout;
 import dev.kejona.crossplatforms.inventory.ItemHandle;
 import dev.kejona.crossplatforms.inventory.SkullProfile;
-import dev.simplix.protocolize.api.Protocolize;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.item.ItemStack;
-import dev.simplix.protocolize.api.player.ProtocolizePlayer;
-import dev.simplix.protocolize.api.providers.ProtocolizePlayerProvider;
 import dev.simplix.protocolize.data.ItemType;
 import dev.simplix.protocolize.data.inventory.InventoryType;
 import net.querz.nbt.tag.CompoundTag;
@@ -21,14 +18,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 public class ProtocolizeInventoryFactory implements InventoryFactory {
 
-    private static final int PROTOCOL_1_16 = 735;
     private static final String CUSTOM_MODEL_DATA_KEY = "CustomModelData";
-
-    private final ProtocolizePlayerProvider players = Protocolize.playerProvider();
 
     @Override
     public InventoryHandle chest(String title, int chestSize) {
@@ -81,20 +74,19 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     }
 
     @Override
-    public ItemHandle skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
+    public ItemHandle skullItem(FormPlayer profile, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
-        setSkullOwner(viewer, item.nbtData(), owner.getUuid(), owner.getName(), owner.getEncodedSkinData());
+        setSkullOwner(item.nbtData(), profile.getName(), profile.getEncodedSkinData());
         return new ProtocolizeItem(item);
     }
 
     @Override
-    public ItemHandle skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
+    public ItemHandle skullItem(SkullProfile profile, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
-        setSkullOwner(viewer,
+        setSkullOwner(
             item.nbtData(),
-            owner.getOwnerId(),
-            owner.getOwnerName(),
-            owner.getTexturesValue()
+            profile.getOwner(),
+            profile.getTextures()
         );
 
         return new ProtocolizeItem(item);
@@ -110,45 +102,31 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
         return item;
     }
 
-    private void setSkullOwner(FormPlayer itemReceiver, CompoundTag tag, UUID id, String name, String textures) {
-        if (id == null && name == null && textures == null) {
-            throw new IllegalArgumentException("id, name, textures cannot all be null");
-        }
+    private void setSkullOwner(CompoundTag tag, String owner, String textures) {
+        if (textures == null) {
+            if (owner == null) {
+                throw new IllegalArgumentException("both owner and textures cannot be null");
+            }
 
-        if (id == null && textures == null) {
-            // old cruddy format of only the name
-            tag.putString("SkullOwner", name);
+            // old cruddy format of only the owner
+            tag.putString("SkullOwner", owner);
             return;
         }
 
-        if (id == null && name == null) {
-            // only textures provided - use random UUID
-            id = UUID.randomUUID();
+        String name;
+        if (owner == null) {
+            // silly fallback since providing UUID instead of name would mean
+            // having to handle the two different UUID formats, which is quite complicated and ugly
+            name = "spinbom";
+        } else {
+            name = owner;
         }
 
         CompoundTag skullOwner = new CompoundTag();
-        if (id != null) {
-            setSkullId(itemReceiver, skullOwner, id);
-        }
-        if (name != null) {
-            skullOwner.putString("Name", name);
-        }
-        if (textures != null) {
-            skullOwner.put("Properties", propertiesWithTextures(textures));
-        }
+        skullOwner.putString("Name", name); // client doesn't seem to complain about not having a UUID
+        skullOwner.put("Properties", propertiesWithTextures(textures));
 
         tag.put("SkullOwner", skullOwner);
-    }
-
-    private void setSkullId(FormPlayer itemReceiver, CompoundTag skullOwner, UUID id) {
-        ProtocolizePlayer player = players.player(itemReceiver.getUuid());
-
-        // UUID storage was changed in 1.16
-        if (player.protocolVersion() < PROTOCOL_1_16) {
-            skullOwner.putString("Id", id.toString());
-        } else {
-            skullOwner.putIntArray("Id", uuidToArray(id));
-        }
     }
 
     private CompoundTag propertiesWithTextures(String encodedTexture) {
@@ -161,21 +139,6 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
         CompoundTag properties = new CompoundTag();
         properties.put("textures", textures);
         return properties;
-    }
-
-    /**
-     * Returns the format for storing UUIDs in NBT, for 1.16 and later
-     */
-    private static int[] uuidToArray(UUID uuid) {
-        long least = uuid.getLeastSignificantBits();
-        long most = uuid.getMostSignificantBits();
-
-        return new int[] {
-            (int) (least >> 32),
-            (int) least,
-            (int) (most >> 32),
-            (int) most
-        };
     }
 
     private static InventoryType convertType(InventoryLayout layout) {

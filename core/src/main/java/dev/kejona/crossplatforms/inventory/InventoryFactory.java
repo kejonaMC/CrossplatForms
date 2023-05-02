@@ -13,6 +13,6 @@ public interface InventoryFactory {
 
     ItemHandle item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData);
 
-    ItemHandle skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore);
-    ItemHandle skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore);
+    ItemHandle skullItem(FormPlayer profile, @Nullable String displayName, List<String> lore);
+    ItemHandle skullItem(SkullProfile profile, @Nullable String displayName, List<String> lore);
 }

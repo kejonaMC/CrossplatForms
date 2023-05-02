@@ -1,13 +1,11 @@
 package dev.kejona.crossplatforms.inventory;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,12 +34,7 @@ public class ConfiguredItem {
 
     }
 
-    @Nonnull
-    public String getDisplayName() {
-        return displayName == null ? "" : displayName;
-    }
-
-    public ItemHandle convertAndResolve(FormPlayer viewer, Resolver resolver) {
+    public ItemHandle convertAndResolve(Resolver resolver) {
         List<String> lore = resolver.apply(this.lore);
 
         if (skull == null) {
@@ -49,7 +42,7 @@ public class ConfiguredItem {
             String material = resolver.apply(this.material);
             return factory.item(material, displayName, lore, customModelData);
         } else {
-            return factory.skullItem(viewer, skull, resolver.apply(displayName), lore);
+            return factory.skullItem(skull, resolver.apply(displayName), lore);
         }
     }
 }

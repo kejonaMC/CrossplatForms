@@ -35,21 +35,19 @@ public class Adapter_v1_8_R3 implements SpigotAdapter {
     }
 
     @Override
-    public void setSkullProfile(SkullMeta meta, @Nullable UUID id, @Nullable String name, @Nullable String textures) {
-        if (id == null && textures == null) {
+    public void setSkullProfile(SkullMeta meta, @Nullable String name, @Nullable String textures) {
+        if (textures == null) {
+            if (name == null) {
+                throw new IllegalArgumentException("Both name and textures cannot be null");
+            }
+
             meta.setOwner(name); // only name provided
             return;
         }
 
-        if (id == null && name == null) {
-            id = UUID.randomUUID(); // GameProfile cannot have both name and ID blank
-        }
-
-        GameProfile profile = new GameProfile(id, name);
-
-        if (textures != null) {
-            profile.getProperties().put("textures", new Property("textures", textures));
-        }
+        // note: providing name and textures but not uuid seems to be invalid according to the server
+        GameProfile profile = new GameProfile(UUID.randomUUID(), name);
+        profile.getProperties().put("textures", new Property("textures", textures));
 
         ReflectionUtils.setValue(meta, ClassNames.META_SKULL_PROFILE, profile);
     }

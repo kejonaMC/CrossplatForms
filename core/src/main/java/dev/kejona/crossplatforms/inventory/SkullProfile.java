@@ -12,7 +12,6 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.UUID;
 
 @Getter
 public class SkullProfile {
@@ -25,21 +24,18 @@ public class SkullProfile {
     private static final Gson GSON = new Gson();
 
     @Nullable
-    private final String ownerName;
+    private final String owner;
     @Nullable
-    private final UUID ownerId;
-    @Nullable
-    private final String texturesValue;
+    private final String textures;
 
-    @Contract("null, null, null -> fail")
-    public SkullProfile(String ownerName, UUID ownerId, String texturesValue) {
-        if (ownerName == null && ownerId == null && texturesValue == null) {
-            throw new IllegalArgumentException("At least one of ownerName, ownerId, and texturesValue must be non null");
+    @Contract("null, null -> fail")
+    public SkullProfile(@Nullable String owner, @Nullable String textures) {
+        if (owner == null && textures == null) {
+            throw new IllegalArgumentException("Both owner and textures cannot be null");
         }
 
-        this.ownerName = ownerName;
-        this.ownerId = ownerId;
-        this.texturesValue = texturesValue;
+        this.owner = owner;
+        this.textures = textures;
     }
 
     public static class Serializer implements TypeSerializer<SkullProfile> {
@@ -52,28 +48,23 @@ public class SkullProfile {
 
             String textures = node.node(TEXTURES).getString();
             if (textures != null) {
-                // Do this just to make sure it is valid
+                // Do this just for validation. Any decoding/parsing exceptions will be wrapped by Configurate.
                 String decoded = new String(Base64.getDecoder().decode(textures), StandardCharsets.UTF_8);
                 GSON.fromJson(decoded, JsonObject.class).getAsJsonObject("textures");
-
-                return new SkullProfile(null, null, textures);
             }
 
-            try {
-                UUID uuid = node.node(OWNER).get(UUID.class);
-                return new SkullProfile(null, uuid, null);
-            } catch (Exception ignored) {
-                String name = node.node(OWNER).getString();
-                if (name == null || name.isEmpty()) {
-                    throw new SerializationException("'owner' is empty or not present");
-                }
-
+            String name = node.node(OWNER).getString();
+            if (name != null) {
                 if (name.length() < MIN_USERNAME_LENGTH || name.length() > MAX_USERNAME_LENGTH) {
-                    throw new SerializationException("'owner' is not a valid UUID and the length is too short or too long to be a valid username");
+                    throw new SerializationException("'owner' is too short or too long to be a valid username");
                 }
-
-                return new SkullProfile(name, null, null);
             }
+
+            if (textures == null && name == null) {
+                throw new SerializationException("At least one of 'owner' and 'textures' must be present");
+            }
+
+            return new SkullProfile(name, textures);
         }
 
         @Override
@@ -81,12 +72,11 @@ public class SkullProfile {
             node.raw(null);
 
             if (skull != null) {
-                if (skull.texturesValue != null) {
-                    node.node(TEXTURES).set(skull.texturesValue);
-                } else if (skull.ownerId != null) {
-                    node.node(OWNER).set(skull.ownerId);
-                } else if (skull.ownerName != null) {
-                    node.node(OWNER).set(skull.ownerName);
+                if (skull.textures != null) {
+                    node.node(TEXTURES).set(skull.textures);
+                }
+                if (skull.owner != null) {
+                    node.node(OWNER).set(skull.owner);
                 }
             }
         }

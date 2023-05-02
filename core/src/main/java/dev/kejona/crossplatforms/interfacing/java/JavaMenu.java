@@ -66,7 +66,7 @@ public class JavaMenu extends Interface {
         // todo: size validation/restraint
         for (Integer slot : buttons.keySet()) {
             ItemButton button = buttons.get(slot);
-            inventory.setSlot(slot, button.convertAndResolve(recipient, resolver));
+            inventory.setSlot(slot, button.convertAndResolve(resolver));
         }
 
         ClickHandler clickHandler = (slot, rightClick) -> {
