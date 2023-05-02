@@ -33,9 +33,9 @@ dependencies {
     api("org.bstats:bstats-base:3.0.2")
     api("cloud.commandframework:cloud-core:1.8.3")
     api("cloud.commandframework:cloud-minecraft-extras:1.8.3")
-    api("net.kyori:adventure-api:4.12.0")
-    api("net.kyori:adventure-text-serializer-legacy:4.12.0")
-    api("net.kyori:adventure-text-serializer-gson:4.12.0") {
+    api("net.kyori:adventure-api:4.13.1")
+    api("net.kyori:adventure-text-serializer-legacy:4.13.1")
+    api("net.kyori:adventure-text-serializer-gson:4.13.1") {
         // This is required or else it overrides the version we explicitly define below
         exclude(group = "com.google.code.gson", module = "gson")
     }
@@ -43,7 +43,7 @@ dependencies {
     api("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
     api("org.spongepowered:configurate-extra-guice:4.2.0-SNAPSHOT")
 
-    api("com.google.inject:guice:5.0.1") {
+    api("com.google.inject:guice:5.1.0") {
        exclude(group = "com.google.guava", module = "guava") // Provides a newer version than provided by server platforms
     }
 
