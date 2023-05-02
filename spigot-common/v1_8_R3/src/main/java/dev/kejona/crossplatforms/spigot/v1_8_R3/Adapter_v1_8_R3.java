@@ -36,8 +36,13 @@ public class Adapter_v1_8_R3 implements SpigotAdapter {
 
     @Override
     public void setSkullProfile(SkullMeta meta, @Nullable UUID id, @Nullable String name, @Nullable String textures) {
+        if (id == null && textures == null) {
+            meta.setOwner(name); // only name provided
+            return;
+        }
+
         if (id == null && name == null) {
-            id = UUID.randomUUID();
+            id = UUID.randomUUID(); // GameProfile cannot have both name and ID blank
         }
 
         GameProfile profile = new GameProfile(id, name);

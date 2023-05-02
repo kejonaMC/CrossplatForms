@@ -95,14 +95,18 @@ public class SpigotInventoryFactory implements InventoryFactory {
     @Override
     public ItemHandle skullItem(FormPlayer viewer, FormPlayer owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
-        adapter.setSkullProfile(skullMeta(item), owner);
+        SkullMeta meta = skullMeta(item);
+        adapter.setSkullProfile(meta, owner);
+        item.setItemMeta(meta);
         return new SpigotItem(item);
     }
 
     @Override
     public ItemHandle skullItem(FormPlayer viewer, SkullProfile owner, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
-        adapter.setSkullProfile(skullMeta(item), owner.getOwnerId(), owner.getOwnerName(), owner.getTexturesValue());
+        SkullMeta meta = skullMeta(item);
+        adapter.setSkullProfile(meta, owner.getOwnerId(), owner.getOwnerName(), owner.getTexturesValue());
+        item.setItemMeta(meta);
         return new SpigotItem(item);
     }
 

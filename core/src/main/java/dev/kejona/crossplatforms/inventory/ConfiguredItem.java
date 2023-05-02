@@ -42,11 +42,11 @@ public class ConfiguredItem {
     }
 
     public ItemHandle convertAndResolve(FormPlayer viewer, Resolver resolver) {
-        String material = resolver.apply(this.material);
         List<String> lore = resolver.apply(this.lore);
 
         if (skull == null) {
             String displayName = resolver.applyOrElse(this.displayName, "");
+            String material = resolver.apply(this.material);
             return factory.item(material, displayName, lore, customModelData);
         } else {
             return factory.skullItem(viewer, skull, resolver.apply(displayName), lore);
