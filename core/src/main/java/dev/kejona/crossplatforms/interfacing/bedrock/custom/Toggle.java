@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-public class Toggle extends CustomComponent {
+public class Toggle extends AbstractComponent<Toggle> {
 
     public static final String TYPE = "toggle";
 

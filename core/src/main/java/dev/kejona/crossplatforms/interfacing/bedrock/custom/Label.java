@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 @ToString(callSuper = true)
 @ConfigSerializable
-public class Label extends CustomComponent {
+public class Label extends AbstractComponent<Label> {
 
     public static final String TYPE = "label";
 

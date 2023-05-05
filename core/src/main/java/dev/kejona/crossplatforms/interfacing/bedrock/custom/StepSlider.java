@@ -3,9 +3,9 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
 import dev.kejona.crossplatforms.context.PlayerContext;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.filler.OptionFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
 import lombok.ToString;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-public class StepSlider extends CustomComponent {
+public class StepSlider extends AbstractComponent<StepSlider> {
 
     public static final String TYPE = "step_slider";
 
@@ -30,7 +30,7 @@ public class StepSlider extends CustomComponent {
     private List<OptionFiller> fillers = Collections.emptyList();
 
     /**
-     * Whether or not the parsing of the Dropdown should return the index of the selection or the text of the button.
+     * Whether the parsing of the Dropdown should return the index of the selection or the text of the button.
      */
     private boolean returnText = true;
 

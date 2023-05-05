@@ -14,7 +14,7 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-public class Input extends CustomComponent {
+public class Input extends AbstractComponent<Input> {
 
     public static final String TYPE = "input";
 

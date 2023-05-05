@@ -26,6 +26,7 @@ public abstract class OptionalElement {
     protected Mode mode = Mode.AND;
 
     /**
+     * If this element should be shown.
      * This should only be called after placeholders have been resolved, and ideally only called once.
      */
     @Contract(pure = true)

@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-public class Slider extends CustomComponent {
+public class Slider extends AbstractComponent<Slider> {
 
     public static final String TYPE = "slider";
 
@@ -28,7 +28,7 @@ public class Slider extends CustomComponent {
 
     @Inject
     private Slider() {
-
+        super();
     }
 
     @Override

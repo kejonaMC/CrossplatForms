@@ -3,10 +3,10 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 import com.google.gson.JsonPrimitive;
 import dev.kejona.crossplatforms.IllegalValueException;
 import dev.kejona.crossplatforms.context.PlayerContext;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
 import dev.kejona.crossplatforms.parser.Parser;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,21 +47,19 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
 
     public abstract CustomComponent copy();
 
-    public final CustomComponent preparedCopy(PlayerContext context) {
-        CustomComponent copy = copy();
-        copy.prepare(context);
-        return copy;
-    }
+    public abstract CustomComponent preparedCopy(PlayerContext context);
 
     public abstract Component cumulusComponent() throws IllegalValueException;
 
     /**
-     * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
+     * Copies data in a source {@link CustomComponent} or any of its parent classes into this Component.
      */
     protected final void copyBasics(CustomComponent source) {
         this.text = source.text;
         this.parsers = new ArrayList<>(source.parsers);
         this.shouldShow = new ArrayList<>(source.shouldShow);
+        this.stripFormatting = source.stripFormatting;
+        this.mode = source.mode;
     }
 
     public void prepare(@Nonnull PlayerContext context) {
