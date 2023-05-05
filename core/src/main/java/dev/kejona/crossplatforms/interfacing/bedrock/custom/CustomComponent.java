@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@ToString
+@ToString(callSuper = true)
 public abstract class CustomComponent extends OptionalElement implements ValuedType {
 
     @Getter
@@ -88,13 +88,14 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CustomComponent component = (CustomComponent) o;
-        return text.equals(component.text) && Objects.equals(shouldShow, component.shouldShow) && parsers.equals(component.parsers);
+        if (!(o instanceof CustomComponent)) return false;
+        if (!super.equals(o)) return false;
+        CustomComponent that = (CustomComponent) o;
+        return text.equals(that.text) && parsers.equals(that.parsers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, shouldShow, parsers);
+        return Objects.hash(super.hashCode(), text, parsers);
     }
 }

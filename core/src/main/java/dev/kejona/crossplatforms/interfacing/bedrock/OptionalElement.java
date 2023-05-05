@@ -3,6 +3,7 @@ package dev.kejona.crossplatforms.interfacing.bedrock;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import dev.kejona.crossplatforms.utils.StringUtils;
+import lombok.ToString;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.Contract;
@@ -10,9 +11,11 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+@ToString
 @ConfigSerializable
 public abstract class OptionalElement {
 
@@ -64,6 +67,19 @@ public abstract class OptionalElement {
             return PLAIN.serialize(LEGACY.deserialize(text));
         }
         return text;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OptionalElement)) return false;
+        OptionalElement that = (OptionalElement) o;
+        return stripFormatting == that.stripFormatting && shouldShow.equals(that.shouldShow) && mode == that.mode;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shouldShow, stripFormatting, mode);
     }
 
     enum Mode {

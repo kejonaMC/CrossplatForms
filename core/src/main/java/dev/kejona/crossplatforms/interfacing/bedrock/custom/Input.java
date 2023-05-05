@@ -73,14 +73,15 @@ public class Input extends AbstractComponent<Input> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Input)) return false;
+        if (!super.equals(o)) return false;
         Input input = (Input) o;
-        return super.equals(o) && placeholder.equals(input.placeholder) && defaultText.equals(input.defaultText);
+        return placeholder.equals(input.placeholder) && defaultText.equals(input.defaultText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(placeholder, defaultText);
+        return Objects.hash(super.hashCode(), placeholder, defaultText);
     }
 
     public static Builder builder() {
