@@ -47,9 +47,11 @@ dependencies {
        exclude(group = "com.google.guava", module = "guava") // Provides a newer version than provided by server platforms
     }
 
+    // Provided by Velocity. A slightly higher version is provided by BungeeCord.
+    // Shaded on Spigot because on older Spigot versions, the Guava is too old and breaks Guice.
     api("com.google.guava:guava") {
         version {
-            prefer("21.0") // Provided by Spigot 1.14, Velocity, BungeeCord. On 1.13 and below, guava is shaded.
+            prefer("30.1-jre")
         }
     }
     api("com.google.code.gson:gson") {
