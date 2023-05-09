@@ -3,10 +3,10 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 import com.google.gson.JsonPrimitive;
 import dev.kejona.crossplatforms.IllegalValueException;
 import dev.kejona.crossplatforms.context.PlayerContext;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
 import dev.kejona.crossplatforms.parser.Parser;
+import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.ValuedType;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@ToString
+@ToString(callSuper = true)
 public abstract class CustomComponent extends OptionalElement implements ValuedType {
 
     @Getter
@@ -47,21 +47,19 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
 
     public abstract CustomComponent copy();
 
-    public final CustomComponent preparedCopy(PlayerContext context) {
-        CustomComponent copy = copy();
-        copy.prepare(context);
-        return copy;
-    }
+    public abstract CustomComponent preparedCopy(PlayerContext context);
 
     public abstract Component cumulusComponent() throws IllegalValueException;
 
     /**
-     * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
+     * Copies data in a source {@link CustomComponent} or any of its parent classes into this Component.
      */
     protected final void copyBasics(CustomComponent source) {
         this.text = source.text;
         this.parsers = new ArrayList<>(source.parsers);
         this.shouldShow = new ArrayList<>(source.shouldShow);
+        this.stripFormatting = source.stripFormatting;
+        this.mode = source.mode;
     }
 
     public void prepare(@Nonnull PlayerContext context) {
@@ -90,13 +88,14 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CustomComponent component = (CustomComponent) o;
-        return text.equals(component.text) && Objects.equals(shouldShow, component.shouldShow) && parsers.equals(component.parsers);
+        if (!(o instanceof CustomComponent)) return false;
+        if (!super.equals(o)) return false;
+        CustomComponent that = (CustomComponent) o;
+        return text.equals(that.text) && parsers.equals(that.parsers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, shouldShow, parsers);
+        return Objects.hash(super.hashCode(), text, parsers);
     }
 }

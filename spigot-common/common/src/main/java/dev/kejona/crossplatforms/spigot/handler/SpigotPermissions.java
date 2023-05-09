@@ -31,7 +31,7 @@ public class SpigotPermissions implements Permissions {
 
     @Override
     public void registerPermissions(Collection<Permission> permissions) {
-        SpigotHandler.ensurePrimaryThread();
+        SpigotHandler.ensurePrimaryThread(); // todo: could be run in sync task if not
         if (permissions.isEmpty()) {
             return;
         }
