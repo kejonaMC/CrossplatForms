@@ -8,7 +8,7 @@ import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.resolver.MapResolver;
 import dev.kejona.crossplatforms.resolver.Resolver;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
 import org.geysermc.cumulus.util.FormImage;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class CustomBedrockForm extends BedrockForm implements ValuedType {
+public class CustomBedrockForm extends BedrockForm implements KeyedType {
 
     public static final String TYPE = "custom_form";
 

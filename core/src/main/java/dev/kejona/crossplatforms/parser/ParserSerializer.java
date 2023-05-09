@@ -1,8 +1,8 @@
 package dev.kejona.crossplatforms.parser;
 
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
 
-public class ParserSerializer extends ValuedTypeSerializer<Parser> {
+public class ParserSerializer extends KeyedTypeSerializer<Parser> {
 
     public ParserSerializer() {
         registerType(PlaceholderParser.TYPE, PlaceholderParser.class);

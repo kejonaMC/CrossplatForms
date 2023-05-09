@@ -2,7 +2,7 @@ package dev.kejona.crossplatforms.filler;
 
 import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public interface OptionFiller extends ValuedType {
+public interface OptionFiller extends KeyedType {
 
     Pattern PLACEHOLDER = Pattern.compile("%raw_text%");
 

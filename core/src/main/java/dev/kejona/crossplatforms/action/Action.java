@@ -2,11 +2,11 @@ package dev.kejona.crossplatforms.action;
 
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.resolver.Resolver;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 
 import javax.annotation.Nonnull;
 
-public interface Action<T> extends ValuedType {
+public interface Action<T> extends KeyedType {
 
     /**
      * Affects a player

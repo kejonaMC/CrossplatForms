@@ -8,7 +8,7 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.resolver.Resolver;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.response.FormResponse;
@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public abstract class BedrockForm extends Interface implements ValuedType {
+public abstract class BedrockForm extends Interface implements KeyedType {
 
     @Inject
     protected transient BedrockHandler bedrockHandler;

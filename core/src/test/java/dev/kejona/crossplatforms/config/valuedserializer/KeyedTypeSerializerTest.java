@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.config.valuedserializer;
 
 import com.google.common.collect.ImmutableList;
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
 import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import dev.kejona.crossplatforms.utils.FileUtils;
 import io.leangen.geantyref.TypeToken;
@@ -18,17 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ValuedTypeSerializerTest {
+public class KeyedTypeSerializerTest {
 
     private static final TypeToken<List<Number>> numberListType = new TypeToken<List<Number>>() {};
 
     @TempDir
     private static File directory;
 
-    private final ValuedTypeSerializer<Number> numberSerializer = new ValuedTypeSerializer<>();
+    private final KeyedTypeSerializer<Number> numberSerializer = new KeyedTypeSerializer<>();
     private final YamlConfigurationLoader loader;
 
-    public ValuedTypeSerializerTest() throws IOException {
+    public KeyedTypeSerializerTest() throws IOException {
         numberSerializer.registerType(Integer.TYPE, Integer.class);
         numberSerializer.registerType(ScientificNotationNumber.TYPE, ScientificNotationNumber.class);
 

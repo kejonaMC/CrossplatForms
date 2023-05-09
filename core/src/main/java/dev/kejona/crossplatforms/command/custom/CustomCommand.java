@@ -8,7 +8,7 @@ import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.resolver.Resolver;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,7 +21,7 @@ import java.util.List;
 @ToString
 @Getter
 @SuppressWarnings("FieldMayBeFinal")
-public abstract class CustomCommand implements ValuedType {
+public abstract class CustomCommand implements KeyedType {
 
     @Inject
     private transient BedrockHandler bedrockHandler;

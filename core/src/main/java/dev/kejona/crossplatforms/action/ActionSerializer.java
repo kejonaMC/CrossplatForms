@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.action;
 
 import dev.kejona.crossplatforms.serialize.TypeResolver;
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
 import io.leangen.geantyref.TypeToken;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
@@ -9,7 +9,7 @@ public class ActionSerializer {
 
     public static final TypeToken<Action<?>> TYPE = new TypeToken<Action<?>>() {};
 
-    private final ValuedTypeSerializer<Action<?>> serializer = new ValuedTypeSerializer<>();
+    private final KeyedTypeSerializer<Action<?>> serializer = new KeyedTypeSerializer<>();
 
     public void register(String typeId, Class<? extends Action<?>> type) {
         serializer.registerType(typeId, type);

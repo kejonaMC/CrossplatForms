@@ -4,6 +4,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
+import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -11,11 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Deserializes a value {@link T} depending on a string node in the node representing {@link T}.
- * This serializer must be registered exact.
+ * Deserializes a value {@link T} depending on a string node within the node representing {@link T}.
+ * This serializer must be registered with one of the registerExact methods of {@link TypeSerializerCollection.Builder}
  * @param <T> The parent type that all entry values have in common.
  */
-public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> implements TypeSerializer<T> {
+public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> implements TypeSerializer<T> {
 
     private final String typeKey;
     private final List<TypeResolver> typeResolvers = new ArrayList<>();
@@ -24,14 +25,14 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
      * Creates a ValuedTypeSerializer with the given key to read the type at
      * @param typeKey The key that the type value is expected to reside at when deserializing/serializing
      */
-    public ValuedTypeSerializer(String typeKey) {
+    public KeyedTypeSerializer(String typeKey) {
         this.typeKey = Objects.requireNonNull(typeKey);
     }
 
     /**
      * Creates a ValuedTypeSerializer with a type key of "type".
      */
-    public ValuedTypeSerializer() {
+    public KeyedTypeSerializer() {
         this("type");
     }
 

@@ -2,14 +2,14 @@ package dev.kejona.crossplatforms.filler;
 
 import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
 
-public interface SimpleFormFiller extends ValuedType {
+public interface SimpleFormFiller extends KeyedType {
 
     default void fillButtons(List<SimpleButton> container, PlayerContext context) {
         SimpleButton template = buttonTemplate();

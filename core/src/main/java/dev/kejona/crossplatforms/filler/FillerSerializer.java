@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.filler;
 
 import dev.kejona.crossplatforms.serialize.TypeResolver;
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
@@ -10,8 +10,8 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 @Getter
 public class FillerSerializer {
 
-    private final ValuedTypeSerializer<OptionFiller> optionFillerSerializer = new ValuedTypeSerializer<>();
-    private final ValuedTypeSerializer<SimpleFormFiller> simpleFormFillerSerializer = new ValuedTypeSerializer<>();
+    private final KeyedTypeSerializer<OptionFiller> optionFillerSerializer = new KeyedTypeSerializer<>();
+    private final KeyedTypeSerializer<SimpleFormFiller> simpleFormFillerSerializer = new KeyedTypeSerializer<>();
 
     public <T extends UniversalFiller> void filler(String typeId, Class<T> fillerType) {
         optionFillerSerializer.registerType(typeId, fillerType);
