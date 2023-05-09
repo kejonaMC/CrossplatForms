@@ -6,7 +6,6 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.command.defaults.OpenCommand;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.permission.Permission;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
 import dev.kejona.crossplatforms.resolver.MapResolver;
@@ -33,9 +32,7 @@ import java.util.StringJoiner;
 public abstract class Interface {
 
     @Inject
-    protected transient Interfacer interfacer;
-    @Inject
-    protected transient ServerHandler serverHandler;
+    private transient Placeholders placeholders;
 
     @Getter
     // Stuff that is generated after deserialization, once the identifier has been loaded
@@ -67,7 +64,8 @@ public abstract class Interface {
         argumentSyntax = joiner.toString();
     }
 
-    public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver, Map<String, String> args) throws ArgumentException {
+    public void send(FormPlayer recipient, Map<String, String> args) throws ArgumentException {
+        Resolver resolver = placeholders.resolver(recipient);
         if (arguments.isEmpty()) {
             send(recipient, resolver);
             return;
@@ -80,7 +78,8 @@ public abstract class Interface {
         send(recipient, new MapResolver(placeholders).then(resolver));
     }
 
-    public void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver, @Nullable String... args) throws ArgumentException {
+    public void send(FormPlayer recipient, String @Nullable... args) throws ArgumentException {
+        Resolver resolver = placeholders.resolver(recipient);
         if (arguments.isEmpty()) {
             send(recipient, resolver);
             return;
@@ -99,7 +98,6 @@ public abstract class Interface {
     }
 
     protected abstract void send(@Nonnull FormPlayer recipient, @Nonnull Resolver resolver);
-
 
     /**
      * e.g. "crossplatforms.form."

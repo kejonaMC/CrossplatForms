@@ -27,6 +27,9 @@ public class JavaMenu extends Interface {
 
     public static final String TYPE = "java_menu";
 
+    /**
+     * Implements {@link Interface#getPermissionBase()} with lombok getter
+     */
     protected final transient String permissionBase = Constants.Id() + ".menu.";
 
     @Inject

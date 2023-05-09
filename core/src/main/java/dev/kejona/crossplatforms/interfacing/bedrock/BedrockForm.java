@@ -6,6 +6,7 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
+import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.serialize.KeyedType;
@@ -28,6 +29,9 @@ import java.util.List;
 public abstract class BedrockForm extends Interface implements KeyedType {
 
     @Inject
+    protected transient ServerHandler serverHandler;
+
+    @Inject
     protected transient BedrockHandler bedrockHandler;
     protected transient Logger logger = Logger.get();
 
@@ -43,17 +47,18 @@ public abstract class BedrockForm extends Interface implements KeyedType {
      */
     protected final void executeHandler(Runnable runnable) {
         if (bedrockHandler.executesResponseHandlersSafely()) {
-            Logger.get().debug("Executing response handler on this thread: " + Thread.currentThread().getName());
+            logger.debug("Executing response handler on this thread: " + Thread.currentThread().getName());
             runnable.run();
         } else {
             serverHandler.executeSafely(() -> {
-                Logger.get().debug("Executing response handler on thread: " + Thread.currentThread().getName());
+                logger.debug("Executing response handler on thread: " + Thread.currentThread().getName());
                 runnable.run();
             });
         }
     }
 
     /**
+     * Handles closed or invalid form responses.
      * Note: this calls {@link #executeHandler(Runnable)}, so it should not be called to execute this method.
      */
     protected void handleIncorrect(FormPlayer player, Resolver resolver, FormResponseResult<? extends FormResponse> result) {
