@@ -1,6 +1,5 @@
 package dev.kejona.crossplatforms.serialize;
 
-import lombok.Getter;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -18,7 +17,6 @@ import java.util.Objects;
  */
 public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> implements TypeSerializer<T> {
 
-    @Getter
     private final String typeKey;
     private final List<TypeResolver> typeResolvers = new ArrayList<>();
 
@@ -27,8 +25,7 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
      * @param typeKey The key that the type value is expected to reside at when deserializing/serializing
      */
     public ValuedTypeSerializer(String typeKey) {
-        Objects.requireNonNull(typeKey);
-        this.typeKey = typeKey;
+        this.typeKey = Objects.requireNonNull(typeKey);
     }
 
     /**
@@ -39,7 +36,7 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
     }
 
     public void registerType(String typeId, Class<? extends T> type, TypeResolver typeResolver) {
-        super.registerType(typeId, type);
+        registerType(typeId, type);
         typeResolvers.add(typeResolver);
     }
 
@@ -49,7 +46,7 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
         if (typeId == null) {
             // try to infer the type based off the nodes content
             for (TypeResolver resolver : typeResolvers) {
-                String possibleType = resolver.getType(node);
+                String possibleType = resolver.inferType(node);
                 if (possibleType != null) {
                     if (typeId != null) {
                         throw new SerializationException("Failed to infer the type because both types matched: " + typeId + " and " + possibleType);
@@ -68,7 +65,9 @@ public class ValuedTypeSerializer<T extends ValuedType> extends TypeRegistry<T> 
             throw new SerializationException("Unsupported type '" + typeId + "'. Not registered. Possible options are: " + getTypes(returnType));
         }
 
-        validateType(returnType, typeId, type);
+        if (!isCompatible(returnType, type)) {
+            throw new SerializationException("Unsupported type '" + typeId + "'. " + type + " is registered but incompatible. Possible type options are: " + getTypes(returnType));
+        }
 
         T object = node.get(type);
         if (object == null) {

@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 public interface TypeResolver {
 
     @Nullable
-    String getType(ConfigurationNode node);
+    String inferType(ConfigurationNode node);
 
     static TypeResolver listOrScalar(String childKey, String type) {
         return node -> {
