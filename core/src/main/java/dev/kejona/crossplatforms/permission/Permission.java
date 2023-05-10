@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class Permission {
+public final class Permission {
 
     @Required
     @Nonnull

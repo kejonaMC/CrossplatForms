@@ -42,7 +42,7 @@ public interface BedrockHandler {
      */
     class Empty implements BedrockHandler {
 
-        public static BedrockHandler INSTANCE = new Empty();
+        private static final BedrockHandler INSTANCE = new Empty();
 
         @Override
         public String getType() {

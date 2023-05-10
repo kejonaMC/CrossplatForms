@@ -1,22 +1,26 @@
 package dev.kejona.crossplatforms.serialize;
 
+import org.spongepowered.configurate.ConfigurationNode;
+
 /**
- * For use with {@link KeyedTypeSerializer}
+ * For use with {@link KeyedTypeSerializer}. Implementing classes must adhere to {@link ConfigurationNode#isMap()}
+ * in order to be successfully serialized. They do not need to be concerned with containing a type field,
+ * as {@link KeyedTypeSerializer} handles the reading and writing of the type.
+ * <p>
+ * However, the implementation of {@link KeyedType#type()} must be exactly equal to the String type identifier
+ * provided in {@link KeyedTypeSerializer#registerType(String, Class)} when this implementation is registered.
  */
 public interface KeyedType {
 
-    /**
-     * @return The identifier for the type of this implementation
-     */
     String type();
 
     /**
-     * @return An object serializable by Configurate that represents this implementation, which should be successfully
-     * deserialized back to an equivalent instance of this implementation if necessary.
-     *
-     * The default implementation is that this returns the given instance that this is called on.
+     * @return false if the type of a serialized form can always be inferred, meaning that the type does not
+     * have to be included in the serialization. If it can sometimes or never be inferred, then true. {@link TypeResolver}s
+     * that are registered to a {@link KeyedTypeSerializer} are responsible for inferring the type to deserialize as.
+     * @see KeyedTypeSerializer#registerType(String, Class, TypeResolver)
      */
-    default Object value() {
-        return this;
+    default boolean serializeWithType() {
+        return true;
     }
 }

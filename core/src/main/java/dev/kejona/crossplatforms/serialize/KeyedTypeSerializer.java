@@ -1,112 +1,99 @@
 package dev.kejona.crossplatforms.serialize;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Injector;
-import dev.kejona.crossplatforms.Entry;
-import dev.kejona.crossplatforms.utils.ConfigurateUtils;
-import io.leangen.geantyref.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * Deserializes a value node into {@link T} depending on the key of the node. This serializer must be registered using
- * {@link TypeSerializerCollection.Builder#registerExact(Class, TypeSerializer)} or
- * {@link TypeSerializerCollection.Builder#registerExact(TypeToken, TypeSerializer)} or
- * @param <T> A parent type that all possible deserializations of the node share
+ * Deserializes a value {@link T} depending on a string node within the node representing {@link T}.
+ * This serializer must be registered with one of the registerExact methods of {@link TypeSerializerCollection.Builder}
+ * @param <T> The parent type that all entry values have in common.
  */
 public class KeyedTypeSerializer<T extends KeyedType> extends TypeRegistry<T> implements TypeSerializer<T> {
 
-    private final Injector injector;
-    private final Map<String, Entry<TypeToken<?>, Class<? extends T>>> simpleTypes = new HashMap<>();
+    private final String typeKey;
+    private final List<TypeResolver> typeResolvers = new ArrayList<>();
 
-    public KeyedTypeSerializer(Injector injector) {
-        this.injector = injector;
+    /**
+     * Creates a ValuedTypeSerializer with the given key to read the type at
+     * @param typeKey The key that the type value is expected to reside at when deserializing/serializing
+     */
+    public KeyedTypeSerializer(String typeKey) {
+        this.typeKey = Objects.requireNonNull(typeKey);
     }
 
-    @Nonnull
-    @Override
-    public Set<String> getTypes(Type superType) {
-        Set<String> types = filter(
-            superType,
-            simpleTypes.entrySet().stream().map(e -> Entry.of(e.getKey(), e.getValue().getValue()))
-        );
-
-        types.addAll(super.getTypes(superType));
-        return types;
+    /**
+     * Creates a ValuedTypeSerializer with a type key of "type".
+     */
+    public KeyedTypeSerializer() {
+        this("type");
     }
 
-    public <V> void registerSimpleType(String typeId, TypeToken<V> valueType, Class<? extends T> simpleType) {
-        String lowerCase = typeId.toLowerCase(Locale.ROOT);
-        if (simpleTypes.get(lowerCase) != null) {
-            throw new IllegalArgumentException("Simple Type " + lowerCase + " is already registered");
-        }
-        simpleTypes.put(lowerCase, Entry.of(valueType, simpleType));
-    }
-
-    public <V> void registerSimpleType(String typeId, Class<V> valueType, Class<? extends T> simpleType) {
-        registerSimpleType(typeId, TypeToken.get(valueType), simpleType);
+    public void registerType(String typeId, Class<? extends T> type, TypeResolver typeResolver) {
+        registerType(typeId, type);
+        typeResolvers.add(typeResolver);
     }
 
     @Override
     public T deserialize(Type returnType, ConfigurationNode node) throws SerializationException {
-        Object key = node.key();
-        if (key == null || key.toString().equals("")) {
-            throw new SerializationException("Cannot deserialization a node into a KeyedType with a key of: " + key);
-        }
-        String typeId = key.toString();
-        Class<? extends T> type = getType(typeId);
-
-        T instance;
-        if (type == null) {
-            Entry<TypeToken<?>, Class<? extends T>> simpleType = simpleTypes.get(typeId.toLowerCase(Locale.ROOT));
-            if (simpleType == null) {
-                throw new SerializationException("Unsupported type (not registered) '" + typeId + "'. Possible options are: " + getTypes(returnType));
-            } else {
-                validateType(returnType, typeId, simpleType.getValue());
-                instance = deserializeSimple(simpleType.getKey(), simpleType.getValue(), node);
+        String typeId = node.node(typeKey).getString();
+        if (typeId == null) {
+            // try to infer the type based off the nodes content
+            for (TypeResolver resolver : typeResolvers) {
+                String possibleType = resolver.inferType(node);
+                if (possibleType != null) {
+                    if (typeId != null) {
+                        throw new SerializationException("Failed to infer the type because both types matched: " + typeId + " and " + possibleType);
+                    }
+                    typeId = possibleType;
+                }
             }
-        } else {
-            validateType(returnType, typeId, type);
-            instance = node.get(type);
+
+            if (typeId == null) {
+                throw new SerializationException("No 'type' value present and the type could not be inferred. Possible type options are: " + getTypes(returnType));
+            }
         }
-        if (instance == null) {
-            throw new SerializationException("Failed to deserialize as '" + typeId + "' because deserialization returned null.");
+
+        Class<? extends T> type = getType(typeId);
+        if (type == null) {
+            throw new SerializationException("Unsupported type '" + typeId + "'. Not registered. Possible options are: " + getTypes(returnType));
         }
-        return instance;
+
+        if (!isCompatible(returnType, type)) {
+            throw new SerializationException("Unsupported type '" + typeId + "'. " + type + " is registered but incompatible. Possible type options are: " + getTypes(returnType));
+        }
+
+        T object = node.get(type);
+        if (object == null) {
+            throw new SerializationException("Failed to deserialize as '" + type + "' because deserialization returned null.");
+        }
+
+        return object;
     }
 
     @Override
-    public void serialize(Type type, @Nullable T keyedType, ConfigurationNode node) throws SerializationException {
+    public void serialize(Type returnType, @Nullable T value, ConfigurationNode node) throws SerializationException {
         node.raw(null);
 
-        if (keyedType != null) {
-            if (keyedType.type().equals(node.key())) {
-                node.set(keyedType.value());
-            } else {
-                throw new SerializationException("Cannot deserialize '" + keyedType.value() + "' of type '" + keyedType.type() + "' because the key of the node at " + node.path() + " does not match the type");
+        if (value != null) {
+            String typeIdentifier = value.type();
+            if (getType(typeIdentifier) == null) {
+                // we don't actually need it for serializing but its probably a mistake or bad design
+                throw new SerializationException("Cannot serialize implementation of ValueType " + value.getClass() + " that has not been registered");
+            }
+
+            node.set(value);
+            if (value.serializeWithType()) {
+                // the type must be included because when this node is deserialized, the type cannot be inferred
+                node.node(typeKey).set(typeIdentifier);
             }
         }
-    }
-
-    private <V> T deserializeSimple(TypeToken<V> valueType, Class<? extends T> simpleType, ConfigurationNode node) throws SerializationException {
-        final V value = node.get(valueType);
-        Injector childInjector = injector.createChildInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(ConfigurateUtils.keyFromToken(valueType)).toInstance(value);
-            }
-        });
-
-        return childInjector.getInstance(simpleType);
     }
 }

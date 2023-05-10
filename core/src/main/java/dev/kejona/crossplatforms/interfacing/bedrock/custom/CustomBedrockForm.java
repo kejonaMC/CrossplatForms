@@ -3,11 +3,12 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 import dev.kejona.crossplatforms.IllegalValueException;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.action.Action;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.resolver.MapResolver;
 import dev.kejona.crossplatforms.resolver.Resolver;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 import lombok.ToString;
 import org.geysermc.cumulus.form.CustomForm;
 import org.geysermc.cumulus.util.FormImage;
@@ -25,7 +26,7 @@ import java.util.UUID;
 @ToString(callSuper = true)
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class CustomBedrockForm extends BedrockForm implements ValuedType {
+public class CustomBedrockForm extends BedrockForm implements KeyedType {
 
     public static final String TYPE = "custom_form";
 
@@ -60,9 +61,10 @@ public class CustomBedrockForm extends BedrockForm implements ValuedType {
         // Setup and add components
         List<CustomComponent> formatted = new ArrayList<>();
         try {
+            PlayerContext context = new PlayerContext(player, resolver); // todo: move upwards
             for (CustomComponent component : this.components) {
                 // resolve placeholders
-                CustomComponent prepared = component.preparedCopy(resolver);
+                CustomComponent prepared = component.preparedCopy(context);
                 formatted.add(prepared);
 
                 // add component to form

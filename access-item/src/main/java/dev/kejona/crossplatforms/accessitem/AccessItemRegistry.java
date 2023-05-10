@@ -3,9 +3,9 @@ package dev.kejona.crossplatforms.accessitem;
 
 import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.permission.Permission;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.reloadable.Reloadable;
 import dev.kejona.crossplatforms.reloadable.ReloadableRegistry;
 import lombok.Getter;
@@ -15,12 +15,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AccessItemRegistry implements Reloadable {
 
     private final ConfigManager configManager;
-    private final ServerHandler serverHandler;
+    private final Permissions permissions;
+
+    @Getter
+    private final Map<String, AccessItem> items = new HashMap<>();
 
     @Getter
     private boolean enabled = false;
@@ -35,12 +40,9 @@ public abstract class AccessItemRegistry implements Reloadable {
     @Getter
     private Map<AccessItem.Limit, PermissionDefault> globalPermissionDefaults = Collections.emptyMap();
 
-    @Getter
-    private final Map<String, AccessItem> items = new HashMap<>();
-
-    public AccessItemRegistry(ConfigManager configManager, ServerHandler serverHandler) {
+    public AccessItemRegistry(ConfigManager configManager, Permissions permissions) {
         this.configManager = configManager;
-        this.serverHandler = serverHandler;
+        this.permissions = permissions;
         ReloadableRegistry.register(this);
         load();
     }
@@ -63,30 +65,23 @@ public abstract class AccessItemRegistry implements Reloadable {
             setHeldSlot = config.isSetHeldSlot();
             globalPermissionDefaults = config.getGlobalPermissionDefaults();
 
+            Set<Permission> permissions = new HashSet<>();
+
             for (String identifier : config.getItems().keySet()) {
                 AccessItem item = config.getItems().get(identifier);
                 items.put(identifier, item);
 
                 // Register permissions with the server
                 item.generatePermissions(this);
-                for (Permission entry : item.getPermissions().values()) {
-                    serverHandler.registerPermission(entry);
-                }
+                permissions.addAll(item.getPermissions().values());
             }
+
+            this.permissions.registerPermissions(permissions);
         }
     }
 
     @Override
     public boolean reload() {
-        // Unregister permissions
-        if (enabled) {
-            for (AccessItem accessItem : items.values()) {
-                for (Permission permission : accessItem.getPermissions().values()) {
-                    serverHandler.unregisterPermission(permission.key());
-                }
-            }
-        }
-
         load();
         return true;
     }

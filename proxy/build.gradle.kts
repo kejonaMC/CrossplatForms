@@ -2,7 +2,6 @@
 description = "proxy"
 
 dependencies {
-    compileOnly("dev.simplix:protocolize-api:2.1.2")
-    compileOnly("net.luckperms:api:5.4")
+    compileOnly("dev.simplix:protocolize-api:2.2.3")
     compileOnly(projects.core)
 }

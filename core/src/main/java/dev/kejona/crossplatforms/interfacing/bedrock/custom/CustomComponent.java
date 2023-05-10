@@ -2,16 +2,16 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.gson.JsonPrimitive;
 import dev.kejona.crossplatforms.IllegalValueException;
-import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.bedrock.OptionalElement;
 import dev.kejona.crossplatforms.parser.Parser;
-import dev.kejona.crossplatforms.serialize.ValuedType;
+import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.serialize.KeyedType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@ToString
-public abstract class CustomComponent extends OptionalElement implements ValuedType {
+@ToString(callSuper = true)
+public abstract class CustomComponent extends OptionalElement implements KeyedType {
 
     @Getter
     protected String text = "";
@@ -41,30 +41,29 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         this.text = Objects.requireNonNull(text);
     }
 
+    public void parser(Parser parser) {
+        parsers.add(parser);
+    }
+
     public abstract CustomComponent copy();
 
-    public abstract CustomComponent preparedCopy(Resolver resolver);
+    public abstract CustomComponent preparedCopy(PlayerContext context);
 
     public abstract Component cumulusComponent() throws IllegalValueException;
 
-    @Nonnull
-    public abstract String resultIfHidden();
-
     /**
-     * Copies data in a source {@link CustomComponent} or any of its parent classes into a target.
+     * Copies data in a source {@link CustomComponent} or any of its parent classes into this Component.
      */
     protected final void copyBasics(CustomComponent source) {
         this.text = source.text;
         this.parsers = new ArrayList<>(source.parsers);
         this.shouldShow = new ArrayList<>(source.shouldShow);
+        this.stripFormatting = source.stripFormatting;
+        this.mode = source.mode;
     }
 
-    /**
-     * Sets placeholders
-     * @param resolver A map of placeholder (including % prefix and suffix), to the resolved value
-     */
-    public void prepare(@Nonnull Resolver resolver) {
-        Objects.requireNonNull(resolver);
+    public void prepare(@Nonnull PlayerContext context) {
+        Resolver resolver = context.resolver();
         text = resolver.apply(text);
         shouldShow = shouldShow.stream().map(resolver).collect(Collectors.toList());
     }
@@ -83,20 +82,20 @@ public abstract class CustomComponent extends OptionalElement implements ValuedT
         return value;
     }
 
-    public void parser(Parser parser) {
-        parsers.add(parser);
-    }
+    @Nonnull
+    public abstract String resultIfHidden();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CustomComponent component = (CustomComponent) o;
-        return text.equals(component.text) && Objects.equals(shouldShow, component.shouldShow) && parsers.equals(component.parsers);
+        if (!(o instanceof CustomComponent)) return false;
+        if (!super.equals(o)) return false;
+        CustomComponent that = (CustomComponent) o;
+        return text.equals(that.text) && parsers.equals(that.parsers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, shouldShow, parsers);
+        return Objects.hash(super.hashCode(), text, parsers);
     }
 }

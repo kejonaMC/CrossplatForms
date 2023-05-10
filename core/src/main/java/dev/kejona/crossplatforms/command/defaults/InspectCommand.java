@@ -6,7 +6,6 @@ import cloud.commandframework.arguments.standard.StringArgument;
 import dev.kejona.crossplatforms.CrossplatForms;
 import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.FormsCommand;
-import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockForm;
 import dev.kejona.crossplatforms.interfacing.bedrock.BedrockFormRegistry;
@@ -26,7 +25,6 @@ public class InspectCommand extends FormsCommand {
 
     @Override
     public void register(CommandManager<CommandOrigin> manager, Command.Builder<CommandOrigin> defaultBuilder) {
-        ServerHandler serverHandler = crossplatForms.getServerHandler();
         BedrockFormRegistry bedrockRegistry = crossplatForms.getInterfacer().getBedrockRegistry();
         JavaMenuRegistry javaRegistry = crossplatForms.getInterfacer().getJavaRegistry();
 
@@ -36,7 +34,7 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("form")
-                .argument(StringArgument.<CommandOrigin>newBuilder("form")
+                .argument(StringArgument.<CommandOrigin>builder("form")
                         .withSuggestionsProvider(((context, s) -> bedrockRegistry.getForms().values()
                                 .stream()
                                 .map(Interface::getIdentifier)
@@ -56,7 +54,7 @@ public class InspectCommand extends FormsCommand {
 
         manager.command(base
                 .literal("menu")
-                .argument(StringArgument.<CommandOrigin>newBuilder("menu")
+                .argument(StringArgument.<CommandOrigin>builder("menu")
                         .withSuggestionsProvider(((context, s) -> javaRegistry.getMenus().values()
                                 .stream()
                                 .map(Interface::getIdentifier)

@@ -1,7 +1,7 @@
 
 plugins {
     id("net.kyori.indra")
-    id("java-test-fixtures")
+    id("java-test-fixtures") // used for the testFixtures source set, which is available for other test sources
 }
 
 sourceSets {
@@ -23,32 +23,46 @@ dependencies {
     testImplementation("org.geysermc.cumulus:cumulus:1.1.1-SNAPSHOT") // needed for testing button components
     testImplementation("com.google.code.gson:gson:2.8.6") // needed for cumulus
 
-    compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT") {
+    // Nullability annotations. todo: move to something else
+    testImplementation("com.google.code.findbugs:jsr305:3.0.2")
+    api("com.google.code.findbugs:jsr305:3.0.2")
+
+    compileOnly("org.geysermc.floodgate:api:2.2.0-SNAPSHOT") { isTransitive = false }
+    compileOnly("net.luckperms:api:5.4") { isTransitive = false }
+
+    api("org.bstats:bstats-base:3.0.2")
+    api("cloud.commandframework:cloud-core:1.8.3")
+    api("cloud.commandframework:cloud-minecraft-extras:1.8.3")
+    api("net.kyori:adventure-api:4.13.1")
+    api("net.kyori:adventure-text-serializer-legacy:4.13.1")
+    api("net.kyori:adventure-text-serializer-gson:4.13.1") {
+        // This is required or else it overrides the version we explicitly define below
         exclude(group = "com.google.code.gson", module = "gson")
     }
 
-    api("cloud.commandframework:cloud-core:1.7.1")
-    api("cloud.commandframework:cloud-minecraft-extras:1.7.1")
-    api("net.kyori:adventure-api:4.11.0")
-    api("net.kyori:adventure-text-serializer-legacy:4.11.0")
-    api("net.kyori:adventure-text-serializer-gson:4.11.0")
     api("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
     api("org.spongepowered:configurate-extra-guice:4.2.0-SNAPSHOT")
-    api("com.google.code.gson:gson:2.3.1") // version provided by spigot 1.8.8
-    api("com.google.inject:guice:5.1.0")
-    api("org.bstats:bstats-base:3.0.0")
 
-    // Required because source and unshaded jars are all mixed up on the opencollab repo currently
-    val baseApi = "2.1.0-20221211.182143-60"
-    val geyserApi = "2.1.0-20221211.182145-60"
-    val geyserCore = "2.1.0-20221211.182157-60"
+    api("com.google.inject:guice:5.1.0") {
+       exclude(group = "com.google.guava", module = "guava") // Provides a newer version than provided by server platforms
+    }
+
+    // Provided by Velocity. A slightly higher version is provided by BungeeCord.
+    // Shaded on Spigot because on older Spigot versions, the Guava is too old and breaks Guice.
+    api("com.google.guava:guava") {
+        version {
+            prefer("30.1-jre")
+        }
+    }
+    api("com.google.code.gson:gson") {
+        version {
+            prefer("2.3.1") // lowest version, provided by spigot 1.8.8
+        }
+    }
 
     // dependencies for java16 sources (optionally used at runtime)
-    java16Implementation("org.geysermc:api:$baseApi")
-    java16Implementation("org.geysermc.geyser:api:$geyserApi")
-    java16Implementation("org.geysermc.geyser:core:$geyserCore") {
-        isTransitive = false
-    }
+    // if someone wants geyser to be directly used then they must be running java 16 or higher
+    java16Implementation("org.geysermc.api:geyser-api:1.0.1-SNAPSHOT")
 }
 
 description = "core"

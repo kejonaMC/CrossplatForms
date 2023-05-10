@@ -1,8 +1,8 @@
 package dev.kejona.crossplatforms.command.custom;
 
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
 
-public class CustomCommandSerializer extends ValuedTypeSerializer<CustomCommand> {
+public class CustomCommandSerializer extends KeyedTypeSerializer<CustomCommand> {
 
     public CustomCommandSerializer() {
         super("method");

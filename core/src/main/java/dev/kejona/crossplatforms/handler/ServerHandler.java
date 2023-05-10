@@ -5,8 +5,6 @@ import dev.kejona.crossplatforms.command.CommandType;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.custom.CustomCommand;
 import dev.kejona.crossplatforms.command.custom.InterceptCommand;
-import dev.kejona.crossplatforms.permission.Permission;
-import dev.kejona.crossplatforms.permission.PermissionDefault;
 import net.kyori.adventure.audience.Audience;
 
 import javax.annotation.Nonnull;
@@ -53,15 +51,6 @@ public interface ServerHandler {
 
     boolean isGeyserEnabled();
     boolean isFloodgateEnabled();
-
-    // todo: move permission stuff to a separate interface. easier for hooking into plugins such as LuckPerms
-    void registerPermission(String key, @Nullable String description, PermissionDefault def);
-
-    default void registerPermission(Permission permission) {
-        registerPermission(permission.key(), permission.description(), permission.defaultPermission());
-    }
-
-    void unregisterPermission(String key);
 
     /**
      * Execute a command as the server console

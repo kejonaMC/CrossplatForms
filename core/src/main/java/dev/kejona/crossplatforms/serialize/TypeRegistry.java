@@ -1,6 +1,6 @@
 package dev.kejona.crossplatforms.serialize;
 
-import org.spongepowered.configurate.serialize.SerializationException;
+import io.leangen.geantyref.GenericTypeReflector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -10,9 +10,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static io.leangen.geantyref.GenericTypeReflector.isSuperType;
 
 /**
  * Deserializes a map with keys of type identifiers (strings) and values that are instances of type provided type T,
@@ -32,7 +29,7 @@ public class TypeRegistry<T> {
      */
     public void registerType(String typeId, Class<? extends T> type) {
         String lowerCase = typeId.toLowerCase(Locale.ROOT);
-        if (types.get(lowerCase) != null) {
+        if (types.containsKey(lowerCase)) {
             throw new IllegalArgumentException("Type " + lowerCase + " is already registered");
         }
         types.put(lowerCase, type);
@@ -50,26 +47,19 @@ public class TypeRegistry<T> {
 
     @Nonnull
     public Set<String> getTypes(Type superType) {
-        return filter(superType, types);
-    }
-
-    public void validateType(Type required, String typeKey, Type registered) throws SerializationException {
-        if (!isValidType(required, registered)) {
-            throw new SerializationException("Unsupported type '" + typeKey + "'. " + registered + " is registered but incompatible. Possible type options are: " + getTypes(required));
-        }
-    }
-
-    public boolean isValidType(Type required, Type registered) {
-        return isSuperType(required, registered);
-    }
-
-    public final <V> Set<String> filter(Type superType, Map<String, Class<? extends V>> types) {
-        return filter(superType, types.entrySet().stream());
-    }
-
-    public final <V> Set<String> filter(Type superType, Stream<Map.Entry<String, Class<? extends V>>> types) {
-        return types.filter(e -> isValidType(superType, e.getValue()))
+        return types.entrySet().stream()
+            .filter(e -> isCompatible(superType, e.getValue()))
             .map(Map.Entry::getKey)
             .collect(Collectors.toSet());
+    }
+
+    /**
+     * Tests if a registered Type is compatible with some required Type.
+     * @param required the Type that is required. For example, in the context of serialization, this would be the declared field type.
+     * @param registered a Type that is registered in a Registry
+     * @return true if the registered type is a subtype of the required type
+     */
+    public static boolean isCompatible(Type required, Type registered) {
+        return GenericTypeReflector.isSuperType(required, registered);
     }
 }

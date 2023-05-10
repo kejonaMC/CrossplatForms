@@ -8,6 +8,7 @@ import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.Placeholders;
+import dev.kejona.crossplatforms.inventory.ConfiguredItem;
 import dev.kejona.crossplatforms.permission.Permission;
 import dev.kejona.crossplatforms.permission.PermissionDefault;
 import dev.kejona.crossplatforms.resolver.Resolver;
@@ -27,7 +28,7 @@ import java.util.Map;
 @Getter
 @ConfigSerializable
 @SuppressWarnings("FieldMayBeFinal")
-public class AccessItem {
+public class AccessItem extends ConfiguredItem {
 
     public static final String STATIC_IDENTIFIER = "crossplatformsaccessitem"; // changing this will break existing setups
     private static final String PERMISSION_BASE = Constants.Id() + ".item";
@@ -48,20 +49,6 @@ public class AccessItem {
     private List<Action<? super AccessItem>> actions = Collections.emptyList();
     private List<Action<? super AccessItem>> bedrockActions = Collections.emptyList();
     private List<Action<? super AccessItem>> javaActions = Collections.emptyList();
-
-    @Required
-    private String material = null;
-
-    /**
-     * Display name of the itemstack
-     */
-    @Required
-    private String displayName = null;
-
-    /**
-     * Itemstack lore
-     */
-    private List<String> lore = Collections.emptyList();
 
     /**
      * The inventory slot to be placed in
@@ -108,7 +95,7 @@ public class AccessItem {
 
     public void generatePermissions(AccessItemRegistry registry) {
         if (permissions != null) {
-            Logger.get().severe("Permissions in Access Item '" + identifier + "' have already been generated!");
+            Logger.get().warn("Permissions in Access Item '" + identifier + "' have already been generated!");
         }
 
         String mainPermission = PERMISSION_BASE + "." + identifier;
@@ -141,18 +128,6 @@ public class AccessItem {
         DROP(".drop", "Ability to remove the Access Item from your inventory", PermissionDefault.FALSE),
         PRESERVE(".preserve", "Stop the Access Item from being destroyed when it is dropped. This includes death, regardless of drop permission.", PermissionDefault.FALSE),
         MOVE(".move", "Ability to move the Access Item around and to inventories", PermissionDefault.FALSE);
-
-        /**
-         * Map of {@link PermissionDefault} to fallback to if the user does not define their own.
-         */
-        public static final Map<Limit, PermissionDefault> FALLBACK_DEFAULTS;
-
-        static {
-            FALLBACK_DEFAULTS = new HashMap<>();
-            for (Limit limit : Limit.values()) {
-                FALLBACK_DEFAULTS.put(limit, limit.fallbackDefault);
-            }
-        }
 
         public final String permissionSuffix;
         public final String description;

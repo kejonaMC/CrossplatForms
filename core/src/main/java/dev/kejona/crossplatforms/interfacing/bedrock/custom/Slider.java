@@ -2,6 +2,8 @@ package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.IllegalValueException;
+import dev.kejona.crossplatforms.context.PlayerContext;
+import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.utils.ParseUtils;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import javax.annotation.Nonnull;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-public class Slider extends CustomComponent {
+public class Slider extends AbstractComponent<Slider> {
 
     public static final String TYPE = "slider";
 
@@ -26,7 +28,7 @@ public class Slider extends CustomComponent {
 
     @Inject
     private Slider() {
-
+        super();
     }
 
     @Override
@@ -46,25 +48,25 @@ public class Slider extends CustomComponent {
             text,
             ParseUtils.getFloat(min, "min"),
             ParseUtils.getFloat(max, "max"),
-            ParseUtils.getUnsignedInt(step, "step"),
+            ParseUtils.getPositiveFloat(step, "step"),
             ParseUtils.getFloat(defaultValue, "default-value")
         );
     }
 
     @Override
-    public void prepare(@Nonnull Resolver resolver) {
-        super.prepare(resolver);
+    public void prepare(@Nonnull PlayerContext context) {
+        super.prepare(context);
+        Resolver resolver = context.resolver();
         min = resolver.apply(min);
         max = resolver.apply(max);
         step = resolver.apply(step);
         defaultValue = resolver.apply(defaultValue);
     }
 
+    @Nonnull
     @Override
-    public Slider preparedCopy(Resolver resolver) {
-        Slider copy = copy();
-        copy.prepare(resolver);
-        return copy;
+    public String parse(FormPlayer player, String result) {
+        return super.parse(player, ParseUtils.downSize(result));
     }
 
     @Nonnull

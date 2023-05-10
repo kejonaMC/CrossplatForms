@@ -19,9 +19,11 @@ public class ConfigurationModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        // remember: explicit bindings cannot be required because this module is used for creating configs
+        // remember: explicit bindings cannot be set as required using binder().requireExplicitBindings()
+        // because this module is used for creating configs - bindings are created on the fly (just in time)
 
         bind(Interfacer.class).toInstance(interfacer);
+
         // Hack to stop the instance from having its members being injected
         // which causes a ClassDefNotFound error if Cumulus is not present (EmptyBedrockHandler)
         bind(BedrockHandler.class).toProvider(Providers.of(bedrockHandler));

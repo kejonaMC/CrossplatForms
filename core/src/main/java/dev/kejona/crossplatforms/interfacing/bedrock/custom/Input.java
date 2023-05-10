@@ -1,7 +1,7 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.resolver.Resolver;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import lombok.Getter;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
@@ -14,7 +14,7 @@ import java.util.Objects;
 @ToString(callSuper = true)
 @Getter
 @ConfigSerializable
-public class Input extends CustomComponent {
+public class Input extends AbstractComponent<Input> {
 
     public static final String TYPE = "input";
 
@@ -53,17 +53,10 @@ public class Input extends CustomComponent {
     }
 
     @Override
-    public void prepare(@Nonnull Resolver resolver) {
-        super.prepare(resolver);
-        placeholder = resolver.apply(placeholder);
-        defaultText = resolver.apply(defaultText);
-    }
-
-    @Override
-    public Input preparedCopy(Resolver resolver) {
-        Input copy = copy();
-        copy.prepare(resolver);
-        return copy;
+    public void prepare(@Nonnull PlayerContext context) {
+        super.prepare(context);
+        placeholder = context.resolver().apply(placeholder);
+        defaultText = context.resolver().apply(defaultText);
     }
 
     @Override
@@ -80,14 +73,15 @@ public class Input extends CustomComponent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Input)) return false;
+        if (!super.equals(o)) return false;
         Input input = (Input) o;
-        return super.equals(o) && placeholder.equals(input.placeholder) && defaultText.equals(input.defaultText);
+        return placeholder.equals(input.placeholder) && defaultText.equals(input.defaultText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(placeholder, defaultText);
+        return Objects.hash(super.hashCode(), placeholder, defaultText);
     }
 
     public static Builder builder() {

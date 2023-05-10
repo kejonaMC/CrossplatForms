@@ -18,6 +18,15 @@ public interface Resolver extends UnaryOperator<String> {
     @Contract("!null -> !null; null -> null")
     String apply(@Nullable String s);
 
+    @Contract("null, _ -> param2")
+    default String applyOrElse(@Nullable String s, @Nullable String def) {
+        if (s == null) {
+            return def;
+        }
+
+        return apply(s);
+    }
+
     @Contract("!null -> !null; null -> null")
     default List<String> apply(@Nullable List<String> list) {
         if (list == null) {

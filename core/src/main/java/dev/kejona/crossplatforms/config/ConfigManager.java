@@ -18,6 +18,7 @@ import dev.kejona.crossplatforms.filler.SplitterFiller;
 import dev.kejona.crossplatforms.interfacing.Argument;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.Option;
 import dev.kejona.crossplatforms.interfacing.bedrock.custom.OptionSerializer;
+import dev.kejona.crossplatforms.inventory.SkullProfile;
 import dev.kejona.crossplatforms.parser.Parser;
 import dev.kejona.crossplatforms.parser.ParserSerializer;
 import dev.kejona.crossplatforms.serialize.PathNodeResolver;
@@ -91,6 +92,7 @@ public class ConfigManager {
                 builder.registerExact(Argument.class, new Argument.Serializer());
                 builder.registerExact(Option.class, new OptionSerializer());
                 builder.registerExact(Literals.class, new Literals.Serializer());
+                builder.registerExact(SkullProfile.class, new SkullProfile.Serializer());
 
                 // serializers for abstract classes
                 builder.registerExact(CustomCommand.class, new CustomCommandSerializer());

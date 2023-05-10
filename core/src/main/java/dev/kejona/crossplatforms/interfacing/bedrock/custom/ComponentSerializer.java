@@ -1,11 +1,11 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
+import dev.kejona.crossplatforms.serialize.KeyedTypeSerializer;
 
 /**
  * This serializer must be registered exact.
  */
-public class ComponentSerializer extends ValuedTypeSerializer<CustomComponent> {
+public class ComponentSerializer extends KeyedTypeSerializer<CustomComponent> {
 
     public ComponentSerializer() {
         registerType(Dropdown.TYPE, Dropdown.class);

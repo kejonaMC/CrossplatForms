@@ -35,7 +35,7 @@ public class RegisteredCommand extends CustomCommand {
     }
 
     @PostProcess
-    protected void postProcess() {
+    private void postProcess() {
         if (command == null) {
             command = Literals.of(new String[]{getIdentifier()});
         }

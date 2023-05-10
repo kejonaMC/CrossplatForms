@@ -13,7 +13,7 @@ allprojects{
     apply(plugin = "net.kyori.indra.git")
 
     group = "dev.kejona"
-    version = "1.4.0"
+    version = "1.5.0"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -57,12 +57,12 @@ allprojects{
 
 subprojects {
     dependencies {
-        testAnnotationProcessor("org.projectlombok:lombok:1.18.24")
-        testCompileOnly("org.projectlombok:lombok:1.18.22")
-        testImplementation("org.junit.jupiter:junit-jupiter:5.9.1")
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.26")
+        testCompileOnly("org.projectlombok:lombok:1.18.26")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 
-        annotationProcessor("org.projectlombok:lombok:1.18.22")
-        compileOnly("org.projectlombok:lombok:1.18.22")
+        annotationProcessor("org.projectlombok:lombok:1.18.26")
+        compileOnly("org.projectlombok:lombok:1.18.26")
         compileOnly("com.google.code.findbugs:jsr305:3.0.2") // nullability annotations
     }
 }

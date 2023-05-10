@@ -13,11 +13,10 @@ import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.CommandType;
 import dev.kejona.crossplatforms.command.DispatchableCommand;
 import dev.kejona.crossplatforms.command.custom.InterceptCommand;
+import dev.kejona.crossplatforms.command.custom.InterceptCommandCache;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
-import dev.kejona.crossplatforms.proxy.PermissionHook;
-import dev.kejona.crossplatforms.proxy.ProxyHandler;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 
@@ -27,14 +26,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-public class VelocityHandler extends ProxyHandler implements ServerHandler {
+public class VelocityHandler extends InterceptCommandCache implements ServerHandler {
 
     private final ProxyServer server;
     private final CommandManager commandManager;
     private final ConsoleCommandSource console;
 
-    public VelocityHandler(ProxyServer server, PermissionHook permissionHook) {
-        super(permissionHook);
+    public VelocityHandler(ProxyServer server) {
         this.server = server;
         this.commandManager = server.getCommandManager();
         this.console = server.getConsoleCommandSource();

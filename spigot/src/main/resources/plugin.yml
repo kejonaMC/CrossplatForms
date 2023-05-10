@@ -1,7 +1,7 @@
 main: dev.kejona.crossplatforms.spigot.CrossplatFormsSpigot
 name: CrossplatForms
 version: ${project_version}
-api-version: 1.14
+api-version: 1.13
 description: ${project_description}
 prefix: CForms
 authors:
@@ -11,6 +11,7 @@ softdepend:
   - Geyser-Spigot
   - floodgate
   - PlaceholderAPI
+  - LuckPerms
 
 # Register our PlayerCommandPreprocessEvent listener before DM so that ours is called first (Since DM uses EventPriority.LOWEST)
 loadbefore:

@@ -2,6 +2,7 @@ package dev.kejona.crossplatforms.bungeecord;
 
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import com.google.inject.Module;
 import dev.kejona.crossplatforms.Constants;
 import dev.kejona.crossplatforms.CrossplatForms;
 import dev.kejona.crossplatforms.CrossplatFormsBootstrap;
@@ -16,18 +17,19 @@ import dev.kejona.crossplatforms.config.ConfigId;
 import dev.kejona.crossplatforms.config.ConfigManager;
 import dev.kejona.crossplatforms.handler.BasicPlaceholders;
 import dev.kejona.crossplatforms.handler.Placeholders;
-import dev.kejona.crossplatforms.interfacing.Interfacer;
-import dev.kejona.crossplatforms.interfacing.NoMenusInterfacer;
+import dev.kejona.crossplatforms.permission.LuckPermsHook;
+import dev.kejona.crossplatforms.permission.Permissions;
 import dev.kejona.crossplatforms.proxy.CloseMenuAction;
-import dev.kejona.crossplatforms.proxy.LuckPermsHook;
-import dev.kejona.crossplatforms.proxy.PermissionHook;
-import dev.kejona.crossplatforms.proxy.ProtocolizeInterfacer;
+import dev.kejona.crossplatforms.proxy.ProtocolizeModule;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.CustomChart;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBootstrap {
 
@@ -54,11 +56,8 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         metrics = new Metrics(this, BSTATS_ID);
         audiences = BungeeAudiences.create(this);
 
-        BungeeCordHandler serverHandler = new BungeeCordHandler(
-            this,
-            audiences,
-            pluginPresent("LuckPerms") ? new LuckPermsHook() : PermissionHook.empty()
-        );
+        BungeeCordHandler serverHandler = new BungeeCordHandler(this, audiences);
+        Permissions permissions = pluginPresent("LuckPerms") ? new LuckPermsHook() : Permissions.empty();
 
         BungeeCommandManager<CommandOrigin> commandManager;
         try {
@@ -83,17 +82,25 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
                 logger,
                 getDataFolder().toPath(),
                 serverHandler,
+                permissions,
                 "formsb",
                 commandManager,
                 placeholders,
                 this
         );
 
-        if (!crossplatForms.isSuccess()) {
-            return;
+        getProxy().getPluginManager().registerListener(this, serverHandler); // events for catching proxy commands
+    }
+
+    @Override
+    public List<Module> configModules() {
+        List<Module> modules = new ArrayList<>();
+
+        if (protocolizePresent) {
+            modules.add(new ProtocolizeModule());
         }
 
-        getProxy().getPluginManager().registerListener(this, serverHandler); // events for catching proxy commands
+        return modules;
     }
 
     @Override
@@ -104,15 +111,6 @@ public class CrossplatFormsBungeeCord extends Plugin implements CrossplatFormsBo
         if (protocolizePresent) {
             configManager.register(ConfigId.JAVA_MENUS);
             CloseMenuAction.register(actionSerializer); // Close Java menus
-        }
-    }
-
-    @Override
-    public Interfacer interfaceManager() {
-        if (protocolizePresent) {
-            return new ProtocolizeInterfacer();
-        } else {
-            return new NoMenusInterfacer();
         }
     }
 

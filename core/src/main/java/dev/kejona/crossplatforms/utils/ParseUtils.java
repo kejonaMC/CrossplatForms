@@ -41,6 +41,21 @@ public class ParseUtils {
         }
     }
 
+    /**
+     * Converts a float to an integer if it can be done without loss of precision.
+     * @param floaty The float, in string representation.
+     * @return the integer as a string if conversion was possible, otherwise the floaty parameter
+     * @throws NumberFormatException if the parameter could not be parsed to a float
+     */
+    public static String downSize(String floaty) throws NumberFormatException {
+        float value = Float.parseFloat(floaty);
+        if ((int) value == value) {
+            return Integer.toString((int) value);
+        } else {
+            return floaty;
+        }
+    }
+
     public static float getFloat(@Nullable String value, String identifier) throws IllegalValueException {
         if (value == null) {
             throw new IllegalValueException(null, "decimal number", identifier);
@@ -52,6 +67,17 @@ public class ParseUtils {
         } catch (NumberFormatException e) {
             throw new IllegalValueException(s, "decimal number", identifier);
         }
+    }
+
+    /**
+     * Requires the string value to be a float, that is positive. It must not be zero or negative.
+     */
+    public static float getPositiveFloat(@Nullable String value, String identifier) throws IllegalValueException {
+        float f = getFloat(value, identifier);
+        if (f <= 0) {
+            throw new IllegalValueException(value, "positive decimal number", identifier);
+        }
+        return f;
     }
 
     public static boolean getBoolean(@Nullable String value, String identifier) throws IllegalValueException {

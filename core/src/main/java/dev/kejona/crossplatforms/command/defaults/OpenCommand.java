@@ -10,7 +10,6 @@ import dev.kejona.crossplatforms.command.CommandOrigin;
 import dev.kejona.crossplatforms.command.FormsCommand;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.Argument;
 import dev.kejona.crossplatforms.interfacing.ArgumentException;
@@ -41,7 +40,6 @@ public class OpenCommand extends FormsCommand {
     private final BedrockHandler bedrockHandler;
     private final Interfacer interfacer;
     private final JavaMenuRegistry javaRegistry;
-    private final Placeholders placeholders;
 
     private final String openCommand;
     private final String sendCommand;
@@ -53,7 +51,6 @@ public class OpenCommand extends FormsCommand {
         this.bedrockHandler = crossplatForms.getBedrockHandler();
         this.interfacer = crossplatForms.getInterfacer();
         this.javaRegistry = crossplatForms.getInterfacer().getJavaRegistry();
-        this.placeholders = crossplatForms.getPlaceholders();
 
         String root = crossplatForms.getRootCommand();
         openCommand = join(root, OPEN_NAME);
@@ -67,7 +64,7 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(OPEN_NAME)
                 .permission(origin -> origin.hasPermission(PERMISSION) && origin.isPlayer())
-                .argument(StringArgument.<CommandOrigin>newBuilder(INTERFACE_ARG)
+                .argument(StringArgument.<CommandOrigin>builder(INTERFACE_ARG)
                         .withSuggestionsProvider((context, s) -> openSuggestions(context))
                         .build())
                 .argument(extrasArgument())
@@ -98,12 +95,12 @@ public class OpenCommand extends FormsCommand {
         manager.command(defaultBuilder
                 .literal(SEND_NAME)
                 .permission(PERMISSION_OTHER)
-                .argument(StringArgument.<CommandOrigin>newBuilder("player")
+                .argument(StringArgument.<CommandOrigin>builder("player")
                         .withSuggestionsProvider((context, s) -> serverHandler.getPlayers()
                                 .map(FormPlayer::getName)
                                 .collect(Collectors.toList()))
                         .build())
-                .argument(StringArgument.<CommandOrigin>newBuilder(INTERFACE_ARG)
+                .argument(StringArgument.<CommandOrigin>builder(INTERFACE_ARG)
                         .withSuggestionsProvider((context, s) -> sendSuggestions(context))
                         .build())
                 .argument(extrasArgument())
@@ -164,7 +161,7 @@ public class OpenCommand extends FormsCommand {
 
     private void send(Interface ui, CommandOrigin origin, FormPlayer recipient, @Nullable String... args) {
         try {
-            ui.send(recipient, placeholders.resolver(recipient), args);
+            ui.send(recipient, args);
         } catch (ArgumentException e) {
             origin.warn("Failed to open " + ui.getIdentifier() + ": " + e.getMessage());
             badSyntax(origin, openCommand, ui);

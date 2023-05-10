@@ -1,15 +1,8 @@
 package dev.kejona.crossplatforms.util;
 
-import dev.kejona.crossplatforms.action.ActionSerializer;
-import dev.kejona.crossplatforms.interfacing.bedrock.custom.Input;
-import dev.kejona.crossplatforms.serialize.ValuedTypeSerializer;
 import dev.kejona.crossplatforms.utils.ConfigurateUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ConfigurateUtilsTest {
 

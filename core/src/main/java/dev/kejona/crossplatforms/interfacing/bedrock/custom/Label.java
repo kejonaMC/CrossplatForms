@@ -1,7 +1,6 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.custom;
 
 import com.google.inject.Inject;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.ToString;
 import org.geysermc.cumulus.component.Component;
 import org.geysermc.cumulus.component.LabelComponent;
@@ -11,7 +10,7 @@ import javax.annotation.Nonnull;
 
 @ToString(callSuper = true)
 @ConfigSerializable
-public class Label extends CustomComponent {
+public class Label extends AbstractComponent<Label> {
 
     public static final String TYPE = "label";
 
@@ -30,13 +29,6 @@ public class Label extends CustomComponent {
     @Override
     public Component cumulusComponent() {
         return LabelComponent.of(text);
-    }
-
-    @Override
-    public Label preparedCopy(Resolver resolver) {
-        Label copy = copy();
-        copy.prepare(resolver);
-        return copy;
     }
 
     @Nonnull

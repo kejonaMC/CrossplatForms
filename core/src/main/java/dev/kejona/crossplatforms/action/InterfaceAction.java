@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.BedrockHandler;
 import dev.kejona.crossplatforms.handler.FormPlayer;
-import dev.kejona.crossplatforms.handler.Placeholders;
 import dev.kejona.crossplatforms.interfacing.ArgumentException;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.interfacing.Interfacer;
@@ -32,13 +31,11 @@ public class InterfaceAction implements GenericAction {
 
     private final transient BedrockHandler bedrockHandler;
     private final transient Interfacer interfacer;
-    private final transient Placeholders placeholders;
 
     @Inject
-    public InterfaceAction(BedrockHandler bedrockHandler, Interfacer interfacer, Placeholders placeholders) {
+    public InterfaceAction(BedrockHandler bedrockHandler, Interfacer interfacer) {
         this.bedrockHandler = bedrockHandler;
         this.interfacer = interfacer;
-        this.placeholders = placeholders;
     }
 
     @Override
@@ -66,7 +63,7 @@ public class InterfaceAction implements GenericAction {
             // The resolver given to this action is not passed to the form being opened.
             // If this action is triggered by a form that has arguments, and the user wants those arguments to be passed
             // to the form that this is opening, they must be passed explicitly as arguments (not through the resolver)
-            ui.send(player, placeholders.resolver(player), arguments);
+            ui.send(player, arguments);
         } catch (ArgumentException e) {
             player.warn("A configuration error resulted in you not opening a form or menu.");
             Logger.get().severe("Failed to open '" + form + "' because: " + e.getMessage());

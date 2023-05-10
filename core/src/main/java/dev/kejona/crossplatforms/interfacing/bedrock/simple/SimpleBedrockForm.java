@@ -1,6 +1,7 @@
 package dev.kejona.crossplatforms.interfacing.bedrock.simple;
 
 import dev.kejona.crossplatforms.Logger;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import dev.kejona.crossplatforms.filler.SimpleFormFiller;
 import dev.kejona.crossplatforms.handler.FormPlayer;
@@ -48,13 +49,9 @@ public class SimpleBedrockForm extends BedrockForm {
         List<SimpleButton> buttons = new ArrayList<>(this.buttons);
 
         // fill the copy with additional buttons
+        PlayerContext context = new PlayerContext(player, resolver);
         for (SimpleFormFiller filler : fillers) {
-            int index = filler.insertIndex();
-            if (index < 0) {
-                filler.generateButtons(resolver).forEachOrdered(buttons::add);
-            } else {
-                filler.generateButtons(resolver).forEachOrdered(b -> buttons.add(index, b));
-            }
+            filler.fillButtons(buttons, context);
         }
 
         // resolve relevant placeholders and add it to the form

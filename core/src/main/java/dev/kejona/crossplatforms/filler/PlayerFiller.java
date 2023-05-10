@@ -2,11 +2,10 @@ package dev.kejona.crossplatforms.filler;
 
 import com.google.inject.Inject;
 import dev.kejona.crossplatforms.SkinCache;
+import dev.kejona.crossplatforms.context.PlayerContext;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.handler.ServerHandler;
 import dev.kejona.crossplatforms.interfacing.bedrock.simple.SimpleButton;
-import dev.kejona.crossplatforms.interfacing.java.ItemButton;
-import dev.kejona.crossplatforms.resolver.Resolver;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import javax.annotation.Nonnull;
@@ -29,20 +28,14 @@ public class PlayerFiller extends UniversalFiller {
 
     @Nonnull
     @Override
-    public Stream<String> rawOptions(Resolver resolver) {
+    public Stream<String> rawOptions(PlayerContext context) {
         return serverHandler.getPlayerNames().sorted();
     }
 
     @Nonnull
     @Override
-    public Stream<SimpleButton> rawButtons(Resolver resolver) {
+    public Stream<SimpleButton> rawButtons(PlayerContext context) {
         return serverHandler.getPlayersSorted().map(player -> new SimpleButton(player.getName(), headLink(player)));
-    }
-
-    @Nonnull
-    @Override
-    public Stream<ItemButton> rawItems(Resolver resolver) {
-        return serverHandler.getPlayersSorted().map(player -> ItemButton.fillEntry(player.getName(), player));
     }
 
     @Override
