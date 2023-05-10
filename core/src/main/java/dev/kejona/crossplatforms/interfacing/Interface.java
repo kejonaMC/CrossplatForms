@@ -78,7 +78,7 @@ public abstract class Interface {
         send(recipient, new MapResolver(placeholders).then(resolver));
     }
 
-    public void send(FormPlayer recipient, String @Nullable... args) throws ArgumentException {
+    public void send(FormPlayer recipient, @Nullable String... args) throws ArgumentException {
         Resolver resolver = placeholders.resolver(recipient);
         if (arguments.isEmpty()) {
             send(recipient, resolver);
