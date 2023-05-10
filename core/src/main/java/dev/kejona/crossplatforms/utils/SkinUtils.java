@@ -21,8 +21,7 @@ public final class SkinUtils {
     }
 
     @Nonnull
-    public static String readSkinUrl(@Nonnull String encodedData) throws IllegalArgumentException {
-
+    public static String urlFromEncoding(@Nonnull String encodedData) throws IllegalArgumentException {
         // See https://wiki.vg/Mojang_API#UUID_to_Profile_and_Skin.2FCape
         JsonObject json;
         try {
@@ -54,23 +53,18 @@ public final class SkinUtils {
         }
     }
 
-    public static boolean isValidUrl(String skinUrl) {
-        return URL_PATTERN.matcher(skinUrl).matches();
-    }
-
-    public static void requireValidUrl(String skinUrl) {
-        if (!isValidUrl(skinUrl)) {
-            throw new IllegalArgumentException("Skin url has unexpected format: " + skinUrl);
-        }
-    }
-
     @Nonnull
-    public static String getSkinId(String skinUrl) throws IllegalArgumentException {
+    public static String idFromUrl(@Nonnull String skinUrl) throws IllegalArgumentException {
         Matcher matcher = URL_PATTERN.matcher(skinUrl);
         if (matcher.matches()) {
             return matcher.group(2);
         } else {
             throw new IllegalArgumentException("Skin url has unexpected format: " + skinUrl);
         }
+    }
+
+    @Nonnull
+    public static String idFromEncoding(@Nonnull String encodedData) throws IllegalArgumentException {
+        return idFromUrl(urlFromEncoding(encodedData));
     }
 }

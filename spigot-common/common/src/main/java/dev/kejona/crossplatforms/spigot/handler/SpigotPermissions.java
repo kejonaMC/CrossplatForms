@@ -42,8 +42,8 @@ public class SpigotPermissions implements Permissions {
                 registerPermission(perm);
             }
         } else {
-            // Register a handful of permissions every tick: https://github.com/kejonaMC/CrossplatForms/issues/128
-            new RegisterTask(permissions).runTaskTimer(plugin, 1L, 1L);
+            // Register 5 permissions every tick: https://github.com/kejonaMC/CrossplatForms/issues/128
+            new RegisterTask(permissions, 5).runTaskTimer(plugin, 0L, 1L);
         }
     }
 
@@ -67,22 +67,24 @@ public class SpigotPermissions implements Permissions {
         }
     }
 
-    class RegisterTask extends BukkitRunnable {
+    private class RegisterTask extends BukkitRunnable {
 
         private final Queue<Permission> queue;
+        private final int batchSize;
 
-        public RegisterTask(Collection<Permission> permissions) {
-            queue = new LinkedList<>(permissions);
+        public RegisterTask(Collection<Permission> permissions, int batchSize) {
+            this.queue = new LinkedList<>(permissions);
+            this.batchSize = batchSize;
         }
 
         @Override
         public void run() {
-            for (int i = 0; i < 5 && !queue.isEmpty(); i++) {
+            for (int i = 0; i < batchSize && !queue.isEmpty(); i++) {
                 registerPermission(queue.remove());
             }
 
             if (queue.isEmpty()) {
-                cancel();
+                cancel(); // finished registering all permissions
             }
         }
     }

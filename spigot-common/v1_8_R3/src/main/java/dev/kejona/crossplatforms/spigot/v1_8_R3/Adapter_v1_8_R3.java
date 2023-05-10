@@ -59,7 +59,6 @@ public class Adapter_v1_8_R3 implements SpigotAdapter {
 
     @Override
     public void registerAuxiliaryEvents(Plugin plugin, SpigotAccessItems items) {
-        PlayerPickupItemListener listener = new PlayerPickupItemListener(items);
-        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(items), plugin);
     }
 }

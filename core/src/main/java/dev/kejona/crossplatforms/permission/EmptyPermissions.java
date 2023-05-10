@@ -4,7 +4,7 @@ import java.util.Collection;
 
 class EmptyPermissions implements Permissions {
 
-    static Permissions INSTANCE = new EmptyPermissions();
+    static final Permissions INSTANCE = new EmptyPermissions();
 
     private EmptyPermissions() {
 

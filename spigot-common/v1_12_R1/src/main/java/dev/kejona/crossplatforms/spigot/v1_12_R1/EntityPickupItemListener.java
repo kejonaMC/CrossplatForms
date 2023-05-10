@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 
 @AllArgsConstructor
-public class EntityPlayerPickupItemListener implements Listener {
+public class EntityPickupItemListener implements Listener {
 
     private final SpigotAccessItems items;
 

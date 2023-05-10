@@ -23,7 +23,7 @@ public class SpigotInventoryController implements InventoryController, Listener 
 
     @Override
     public void openInventory(FormPlayer recipient, InventoryHandle container, ClickHandler clickHandler) {
-        Player player = Objects.requireNonNull(Bukkit.getPlayer(recipient.getUuid()), "player lookup");
+        Player player = Objects.requireNonNull(Bukkit.getPlayer(recipient.getUuid()), "player lookup for " + recipient.getUuid());
         Inventory inventory = container.castedHandle(Inventory.class);
 
         player.openInventory(inventory);

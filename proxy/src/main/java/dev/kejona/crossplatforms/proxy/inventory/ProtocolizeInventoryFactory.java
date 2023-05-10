@@ -27,7 +27,6 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     public InventoryHandle chest(String title, int chestSize) {
         InventoryType type = InventoryType.chestInventoryWithSize(chestSize);
         Inventory inventory = new Inventory(type);
-
         inventory.title(title);
 
         return new ProtocolizeInventory(inventory);
@@ -37,7 +36,6 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     public InventoryHandle inventory(String title, InventoryLayout layout) {
         InventoryType type = convertType(layout);
         Inventory inventory = new Inventory(type);
-
         inventory.title(title);
 
         return new ProtocolizeInventory(inventory);
@@ -46,7 +44,7 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     @Override
     public ItemHandle item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
         ItemType type;
-        if (material == null || material.isEmpty()) {
+        if (material == null) {
             type = ItemType.STONE;
         } else {
             try {
@@ -63,11 +61,8 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
         }
         item.lore(lore, true);
 
-        CompoundTag nbt = item.nbtData();
         if (customModelData != null) {
-            nbt.putInt(CUSTOM_MODEL_DATA_KEY, customModelData);
-        } else {
-            nbt.remove(CUSTOM_MODEL_DATA_KEY);
+            item.nbtData().putInt(CUSTOM_MODEL_DATA_KEY, customModelData);
         }
 
         return new ProtocolizeItem(item);
@@ -83,11 +78,7 @@ public class ProtocolizeInventoryFactory implements InventoryFactory {
     @Override
     public ItemHandle skullItem(SkullProfile profile, @Nullable String displayName, List<String> lore) {
         ItemStack item = skullBase(displayName, lore);
-        setSkullOwner(
-            item.nbtData(),
-            profile.getOwner(),
-            profile.getTextures()
-        );
+        setSkullOwner(item.nbtData(), profile.getOwner(), profile.getTextures());
 
         return new ProtocolizeItem(item);
     }

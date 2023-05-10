@@ -6,10 +6,10 @@ import java.util.TreeMap;
 
 public class VersionMap<T> extends TreeMap<Version, T> {
 
-    private final int supportedMajorVersion;
+    private final int majorVersion;
 
     public VersionMap(int supportedMajorVersion) {
-        this.supportedMajorVersion = supportedMajorVersion;
+        this.majorVersion = supportedMajorVersion;
     }
 
     @Nonnull
@@ -27,13 +27,13 @@ public class VersionMap<T> extends TreeMap<Version, T> {
 
         Version version = new Version(nmsVersion);
 
-        if (version.major() != supportedMajorVersion) {
-            return new Versioned<>(firstKey().nmsVersion()); // todo: questionable?
+        if (version.major() != majorVersion) {
+            return Versioned.unsupported(lastKey().toString());
         }
 
         if (containsKey(version)) {
             // Direct support for this version
-            return new Versioned<>(getOrThrow(version));
+            return Versioned.supported(getOrThrow(version));
         }
 
         // Find adapter versions below and above the given version
@@ -42,11 +42,11 @@ public class VersionMap<T> extends TreeMap<Version, T> {
 
         if (lower == null) {
             // Given version is lower than the lowest adapter version
-            return new Versioned<>(higher.nmsVersion());
+            return Versioned.unsupported(higher.toString());
         }
         if (higher == null) {
-            // Given version is higher than the highest adapter version
-            return new Versioned<>(getOrThrow(lower));
+            // Given version is higher than the highest adapter version. Assume we know this works
+            return Versioned.supported(getOrThrow(lower));
         }
 
         if (lower.minor() != version.minor()) {
@@ -56,15 +56,15 @@ public class VersionMap<T> extends TreeMap<Version, T> {
                 // The given version and higher adapter version only differ in patch version. The server should be updated.
                 // eg 1.13  <  1.14.1  <  1.14.2
                 //    lower    version    higher
-                return new Versioned<>(getOrThrow(higher), higher.nmsVersion());
+                return Versioned.supported(getOrThrow(higher), higher.toString());
             } else {
                 // eg 1.13  <  1.14  <  1.15
                 //    lower   version   higher
-                return new Versioned<>(getOrThrow(lower));
+                return Versioned.supported(getOrThrow(lower));
             }
         }
 
         // There is an adapter for the same minor version, but a lower patch version
-        return new Versioned<>(getOrThrow(lower));
+        return Versioned.supported(getOrThrow(lower));
     }
 }

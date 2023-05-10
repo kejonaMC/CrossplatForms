@@ -35,14 +35,14 @@ public class ConfiguredItem {
     }
 
     public ItemHandle convertAndResolve(Resolver resolver) {
+        String displayName = resolver.apply(this.displayName);
         List<String> lore = resolver.apply(this.lore);
 
         if (skull == null) {
-            String displayName = resolver.applyOrElse(this.displayName, "");
             String material = resolver.apply(this.material);
             return factory.item(material, displayName, lore, customModelData);
         } else {
-            return factory.skullItem(skull, resolver.apply(displayName), lore);
+            return factory.skullItem(skull, displayName, lore);
         }
     }
 }

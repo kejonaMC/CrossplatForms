@@ -48,6 +48,7 @@ public class JavaMenuRegistry implements Reloadable {
         MenuConfig config = configManager.getConfig(MenuConfig.class).get();
         enabled = config.isEnable();
         if (enabled) {
+            // todo: Permission does not implement equals/hashCode, so using a set won't really work as intended
             Set<Permission> permissions = new HashSet<>();
 
             for (String identifier : config.getMenus().keySet()) {

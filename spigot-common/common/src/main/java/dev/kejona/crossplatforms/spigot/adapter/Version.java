@@ -25,7 +25,8 @@ public class Version implements Comparable<Version> {
         }
     }
 
-    public String nmsVersion() {
+    @Override
+    public String toString() {
         return major + "_" + minor + "_R" + patch;
     }
 

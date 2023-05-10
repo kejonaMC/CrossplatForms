@@ -6,9 +6,9 @@ import dev.kejona.crossplatforms.action.Action;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.interfacing.Interface;
 import dev.kejona.crossplatforms.inventory.ClickHandler;
-import dev.kejona.crossplatforms.inventory.InventoryHandle;
 import dev.kejona.crossplatforms.inventory.InventoryController;
 import dev.kejona.crossplatforms.inventory.InventoryFactory;
+import dev.kejona.crossplatforms.inventory.InventoryHandle;
 import dev.kejona.crossplatforms.inventory.InventoryLayout;
 import dev.kejona.crossplatforms.resolver.Resolver;
 import lombok.Getter;
@@ -39,7 +39,7 @@ public class JavaMenu extends Interface {
 
     private boolean allowBedrock = false;
 
-    private int size = 5; // Hopper size by default
+    private int size = 9;
     private InventoryLayout type = InventoryLayout.CHEST;
 
     private Map<Integer, ItemButton> buttons = Collections.emptyMap();
@@ -58,7 +58,8 @@ public class JavaMenu extends Interface {
         InventoryHandle inventory;
         if (type == InventoryLayout.CHEST) {
             if (size == 5) {
-                // Hopper
+                // Extra safeguard for hopper
+                type = InventoryLayout.HOPPER;
                 inventory = factory.inventory(title, InventoryLayout.HOPPER);
             } else {
                 inventory = factory.chest(title, size);

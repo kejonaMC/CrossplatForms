@@ -56,7 +56,7 @@ public class SpigotInventoryFactory implements InventoryFactory {
     public ItemHandle item(@Nullable String material, @Nullable String displayName, @Nonnull List<String> lore, @Nullable Integer customModelData) {
 
         Material type;
-        if (material == null || material.isEmpty()) {
+        if (material == null) {
             type = Material.STONE;
         } else {
             type = Material.matchMaterial(material);

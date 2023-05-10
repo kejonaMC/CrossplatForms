@@ -9,7 +9,10 @@ public class Adapter_v1_12_R1 extends Adapter_v1_9_R2 {
 
     @Override
     public void registerAuxiliaryEvents(Plugin plugin, SpigotAccessItems items) {
-        plugin.getServer().getPluginManager().registerEvents(new EntityPlayerPickupItemListener(items), plugin);
+        // No super() because EntityPickupItemListener is used instead of PlayerPickupItemListener
+        // because PlayerPickupItemEvent was deprecated in favour of EntityPickupItemEvent
+
+        plugin.getServer().getPluginManager().registerEvents(new EntityPickupItemListener(items), plugin);
         plugin.getServer().getPluginManager().registerEvents(new SwapHandItemsListener(items), plugin);
     }
 }

@@ -44,10 +44,7 @@ public class SkinCache {
         // todo: calculate default skin if no encoded data or failed to read
 
         try {
-            String skinUrl = SkinUtils.readSkinUrl(encodedData);
-            String skinId = SkinUtils.getSkinId(skinUrl);
-            String avatarUrl = AVATAR_ENDPOINT + skinId;
-
+            String avatarUrl = AVATAR_ENDPOINT + SkinUtils.idFromEncoding(encodedData);
             LOGGER.debug("Avatar URL for " + uuid + ": " + avatarUrl);
             return avatarUrl;
         } catch (Exception e) {

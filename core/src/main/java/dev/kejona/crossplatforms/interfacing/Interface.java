@@ -55,7 +55,7 @@ public abstract class Interface {
     private transient String argumentSyntax = "";
 
     @PostProcess
-    private void postProcess() {
+    protected void postProcess() {
         StringJoiner joiner = new StringJoiner(" ");
         joiner.add(identifier);
         for (Argument arg : arguments) {
