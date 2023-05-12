@@ -43,7 +43,7 @@ dependencies {
     api("org.spongepowered:configurate-yaml:4.2.0-SNAPSHOT")
     api("org.spongepowered:configurate-extra-guice:4.2.0-SNAPSHOT")
 
-    api("com.google.inject:guice:5.1.0") {
+    api("com.google.inject:guice:7.0.0") {
        exclude(group = "com.google.guava", module = "guava") // Provides a newer version than provided by server platforms
     }
 
