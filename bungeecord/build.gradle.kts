@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
     compileOnly("net.md-5:bungeecord-api:1.19-R0.1-SNAPSHOT")
-    compileOnly("com.github.SpigotMC.BungeeCord:bungeecord-proxy:9e5ed82") // For getting skins (dependency through jitpack)
+    compileOnly("com.github.SpigotMC.BungeeCord:bungeecord-proxy:6324c7d") // For getting skins (dependency through jitpack)
     api("cloud.commandframework:cloud-bungee:1.8.3")
     api("net.kyori:adventure-platform-bungeecord:4.3.0")
     implementation("org.bstats:bstats-bungeecord:3.0.2")
@@ -24,12 +24,13 @@ tasks.withType<ShadowJar> {
             // Used by cloud and configurate
             relocate("io.leangen.geantyref", "dev.kejona.crossplatforms.shaded.typetoken")
             relocate("org.bstats", "dev.kejona.crossplatforms.shaded.bstats")
+            // bungeecord doesn't have good snakeyaml anymore
+            relocate("org.yaml.snakeyaml", "dev.kejona.crossplatforms.shaded.snakeyaml")
         }
         exclude {
                 e ->
             val name = e.name
             name.startsWith("com.mojang") // all available on bungee
-            || name.startsWith("org.yaml")
             // Guice must be relocated, everything else is available
             || (name.startsWith("com.google") && !name.startsWith("com.google.inject"))
             || name.startsWith("javax.inject")

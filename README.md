@@ -1,6 +1,6 @@
 <img alt="CrossplatForms" width="500" src="https://github.com/kejonaMC/CrossplatForms/blob/main/images/crossplatForms.svg" /> 
 
-[![Build Status](https://ci.kejonamc.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.kejona.dev/job/CrossplatForms/job/main/)
+[![Build Status](https://ci.kejonamc.dev/job/CrossplatForms/job/main/badge/icon)](https://ci.kejonamc.dev/job/CrossplatForms/job/main/)
 [![Version](https://img.shields.io/badge/version-1.5.0-blue)](https://github.com/kejonaMC/CrossplatForms/releases)
 [![License](https://img.shields.io/badge/License-GPL-orange)](https://github.com/kejonaMC/CrossplatForms/blob/master/LICENSE)
 [![Discord](https://img.shields.io/discord/853331530004299807?color=7289da&label=discord&logo=discord&logoColor=white)](https://discord.gg/M2SvqCu4e9)
@@ -38,9 +38,9 @@ BungeeCord and Velocity do not support Access Items.
 
 ---
 
-* [`CrossplatForms-Spigot.jar`](https://ci.kejona.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; Spigot 1.8.8 - 1.19.4
-* [`CrossplatForms-BungeeCord.jar`](https://ci.kejona.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp; BungeeCord
-* [`CrossplatForms-Velocity.jar`](https://ci.kejona.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp; Velocity 3.x
+* [`CrossplatForms-Spigot.jar`](https://ci.kejonamc.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; Spigot 1.8.8 - 1.19.4
+* [`CrossplatForms-BungeeCord.jar`](https://ci.kejonamc.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp; BungeeCord
+* [`CrossplatForms-Velocity.jar`](https://ci.kejonamc.dev/job/CrossplatForms/job/main/) :&ensp;&ensp;&ensp;&ensp;&ensp; Velocity 3.x
 
 Alternative downloads are available [here](https://github.com/kejonaMC/CrossplatForms/actions/workflows/push-main.yml) and development builds are available [here](https://github.com/kejonaMC/CrossplatForms/actions/workflows/push-dev.yml).
 
