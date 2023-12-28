@@ -8,7 +8,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class SkinCache {
@@ -29,7 +28,7 @@ public class SkinCache {
         UUID uuid = player.getUuid();
         try {
             return avatars.get(uuid, () -> getAvatarUrl(uuid, player.getEncodedSkinData()));
-        } catch (ExecutionException e) {
+        } catch (Throwable e) {
             LOGGER.warn("Exception while computing avatar url of " + player.getName());
             e.printStackTrace();
             return null;

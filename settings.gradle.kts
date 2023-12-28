@@ -57,3 +57,6 @@ findProject(":spigot-common:v1_13_R2")?.name = "v1_13_R2"
 
 include(":spigot-common:v1_14_R1")
 findProject(":spigot-common:v1_14_R1")?.name = "v1_14_R1"
+
+include(":spigot-common:v1_20_R2")
+findProject(":spigot-common:v1_20_R2")?.name = "v1_20_R2"

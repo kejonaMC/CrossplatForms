@@ -15,9 +15,14 @@ allprojects{
     group = "dev.kejona"
     version = "1.5.0"
 
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(8))
+        }
+    }
+
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
-        options.release.set(8)
     }
 
     tasks.withType<Test>().configureEach {

@@ -1,5 +1,6 @@
 package dev.kejona.crossplatforms.spigot.adapter;
 
+import com.mojang.authlib.properties.Property;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.spigot.SpigotAccessItems;
 import org.bukkit.Material;
@@ -27,6 +28,8 @@ public interface SpigotAdapter {
     }
 
     NbtAccessor nbtAccessor(Plugin plugin);
+
+    String propertyValue(Property property);
 
     void registerAuxiliaryEvents(Plugin plugin, SpigotAccessItems items);
 }

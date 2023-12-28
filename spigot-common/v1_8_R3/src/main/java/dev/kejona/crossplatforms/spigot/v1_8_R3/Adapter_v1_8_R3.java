@@ -58,6 +58,11 @@ public class Adapter_v1_8_R3 implements SpigotAdapter {
     }
 
     @Override
+    public String propertyValue(Property property) {
+        return property.getValue();
+    }
+
+    @Override
     public void registerAuxiliaryEvents(Plugin plugin, SpigotAccessItems items) {
         plugin.getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(items), plugin);
     }

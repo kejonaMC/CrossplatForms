@@ -13,8 +13,10 @@ dependencies {
     api(projects.core)
 }
 
-tasks.withType<JavaCompile> {
-    options.release.set(11)
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17)) // velocity's minimum
+    }
 }
 
 tasks.withType<ShadowJar> {

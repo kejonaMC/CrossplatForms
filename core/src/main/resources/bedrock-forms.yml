@@ -37,7 +37,6 @@ forms:
 
   minigames:
     type: simple_form
-    command: minigames
     title: "Minigames"
     content: "Click on a minigame of choice."
     buttons:
@@ -145,6 +144,15 @@ forms:
 
     actions:
       - message: "You entered: '%result_0%' '%result_1%' '%result_2%' '%result_3%' '%result_4%' '%result_5%'"
+
+  players:
+    type: simple_form
+    title: Players
+    fillers:
+      - type: player
+        format:
+          actions:
+            - commands: "You selected %raw_text%"
 
 # Don't touch this
 config-version: 5

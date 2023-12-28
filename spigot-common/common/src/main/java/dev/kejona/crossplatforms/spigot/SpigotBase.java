@@ -78,7 +78,7 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         metrics = new Metrics(this, METRICS_ID);
 
         Versioned<SpigotAdapter> result = findVersionAdapter();
-        result.betterVersion().ifPresent(v -> logger.warn("Consider using server version " + v + " instead."));
+        result.betterVersion().ifPresent(v -> logger.warn("Consider using server version " + v + " or higher instead."));
         if (result.value().isPresent()) {
             spigotAdapter = result.value().get();
         } else {
@@ -233,6 +233,10 @@ public abstract class SpigotBase extends JavaPlugin implements CrossplatFormsBoo
         }
 
         return false;
+    }
+
+    public SpigotAdapter adapter() {
+        return spigotAdapter;
     }
 
     public abstract Versioned<SpigotAdapter> findVersionAdapter();

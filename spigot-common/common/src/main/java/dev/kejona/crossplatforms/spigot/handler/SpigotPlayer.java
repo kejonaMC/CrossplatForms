@@ -6,6 +6,7 @@ import dev.kejona.crossplatforms.Logger;
 import dev.kejona.crossplatforms.handler.FormPlayer;
 import dev.kejona.crossplatforms.spigot.ClassNames;
 import dev.kejona.crossplatforms.spigot.SpigotBase;
+import dev.kejona.crossplatforms.spigot.adapter.SpigotAdapter;
 import dev.kejona.crossplatforms.utils.ReflectionUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class SpigotPlayer implements FormPlayer {
 
     private static final SpigotBase PLUGIN = SpigotBase.getInstance();
+    private static final SpigotAdapter ADAPTER = PLUGIN.adapter();
 
     private final Player handle;
 
@@ -56,7 +58,7 @@ public class SpigotPlayer implements FormPlayer {
         // Need to be careful here - getProperties() returns an authlib PropertyMap, which extends
         // MultiMap from Guava. On spigot-legacy, Guava is shaded and relocated.
         for (Property textures : profile.getProperties().get("textures")) {
-            String value = textures.getValue();
+            String value = ADAPTER.propertyValue(textures);
             if (!value.isEmpty()) {
                 return value;
             }
