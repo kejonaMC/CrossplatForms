@@ -5,7 +5,9 @@ name: push-dev
 
 on:
   push:
-    branches: [ dev ]
+    branches:
+      - "dev"
+      - "dev2.0"
 
 jobs:
   build:
