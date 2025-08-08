@@ -1,0 +1,60 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'   # Trigger alleen op tags die starten met "v", bv v1.0.0, v2.3.4, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 16
+        uses: actions/setup-java@v4
+        with:
+          java-version: '16'
+          distribution: 'adopt'
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Spigot JAR
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: spigot/build/libs/CrossplatForms-Spigot.jar
+          asset_name: CrossplatForms-Spigot.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload BungeeCord JAR
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: bungeecord/build/libs/CrossplatForms-BungeeCord.jar
+          asset_name: CrossplatForms-BungeeCord.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload Velocity JAR
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: velocity/build/libs/CrossplatForms-Velocity.jar
+          asset_name: CrossplatForms-Velocity.jar
+          asset_content_type: application/java-archive

@@ -7,14 +7,15 @@ import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.connection.InitialHandler;
-import net.md_5.bungee.connection.LoginResult;
 import net.md_5.bungee.protocol.Property;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -41,33 +42,52 @@ public class BungeeCordPlayer implements FormPlayer {
     }
 
     @Nullable
-    @Override
-    public String getEncodedSkinData() {
-        InitialHandler handler;
+    public static String getEncodedSkinData(ProxiedPlayer player) {
+        PendingConnection connection = player.getPendingConnection();
+        if (connection == null) {
+            return null;
+        }
+
         try {
-            handler = (InitialHandler) player.getPendingConnection();
-        } catch (ClassCastException e) {
-            Logger.get().warn("Incompatible BungeeCord fork, unable to get skin texture");
+            Method getLoginProfileMethod = connection.getClass().getMethod("getLoginProfile");
+            Object loginProfile = getLoginProfileMethod.invoke(connection);
+            if (loginProfile == null) {
+                return null;
+            }
+
+            Method getPropertiesMethod = loginProfile.getClass().getMethod("getProperties");
+            Object propertiesObj = getPropertiesMethod.invoke(loginProfile);
+            if (!(propertiesObj instanceof Iterable<?>)) {
+                return null;
+            }
+
+            Iterable<?> properties = (Iterable<?>) propertiesObj;
+
+            for (Object propObj : properties) {
+                if (!(propObj instanceof Property)) {
+                    continue;
+                }
+                Property property = (Property) propObj;
+                if ("textures".equals(property.getName())) {
+                    String value = property.getValue();
+                    if (value != null && !value.isEmpty()) {
+                        return value;
+                    }
+                }
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            Logger.get().warn("Could not retrieve skin textures via reflection from player " + player.getName());
             if (Logger.get().isDebug()) {
                 e.printStackTrace();
             }
-            return null;
-        }
-
-        LoginResult loginResult = handler.getLoginProfile();
-        if (loginResult == null) {
-            return null;
-        }
-
-        for (Property property : loginResult.getProperties()) {
-            if (property.getName().equals("textures")) {
-                String value = property.getValue();
-                if (!value.isEmpty()) {
-                    return value;
-                }
-            }
         }
         return null;
+    }
+
+    @Override
+    @Nullable
+    public String getEncodedSkinData() {
+        return getEncodedSkinData(player);
     }
 
     @Override
